@@ -29,4 +29,4 @@ RAN also publishes some of the tooling behind these releases: the [RAN WordPress
 
 ## Who is RAN?
 
-I’m Benjamin Rush, usually [`bnjmnrsh`](https://github.com/bnjmnrsh) online, because a famous guy with the same name meant I had to give up my vowels. I build things for the web, and I love to do deep dives on JavaScript, CSS and accessibility. Rockets Are Nostalgic is where I publish my WordPress plugins and tools. I write about these things and more at [Serial Enabler](https://bnjmnrsh.substack.com/).
+I’m Benjamin Rush, usually [`bnjmnrsh`](https://github.com/bnjmnrsh) online, because a famous guy with the same name meant I had to give up my vowels. I build things for the web, and I like a deep dive into JavaScript, CSS and accessibility. Rockets Are Nostalgic is where I publish my WordPress plugins and tools. I write about these things and more at [Serial Enabler](https://bnjmnrsh.substack.com/).
