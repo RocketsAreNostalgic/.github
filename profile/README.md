@@ -1,3 +1,5 @@
+![A retro-futurist interplanetary workshop at night, with RAN machinery surrounding a rocket ready for launch.](./assets/ran-night-shift-header.png)
+
 # RocketsAreNostalgic [RAN]
 
 RAN is the home of a small collection of WordPress plugins that [I've](https://github.com/bnjmnrsh) created over the years. Designed before [Gutenberg](https://wordpress.org/gutenberg/) , many of them add features to the TinyMCE toolbar and so can be used in any WordPress install that uses the [Classic Editor Plugin](https://en-gb.wordpress.org/plugins/classic-editor/).
