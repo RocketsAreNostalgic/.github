@@ -1,0 +1,52 @@
+name: RAN PHP Quality
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        description: PHP version used to execute the repository quality contract.
+        required: false
+        type: string
+        default: '8.4'
+      working-directory:
+        description: Project directory containing composer.json and composer.lock.
+        required: false
+        type: string
+        default: .
+      composer-install-args:
+        description: Arguments passed to composer install after the command name.
+        required: false
+        type: string
+        default: --no-interaction --prefer-dist
+      check-command:
+        description: Canonical deterministic PHP quality command.
+        required: false
+        type: string
+        default: composer check
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Install locked Composer dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: composer install ${{ inputs.composer-install-args }}
+
+      - name: Run PHP quality contract
+        working-directory: ${{ inputs.working-directory }}
+        run: ${{ inputs.check-command }}
