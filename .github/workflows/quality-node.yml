@@ -9,7 +9,7 @@ on:
         type: string
         default: package.json
       pnpm-version:
-        description: pnpm version used to install and run the locked project toolchain.
+        description: Exact pnpm version declared by packageManager and used for the locked toolchain.
         required: false
         type: string
         default: '11.13.1'
@@ -30,12 +30,19 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - name: Require locked Node manifests
+      - name: Require locked Node manifests and exact package manager
         working-directory: ${{ inputs.working-directory }}
+        env:
+          RAN_PNPM_VERSION: ${{ inputs.pnpm-version }}
         run: |
+          set -euo pipefail
           test -f package.json
           test -f pnpm-lock.yaml
+          declared_pnpm="$(jq -er '.packageManager | select(startswith("pnpm@")) | ltrimstr("pnpm@") | split("+")[0]' package.json)"
+          test "$declared_pnpm" = "$RAN_PNPM_VERSION"
 
       - name: Set up pnpm
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
@@ -48,6 +55,12 @@ jobs:
           node-version-file: ${{ inputs.working-directory }}/${{ inputs.node-version-file }}
           cache: pnpm
           cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+      - name: Verify exact pnpm toolchain
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          RAN_PNPM_VERSION: ${{ inputs.pnpm-version }}
+        run: test "$(pnpm --version)" = "$RAN_PNPM_VERSION"
 
       - name: Install locked Node dependencies
         working-directory: ${{ inputs.working-directory }}
