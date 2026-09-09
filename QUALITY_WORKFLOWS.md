@@ -12,12 +12,14 @@ Project-specific focused checks that are not part of the ordinary aggregate cont
 
 ## Caller examples
 
+Consumers must pin these workflows to an immutable full commit SHA. A human-readable release name may be kept in a comment for provenance, but a mutable branch or tag is not the execution reference.
+
 A Node repository may call:
 
 ```yaml
 jobs:
   baseline:
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-node.yml@quality-v1
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-node.yml@<immutable-full-commit-sha> # quality-v1
     with:
       pnpm-version: '11.13.1'
 ```
@@ -27,7 +29,7 @@ A PHP library may call:
 ```yaml
 jobs:
   baseline:
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library.yml@quality-v1
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library.yml@<immutable-full-commit-sha> # quality-v1
     with:
       php-version: '8.4'
 ```
@@ -37,13 +39,13 @@ A mixed WordPress plugin may call:
 ```yaml
 jobs:
   baseline:
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@quality-v1
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@<immutable-full-commit-sha> # quality-v1
     with:
       php-version: '8.4'
       pnpm-version: '11.13.1'
 ```
 
-`quality-v1` is the intended major-version reference after the workflow baseline is accepted and tagged. Consumers must not be pointed permanently at `main`.
+A release tag such as `quality-v1` may identify a reviewed standards release for upgrade discovery, but consumers execute the exact commit SHA associated with the reviewed revision. A standards upgrade therefore appears as an explicit caller change.
 
 ## Stable check contract
 
@@ -56,7 +58,7 @@ Example:
 ```yaml
 jobs:
   baseline:
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@quality-v1
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@<immutable-full-commit-sha> # quality-v1
     with:
       php-version: '8.4'
       pnpm-version: '11.13.1'
@@ -92,3 +94,7 @@ Do not create an organisation required-status rule until representative consumer
 Inputs are limited to project/toolchain identity such as PHP, Node/pnpm version and working directory. They do not allow callers to substitute the quality command or disable parts of a selected profile.
 
 Choose the workflow matching the actual repository profile instead of weakening a broader workflow through skip flags.
+
+## Supply-chain policy
+
+Third-party actions inside the shared workflows are pinned to immutable full commit SHAs. Version comments record the reviewed release for maintainability. Updates to those pins are reviewed in this repository before consumers adopt the new RAN workflow commit.
