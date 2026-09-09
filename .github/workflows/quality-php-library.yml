@@ -13,16 +13,6 @@ on:
         required: false
         type: string
         default: .
-      composer-install-args:
-        description: Arguments passed to composer install after the command name.
-        required: false
-        type: string
-        default: --no-interaction --prefer-dist
-      check-command:
-        description: Canonical deterministic PHP quality command.
-        required: false
-        type: string
-        default: composer check
 
 permissions:
   contents: read
@@ -45,8 +35,8 @@ jobs:
 
       - name: Install locked Composer dependencies
         working-directory: ${{ inputs.working-directory }}
-        run: composer install ${{ inputs.composer-install-args }}
+        run: composer install --no-interaction --prefer-dist
 
       - name: Run PHP quality contract
         working-directory: ${{ inputs.working-directory }}
-        run: ${{ inputs.check-command }}
+        run: composer check
