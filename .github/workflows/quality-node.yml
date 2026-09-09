@@ -18,11 +18,6 @@ on:
         required: false
         type: string
         default: .
-      check-command:
-        description: Canonical deterministic Node quality command.
-        required: false
-        type: string
-        default: pnpm check
 
 permissions:
   contents: read
@@ -54,4 +49,4 @@ jobs:
 
       - name: Run Node quality contract
         working-directory: ${{ inputs.working-directory }}
-        run: ${{ inputs.check-command }}
+        run: pnpm check
