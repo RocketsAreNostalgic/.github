@@ -6,7 +6,9 @@ This document defines the organization-wide community-health baseline for Rocket
 
 GitHub uses the community-health files in this public `.github` repository as defaults when a repository does not provide its own file of the same type. Repository-local files are allowed and are expected where project-specific contribution, support, release, or security guidance is needed.
 
-For public, supported RAN and legacy TNY WordPress plugins, this baseline is mandatory. Those repositories must either inherit the complete organization defaults or provide local equivalents that preserve the requirements below.
+The safety, privacy, disclosure, conduct, and route-integrity requirements in this standard apply to every RAN repository that exposes public community intake.
+
+Public, supported RAN and legacy TNY WordPress plugins must additionally provide the complete community-health surface defined below. Those repositories must either inherit the complete organization defaults or provide local equivalents that preserve the requirements below.
 
 Private, fixture, archived, or intentionally unsupported repositories may use a reduced local intake surface when public contribution and support are not offered. Before such a repository becomes publicly supported, its community-health surface must be brought into compliance with this standard.
 
@@ -23,7 +25,7 @@ A local `CONTRIBUTING.md` or pull-request template should therefore name the act
 
 ## Required community-health surface
 
-Public, supported RAN WordPress plugins must provide, locally or by inheritance:
+Public, supported RAN and legacy TNY WordPress plugins must provide, locally or by inheritance:
 
 - `CODE_OF_CONDUCT.md`
 - `CONTRIBUTING.md`
