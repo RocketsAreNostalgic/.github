@@ -1,6 +1,6 @@
 # RAN reusable quality workflows
 
-The workflows under `.github/workflows/` provide the common CI execution layer for repositories that have adopted the RAN quality command contract.
+The workflows under `.github/workflows/` provide the common CI source-quality layer for repositories that have adopted the RAN quality command contract.
 
 They deliberately invoke fixed aggregate commands rather than accepting arbitrary command inputs:
 
@@ -8,7 +8,25 @@ They deliberately invoke fixed aggregate commands rather than accepting arbitrar
 - `quality-php-library.yml` runs `composer check` and emits `RAN PHP Library Quality`.
 - `quality-wordpress-plugin.yml` runs both canonical contracts and emits `RAN WordPress Plugin Quality`.
 
-Project-specific focused checks that are not part of the ordinary aggregate contract remain in the caller repository's workflow or `AGENTS.md` contract.
+The current shared Node lane is intentionally pnpm-specific because that matches the maintained RAN Node estate. A non-pnpm repository should use an equivalent local or future manager-specific shared lane rather than add pnpm solely to consume this workflow.
+
+## Shared baseline guarantees
+
+The reusable workflows own broadly transferable guarantees that should not be reimplemented differently in every repository:
+
+- third-party Actions are pinned to immutable full commit SHAs;
+- workflow permissions are read-only unless a future profile proves a stronger permission is necessary;
+- checkout does not persist Git credentials while project-controlled commands run;
+- required lockfiles must exist before dependency installation;
+- pnpm consumers must execute the exact version declared in `packageManager`;
+- Composer profiles run `composer validate --strict --no-check-publish --no-check-all` before installation;
+- Composer installs use the reviewed lockfile and do not resolve an untracked dependency graph;
+- PHP profiles run the repository's `composer check` contract and then an independent PHP syntax sweep;
+- pnpm profiles run frozen installation followed by the repository's `pnpm check` contract.
+
+These guarantees intentionally mirror the broadly transferable source-quality posture of `ran-booster`, the RAN high-water reference implementation.
+
+Project-specific focused checks remain in the caller repository and feed the terminal merge gate. Examples include archive/package integrity, WordPress install/activation and compatibility matrices, Plugin Check, provider/runtime contracts, deployment/release proofs, or other evidence whose exact shape belongs to the product rather than the organisation source baseline.
 
 ## Caller examples
 
@@ -16,7 +34,7 @@ Consumers must pin these workflows to an immutable full commit SHA. A human-read
 
 Use the caller job id `baseline` so the profile-specific shared context is predictable.
 
-A Node repository may call:
+A pnpm Node repository may call:
 
 ```yaml
 jobs:
@@ -104,14 +122,16 @@ Do not create organisation required-status rules until representative consumers 
 
 ## Inputs
 
-Inputs are limited to project/toolchain identity such as PHP, Node/pnpm version and working directory. They do not allow callers to substitute the quality command or disable parts of a selected profile.
+Inputs are limited to project/toolchain identity such as PHP version, exact pnpm version, Node-version file, and working directory. They do not allow callers to substitute the quality command or disable parts of a selected profile.
+
+A caller-supplied pnpm version is not an override: the shared workflow compares it with `packageManager` and fails on disagreement.
 
 Choose the workflow matching the actual repository profile instead of weakening a broader workflow through skip flags.
 
-## Locked dependency graphs
+## Booster parity boundary
 
-The shared workflows fail explicitly before installation when their required lockfile is absent. `composer install` is never allowed to fall back to resolving from `composer.json`, and pnpm workflows require `pnpm-lock.yaml` before running the frozen install.
+`ran-booster` is the high-water reference, not a template to copy mechanically.
 
-## Supply-chain policy
+The shared workflows should absorb Booster gates that are technology-wide and deterministic. Booster-specific release lifecycle, exact artifact admission/reuse, updater source verification, WordPress/database matrix topology, and runtime/product contracts remain in Booster's local workflow and feed its own required quality result.
 
-Third-party actions inside the shared workflows are pinned to immutable full commit SHAs. Version comments record the reviewed release for maintainability. Updates to those pins are reviewed in this repository before consumers adopt the new RAN workflow commit.
+When a transferable Booster guarantee is stronger than this shared layer, treat that as a baseline-review trigger rather than assuming the lower organisation guarantee is permanently sufficient.
