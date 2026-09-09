@@ -16,7 +16,7 @@ A Node repository may call:
 
 ```yaml
 jobs:
-  quality:
+  baseline:
     uses: RocketsAreNostalgic/.github/.github/workflows/quality-node.yml@quality-v1
     with:
       pnpm-version: '11.13.1'
@@ -26,7 +26,7 @@ A PHP library may call:
 
 ```yaml
 jobs:
-  quality:
+  baseline:
     uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library.yml@quality-v1
     with:
       php-version: '8.4'
@@ -36,7 +36,7 @@ A mixed WordPress plugin may call:
 
 ```yaml
 jobs:
-  quality:
+  baseline:
     uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@quality-v1
     with:
       php-version: '8.4'
@@ -47,9 +47,45 @@ jobs:
 
 ## Stable check contract
 
-GitHub renders a called reusable-workflow job using both the caller job and called job names. Callers should use `quality` as the calling job name; these reusable workflows also expose a called job named `quality`. The resulting reusable-workflow status is therefore expected to remain stable for organisation ruleset purposes once the first consumer migrations confirm GitHub's exact rendered context.
+GitHub renders called reusable-workflow jobs using a composite caller/called job name. RAN therefore does **not** use that nested context as the organisation merge-protection contract.
 
-Do not create an organisation required-status rule until representative consumers have emitted and passed the exact intended status.
+Each consumer should expose a local terminal aggregation job named `quality`. That job must depend on every baseline and project-specific job required for the repository's ordinary merge gate and must fail unless all of those dependencies succeeded.
+
+Example:
+
+```yaml
+jobs:
+  baseline:
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@quality-v1
+    with:
+      php-version: '8.4'
+      pnpm-version: '11.13.1'
+
+  project:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./scripts/project-specific-checks.sh
+
+  quality:
+    name: quality
+    if: ${{ always() }}
+    needs:
+      - baseline
+      - project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all quality lanes
+        env:
+          BASELINE_RESULT: ${{ needs.baseline.result }}
+          PROJECT_RESULT: ${{ needs.project.result }}
+        run: |
+          test "$BASELINE_RESULT" = success
+          test "$PROJECT_RESULT" = success
+```
+
+This gives organisation rulesets one stable local `quality` context while allowing a repository to add focused integration, archive, generated-artifact, compatibility, or release checks without changing the required-status name.
+
+Do not create an organisation required-status rule until representative consumers have emitted and passed this exact terminal `quality` context.
 
 ## Inputs
 
