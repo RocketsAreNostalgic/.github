@@ -1,0 +1,56 @@
+name: Bug report
+description: Report a reproducible, non-sensitive problem.
+title: '[Bug]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve this project. Do not include vulnerability details, credentials, secrets, private source, private repository or site identities, customer data, signed URLs, non-public release assets, or full production logs. Replace private identities with neutral labels. Use the private route in SECURITY.md for vulnerabilities.
+  - type: input
+    id: version
+    attributes:
+      label: Project version
+      description: Provide the affected release, tag, or installed version.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Relevant environment
+      description: Provide only the runtime, platform, dependency, or application versions needed to reproduce the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Give the smallest repeatable sequence. Replace private repository and site identities with neutral labels.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include exact safe error text where useful.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Optional. Include only the smallest relevant excerpt after removing sensitive values and private identities.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I have removed credentials, secrets, signed URLs, private source, private repository or site identities, customer data, non-public release assets, full production logs, private workbench material, and Dex identifiers.
+          required: true
+        - label: This report does not disclose a security vulnerability.
+          required: true
