@@ -16,6 +16,8 @@ The reusable workflows own broadly transferable guarantees that should not be re
 
 - third-party Actions are pinned to immutable full commit SHAs;
 - workflow permissions are read-only unless a future profile proves a stronger permission is necessary;
+- pull-request runs explicitly check out `github.event.pull_request.head.sha`; non-PR calls use `github.sha`;
+- the checked-out commit is verified before project-controlled commands run, so source-quality evidence binds to the exact reviewed revision rather than GitHub's synthetic PR merge commit;
 - checkout does not persist Git credentials while project-controlled commands run;
 - required lockfiles must exist before dependency installation;
 - pnpm consumers must execute the exact version declared in `packageManager`;
@@ -25,6 +27,8 @@ The reusable workflows own broadly transferable guarantees that should not be re
 - pnpm profiles run frozen installation followed by the repository's `pnpm check` contract.
 
 These guarantees intentionally mirror the broadly transferable source-quality posture of `ran-booster`, the RAN high-water reference implementation.
+
+Testing the exact PR head and testing mergeability are separate contracts. The shared source-quality lane proves the reviewed head; repository rulesets/strict status checks or a merge queue must ensure the head is current with the target branch before merge. A repository may add an explicit merge-integration lane when its product needs stronger base-integration evidence.
 
 Project-specific focused checks remain in the caller repository and feed the terminal merge gate. Examples include archive/package integrity, WordPress install/activation and compatibility matrices, Plugin Check, provider/runtime contracts, deployment/release proofs, or other evidence whose exact shape belongs to the product rather than the organisation source baseline.
 
@@ -122,7 +126,7 @@ Do not create organisation required-status rules until representative consumers 
 
 ## Inputs
 
-Inputs are limited to project/toolchain identity such as PHP version, exact pnpm version, Node-version file, and working directory. They do not allow callers to substitute the quality command or disable parts of a selected profile.
+Inputs are limited to project/toolchain identity such as PHP version, exact pnpm version, Node-version file, and working directory. They do not allow callers to substitute the quality command, source revision, or disable parts of a selected profile.
 
 A caller-supplied pnpm version is not an override: the shared workflow compares it with `packageManager` and fails on disagreement.
 
