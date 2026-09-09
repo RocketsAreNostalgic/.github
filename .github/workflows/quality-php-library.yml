@@ -25,10 +25,13 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Require locked Composer manifests
         working-directory: ${{ inputs.working-directory }}
         run: |
+          set -euo pipefail
           test -f composer.json
           test -f composer.lock
 
@@ -39,10 +42,18 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Validate Composer configuration
+        working-directory: ${{ inputs.working-directory }}
+        run: composer validate --strict --no-check-publish --no-check-all
+
       - name: Install locked Composer dependencies
         working-directory: ${{ inputs.working-directory }}
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run PHP quality contract
         working-directory: ${{ inputs.working-directory }}
         run: composer check
+
+      - name: Lint all PHP files
+        working-directory: ${{ inputs.working-directory }}
+        run: find . -path './vendor' -prune -o -path './node_modules' -prune -o -type f -name '*.php' -exec php -l {} \;
