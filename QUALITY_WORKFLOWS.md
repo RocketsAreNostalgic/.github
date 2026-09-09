@@ -16,27 +16,28 @@ The reusable workflows own broadly transferable guarantees that should not be re
 
 - third-party Actions are pinned to immutable full commit SHAs;
 - workflow permissions are read-only unless a future profile proves a stronger permission is necessary;
-- pull-request runs explicitly check out `github.event.pull_request.head.sha`; non-PR calls use `github.sha`;
+- `pull_request_target` callers are rejected before checkout or project-controlled execution;
+- ordinary `pull_request` runs explicitly check out `github.event.pull_request.head.sha`; non-PR calls use `github.sha`;
 - the checked-out commit is verified before project-controlled commands run, so source-quality evidence binds to the exact reviewed revision rather than GitHub's synthetic PR merge commit;
 - checkout does not persist Git credentials while project-controlled commands run;
 - required lockfiles must exist before dependency installation;
 - pnpm consumers must execute the exact version declared in `packageManager`;
 - Composer profiles run `composer validate --strict --no-check-publish --no-check-all` before installation;
 - Composer installs use the reviewed lockfile and do not resolve an untracked dependency graph;
-- PHP profiles run the repository's `composer check` contract and then an independent PHP syntax sweep;
+- PHP profiles run the repository's `composer check` contract and then an independent syntax sweep whose failure propagates out of the workflow;
 - pnpm profiles run frozen installation followed by the repository's `pnpm check` contract.
 
 These guarantees intentionally mirror the broadly transferable source-quality posture of `ran-booster`, the RAN high-water reference implementation.
 
-Testing the exact PR head and testing mergeability are separate contracts. The shared source-quality lane proves the reviewed head; repository rulesets/strict status checks or a merge queue must ensure the head is current with the target branch before merge. A repository may add an explicit merge-integration lane when its product needs stronger base-integration evidence.
+Testing the exact PR head and testing mergeability are separate contracts. The shared source-quality lane proves the reviewed head; repository rulesets/strict integration policy or a merge queue must ensure the head is current with the target branch before merge. A repository may add an explicit merge-integration lane when its product needs stronger base-integration evidence.
 
-Project-specific focused checks remain in the caller repository and feed the terminal merge gate. Examples include archive/package integrity, WordPress install/activation and compatibility matrices, Plugin Check, provider/runtime contracts, deployment/release proofs, or other evidence whose exact shape belongs to the product rather than the organisation source baseline.
+Project-specific focused checks remain in the caller repository. Examples include archive/package integrity, WordPress install/activation and compatibility matrices, Plugin Check, provider/runtime contracts, deployment/release proofs, or other evidence whose exact shape belongs to the product rather than the organisation source baseline.
 
 ## Caller examples
 
-Consumers must pin these workflows to an immutable full commit SHA. A human-readable release name may be kept in a comment for provenance, but a mutable branch or tag is not the execution reference.
+Consumers must pin these reusable workflows to an immutable full commit SHA. A human-readable release name may be kept in a comment for provenance, but a mutable branch or tag is not the execution reference.
 
-Use the caller job id `baseline` so the profile-specific shared context is predictable.
+Use the caller job id `baseline` so the profile-specific shared context remains predictable for humans and diagnostics.
 
 A pnpm Node repository may call:
 
@@ -77,18 +78,11 @@ Expected shared context: `baseline / RAN WordPress Plugin Quality`.
 
 A release tag such as `quality-v1` may identify a reviewed standards release for upgrade discovery, but consumers execute the exact commit SHA associated with the reviewed revision. A standards upgrade therefore appears as an explicit caller change.
 
-## Stable merge-gate contract
+## Consumer aggregation versus merge enforcement
 
-RAN uses **two complementary check identities** for migrated repositories:
+Consumer-owned status names are **evidence, not an unforgeable workflow identity**. A pull request that can edit its caller workflow can manufacture a successful job with the same displayed status name. Therefore neither `baseline / RAN WordPress Plugin Quality` nor a local terminal `quality` status is sufficient by itself to prove that an organisation-owned workflow executed.
 
-1. the profile-specific shared context proves that the repository called the correct organisation baseline; and
-2. a terminal local `quality` job proves that all baseline and project-specific merge-required lanes succeeded.
-
-A profile ruleset should therefore require the correct shared context for that profile **and** the terminal local `quality` context. This prevents a WordPress repository from silently replacing the WordPress shared workflow with the Node workflow while preserving a generic success check.
-
-Each consumer must expose a local terminal aggregation job named `quality`. That job must depend on every baseline and project-specific job required for the repository's ordinary merge gate and must fail unless all of those dependencies succeeded.
-
-Example:
+A migrated repository should still expose a local terminal aggregation job named `quality` because it gives maintainers one clear result for all ordinary shared and project-specific lanes:
 
 ```yaml
 jobs:
@@ -122,7 +116,16 @@ jobs:
           fi
 ```
 
-Do not create organisation required-status rules until representative consumers have emitted and passed both the exact profile-specific context and terminal `quality` context.
+The security/enforcement boundary is an organization or enterprise ruleset using GitHub's **Require workflows to pass before merging** rule. That required workflow must be selected from an organisation-controlled repository/branch/workflow configuration so a target-repository pull request cannot replace it with a look-alike job. Where the required workflow delegates to these reusable profiles, that delegation should use an immutable reviewed provider SHA.
+
+The final enforcement phase should therefore:
+
+1. keep the consumer `baseline` and terminal `quality` jobs for local feedback and diagnosis;
+2. configure the appropriate organisation ruleset-required workflow for the repository profile;
+3. ensure that required workflow executes the same reviewed RAN baseline against the intended source revision; and
+4. use repository-level required-workflow enforcement as needed for product-specific gates that must not be bypassable by editing a caller workflow.
+
+Do not create organization required-status rules that treat a consumer-controlled job name as proof of organisation workflow identity.
 
 ## Inputs
 
@@ -136,6 +139,6 @@ Choose the workflow matching the actual repository profile instead of weakening 
 
 `ran-booster` is the high-water reference, not a template to copy mechanically.
 
-The shared workflows should absorb Booster gates that are technology-wide and deterministic. Booster-specific release lifecycle, exact artifact admission/reuse, updater source verification, WordPress/database matrix topology, and runtime/product contracts remain in Booster's local workflow and feed its own required quality result.
+The shared workflows should absorb Booster gates that are technology-wide and deterministic. Booster-specific release lifecycle, exact artifact admission/reuse, updater source verification, WordPress/database matrix topology, and runtime/product contracts remain in Booster's local workflow.
 
 When a transferable Booster guarantee is stronger than this shared layer, treat that as a baseline-review trigger rather than assuming the lower organisation guarantee is permanently sufficient.
