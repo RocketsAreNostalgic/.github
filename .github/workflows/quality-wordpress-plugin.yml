@@ -14,7 +14,7 @@ on:
         type: string
         default: package.json
       pnpm-version:
-        description: pnpm version used to install and run the locked project toolchain.
+        description: Exact pnpm version declared by packageManager and used for the locked toolchain.
         required: false
         type: string
         default: '11.13.1'
@@ -35,14 +35,21 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - name: Require locked project manifests
+      - name: Require locked project manifests and exact package manager
         working-directory: ${{ inputs.working-directory }}
+        env:
+          RAN_PNPM_VERSION: ${{ inputs.pnpm-version }}
         run: |
+          set -euo pipefail
           test -f composer.json
           test -f composer.lock
           test -f package.json
           test -f pnpm-lock.yaml
+          declared_pnpm="$(jq -er '.packageManager | select(startswith("pnpm@")) | ltrimstr("pnpm@") | split("+")[0]' package.json)"
+          test "$declared_pnpm" = "$RAN_PNPM_VERSION"
 
       - name: Set up PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
@@ -51,13 +58,21 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Validate Composer configuration
+        working-directory: ${{ inputs.working-directory }}
+        run: composer validate --strict --no-check-publish --no-check-all
+
       - name: Install locked Composer dependencies
         working-directory: ${{ inputs.working-directory }}
-        run: composer install --no-interaction --prefer-dist
+        run: composer install --no-interaction --prefer-dist --no-progress
 
       - name: Run PHP quality contract
         working-directory: ${{ inputs.working-directory }}
         run: composer check
+
+      - name: Lint all PHP files
+        working-directory: ${{ inputs.working-directory }}
+        run: find . -path './vendor' -prune -o -path './node_modules' -prune -o -type f -name '*.php' -exec php -l {} \;
 
       - name: Set up pnpm
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
@@ -70,6 +85,12 @@ jobs:
           node-version-file: ${{ inputs.working-directory }}/${{ inputs.node-version-file }}
           cache: pnpm
           cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
+
+      - name: Verify exact pnpm toolchain
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          RAN_PNPM_VERSION: ${{ inputs.pnpm-version }}
+        run: test "$(pnpm --version)" = "$RAN_PNPM_VERSION"
 
       - name: Install locked Node dependencies
         working-directory: ${{ inputs.working-directory }}
