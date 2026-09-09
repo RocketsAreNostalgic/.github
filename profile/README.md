@@ -27,6 +27,12 @@ I've got more up my sleeve, and they will drop as they're ready.
 
 RAN also publishes some of the tooling behind these releases: the [RAN WordPress GitHub Release Updater](https://github.com/RocketsAreNostalgic/ran-wp-github-release-updater), [RAN Admin Shell](https://github.com/RocketsAreNostalgic/ran-admin-shell) and [RAN Booster Release Bootstrap Templates](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates).
 
+## How RAN builds software
+
+RAN is small, but I don't want that to mean ad hoc. The maintained repositories share a baseline for security, contributions, code quality, review and CI, while each project keeps the tooling and checks that make sense for its code.
+
+[Read how RAN builds software](../ENGINEERING.md).
+
 ## Who is RAN?
 
 I’m Benjamin Rush, usually [`bnjmnrsh`](https://github.com/bnjmnrsh) online, because a famous guy with the same name meant I had to give up my vowels. I build things for the web, and I like a deep dive into JavaScript, CSS and accessibility. Rockets Are Nostalgic is where I publish my WordPress plugins and tools. I write about these things and more at [Serial Enabler](https://bnjmnrsh.substack.com/).
