@@ -180,18 +180,42 @@ Shared organisation workflows must:
 - check out without persisted Git credentials before project-controlled commands run;
 - require the profile's tracked lockfiles before installation;
 - enforce exact package-manager identity where the profile defines one;
-- invoke the canonical local aggregate command rather than accept a caller-supplied weaker substitute.
+- invoke a fixed profile contract rather than accept caller-supplied arbitrary commands or skip flags.
 
 Consumers must pin the reusable RAN workflow itself to an immutable full commit SHA.
 
-Every migrated maintained repository must expose two distinct merge-protection guarantees:
+Migrated maintained repositories should expose two distinct diagnostic/local evidence surfaces:
 
-1. the applicable profile-specific shared status, such as `baseline / RAN WordPress Plugin Quality`, `baseline / RAN PHP Library Quality`, or `baseline / RAN Node Quality`, proving that the repository did not substitute a weaker shared profile; and
-2. a local terminal job named exactly `quality`, proving that every shared and project-specific lane required for ordinary merge approval succeeded.
+1. the applicable profile-specific shared status, such as `baseline / RAN WordPress Plugin Quality`, `baseline / RAN PHP Library Quality`, or `baseline / RAN Node Quality`; and
+2. a local terminal job named exactly `quality`, showing that every shared and project-specific lane required for ordinary merge approval succeeded.
 
-The terminal job must depend on all required lanes and must fail unless each required dependency succeeds. Project-specific jobs may be stricter than the organisation baseline and remain mandatory through this terminal gate.
+These displayed statuses are useful evidence, but they are **not by themselves unforgeable merge-protection guarantees**. A pull request may be able to edit its caller workflow, aggregate script, quality-tool configuration, or a helper invoked by that aggregate.
 
-Before an organisation ruleset requires either status across a repository group, every targeted repository must already emit and pass the intended exact contexts reliably.
+The terminal job must depend on all locally required lanes and fail unless each required dependency succeeds. Project-specific jobs may be stricter than the organisation baseline and remain mandatory through this terminal gate.
+
+### Enforcement integrity
+
+Before organisation ruleset enforcement is enabled for a quality profile, both of these boundaries must be protected:
+
+1. **Workflow identity.** An organisation or enterprise ruleset must require an organisation-controlled workflow so a target-repository pull request cannot replace it with a look-alike status/job.
+2. **Quality-contract integrity.** The authoritative checks executed by that required workflow must not be weakenable solely through an unreviewed change in the target pull request.
+
+Quality-contract integrity should be achieved in one of two ways:
+
+- **Organisation-owned execution (preferred end state):** the required workflow owns the authoritative commands/configuration, including versioned shared RAN standards, independently of PR-editable aggregate definitions. Repository `composer check` and package-manager `check` commands remain the normal local developer interface but are not the sole authority for the required organisation gate.
+- **Protected consumer contract (transitional path):** changes to the complete transitive consumer quality contract require independent maintainer/code-owner approval that the pull-request author cannot self-satisfy. Stale approvals must be dismissed, or approval of the most recent reviewable push must be required, so later commits cannot silently weaken the reviewed contract.
+
+The protected transitive contract includes, as applicable:
+
+- `composer.json` / `package.json` aggregate scripts and quality-tool dependencies;
+- relevant lockfiles where changing the resolved quality-tool graph can alter the gate;
+- PHPCS/WPCS, PHPCompatibility, PHPStan, ESLint, Prettier, Stylelint and test-runner configuration;
+- scripts/configuration transitively invoked by aggregate commands;
+- caller/local quality workflow files that determine which product-specific checks feed terminal `quality`.
+
+Because aggregate commands can delegate to repository-specific files, each migrated repository must identify the actual transitive surface rather than assuming the manifests alone are sufficient.
+
+Until workflow identity **and** quality-contract integrity are both protected, reusable RAN profiles provide deterministic verification evidence but must not be configured or described as the sole organisation merge-security boundary.
 
 ## Quality profiles and applicability
 
@@ -212,7 +236,7 @@ Required gates:
 - when deployable runtime plugin code exists: at least one clean install/activation smoke proof, with broader WordPress/PHP/database matrix coverage where materially different supported boundaries require runtime proof;
 - when the repository targets WordPress.org: applicable Plugin Check evidence;
 - tracked lockfiles and locked installs for every package ecosystem that supports them;
-- the profile-specific shared status plus terminal local `quality` status.
+- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before either is relied on as an organisation merge control.
 
 A concrete environment or legacy constraint may temporarily defer one of these gates only through the documented-exception or `legacy` process. A missing test/static-analysis/runtime proof is not automatically non-applicable merely because the repository does not currently have it.
 
@@ -228,7 +252,7 @@ Required gates:
 - automated tests for behavioural production code;
 - characterization/contract tests where inherited or compatibility-sensitive public behaviour warrants them;
 - a tracked Composer lockfile for reproducible RAN development/CI;
-- the profile-specific shared status plus terminal local `quality` status.
+- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before organisation enforcement.
 
 ### `node`
 
@@ -241,7 +265,7 @@ Required gates:
 - tracked package-manager lockfile and locked installation;
 - an authoritative package-manager `check` script implementing the deterministic aggregate contract;
 - exact declared package-manager execution where the shared profile supports it;
-- the profile-specific shared status plus terminal local `quality` status.
+- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before organisation enforcement.
 
 ### `mixed`
 
@@ -283,6 +307,9 @@ Code review should treat the following as defects when the applicable profile or
 - missing package/archive or install/activation proof where the product profile triggers it;
 - a merge-required focused check that does not feed the terminal local `quality` job;
 - a repository emitting terminal `quality` while using the wrong or weaker profile-specific shared workflow;
+- treating a consumer-controlled status name as proof that the organisation-owned workflow executed;
+- relying on a ruleset-required wrapper while the authoritative aggregate/configuration it delegates to can be weakened solely through an unreviewed pull-request edit;
+- failing to protect/document the complete transitive quality-contract surface when using protected-consumer-contract enforcement;
 - CI that runs materially different checks from the documented local contract without explanation;
 - documentation that weakens mandatory CI or `AGENTS.md` requirements;
 - a reusable organisation workflow or third-party Action referenced through a mutable branch or tag instead of an immutable full commit SHA;
@@ -300,9 +327,11 @@ Organisation enforcement follows this order:
 3. prove the standard in the clean Starter reference and compare it against the Booster high-water reference;
 4. record any justified Starter/Booster parity gaps before declaring the baseline stable;
 5. migrate maintained repositories through reviewable PRs;
-6. verify the profile-specific and terminal `quality` statuses across representative repositories;
-7. apply organisation rulesets only to repositories that already conform.
+6. verify the profile-specific shared evidence and terminal `quality` results across representative repositories;
+7. establish an organisation-controlled required workflow for each enforced profile;
+8. establish quality-contract integrity through organisation-owned authoritative execution/configuration or independently protected review of each consumer's complete transitive quality contract;
+9. only then enable organisation rulesets for repositories that already conform.
 
 Organisation rules are the minimum. Individual repositories may impose stronger checks, and the baseline must not be used as a reason to remove them.
 
-No repository should be made non-mergeable merely because an organisation-required status was enabled before that repository had been migrated to emit it.
+No repository should be made non-mergeable merely because an organisation rule was enabled before that repository had been migrated and its workflow-identity and quality-contract-integrity boundaries were ready for enforcement.
