@@ -1,0 +1,21 @@
+name: Security reporting help
+description: Use only when private vulnerability reporting is unavailable. Do not include vulnerability details.
+title: '[Security reporting help]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only when the repository's private vulnerability-reporting route is unavailable. Do not include vulnerability details, exploit steps, reproduction traces, credentials, tokens, webhook secrets, WordPress salts, private repository or site identities, signed URLs, full production logs, customer data, private source, or non-public release assets. Replace any private identity with a neutral label.
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Required security acknowledgements
+      options:
+        - label: Private vulnerability reporting is unavailable, and I am requesting a confidential contact route.
+          required: true
+        - label: I have not included vulnerability details, exploit steps, or reproduction traces in this report.
+          required: true
+        - label: I have removed secrets, private repository and site identities, and sensitive operations data from this report.
+          required: true
+        - label: I understand this public issue is only a request for private contact and contains no technical findings.
+          required: true

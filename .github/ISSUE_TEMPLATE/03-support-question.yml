@@ -1,0 +1,41 @@
+name: Support question
+description: Ask for ordinary, non-sensitive support with bounded context.
+title: '[Support]: '
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for ordinary support questions. Report reproducible defects with the Bug report form. Never include vulnerability details, private repository identities, or private site identities here. Replace private identities with neutral labels. Use the private route in SECURITY.md for sensitive reporting.
+  - type: input
+    id: version
+    attributes:
+      label: Project version
+      description: Provide the affected release, tag, or installed version where applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Relevant environment
+      description: Include only the runtime or platform information needed to understand the question.
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Ask your support question with clear, minimal context and neutral labels for private repository or site identities.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and context
+      description: If useful, include small reproduction steps, a screenshot, or a short sanitized log excerpt after removing private repository and site identities.
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Required acknowledgements
+      options:
+        - label: I have removed credentials, secrets, signed URLs, private repository or site identities, customer data, full production logs, private source, private workbench material, Dex identifiers, and other sensitive information.
+          required: true
+        - label: This request does not include a security vulnerability.
+          required: true
