@@ -1,0 +1,79 @@
+name: RAN PHP Quality
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        description: PHP version used to execute the repository quality contract.
+        required: false
+        type: string
+        default: '8.4'
+      working-directory:
+        description: Project directory containing composer.json and composer.lock.
+        required: false
+        type: string
+        default: .
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: RAN PHP Library Quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Reject privileged pull_request_target callers
+        if: ${{ github.event_name == 'pull_request_target' }}
+        run: |
+          echo 'RAN source-quality workflows do not execute pull-request head code from pull_request_target.' >&2
+          exit 1
+
+      - name: Check out exact source revision
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source revision
+        env:
+          RAN_EXPECTED_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test -n "$RAN_EXPECTED_SHA"
+          test "$(git rev-parse HEAD)" = "$RAN_EXPECTED_SHA"
+
+      - name: Require locked Composer manifests
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          set -euo pipefail
+          test -f composer.json
+          test -f composer.lock
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ inputs.php-version }}
+          tools: composer:v2
+          coverage: none
+
+      - name: Validate Composer configuration
+        working-directory: ${{ inputs.working-directory }}
+        run: composer validate --strict --no-check-publish --no-check-all
+
+      - name: Install locked Composer dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Run PHP quality contract
+        working-directory: ${{ inputs.working-directory }}
+        run: composer check
+
+      - name: Lint all PHP files
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            php -l "$file"
+          done < <(find . \( -path './vendor' -o -path './node_modules' \) -prune -o -type f -name '*.php' -print0)
