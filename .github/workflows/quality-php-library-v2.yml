@@ -23,11 +23,6 @@ on:
         required: false
         type: string
         default: '24.11.0'
-      runner:
-        description: Runner label used for both quality lanes.
-        required: false
-        type: string
-        default: blacksmith-2vcpu-ubuntu-2404
       working-directory:
         description: Project directory containing composer.json and composer.lock.
         required: false
@@ -40,7 +35,7 @@ permissions:
 jobs:
   floor:
     name: PHP ${{ inputs.php-floor }} floor
-    runs-on: ${{ inputs.runner }}
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 15
     steps:
       - name: Reject privileged pull_request_target callers
@@ -107,7 +102,7 @@ jobs:
 
   current:
     name: PHP ${{ inputs.php-current }} compatibility
-    runs-on: ${{ inputs.runner }}
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     timeout-minutes: 15
     steps:
       - name: Reject privileged pull_request_target callers
