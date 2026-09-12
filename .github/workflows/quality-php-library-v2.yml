@@ -79,6 +79,16 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
 
+      - name: Verify exact Node.js version
+        if: ${{ inputs.node-version != '' }}
+        shell: bash
+        env:
+          RAN_NODE_VERSION: ${{ inputs.node-version }}
+        run: |
+          set -euo pipefail
+          [[ "$RAN_NODE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$(node --version)" = "v${RAN_NODE_VERSION}"
+
       - name: Validate Composer configuration
         working-directory: ${{ inputs.working-directory }}
         run: composer validate --strict --no-check-publish --no-check-all
@@ -146,6 +156,20 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
 
+      - name: Verify exact Node.js version
+        if: ${{ inputs.node-version != '' }}
+        shell: bash
+        env:
+          RAN_NODE_VERSION: ${{ inputs.node-version }}
+        run: |
+          set -euo pipefail
+          [[ "$RAN_NODE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$(node --version)" = "v${RAN_NODE_VERSION}"
+
+      - name: Validate Composer configuration
+        working-directory: ${{ inputs.working-directory }}
+        run: composer validate --strict --no-check-publish --no-check-all
+
       - name: Install locked Composer dependencies
         working-directory: ${{ inputs.working-directory }}
         run: composer install --no-interaction --prefer-dist --no-progress
@@ -153,3 +177,12 @@ jobs:
       - name: Run repository quality contract
         working-directory: ${{ inputs.working-directory }}
         run: composer check
+
+      - name: Lint all PHP files
+        shell: bash
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            php -l "$file"
+          done < <(find . \( -path './vendor' -o -path './node_modules' \) -prune -o -type f -name '*.php' -print0)
