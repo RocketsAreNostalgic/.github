@@ -6,7 +6,7 @@ They deliberately invoke fixed aggregate commands rather than accepting arbitrar
 
 - `quality-node.yml` runs `pnpm check` and emits `RAN Node Quality`.
 - `quality-php-library.yml` runs `composer check` and emits `RAN PHP Library Quality`.
-- `quality-php-library-v2.yml` runs the repository's Composer quality contract on both its PHP floor and current-stable PHP, with independent PHP syntax verification on the floor lane.
+- `quality-php-library-v2.yml` runs the repository's Composer quality contract on both its PHP floor and current-stable PHP, with strict Composer validation and independent PHP syntax verification on both lanes.
 - `quality-wordpress-plugin.yml` runs both canonical contracts and emits `RAN WordPress Plugin Quality`.
 
 The current shared Node lane is intentionally pnpm-specific because that matches the maintained RAN Node estate. A non-pnpm repository should use an equivalent local or future manager-specific shared lane rather than add pnpm solely to consume this workflow.
@@ -23,9 +23,10 @@ The reusable workflows own broadly transferable guarantees that should not be re
 - checkout does not persist Git credentials while project-controlled commands run;
 - required lockfiles must exist before dependency installation;
 - pnpm consumers must execute the exact version declared in `packageManager`;
-- Composer profiles run `composer validate --strict --no-check-publish --no-check-all` before installation where the profile owns the primary quality lane;
+- PHP v2 consumers that request Node must provide a full `major.minor.patch` Node version and the installed binary is verified against it;
+- Composer profiles run `composer validate --strict --no-check-publish --no-check-all` before installation;
 - Composer installs use the reviewed lockfile and do not resolve an untracked dependency graph;
-- PHP profiles run the repository's `composer check` contract and then, on the primary lane, an independent syntax sweep whose failure propagates out of the workflow;
+- PHP profiles run the repository's `composer check` contract and then an independent syntax sweep whose failure propagates out of the workflow;
 - pnpm profiles run frozen installation followed by the repository's `pnpm check` contract;
 - reusable providers own their runner selection; a caller cannot redirect pull-request code to a self-hosted or otherwise privileged runner.
 
@@ -104,7 +105,7 @@ jobs:
 
 Expected shared contexts: `baseline / PHP 8.2 floor` and `baseline / PHP 8.5 compatibility`.
 
-The v2 PHP provider deliberately does not expose a runner input. Pull requests in caller repositories can edit their caller workflow, so runner selection must remain organisation-owned rather than allowing a PR to redirect project-controlled commands to a self-hosted or otherwise privileged runner.
+The v2 PHP provider deliberately does not expose a runner input. Pull requests in caller repositories can edit their caller workflow, so runner selection must remain organisation-owned rather than allowing a PR to redirect project-controlled commands to a self-hosted or otherwise privileged runner. When `node-version` is non-empty, v2 also requires a full `major.minor.patch` value and verifies `node --version` before project-controlled commands run.
 
 A mixed WordPress plugin may call:
 
@@ -175,7 +176,7 @@ Do not create organization required-status rules that treat a consumer-controlle
 
 Inputs are limited to project/toolchain identity such as PHP versions, PHP extensions, exact Node or pnpm version, Node-version file, and working directory. They do not allow callers to substitute the quality command, source revision, runner, or disable parts of a selected profile.
 
-A caller-supplied pnpm version is not an override: the shared workflow compares it with `packageManager` and fails on disagreement.
+A caller-supplied pnpm version is not an override: the shared workflow compares it with `packageManager` and fails on disagreement. The v2 PHP workflow likewise verifies any non-empty Node version exactly after setup.
 
 Choose the workflow matching the actual repository profile instead of weakening a broader workflow through skip flags.
 
