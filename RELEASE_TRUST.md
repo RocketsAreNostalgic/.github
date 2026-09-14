@@ -14,6 +14,22 @@ Repository-specific gates may be stronger than this policy and should remain loc
 
 This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Source-quality profile adoption and reusable quality-workflow rollout remain separately owned by RocketsAreNostalgic/.github#7.
 
+### Deterministic test fixtures
+
+The existence of a GitHub release workflow does not by itself make a repository a production release-trust target.
+
+Repositories whose published releases exist solely as deterministic test fixtures are a justified difference when their release state is test data rather than production distribution, production dependency identity, or independent release-authority evidence. Their relevant invariant is that the fixture state is deliberate, reproducible, and matched by the consuming test suite.
+
+A fixture may therefore intentionally model behaviour that would be inappropriate for a production publisher, including mutable release assets, weaker admission settings, unusual release history, or other controlled failure/recovery states. The organisation should not harden those characteristics merely for consistency when doing so would change the behaviour the tests are meant to exercise.
+
+A fixture repository enters the production release-trust audit only when its published state is also used as one of the following:
+
+- production distribution;
+- production dependency or package identity;
+- trusted evidence that authorizes real privileged repository or publication mutation.
+
+If a fixture crosses one of those boundaries, audit the production use separately from its fixture role rather than treating the test fixture label as a blanket exemption.
+
 ## Vocabulary
 
 ### Evidence
