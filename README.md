@@ -4,4 +4,4 @@ This repository contains the default community-health files inherited by reposit
 
 The governing policy is [COMMUNITY_STANDARDS.md](COMMUNITY_STANDARDS.md). Repository-local files may extend or replace these defaults when project-specific guidance is required, but they must preserve the organization-wide safety and disclosure boundaries defined there.
 
-Engineering policy is documented in [ENGINEERING.md](ENGINEERING.md), [QUALITY_STANDARDS.md](QUALITY_STANDARDS.md), [QUALITY_WORKFLOWS.md](QUALITY_WORKFLOWS.md), [REPOSITORY_RULESETS.md](REPOSITORY_RULESETS.md), [RELEASE_TRUST.md](RELEASE_TRUST.md), and [RELEASE_PUBLISHERS.md](RELEASE_PUBLISHERS.md).
+Engineering policy is documented in [ENGINEERING.md](ENGINEERING.md), [QUALITY_STANDARDS.md](QUALITY_STANDARDS.md), [QUALITY_WORKFLOWS.md](QUALITY_WORKFLOWS.md), [REPOSITORY_RULESETS.md](REPOSITORY_RULESETS.md), [RELEASE_CLASSIFICATION.md](RELEASE_CLASSIFICATION.md), [RELEASE_TRUST.md](RELEASE_TRUST.md), and [RELEASE_PUBLISHERS.md](RELEASE_PUBLISHERS.md).

@@ -6,7 +6,7 @@ Before making changes, read the repository's local `AGENTS.md`, README, developm
 
 Install dependencies from tracked lockfiles and run the checks required by the repository before proposing a change. Add focused runtime, integration, compatibility, generated-artifact, or release proofs when the project contract requires them.
 
-Use the repository's commit and release conventions. Where a project uses Release Please or otherwise requires Conventional Commits, use the appropriate Conventional Commit subject.
+Use the repository's commit and release conventions. Where a project uses Release Please or otherwise requires Conventional Commits, use the appropriate Conventional Commit subject. If pull-request-controlled metadata becomes the final commit subject consumed by release automation, treat that subject as release metadata: a release-significant change must use a release-driving classification recognized by that repository's own release policy, or a supported explicit breaking classification. See [RELEASE_CLASSIFICATION.md](RELEASE_CLASSIFICATION.md).
 
 Do not include credentials, secrets, signed URLs, customer data, private source, private repository or site identities, full production logs, private workbench material, vulnerability details, or other sensitive information in commits, issues, or pull requests. Replace private identities with neutral labels and reduce examples to non-sensitive reproducers.
 
