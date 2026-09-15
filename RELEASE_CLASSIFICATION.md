@@ -49,7 +49,8 @@ For repositories where PR-controlled metadata becomes the final commit subject c
 3. If the pull request contains a mechanically identifiable release-significant change, CI **must** fail closed when the final subject uses a hidden or otherwise non-release-driving type, unless the subject uses a supported explicit breaking marker such as `!`.
 4. If a mechanically reliable check is not practical for a release-significant class of change, the repository must document that justified difference and the review step that owns the classification decision.
 5. Repository-local checks should derive allowed release-driving types from the repository's own release configuration where practical rather than duplicating a second hard-coded policy.
-6. A merge method that preserves individual commits does not remove the need for deliberate release metadata; it only changes which commit metadata the release tool consumes.
+6. If a classification check relies on mutable pull-request metadata such as the title, the required evidence **must be invalidated and rerun when that metadata changes**. A previously green check against an earlier title is not valid evidence for a later merge title.
+7. A merge method that preserves individual commits does not remove the need for deliberate release metadata; it only changes which commit metadata the release tool consumes.
 
 Changing a PR title after the final commit has been created does not repair the already-created commit. Recovery must proceed through the repository's normal reviewed release process rather than rewriting protected history or creating manual tags/releases.
 
@@ -101,6 +102,10 @@ If the repository's release tooling recognizes the Conventional Commits breaking
 `refactor!: replace the public runtime contract`
 
 may legitimately be release-driving even when the base `refactor:` type is normally hidden. Repository-local enforcement must model that supported breaking semantics rather than rejecting it solely because the base type is hidden.
+
+### Mutable title after a green check
+
+A production dependency PR passes its required classification check as `deps: adopt updater support beta.3`. Renaming the PR to `refactor: consume shared updater support` before squash merge changes the release metadata. The required classification evidence must rerun for that edit; the earlier green result cannot remain the merge gate.
 
 ### Repository with different dependency policy
 
