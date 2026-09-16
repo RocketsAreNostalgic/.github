@@ -9,7 +9,7 @@ They deliberately invoke fixed aggregate commands rather than accepting arbitrar
 - `quality-php-library-v2.yml` is the current PHP-library provider. It runs the repository's Composer quality contract on both its PHP floor and current-stable PHP, with strict Composer validation and independent PHP syntax verification on both lanes.
 - `quality-wordpress-plugin.yml` is the current mixed WordPress-plugin provider. It runs both canonical contracts and emits `RAN WordPress Plugin Quality`.
 
-The current shared Node lane is intentionally pnpm-specific because that matches the maintained RAN Node estate. A non-pnpm repository should use an equivalent local or future manager-specific shared lane rather than add pnpm solely to consume this workflow.
+The current shared Node lane is intentionally pnpm-specific because that matches the maintained RAN Node estate that is eligible for the shared provider. A non-pnpm repository should use an equivalent local or future manager-specific shared lane rather than add pnpm solely to consume this workflow.
 
 ## Provider lifecycle policy
 
@@ -21,10 +21,35 @@ Current lifecycle state:
 | --- | --- | --- | --- | --- | --- |
 | `quality-php-library-v2.yml` | **CURRENT** | Maintained PHP-library source quality; also the shared PHP source baseline for PHP-only maintained WordPress plugins where the mixed WordPress provider would manufacture a Node surface | `ran-updater-support`, `ran-wp-branch-updater`, `ran-wp-release-updater` | `ran-plugin-library`, `ran-admin-shell`, and the PHP-only baseline of `ran-booster-bitbucket` after their repository-local migrations | Preferred PHP provider for new and migrating compatible maintained consumers. Pure-PHP callers set `node-version: ''`; callers that need Node provide an exact full version. |
 | `quality-php-library.yml` | **LEGACY / DEPRECATION** | Historical single-PHP PHP-library source baseline | none on maintained default branches | none | Do not add new consumers. Retire only after every maintained PHP-source target has moved to v2 and no open PR/branch intended for merge still pins v1. |
-| `quality-wordpress-plugin.yml` | **CURRENT** | Maintained WordPress plugins with both Composer and locked pnpm quality contracts | `ran-starter-plugin`, `ran-emailoctopus-jetpack-forms`, `ran-ecwid-shop-teaser`, `ran-enhanced-cover`, `ran-turnstile-for-jetpack-forms`, `ran-duplicate-detector` | `ran-booster-wp-pusher-migrator` and maintained legacy WordPress plugins once their local quality/toolchain contracts are migrated | Keep as the current WordPress contract. Do not create a WordPress `v2` unless a concrete shared contract gap requires an incompatible generation. |
-| `quality-node.yml` | **CURRENT** | Maintained pnpm Node repositories | none yet | `ran-booster-workbench`, `ran-booster-release-bootstrap-templates` | Keep as the current Node contract. Consumer migrations must first expose a truthful locked `pnpm check` contract and stable Node/package-manager identity; that is a repository migration, not a provider-generation gap. |
+| `quality-wordpress-plugin.yml` | **CURRENT** | Maintained WordPress plugins with both Composer and locked pnpm quality contracts | `ran-starter-plugin`, `ran-emailoctopus-jetpack-forms`, `ran-ecwid-shop-teaser`, `ran-enhanced-cover`, `ran-turnstile-for-jetpack-forms`, `ran-duplicate-detector` | `ran-booster-wp-pusher-migrator`, `tnySignature`, and `tnyGoogleKey` if its maintained-purpose re-audit remains positive | Keep as the current WordPress contract. Do not create a WordPress `v2` unless a concrete shared contract gap requires an incompatible generation. |
+| `quality-node.yml` | **CURRENT** | Maintained pnpm Node repositories | none yet | `ran-booster-workbench` | Keep as the current pnpm Node contract. A maintained npm repository should keep an equivalent local lane or use a future manager-specific shared provider rather than migrate package manager solely to consume this workflow. |
 
 There is no provider currently classified **TRANSITIONAL**. The three current providers are intentionally different profiles: PHP source quality, mixed WordPress PHP+pnpm source quality, and pnpm Node source quality. That profile split is substantive and should remain small.
+
+### Current and target consumer pins
+
+Consumers execute immutable provider commits, not mutable release tags. The inventory below records the lifecycle-authoritative mapping used by the current estate review; repository-specific caller details and stronger local gates are tracked in `.github#15`.
+
+| Repository | Repository profile | Caller | Current provider / immutable ref | Target provider / immutable ref | Disposition |
+| --- | --- | --- | --- | --- | --- |
+| `ran-starter-plugin` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-emailoctopus-jetpack-forms` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-ecwid-shop-teaser` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-enhanced-cover` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-turnstile-for-jetpack-forms` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-duplicate-detector` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
+| `ran-updater-support` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
+| `ran-wp-branch-updater` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
+| `ran-wp-release-updater` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
+| `ran-plugin-library` | `php-library` | none yet | none | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` or a later explicitly reviewed immutable v2 revision at implementation time | migrate |
+| `ran-admin-shell` | `php-library` | local `.github/workflows/quality.yml` | no reusable provider | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` or a later explicitly reviewed immutable v2 revision at implementation time | migrate |
+| `ran-booster-bitbucket` | `wordpress-plugin` (PHP-only shared source surface) | local `.github/workflows/quality.yml` | no reusable provider on current `main` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` or a later explicitly reviewed immutable v2 revision at implementation time | migrate shared PHP baseline; keep WordPress profile |
+| `ran-booster-wp-pusher-migrator` | `wordpress-plugin` | migration PR #40 | no provider on default branch | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` in the current migration | migrate |
+| `ran-booster-workbench` | `node` | none yet | none | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` or a later explicitly reviewed immutable Node-provider revision at implementation time | migrate |
+| `tnySignature` | `wordpress-plugin` | none yet | none | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` or a later explicitly reviewed immutable WordPress-provider revision at implementation time | migrate |
+| `tnyGoogleKey` | `wordpress-plugin` if maintained-purpose re-audit remains positive | none yet | none | current immutable WordPress-provider revision if retained in the maintained estate | re-audit, then migrate or remove from active estate |
+
+`ran-booster-release-bootstrap-templates` is deliberately **not** a `quality-node.yml` target: its maintained package surface is npm-based today. Adding pnpm solely to consume the shared provider would violate the provider-selection rule above. Its local npm quality and deterministic pack-input evidence are a justified profile-specific difference unless the repository independently adopts pnpm for product/tooling reasons.
 
 ### PHP v2 supersedes PHP v1
 
@@ -44,13 +69,15 @@ A WordPress `v2` is therefore **not warranted now**. In particular, adding a sec
 
 ### Node remains on the current provider generation
 
-`quality-node.yml` is current and sufficient for the maintained Node targets identified by the organisation migration programme. It owns exact-head execution, immutable Actions, locked pnpm installation, exact package-manager identity and the fixed `pnpm check` entry point.
+`quality-node.yml` is current and sufficient for the maintained pnpm Node target identified by the organisation migration programme. It owns exact-head execution, immutable Actions, locked pnpm installation, exact package-manager identity and the fixed `pnpm check` entry point.
 
-A target repository that lacks `packageManager`, a lockfile, an exact/stable Node declaration or a truthful aggregate `pnpm check` must fix those local contracts as part of migration. That is not a reason to weaken or version the provider.
+A pnpm target repository that lacks `packageManager`, a lockfile, an exact/stable Node declaration or a truthful aggregate `pnpm check` must fix those local contracts as part of migration. A maintained repository whose real package surface is npm is not a target for this provider merely for consistency; it should retain an equivalent local lane or motivate a separate manager-specific provider only if multiple maintained consumers establish a real shared contract.
 
 ### Intentionally local/self-validating repositories
 
 A reusable provider is an organisation minimum, not a requirement to duplicate evidence mechanically. Repositories whose local CI is itself a conformance harness may remain intentionally distinct when the local workflow proves more specific package-provider behaviour that a generic caller would only duplicate. The current shared standards packages (`ran-coding-standards` and `ran-quality-config`) are examples: their local workflows include fresh consumer/package verification in addition to their ordinary aggregate checks.
+
+`ran-booster-release-bootstrap-templates` is also intentionally local for the current lifecycle: its maintained npm contract and deterministic pack-input evidence do not justify a package-manager migration merely to fit the pnpm provider.
 
 Likewise `ran-booster` remains the high-water WordPress implementation with a specialist evidence/admission lifecycle. It consumes the shared coding/frontend standards but should not gain a redundant reusable baseline solely for visual consistency. Revisit that disposition only if a transferable organisation guarantee is missing from Booster's local workflow or #12 establishes an organisation-required execution boundary that needs a different composition.
 
