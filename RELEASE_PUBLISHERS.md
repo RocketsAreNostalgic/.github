@@ -29,7 +29,7 @@ Repositories whose semantics require the candidate still to be the tip of `main`
 
 ## Privileged `workflow_dispatch` authority audit
 
-The 2026-09-17 #24 sweep distinguishes manual CI from manual privileged mutation. Default-branch workflow search found `workflow_dispatch` in public Quality/release workflows, and the private Duplicate Detector recovery workflow was inspected directly because private-repository code search does not expose it.
+The 2026-09-17 #24 sweep distinguishes manual CI from manual privileged mutation. Default-branch workflow search covered the public estate, and the private Duplicate Detector recovery workflow was inspected directly so its already-recorded private-plan settings limitation did not create a survey gap.
 
 The current production write-capable manual-dispatch estate is:
 
