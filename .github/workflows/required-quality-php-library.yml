@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   contract:
+    if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Verify protected PHP quality contract
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -64,6 +65,7 @@ jobs:
             --expected-profile php-library
 
   baseline:
+    if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Organisation PHP baseline
     needs: contract
     uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9
@@ -76,7 +78,7 @@ jobs:
 
   required-quality:
     name: required-quality
-    if: ${{ always() }}
+    if: ${{ always() && github.repository != 'RocketsAreNostalgic/.github' }}
     needs:
       - contract
       - baseline
