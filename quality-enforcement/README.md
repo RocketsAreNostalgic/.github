@@ -23,9 +23,9 @@ entry records:
 - the reviewed source commit from which the approval was derived;
 - exact Git object IDs for the repository-owned files or trees that determine
   the authoritative quality contract; and
-- where necessary, repository-relative configuration or hook paths that are
-  explicitly required to remain absent so a pull request cannot introduce a
-  higher-precedence or implicitly discovered shadow configuration.
+- where necessary, repository-relative paths that are explicitly required to
+  remain absent so a pull request cannot introduce a higher-precedence shadow
+  configuration, package-manager hook, or prebuilt dependency tree.
 
 A required workflow owned by this repository checks out the exact target
 revision and this policy repository at `job.workflow_sha`, then runs
@@ -59,6 +59,12 @@ canonical aggregate proves. Depending on the repository this normally includes:
 - tests/fixtures that constitute the authoritative behavioural or contract
   harness.
 
+Dependency installation must start from the reviewed source tree and the
+protected lockfiles. Tracked `vendor/` or `node_modules/` trees are therefore
+required to remain absent for Composer/pnpm profiles: otherwise an installer may
+reuse pre-existing metadata, binaries, or package contents instead of
+materialising the reviewed dependency graph from the lock.
+
 Some tools discover configuration by filename or precedence rather than by an
 explicit protected path. In that case the contract must either protect the
 selected file **and** require higher-precedence alternatives to remain absent,
@@ -86,13 +92,12 @@ those changes pass, not the product being tested.
 
 ## Approval lifecycle
 
-When a protected target object or required-absent configuration policy needs to
-change:
+When a protected target object or required-absent policy needs to change:
 
 1. make the target-repository change in its normal pull request;
 2. review the new quality semantics and complete the repository's ordinary CI;
-3. derive the new protected object IDs and configuration-presence requirements
-   from the exact reviewed target revision;
+3. derive the new protected object IDs and required-absence rules from the exact
+   reviewed target revision;
 4. update `contracts.json` in a separate reviewed `.github` change;
 5. only after the central contract is approved should the target change become
    eligible under the organisation-required workflow; and
@@ -123,8 +128,9 @@ callers are evidence only and were closed without merge.
 
 The protected Node surface includes the complete `tests` and `scripts` trees so
 the aggregate cannot be weakened indirectly through a helper that its protected
-test harness executes. Package-manager shadow configuration and hook paths are
-also centrally constrained rather than being implicitly trusted.
+test harness executes. Package-manager shadow configuration, hook paths, and
+prebuilt `node_modules/` content are centrally constrained rather than being
+implicitly trusted.
 
 ### PHP library — Admin Shell
 
@@ -173,6 +179,11 @@ This binds contract data and validation code to the same organisation-owned
 workflow revision that GitHub is executing rather than to a mutable target
 branch.
 
+The consumer-required workflows deliberately skip when `github.repository` is
+`RocketsAreNostalgic/.github`; the policy repository is their source, not a
+consumer contract. Organisation rules must likewise target enrolled consumer
+repositories rather than treating the policy repository as a consumer.
+
 Consumer repositories must not treat a local job named `quality` as a
 substitute for this boundary. Local terminal jobs remain useful diagnostics and
 repository merge evidence, but the organisation enforcement authority is the
@@ -186,7 +197,8 @@ reviewed. Enrol repositories incrementally:
 
 1. classify the repository against one of the supported profiles;
 2. audit its complete transitive authority-bearing quality surface, including
-   implicitly discovered package-manager/tool configuration and hook paths;
+   implicitly discovered package-manager/tool configuration, hook paths, and
+   pre-existing dependency trees;
 3. add and review its central object and required-absent contract entries;
 4. prove the required workflow on that exact repository before targeting it;
 5. add the repository to the matching organisation required-workflow rule; and
