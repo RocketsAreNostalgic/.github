@@ -55,6 +55,8 @@ canonical aggregate proves. Depending on the repository this normally includes:
   configuration;
 - package-manager project configuration and install hooks such as `.npmrc`,
   `pnpm-workspace.yaml`, and pnpm hook files;
+- implicitly consumed ignore files such as `.gitignore`, `.prettierignore`, or
+  `.stylelintignore` where they can change what a protected command checks;
 - scripts transitively invoked by the aggregate; and
 - tests/fixtures that constitute the authoritative behavioural or contract
   harness.
@@ -99,32 +101,117 @@ When a protected target object or required-absent policy needs to change:
 3. derive the new protected object IDs and required-absence rules from the exact
    reviewed target revision;
 4. update `contracts.json` in a separate reviewed `.github` change;
-5. only after the central contract is approved should the target change become
+5. prove that central candidate against the unchanged exact target revision;
+6. only after the central contract is approved should the target change become
    eligible under the organisation-required workflow; and
-6. retain stronger repository-specific required checks independently unless an
+7. retain stronger repository-specific required checks independently unless an
    explicit later review proves them redundant.
 
 The registry update is therefore an explicit organisation-policy decision, not
 a way for the target pull request to approve itself.
 
+### Stale or superseded approvals
+
+A registry entry approves the exact Git objects derived from one reviewed target
+revision. It is not an approval of a mutable branch name.
+
+- If the target PR head changes after the contract objects are derived, the
+  central registry change is stale. Re-derive the contract from the new exact
+  head and repeat review/proof; do not reuse the previous approval.
+- If the target PR is abandoned, superseded, or closed before the registry
+  change lands, close the corresponding central approval rather than carrying
+  speculative object IDs forward.
+- If a central contract entry has already landed for a target revision that will
+  not land, restore the entry from the target repository's current approved
+  default-branch contract in a separate reviewed `.github` change and canary the
+  restored entry before expanding enforcement.
+- After a central contract refresh lands, rerun the required workflow on the
+  unchanged target head. A subsequent target-head change restarts the approval
+  cycle.
+
+`approved_commit` records the provenance of the reviewed contract; enforcement
+still relies on the exact protected object IDs, required-absence policy, and
+centrally owned provider inputs.
+
+## Control-plane canary procedure
+
+The required workflows, validator, registry schema, and contract semantics form
+a high-blast-radius enforcement control plane. Material changes must be proven
+before estate-wide rollout.
+
+1. Create the central change on a reviewed `.github` branch and freeze its exact
+   candidate SHA.
+2. Exercise every affected profile through an enrolled representative repository
+   using a disposable caller pinned to that exact central SHA.
+3. Require a positive exact-contract pass through the protected-contract check,
+   immutable provider, and terminal `required-quality` job.
+4. When the change addresses a bypass class, include a negative proof showing
+   the weakened/shadowed contract fails before the organisation baseline is
+   trusted.
+5. Restore the representative contract and prove it green again on the same
+   central candidate.
+6. Merge the central change only after representative proof and review are
+   clean; then stage organisation-rule expansion incrementally rather than
+   targeting the whole estate at once.
+
+PR #28 established the initial Node, WordPress, and PHP-v2 representative
+pattern using Bootstrap Templates, Starter, and Admin Shell respectively.
+
+## Emergency rollback
+
+A defective central enforcement change must be recoverable without weakening
+repository-owned quality rules.
+
+1. An organisation owner/admin may temporarily disable the affected required
+   workflow rule, or remove only the affected repositories from that rule, to
+   stop a central control-plane defect from blocking unrelated product work.
+2. Leave all stronger repository-local required checks, review requirements, and
+   merge policies in place during that temporary disablement.
+3. Revert or correct the defective `.github` change through the normal reviewed
+   pull-request path; do not patch consumer repositories to manufacture a bypass.
+4. Re-run the representative canary set against the exact repaired/reverted
+   central revision.
+5. Re-enable the organisation rule only after the restored control plane is
+   proven green.
+
+Temporary disablement is an emergency recovery action, not an alternate merge
+path. It must be narrow, owner/admin-controlled, and followed by restoration of
+the organisation-required boundary.
+
+## Protected-surface re-audit
+
+Re-audit a repository's authority-bearing surface whenever its contract is
+refreshed and during each enforcement rollout wave. Also re-audit after material
+provider, package-manager, test-runner, lint/format tool, or configuration-format
+changes.
+
+The audit should actively look for new implicit inputs rather than only comparing
+the existing registry: higher-precedence config names, ignore files, package
+manager hooks, helper scripts, test/fixture trees, generated command wrappers,
+and prebuilt dependency directories can all change what the aggregate proves.
+Any newly authoritative input must be protected as an exact object, required to
+remain absent, or removed from implicit discovery by an explicit protected
+command/configuration path.
+
 ## Representative proof evidence
 
 The three supported profiles have each been exercised through a disposable
-pull request with the same positive / negative / restored pattern. The proof
-callers are evidence only and were closed without merge.
+pull request with positive / negative / restored evidence. The proof callers are
+evidence only and were closed without merge.
 
 ### Node — Bootstrap Templates
 
 `ran-booster-release-bootstrap-templates#21` proves the pure pnpm profile.
 
-- approved-contract required-workflow run `35229917347` succeeded;
 - commit `6a369cf16b0e0a4a10d0fc6f271f9826d444e28c` changed only
   `package.json#scripts.check` from `pnpm test` to `true`;
-- repository-owned run `35230167165` still passed `Pack inputs`, shared Node
-  quality, `Quality`, and terminal `quality`;
-- organisation run `35230167761` rejected the changed `package.json` blob before
-  running the organisation Node baseline; and
-- restored required-workflow run `35230315256` succeeded.
+- repository-owned run `35230167165` still passed local quality while
+  organisation run `35230167761` rejected the changed protected package blob;
+- a later `.npmrc` / `script-shell=/bin/true` negative proof likewise left local
+  run `35235390134` green while required run `35235390672` rejected the
+  required-absent shadow path; and
+- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  passed repository run `35239134905` and required run `35239135572`.
 
 The protected Node surface includes the complete `tests` and `scripts` trees so
 the aggregate cannot be weakened indirectly through a helper that its protected
@@ -137,31 +224,32 @@ implicitly trusted.
 `ran-admin-shell#12` proves PHP v2 and central ownership of `php-floor`,
 `php-current`, extensions, and optional Node identity.
 
-- approved-contract repository run `35232299642` and required-workflow run
-  `35232299880` succeeded;
 - commit `71a5e38b73b9b03783d7c4936d163996443ab444` changed only
   `composer.json#scripts.check` to `true`;
-- repository-owned `Quality` run `35232546187` still succeeded;
-- organisation run `35232546416` rejected the changed `composer.json` blob and
-  skipped the PHP baseline; and
-- final restored head `fc60b04816c2fd130c8f63b36364da9f1d5398c6`
-  passed repository run `35232974087` and required-workflow run `35232974291`.
+- repository-owned `Quality` run `35232546187` still succeeded while
+  organisation run `35232546416` rejected the changed Composer object before
+  the PHP baseline; and
+- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  passed repository run `35239182921` and required run `35239183776`.
+
+Admin Shell's protected aggregate invokes
+`phpunit --configuration phpunit.xml.dist` explicitly, so the protected PHPUnit
+configuration does not rely on automatic filename precedence.
 
 ### WordPress plugin — Starter
 
 `ran-starter-plugin#21` proves the mixed Composer + pnpm profile while Starter's
 stronger archive/install evidence remains repository-owned.
 
-- approved-contract repository run `35232373052` and required-workflow run
-  `35232372886` succeeded;
 - commit `1503ac6007128eb119655fbbd8428568e3e436b8` changed only
   `package.json#scripts.check` to `true`;
-- repository run `35232631692` still passed the shared WordPress baseline,
-  project-specific archive/install evidence, and terminal `quality`;
-- organisation run `35232632076` rejected the changed `package.json` blob and
-  skipped the organisation WordPress baseline; and
-- final restored head `49db641d73fbe962e0cddd37486f181ca766c06f`
-  passed repository run `35232928169` and required-workflow run `35232929039`.
+- repository run `35232631692` still passed local/shared evidence while
+  organisation run `35232632076` rejected the changed protected package object;
+- review identified implicit Stylelint and Prettier inputs: `.stylelintignore`
+  is required absent, while the approved `.gitignore` and `.prettierignore`
+  blobs are protected; and
+- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  passed repository run `35239152367` and required run `35239152954`.
 
 ### Booster
 
@@ -197,8 +285,8 @@ reviewed. Enrol repositories incrementally:
 
 1. classify the repository against one of the supported profiles;
 2. audit its complete transitive authority-bearing quality surface, including
-   implicitly discovered package-manager/tool configuration, hook paths, and
-   pre-existing dependency trees;
+   implicitly discovered package-manager/tool configuration, ignore files, hook
+   paths, and pre-existing dependency trees;
 3. add and review its central object and required-absent contract entries;
 4. prove the required workflow on that exact repository before targeting it;
 5. add the repository to the matching organisation required-workflow rule; and
