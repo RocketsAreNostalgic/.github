@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "repositories": {
+    "RocketsAreNostalgic/ran-booster-release-bootstrap-templates": {
+      "profile": "node",
+      "approved_commit": "29a194be54c383e91758665d99461017386fe2e8",
+      "inputs": {
+        "node-version-file": "package.json",
+        "pnpm-version": "11.13.1",
+        "working-directory": "."
+      },
+      "objects": [
+        {
+          "path": ".github/workflows/quality.yml",
+          "type": "blob",
+          "oid": "7e95c6a2d14b78f7375421cfa0a66fb133ea0632"
+        },
+        {
+          "path": "package.json",
+          "type": "blob",
+          "oid": "0c0a9e58fd0ee4a68c08eb1252c2e29f130773d2"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "type": "blob",
+          "oid": "9b60ae1782d6de40a88f604fe40efd8a127d3418"
+        },
+        {
+          "path": "tests",
+          "type": "tree",
+          "oid": "92b8c581362392b2977a65e904b99fe49d4f30de"
+        },
+        {
+          "path": "scripts",
+          "type": "tree",
+          "oid": "dd17358c66938d5519770ba4264b000c7a49e199"
+        }
+      ],
+      "absent": [
+        ".npmrc",
+        ".pnpmfile.cjs",
+        ".pnpmfile.mjs",
+        "pnpm-workspace.yaml",
+        "node_modules"
+      ]
+    },
+    "RocketsAreNostalgic/ran-starter-plugin": {
+      "profile": "wordpress-plugin",
+      "approved_commit": "54280acf049ac2dba1cc8793f41424e42e0b0bcc",
+      "inputs": {
+        "php-version": "8.4",
+        "node-version-file": "package.json",
+        "pnpm-version": "11.13.1",
+        "working-directory": "."
+      },
+      "objects": [
+        {
+          "path": ".github/workflows/quality.yml",
+          "type": "blob",
+          "oid": "72051244f0304da8c22c9c93987e45bc55d99f43"
+        },
+        {
+          "path": "composer.json",
+          "type": "blob",
+          "oid": "ef87f8937aa9e79281a4902ea04329627783b339"
+        },
+        {
+          "path": "composer.lock",
+          "type": "blob",
+          "oid": "417d650cfd872eabbd83d747c9203205a38944dd"
+        },
+        {
+          "path": "package.json",
+          "type": "blob",
+          "oid": "b6caee7f8d03b6fc8057362c64bb2d8957fc8eb2"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "type": "blob",
+          "oid": "30ba7936074d2f99786811137009dd10070af13e"
+        },
+        {
+          "path": "pnpm-workspace.yaml",
+          "type": "blob",
+          "oid": "744cd47ff496457ef6fbe312910455145d36ce00"
+        },
+        {
+          "path": ".phpcs.xml",
+          "type": "blob",
+          "oid": "1bda0a1c230d3e00d745741d2da4cc3f73935a12"
+        },
+        {
+          "path": "phpstan.neon",
+          "type": "blob",
+          "oid": "06529a91f66c8c80ed9f0aa9c3ccc53efd33a344"
+        },
+        {
+          "path": "phpunit.xml",
+          "type": "blob",
+          "oid": "8236607b29a6df03dae8cc1e4fbb2792f6645ddb"
+        },
+        {
+          "path": "eslint.config.js",
+          "type": "blob",
+          "oid": "5107fa0546179f5a75251d73dd99d05085802bd5"
+        },
+        {
+          "path": ".stylelintrc",
+          "type": "blob",
+          "oid": "59db0ae10d4a7ecbd08ceb966a206d1eeea54fe8"
+        },
+        {
+          "path": ".prettierignore",
+          "type": "blob",
+          "oid": "cb6b7204775da0f2739a57383d42e6642009499c"
+        },
+        {
+          "path": ".gitignore",
+          "type": "blob",
+          "oid": "b85d5f6fbe2ec56a839a565b1f915a5945d99d8b"
+        },
+        {
+          "path": "vite.config.js",
+          "type": "blob",
+          "oid": "4b919e4852068f2c351a3ef2b51da3e9027c3b3b"
+        },
+        {
+          "path": "scripts",
+          "type": "tree",
+          "oid": "25c081ffe68a7184ab504c2ca2347a4c9768bd72"
+        },
+        {
+          "path": "tests",
+          "type": "tree",
+          "oid": "1b292471c4691b4ef6226ee545a04c901bbafc8e"
+        },
+        {
+          "path": "release-contents.txt",
+          "type": "blob",
+          "oid": "fe93eb9c5536fc171036a250aefa8d6f5f0d7b57"
+        }
+      ],
+      "absent": [
+        ".npmrc",
+        ".pnpmfile.cjs",
+        ".pnpmfile.mjs",
+        "node_modules",
+        "vendor",
+        "eslint.config.cjs",
+        "eslint.config.mjs",
+        "eslint.config.ts",
+        "eslint.config.cts",
+        "eslint.config.mts",
+        ".stylelintignore",
+        "stylelint.config.js",
+        "stylelint.config.cjs",
+        "stylelint.config.mjs",
+        "stylelint.config.ts",
+        "stylelint.config.cts",
+        "stylelint.config.mts",
+        ".stylelintrc.json",
+        ".stylelintrc.yaml",
+        ".stylelintrc.yml",
+        ".stylelintrc.js",
+        ".stylelintrc.cjs",
+        ".stylelintrc.mjs",
+        ".stylelintrc.ts",
+        ".stylelintrc.cts",
+        ".stylelintrc.mts",
+        ".prettierrc",
+        ".prettierrc.json",
+        ".prettierrc.json5",
+        ".prettierrc.yml",
+        ".prettierrc.yaml",
+        ".prettierrc.toml",
+        ".prettierrc.js",
+        ".prettierrc.cjs",
+        ".prettierrc.mjs",
+        ".prettierrc.ts",
+        ".prettierrc.cts",
+        ".prettierrc.mts",
+        "prettier.config.js",
+        "prettier.config.cjs",
+        "prettier.config.mjs",
+        "prettier.config.ts",
+        "prettier.config.cts",
+        "prettier.config.mts",
+        "vite.config.cjs",
+        "vite.config.mjs",
+        "vite.config.ts",
+        "vite.config.cts",
+        "vite.config.mts"
+      ]
+    },
+    "RocketsAreNostalgic/ran-admin-shell": {
+      "profile": "php-library",
+      "approved_commit": "098cfd970f91c3701259fc393697b722d6e2546e",
+      "inputs": {
+        "php-floor": "8.0",
+        "php-current": "8.5",
+        "php-extensions": "zip",
+        "node-version": "",
+        "working-directory": "."
+      },
+      "objects": [
+        {
+          "path": ".github/workflows/quality.yml",
+          "type": "blob",
+          "oid": "f5f059dba6e33ee847116e4c0079b95a3460ec83"
+        },
+        {
+          "path": "composer.json",
+          "type": "blob",
+          "oid": "9eee27389dd5c73d84e6276ecdef46c474ac006a"
+        },
+        {
+          "path": "composer.lock",
+          "type": "blob",
+          "oid": "d397879f9cf5106b29358dc8449b17b854a77c76"
+        },
+        {
+          "path": "phpcs.xml.dist",
+          "type": "blob",
+          "oid": "2797f8d08d38ed02b945c69c819b3f69caa9bb7f"
+        },
+        {
+          "path": "phpunit.xml.dist",
+          "type": "blob",
+          "oid": "b299c263c87bfda3cccebb4c0f508435a1feb388"
+        },
+        {
+          "path": "tests",
+          "type": "tree",
+          "oid": "8a1c43be4e246a4156f7f6d26ed8b8b26c25d2df"
+        },
+        {
+          "path": "fixtures",
+          "type": "tree",
+          "oid": "25f52d335f14f2322f4309183a00be0b04a92520"
+        }
+      ],
+      "absent": [
+        "vendor",
+        ".phpcs.xml",
+        ".phpcs.xml.dist",
+        "phpcs.xml"
+      ]
+    }
+  }
+}
