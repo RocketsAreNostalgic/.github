@@ -146,6 +146,7 @@
         "eslint.config.ts",
         "eslint.config.cts",
         "eslint.config.mts",
+        ".stylelintignore",
         "stylelint.config.js",
         "stylelint.config.cjs",
         "stylelint.config.mjs",
