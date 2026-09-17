@@ -29,7 +29,7 @@ Repositories whose semantics require the candidate still to be the tip of `main`
 
 ## Privileged `workflow_dispatch` authority audit
 
-The 2026-09-17 #24 sweep distinguishes manual CI from manual privileged mutation. Default-branch workflow search covered the public estate, and the private Duplicate Detector recovery workflow was inspected directly so its already-recorded private-plan settings limitation did not create a survey gap.
+The 2026-09-17 #24 sweep distinguishes manual CI from manual privileged mutation. It covered the full current production-publisher matrix on `main` **and every live non-default branch** returned by GitHub at the audit checkpoint. Non-default refs were compared for workflow drift, and refs in repositories with a privileged manual release workflow were read directly rather than assumed to match `main`. No branch-only privileged `workflow_dispatch` path was found outside the five repositories below. Enhanced Cover's live Release Please branch and all eight then-live Ecwid non-default branches retained the `github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'` guard on their write-capable manual release workflow. EmailOctopus, Turnstile and Duplicate Detector had no live non-default branch at that checkpoint. Branch-only write workflows found elsewhere in the production publisher estate were push-triggered automation, not manual dispatch. The private Duplicate Detector recovery workflow was inspected directly so its already-recorded private-plan settings limitation did not create a survey gap.
 
 The current production write-capable manual-dispatch estate is:
 
@@ -45,7 +45,7 @@ The WordPress.org jobs use the `wordpress-org` Environment and Environment-scope
 
 Manual `workflow_dispatch` that is only read-only Quality/evidence is outside this privileged-authority class. In particular, `ran-starter-plugin` and `tnySignature` expose manual Quality execution but no write-capable manual release path; Starter's publisher is admitted by successful `Quality` `workflow_run`, not by manual dispatch. The remaining production publishers in the matrix have no default-branch write-capable `workflow_dispatch` path detected by the estate sweep.
 
-This closes the #24 authority-model question without weakening local recovery controls: trusted-ref guards remain required defence in depth, exact provenance/readback remains repository-local, and no inline condition or ordinary technical review is described as an independent security principal.
+This closes the #24 authority-model question without weakening local recovery controls: trusted-ref guards remain required defence in depth, exact provenance/readback remains repository-local, and no inline condition or ordinary technical review is described as an independent security principal. The live-branch sweep proves the current checked-in estate has no overlooked branch-only privileged dispatch workflow; it does **not** claim that a trusted workflow author is unable to create a future branch with different control. That residual capability is the defining self-authorization property explicitly accepted by the single-trusted-principal model, not an unacknowledged independent-authorization gap.
 
 ## Current production publisher matrix
 
