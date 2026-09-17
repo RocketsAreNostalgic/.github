@@ -42,7 +42,7 @@ A required status check produced by GitHub Actions should be bound to **GitHub A
 
 Multiple protected checks are appropriate where they represent genuinely distinct lifecycle or security gates that are not naturally reducible to one ordinary terminal quality contract.
 
-Current examples include complex release/provenance workflows such as Booster and Booster Bitbucket, where ordinary quality, runtime/archive evidence, and release-candidate readback have different conditional lifecycles. `ran-booster-release-bootstrap-templates` likewise keeps separate `Pack inputs` and `Quality` checks because it does not currently expose a trustworthy terminal fan-in over both jobs. These checks should not be collapsed solely to make the Rulesets UI look uniform.
+Current examples include complex release/provenance workflows such as Booster and Booster Bitbucket, where ordinary quality, runtime/archive evidence, and release-candidate readback have different conditional lifecycles. `ran-booster-release-bootstrap-templates` now exposes a local terminal `quality` fan-in over its repository-owned `Pack inputs` lane and the shared Node baseline, but its live ruleset deliberately continues to require the established `Pack inputs` and `Quality` contexts while organisation-required enforcement is proved under #12. Do not remove those existing requirements merely because the new diagnostic terminal exists.
 
 A repository that lacks a trustworthy terminal fan-in should keep the checks that actually enforce its current CI contract until a separate workflow change demonstrates that aggregation improves clarity without weakening coverage.
 
@@ -67,11 +67,11 @@ The current maintained public repository mapping is:
 | `ran-turnstile-for-jetpack-forms` | WordPress plugin | squash + merge | `quality` from GitHub Actions |
 | `ran-booster` | Complex release/provenance product | squash + merge | `Runtime archive`, `Quality`, and `Release candidate install readback`, all from GitHub Actions |
 | `ran-booster-bitbucket` | Complex release/provenance add-on | squash + merge | `Runtime archive`, `Quality`, and `Release candidate install readback`, all from GitHub Actions |
-| `ran-booster-release-bootstrap-templates` | Release-integrity templates | squash + merge | `Pack inputs` and `Quality`, both from GitHub Actions |
-| `ran-plugin-library` | Library pending quality-profile migration | squash + merge | No required CI status until a trustworthy gate exists |
-| `ran-admin-shell` | Library in quality-gate migration | squash + merge | Add `quality` after the repository-side fan-in change lands |
+| `ran-booster-release-bootstrap-templates` | Node/pnpm release-integrity templates | squash + merge | Live ruleset still requires `Pack inputs` and `Quality`; terminal `quality` now aggregates repository-specific + shared baseline evidence, with #12 owning future organisation-required enforcement |
+| `ran-plugin-library` | PHP library; migration currently deferred/not planned | squash + merge | No normalized required CI status in the current programme |
+| `ran-admin-shell` | PHP library | squash + merge | Live ruleset requires strict GitHub Actions `quality`; workflow consumes PHP v2 and exposes that terminal fan-in |
 | `tnyGmaps` | Legacy WordPress plugin | squash + merge | No normalized required CI status yet |
-| `tnySignature` | Legacy WordPress plugin | squash + merge | No normalized required CI status yet |
+| `tnySignature` | WordPress plugin; quality profile migrated | squash + merge | Normalized local `quality` evidence exists; organisation-required enforcement remains under #12 |
 | `wp-duplicate-detector` | Legacy WordPress plugin | squash + merge | No normalized required CI status yet |
 | `ran-coding-standards` | Shared quality tooling | squash + merge target | Remediation tracked in #16: require its stable `quality` gate and resolved review threads |
 | `ran-quality-config` | Shared quality tooling | squash + merge target | Remediation tracked in #16: require its stable `quality` gate |

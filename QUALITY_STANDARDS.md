@@ -147,7 +147,7 @@ Repositories should expose predictable aggregate quality commands where the rele
 
 The repository's authoritative package manager must expose a script named `check`. Invoke it with that repository's package manager, for example `pnpm check`, `npm run check`, or `yarn check`.
 
-For a pnpm repository, `pnpm check` means: run the ordinary deterministic Node/frontend source-quality baseline for the repository.
+For maintained RAN Node/package-managed repositories, pnpm is the organisation house style unless a concrete repository-specific constraint justifies another manager. For a pnpm repository, `pnpm check` means: run the ordinary deterministic Node/frontend source-quality baseline for the repository.
 
 The aggregate must include every applicable deterministic formatter, linter, type check, unit/asset test, and tracked generated-artifact freshness check that can run in a standard isolated CI environment without privileged mutation, deployment credentials, external service availability, or a purpose-built destructive/integration environment.
 
@@ -155,7 +155,7 @@ A check may remain outside the aggregate only when it objectively requires one o
 
 A repository may not omit an applicable ordinary deterministic check merely by declaring it outside the aggregate.
 
-The current shared RAN Node workflow is pnpm-specific because that matches the maintained RAN Node estate. A non-pnpm repository must use an equivalent local or future manager-specific shared lane rather than introducing a second package manager solely to consume the pnpm workflow.
+The current shared RAN Node workflow is pnpm-specific because that matches the maintained RAN Node estate and house style. A maintained non-pnpm repository must have a concrete reason to retain its package manager and must use an equivalent local or future manager-specific shared lane as a justified difference; package-manager diversity alone is not a reason to avoid normalization.
 
 ### Composer/PHP projects
 
@@ -186,8 +186,10 @@ Consumers must pin the reusable RAN workflow itself to an immutable full commit 
 
 Migrated maintained repositories should expose two distinct diagnostic/local evidence surfaces:
 
-1. the applicable profile-specific shared status, such as `baseline / RAN WordPress Plugin Quality`, `baseline / RAN PHP Library Quality`, or `baseline / RAN Node Quality`; and
+1. the applicable profile-specific shared status, such as `baseline / RAN WordPress Plugin Quality`, the PHP-v2 floor/current contexts (for example `baseline / PHP 8.2 floor` and `baseline / PHP 8.5 compatibility`), or `baseline / RAN Node Quality`; and
 2. a local terminal job named exactly `quality`, showing that every shared and project-specific lane required for ordinary merge approval succeeded.
+
+The retired PHP v1 context `baseline / RAN PHP Library Quality` is historical only and must not be configured as a current required check.
 
 These displayed statuses are useful evidence, but they are **not by themselves unforgeable merge-protection guarantees**. A pull request may be able to edit its caller workflow, aggregate script, quality-tool configuration, or a helper invoked by that aggregate.
 
