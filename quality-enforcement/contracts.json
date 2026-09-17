@@ -6,7 +6,8 @@
       "approved_commit": "29a194be54c383e91758665d99461017386fe2e8",
       "inputs": {
         "node-version-file": "package.json",
-        "pnpm-version": "11.13.1"
+        "pnpm-version": "11.13.1",
+        "working-directory": "."
       },
       "objects": [
         {
@@ -39,7 +40,8 @@
         ".npmrc",
         ".pnpmfile.cjs",
         ".pnpmfile.mjs",
-        "pnpm-workspace.yaml"
+        "pnpm-workspace.yaml",
+        "node_modules"
       ]
     },
     "RocketsAreNostalgic/ran-starter-plugin": {
@@ -137,6 +139,8 @@
         ".npmrc",
         ".pnpmfile.cjs",
         ".pnpmfile.mjs",
+        "node_modules",
+        "vendor",
         "eslint.config.cjs",
         "eslint.config.mjs",
         "eslint.config.ts",
@@ -230,6 +234,7 @@
         }
       ],
       "absent": [
+        "vendor",
         ".phpcs.xml",
         ".phpcs.xml.dist",
         "phpcs.xml"
