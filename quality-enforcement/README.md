@@ -1,7 +1,7 @@
 # Required quality enforcement contracts
 
 This directory is the organisation-owned integrity layer used by the required
-quality workflow proof under `.github#12`.
+quality workflows under `.github#12`.
 
 The reusable quality providers already give RAN deterministic source-quality
 execution, but they intentionally invoke repository-owned aggregate commands
@@ -56,7 +56,7 @@ canonical aggregate proves. Depending on the repository this normally includes:
 A whole Git tree object is appropriate when every file below that directory is
 part of the authority-bearing harness. This deliberately means a legitimate
 change to that harness requires a central contract refresh. That is the
-transitional approval boundary; silently allowing those files to change would
+protected approval boundary; silently allowing those files to change would
 recreate the bypass this mechanism exists to prevent.
 
 Do **not** protect ordinary product implementation merely because tests execute
@@ -80,28 +80,67 @@ When a protected target object needs to change:
 The registry update is therefore an explicit organisation-policy decision, not
 a way for the target pull request to approve itself.
 
-## Proof strategy
+## Representative proof evidence
 
-The rollout uses disposable target-repository pull requests to prove the
-composition before organisation rules are activated:
+The three supported profiles have each been exercised through a disposable
+pull request with the same positive / negative / restored pattern. The proof
+callers are evidence only and were closed without merge.
 
-- **Node:** `ran-booster-release-bootstrap-templates` proves the pure pnpm
-  profile. A negative proof replaces `pnpm check` with a no-op: repository-owned
-  statuses still pass, while the central contract rejects the changed
-  `package.json` blob before the provider is trusted.
-- **WordPress:** `ran-starter-plugin` proves the mixed Composer + pnpm profile
-  while its stronger archive/install evidence remains repository-owned.
-- **PHP:** `ran-admin-shell` proves PHP v2 and central ownership of
-  `php-floor`, `php-current`, extensions, and optional Node identity. A negative
-  proof weakens the target caller's PHP floor and must be rejected by the
-  central workflow even if the repository's local caller accepts it.
-- **Booster:** remains the high-water composition proof for a specialist local
-  topology. Its runtime/archive/release evidence is not replaced by the generic
-  provider contract.
+### Node — Bootstrap Templates
 
-Disposable proof callers are evidence only and are closed without merge.
-Organisation ruleset activation is a separate administrator action after the
-proof implementation and repository contract entries have been reviewed.
+`ran-booster-release-bootstrap-templates#21` proves the pure pnpm profile.
+
+- approved-contract required-workflow run `35229917347` succeeded;
+- commit `6a369cf16b0e0a4a10d0fc6f271f9826d444e28c` changed only
+  `package.json#scripts.check` from `pnpm test` to `true`;
+- repository-owned run `35230167165` still passed `Pack inputs`, shared Node
+  quality, `Quality`, and terminal `quality`;
+- organisation run `35230167761` rejected the changed `package.json` blob before
+  running the organisation Node baseline; and
+- restored required-workflow run `35230315256` succeeded.
+
+The protected Node surface includes the complete `tests` and `scripts` trees so
+the aggregate cannot be weakened indirectly through a helper that its protected
+test harness executes.
+
+### PHP library — Admin Shell
+
+`ran-admin-shell#12` proves PHP v2 and central ownership of `php-floor`,
+`php-current`, extensions, and optional Node identity.
+
+- approved-contract repository run `35232299642` and required-workflow run
+  `35232299880` succeeded;
+- commit `71a5e38b73b9b03783d7c4936d163996443ab444` changed only
+  `composer.json#scripts.check` to `true`;
+- repository-owned `Quality` run `35232546187` still succeeded;
+- organisation run `35232546416` rejected the changed `composer.json` blob and
+  skipped the PHP baseline; and
+- final restored head `fc60b04816c2fd130c8f63b36364da9f1d5398c6`
+  passed repository run `35232974087` and required-workflow run `35232974291`.
+
+### WordPress plugin — Starter
+
+`ran-starter-plugin#21` proves the mixed Composer + pnpm profile while Starter's
+stronger archive/install evidence remains repository-owned.
+
+- approved-contract repository run `35232373052` and required-workflow run
+  `35232372886` succeeded;
+- commit `1503ac6007128eb119655fbbd8428568e3e436b8` changed only
+  `package.json#scripts.check` to `true`;
+- repository run `35232631692` still passed the shared WordPress baseline,
+  project-specific archive/install evidence, and terminal `quality`;
+- organisation run `35232632076` rejected the changed `package.json` blob and
+  skipped the organisation WordPress baseline; and
+- final restored head `49db641d73fbe962e0cddd37486f181ca766c06f`
+  passed repository run `35232928169` and required-workflow run `35232929039`.
+
+### Booster
+
+`ran-booster` remains the high-water composition reference for a specialist
+local topology. Its runtime/archive/release evidence is not replaced by the
+generic provider contract. Before it is enrolled in organisation enforcement,
+its corresponding central contract must preserve the applicable shared quality
+authority while its stronger repository-specific rules remain required.
 
 ## Required workflow identity
 
@@ -115,3 +154,20 @@ Consumer repositories must not treat a local job named `quality` as a
 substitute for this boundary. Local terminal jobs remain useful diagnostics and
 repository merge evidence, but the organisation enforcement authority is the
 required workflow plus this protected contract.
+
+## Rollout
+
+Organisation ruleset activation is an administrator action after the required
+workflow implementation and each target repository's contract entry have been
+reviewed. Enrol repositories incrementally:
+
+1. classify the repository against one of the supported profiles;
+2. audit its complete transitive authority-bearing quality surface;
+3. add and review its central contract entry;
+4. prove the required workflow on that exact repository before targeting it;
+5. add the repository to the matching organisation required-workflow rule; and
+6. keep stronger local required checks until a separate review demonstrates
+   that any one of them is truly redundant.
+
+Do not target a repository that has no entry in `contracts.json`; the validator
+will deliberately fail closed with `No approved quality contract`.
