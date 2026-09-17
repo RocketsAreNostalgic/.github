@@ -30,9 +30,9 @@
           "oid": "92b8c581362392b2977a65e904b99fe49d4f30de"
         },
         {
-          "path": "scripts/contract.mjs",
-          "type": "blob",
-          "oid": "349ac3a9efd3897a8f73dd963a2580e55cca1753"
+          "path": "scripts",
+          "type": "tree",
+          "oid": "dd17358c66938d5519770ba4264b000c7a49e199"
         }
       ]
     },
