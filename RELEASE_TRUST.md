@@ -117,6 +117,19 @@ Use such a boundary when independent authorization is actually intended. Do not 
 
 A repository is not required to add a human or external approval step merely for consistency. The need for independent authorization is an architectural decision based on the authority being protected.
 
+### Privileged manual dispatch authority
+
+A `workflow_dispatch` run executes the workflow definition from the selected dispatch ref. A condition inside that same workflow such as `github.ref == 'refs/heads/main'` is therefore useful defence in depth against accidental alternate-ref execution, but it is **not** an independent authorization boundary against a principal who can author and execute a different workflow revision.
+
+For a production manual-dispatch path that can acquire repository, release, deployment, registry, or equivalent mutation authority, record one of two explicit models:
+
+1. **Independent execution authority is intended.** A principal or policy outside the workflow revision being executed must approve or enable the privileged mutation. Examples can include a genuinely independent protected-environment reviewer, an external credential broker, or another enforced promotion mechanism that the workflow author cannot unilaterally change or satisfy.
+2. **A single trusted release principal is intentionally accepted.** The principal who can promote trusted release control may also ultimately authorize the manual mutation. In that model, protected/default-branch promotion plus exact qualification can be the intended release boundary, and an inline trusted-ref condition remains accident containment rather than separation of authority.
+
+Do not manufacture a second account, ceremonial approval loop, or repository-controlled self-deferral merely to claim independence. Conversely, do not count ordinary code review, an inline ref condition, or the mere presence of an Environment-scoped secret as independent authorization unless a distinct principal or policy is actually enforced.
+
+Whichever model applies, privileged manual dispatch should still use least-privilege job permissions, preserve exact source/artifact identity, keep historical or release-controlled code away from fresh write authority where practical, read mutation back exactly, and contract-test the intended trusted-ref guard when the operational path is the protected default branch.
+
 ### Repository-specific stronger gates
 
 Product-specific proofs remain owned by the repository that understands them. Examples include:
