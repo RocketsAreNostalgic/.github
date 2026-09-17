@@ -115,6 +115,11 @@
           "oid": "cb6b7204775da0f2739a57383d42e6642009499c"
         },
         {
+          "path": ".gitignore",
+          "type": "blob",
+          "oid": "b85d5f6fbe2ec56a839a565b1f915a5945d99d8b"
+        },
+        {
           "path": "vite.config.js",
           "type": "blob",
           "oid": "4b919e4852068f2c351a3ef2b51da3e9027c3b3b"
