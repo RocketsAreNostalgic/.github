@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   contract:
+    if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Verify protected Node quality contract
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -62,6 +63,7 @@ jobs:
             --expected-profile node
 
   baseline:
+    if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Organisation Node baseline
     needs: contract
     uses: RocketsAreNostalgic/.github/.github/workflows/quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d
@@ -72,7 +74,7 @@ jobs:
 
   required-quality:
     name: required-quality
-    if: ${{ always() }}
+    if: ${{ always() && github.repository != 'RocketsAreNostalgic/.github' }}
     needs:
       - contract
       - baseline
