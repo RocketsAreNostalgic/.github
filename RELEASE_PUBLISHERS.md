@@ -81,7 +81,8 @@ There are no remaining **REMEDIATION REQUIRED** repositories from the implementa
 
 ## Relationship to other work
 
-- `RELEASE_TRUST.md` / issue #9 owns the remaining architectural and final audit reconciliation work.
+- `RELEASE_TRUST.md` / issue #9 owns the remaining release-authority architecture and umbrella release-trust reconciliation.
+- Issue #20 retains release-classification audit/remediation ownership until each affected repository has a final classification rule or documented justified difference.
 - Issue #22 owns authenticated canonical `workflow_run` admission and is implementation-complete across the current production publisher estate.
 - Issue #12 owns authoritative organisation quality-workflow identity and transitive quality-contract integrity and is implementation-complete.
 - Issue #24 separately owns privileged `workflow_dispatch` execution authority; issue #29 separately owns release terminal-state/liveness reconciliation.
