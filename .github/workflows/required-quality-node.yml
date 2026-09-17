@@ -16,6 +16,7 @@ jobs:
     outputs:
       node_version_file: ${{ steps.contract.outputs.node_version_file }}
       pnpm_version: ${{ steps.contract.outputs.pnpm_version }}
+      working_directory: ${{ steps.contract.outputs.working_directory }}
     steps:
       - name: Require organisation-owned workflow identity
         env:
@@ -67,6 +68,7 @@ jobs:
     with:
       node-version-file: ${{ needs.contract.outputs.node_version_file }}
       pnpm-version: ${{ needs.contract.outputs.pnpm_version }}
+      working-directory: ${{ needs.contract.outputs.working_directory }}
 
   required-quality:
     name: required-quality
