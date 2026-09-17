@@ -101,7 +101,8 @@ When a protected target object or required-absent policy needs to change:
 3. derive the new protected object IDs and required-absence rules from the exact
    reviewed target revision;
 4. update `contracts.json` in a separate reviewed `.github` change;
-5. prove that central candidate against the unchanged exact target revision;
+5. prove that central candidate against the exact target revision from which the
+   contract was derived;
 6. only after the central contract is approved should the target change become
    eligible under the organisation-required workflow; and
 7. retain stronger repository-specific required checks independently unless an
@@ -112,12 +113,18 @@ a way for the target pull request to approve itself.
 
 ### Stale or superseded approvals
 
-A registry entry approves the exact Git objects derived from one reviewed target
-revision. It is not an approval of a mutable branch name.
+A registry entry approves the protected Git objects, required-absence policy,
+and centrally owned provider inputs derived from one reviewed target revision.
+It is not an approval of a mutable branch name or of unrelated product source.
 
-- If the target PR head changes after the contract objects are derived, the
-  central registry change is stale. Re-derive the contract from the new exact
-  head and repeat review/proof; do not reuse the previous approval.
+- If the target PR head changes **and that move changes any protected object,
+  required-absent path state, or other authority-bearing contract input**, the
+  central approval is stale. Re-derive the contract from the new exact head and
+  repeat review/proof; do not reuse the previous approval.
+- A product-only head move outside the protected surface does not require a
+  registry refresh. The required workflow must still rerun on the new exact
+  target head and independently prove that its protected objects/absence rules
+  still match the central contract before merge.
 - If the target PR is abandoned, superseded, or closed before the registry
   change lands, close the corresponding central approval rather than carrying
   speculative object IDs forward.
@@ -125,13 +132,11 @@ revision. It is not an approval of a mutable branch name.
   not land, restore the entry from the target repository's current approved
   default-branch contract in a separate reviewed `.github` change and canary the
   restored entry before expanding enforcement.
-- After a central contract refresh lands, rerun the required workflow on the
-  unchanged target head. A subsequent target-head change restarts the approval
-  cycle.
 
-`approved_commit` records the provenance of the reviewed contract; enforcement
-still relies on the exact protected object IDs, required-absence policy, and
-centrally owned provider inputs.
+`approved_commit` records the provenance of the reviewed contract definition;
+enforcement still relies on the exact protected object IDs, required-absence
+policy, centrally owned provider inputs, and validation of the current exact
+target revision.
 
 ## Control-plane canary procedure
 
@@ -180,10 +185,15 @@ the organisation-required boundary.
 
 ## Protected-surface re-audit
 
-Re-audit a repository's authority-bearing surface whenever its contract is
-refreshed and during each enforcement rollout wave. Also re-audit after material
-provider, package-manager, test-runner, lint/format tool, or configuration-format
-changes.
+The owner of the organisation quality programme (`.github#7` while that tracker
+is open, or its named successor after closure) owns the recurring re-audit. While
+organisation required-workflow rules are active, the enrolled estate must be
+re-audited **at least once per calendar quarter**, with the result recorded in
+that programme tracker or successor quality log.
+
+A repository must also be re-audited whenever its contract is refreshed, during
+each enforcement rollout wave, and after material provider, package-manager,
+test-runner, lint/format tool, or configuration-format changes.
 
 The audit should actively look for new implicit inputs rather than only comparing
 the existing registry: higher-precedence config names, ignore files, package
@@ -211,6 +221,7 @@ evidence only and were closed without merge.
   run `35235390134` green while required run `35235390672` rejected the
   required-absent shadow path; and
 - final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  against exact Bootstrap head `6d67798f084e292623c539436560409dc38e4824`
   passed repository run `35239134905` and required run `35239135572`.
 
 The protected Node surface includes the complete `tests` and `scripts` trees so
@@ -230,6 +241,7 @@ implicitly trusted.
   organisation run `35232546416` rejected the changed Composer object before
   the PHP baseline; and
 - final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  against exact Admin Shell head `76005e2c31b64d25121f98f4585f2db92d161a0e`
   passed repository run `35239182921` and required run `35239183776`.
 
 Admin Shell's protected aggregate invokes
@@ -249,6 +261,7 @@ stronger archive/install evidence remains repository-owned.
   is required absent, while the approved `.gitignore` and `.prettierignore`
   blobs are protected; and
 - final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
+  against exact Starter head `f3d865e842de2be8c2df35ea52a6c7f94a7e61f8`
   passed repository run `35239152367` and required run `35239152954`.
 
 ### Booster
