@@ -34,6 +34,12 @@
           "type": "tree",
           "oid": "dd17358c66938d5519770ba4264b000c7a49e199"
         }
+      ],
+      "absent": [
+        ".npmrc",
+        ".pnpmfile.cjs",
+        ".pnpmfile.mjs",
+        "pnpm-workspace.yaml"
       ]
     },
     "RocketsAreNostalgic/ran-starter-plugin": {
@@ -126,6 +132,54 @@
           "type": "blob",
           "oid": "fe93eb9c5536fc171036a250aefa8d6f5f0d7b57"
         }
+      ],
+      "absent": [
+        ".npmrc",
+        ".pnpmfile.cjs",
+        ".pnpmfile.mjs",
+        "eslint.config.cjs",
+        "eslint.config.mjs",
+        "eslint.config.ts",
+        "eslint.config.cts",
+        "eslint.config.mts",
+        "stylelint.config.js",
+        "stylelint.config.cjs",
+        "stylelint.config.mjs",
+        "stylelint.config.ts",
+        "stylelint.config.cts",
+        "stylelint.config.mts",
+        ".stylelintrc.json",
+        ".stylelintrc.yaml",
+        ".stylelintrc.yml",
+        ".stylelintrc.js",
+        ".stylelintrc.cjs",
+        ".stylelintrc.mjs",
+        ".stylelintrc.ts",
+        ".stylelintrc.cts",
+        ".stylelintrc.mts",
+        ".prettierrc",
+        ".prettierrc.json",
+        ".prettierrc.json5",
+        ".prettierrc.yml",
+        ".prettierrc.yaml",
+        ".prettierrc.toml",
+        ".prettierrc.js",
+        ".prettierrc.cjs",
+        ".prettierrc.mjs",
+        ".prettierrc.ts",
+        ".prettierrc.cts",
+        ".prettierrc.mts",
+        "prettier.config.js",
+        "prettier.config.cjs",
+        "prettier.config.mjs",
+        "prettier.config.ts",
+        "prettier.config.cts",
+        "prettier.config.mts",
+        "vite.config.cjs",
+        "vite.config.mjs",
+        "vite.config.ts",
+        "vite.config.cts",
+        "vite.config.mts"
       ]
     },
     "RocketsAreNostalgic/ran-admin-shell": {
@@ -174,6 +228,11 @@
           "type": "tree",
           "oid": "25f52d335f14f2322f4309183a00be0b04a92520"
         }
+      ],
+      "absent": [
+        ".phpcs.xml",
+        ".phpcs.xml.dist",
+        "phpcs.xml"
       ]
     }
   }
