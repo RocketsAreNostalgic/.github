@@ -54,6 +54,10 @@ function git(worktree, ...args) {
   }
 }
 
+function pathExists(worktree, path) {
+  return git(worktree, 'ls-tree', '-z', 'HEAD', '--', path).length > 0;
+}
+
 function output(name, value) {
   const outputFile = process.env.GITHUB_OUTPUT;
   if (!outputFile) return;
@@ -110,21 +114,16 @@ if (args.expectedProfile && contract.profile !== args.expectedProfile) {
 if (!Array.isArray(contract.objects) || contract.objects.length === 0) {
   fail(`No protected objects configured for ${args.repository}`);
 }
+if (contract.absent !== undefined && !Array.isArray(contract.absent)) {
+  fail(`Absent-path contract must be an array for ${args.repository}`);
+}
 if (!/^[0-9a-f]{40}$/.test(contract.approved_commit || '')) {
   fail(`Invalid approved commit for ${args.repository}`);
 }
 
 const seen = new Set();
 for (const object of contract.objects) {
-  if (
-    typeof object?.path !== 'string' ||
-    !object.path ||
-    object.path.startsWith('/') ||
-    object.path.includes('..') ||
-    /[\r\n:]/.test(object.path)
-  ) {
-    fail(`Unsafe protected path in ${args.repository}`);
-  }
+  requireSafeRelativePath(object?.path, `protected path in ${args.repository}`);
   if (seen.has(object.path)) fail(`Duplicate protected path: ${object.path}`);
   seen.add(object.path);
 
@@ -146,6 +145,16 @@ for (const object of contract.objects) {
     );
   }
   console.log(`approved ${object.type} ${object.oid} ${object.path}`);
+}
+
+for (const path of contract.absent || []) {
+  requireSafeRelativePath(path, `absent path in ${args.repository}`);
+  if (seen.has(path)) fail(`Duplicate protected/absent path: ${path}`);
+  seen.add(path);
+  if (pathExists(worktree, path)) {
+    fail(`${path} is an unapproved shadow/configuration path and must remain absent`);
+  }
+  console.log(`approved absent ${path}`);
 }
 
 const inputs = contract.inputs || {};
@@ -172,7 +181,7 @@ if (contract.profile === 'php-library') {
   });
   if (
     typeof inputs['php-extensions'] !== 'string' ||
-    !/^[A-Za-z0-9_,-]+$/.test(inputs['php-extensions'])
+    !/^[A-Za-z0-9_-]+(?:,[A-Za-z0-9_-]+)*$/.test(inputs['php-extensions'])
   ) {
     fail('php-extensions must be a non-empty comma-separated identifier list');
   }
@@ -190,5 +199,5 @@ output('node_version', inputs['node-version'] || '');
 output('working_directory', workingDirectory);
 
 console.log(
-  `Quality contract accepted for ${args.repository} (${contract.profile}, ${contract.objects.length} protected objects).`,
+  `Quality contract accepted for ${args.repository} (${contract.profile}, ${contract.objects.length} protected objects, ${(contract.absent || []).length} required-absent paths).`,
 );
