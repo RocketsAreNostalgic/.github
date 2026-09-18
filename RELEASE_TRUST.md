@@ -130,6 +130,8 @@ Do not manufacture a second account, ceremonial approval loop, or repository-con
 
 Whichever model applies, privileged manual dispatch should still use least-privilege job permissions, preserve exact source/artifact identity, keep historical or release-controlled code away from fresh write authority where practical, read mutation back exactly, and contract-test the intended trusted-ref guard when the operational path is the protected default branch.
 
+`workflow_dispatch` may target a branch or tag, and the selected ref supplies the workflow revision that executes. A trusted-ref guard added only to current `main` therefore does not neutralize older tags or maintained refs that still carry a privileged pre-guard workflow at the same dispatchable workflow path. When hardening a privileged manual workflow after such refs already exist, the repository must either prove those refs are no longer dispatchable or neutralize them without rewriting release history. One accepted pattern is to move the guarded current workflow to a new default-branch workflow path that does not exist in the historical refs, remove the legacy path from current `main`, and contract-lock that absence.
+
 ### Repository-specific stronger gates
 
 Product-specific proofs remain owned by the repository that understands them. Examples include:
