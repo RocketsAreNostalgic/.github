@@ -41,6 +41,9 @@ permissions:
 jobs:
   observe:
     name: Observe release terminal state
+    concurrency:
+      group: release-liveness-${{ github.repository }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
