@@ -220,7 +220,8 @@ jobs:
           )"
           active_runs="$(
             jq -c \
-              '[.workflow_runs[] | select(.status != "completed") | {id, name, event, status, html_url}]' \
+              --argjson current_run_id "$GITHUB_RUN_ID" \
+              '[.workflow_runs[] | select(.id != $current_run_id and .status != "completed") | {id, name, event, status, html_url}]' \
               <<< "$runs"
           )"
           active_count="$(jq -er 'length' <<< "$active_runs")"
