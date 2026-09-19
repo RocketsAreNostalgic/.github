@@ -133,7 +133,11 @@ jobs:
           )"
           candidates="$(
             jq -c --arg title "$expected_title" \
-              '[.[][] | select(.merged_at != null and .title == $title)]' \
+              '[.[][] | select(
+                .merged_at != null and
+                .title == $title and
+                ([.labels[].name] | index("autorelease: abandoned") == null)
+              )]' \
               <<< "$pull_pages"
           )"
           candidate_count="$(jq -er 'length' <<< "$candidates")"
@@ -149,6 +153,12 @@ jobs:
             jq -r --arg label "$RAN_RECONCILED_LABEL" \
               '[.labels[].name] | index($label) != null' \
               <<< "$candidate"
+          )"
+          pending="$(
+            jq -r '[.labels[].name] | index("autorelease: pending") != null' <<< "$candidate"
+          )"
+          tagged="$(
+            jq -r '[.labels[].name] | index("autorelease: tagged") != null' <<< "$candidate"
           )"
 
           release_file="$(mktemp)"
@@ -185,6 +195,12 @@ jobs:
               if [[ "$tag_commit" != "$candidate_sha" ]]; then
                 fail_observer "Published tag ${tag} resolves to ${tag_commit}, not exact candidate ${candidate_sha}."
               fi
+              if [[ "$tagged" != true || "$pending" == true ]]; then
+                fail_observer "Published release ${tag} exists, but Release Please labels are not terminally reconciled."
+              fi
+              if [[ "$reconciled" == true ]]; then
+                fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+              fi
 
               record_state \
                 published \
@@ -201,10 +217,17 @@ jobs:
               ;;
           esac
 
+          if [[ "$tagged" == true ]]; then
+            fail_observer "PR #${candidate_number} is marked autorelease: tagged, but no published release exists for ${tag}."
+          fi
+
           if [[ "$reconciled" == true ]]; then
+            if [[ "$pending" == true ]]; then
+              fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL} but still carries autorelease: pending."
+            fi
             record_state \
               reconciled \
-              "PR #${candidate_number} / ${tag} is explicitly marked `${RAN_RECONCILED_LABEL}` and has no conflicting published release."
+              "PR #${candidate_number} / ${tag} is explicitly marked `${RAN_RECONCILED_LABEL}`, has no stale pending/tagged label, and has no conflicting published release."
             exit 0
           fi
 
