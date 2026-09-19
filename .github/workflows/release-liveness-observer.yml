@@ -1,0 +1,258 @@
+name: RAN Release Liveness Observer
+
+on:
+  workflow_call:
+    inputs:
+      grace_minutes:
+        description: Minutes after the merged release proposal before an unresolved candidate is stranded.
+        required: false
+        type: number
+        default: 60
+      manifest_path:
+        description: Repository-relative Release Please manifest path.
+        required: false
+        type: string
+        default: .release-please-manifest.json
+      manifest_key:
+        description: Release Please manifest component key.
+        required: false
+        type: string
+        default: .
+      release_pr_title_prefix:
+        description: Exact title prefix used by the merged Release Please proposal.
+        required: false
+        type: string
+        default: 'chore(main): release '
+      reconciled_label:
+        description: Durable PR label marking an explicitly reconciled unpublished candidate.
+        required: false
+        type: string
+        default: 'release: reconciled'
+    outputs:
+      state:
+        description: Observed candidate state when the observer completes successfully.
+        value: ${{ jobs.observe.outputs.state }}
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
+
+jobs:
+  observe:
+    name: Observe release terminal state
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      state: ${{ steps.observe.outputs.state }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RAN_GRACE_MINUTES: ${{ inputs.grace_minutes }}
+      RAN_MANIFEST_PATH: ${{ inputs.manifest_path }}
+      RAN_MANIFEST_KEY: ${{ inputs.manifest_key }}
+      RAN_RELEASE_PR_TITLE_PREFIX: ${{ inputs.release_pr_title_prefix }}
+      RAN_RECONCILED_LABEL: ${{ inputs.reconciled_label }}
+    steps:
+      - name: Observe current release candidate
+        id: observe
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail_observer() {
+            local message="$1"
+            {
+              echo '## Release liveness: observer error'
+              echo
+              echo "$message"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$message"
+            exit 1
+          }
+
+          record_state() {
+            local state="$1" detail="$2"
+            echo "state=${state}" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Release liveness: ${state}"
+              echo
+              echo "$detail"
+            } >> "$GITHUB_STEP_SUMMARY"
+          }
+
+          resolve_tag_commit() {
+            local object_json="$1" object_type object_sha depth
+            for depth in {1..16}; do
+              object_type="$(jq -er '.object.type' <<< "$object_json")"
+              object_sha="$(jq -er '.object.sha | select(test("^[0-9a-f]{40}$"))' <<< "$object_json")"
+              case "$object_type" in
+                commit)
+                  printf '%s\n' "$object_sha"
+                  return 0
+                  ;;
+                tag)
+                  object_json="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${object_sha}")"
+                  ;;
+                *)
+                  echo "::error::Unsupported Git tag object type: ${object_type}" >&2
+                  return 1
+                  ;;
+              esac
+            done
+            echo '::error::Git tag indirection exceeds the supported depth.' >&2
+            return 1
+          }
+
+          [[ "$RAN_GRACE_MINUTES" =~ ^[0-9]+$ ]] || fail_observer 'grace_minutes must be a non-negative integer.'
+          [[ "$RAN_MANIFEST_PATH" =~ ^[A-Za-z0-9._/-]+$ && "$RAN_MANIFEST_PATH" != *'..'* ]] \
+            || fail_observer 'manifest_path contains unsupported path syntax.'
+          test -n "$RAN_MANIFEST_KEY" || fail_observer 'manifest_key must not be empty.'
+          test -n "$RAN_RELEASE_PR_TITLE_PREFIX" || fail_observer 'release_pr_title_prefix must not be empty.'
+          test -n "$RAN_RECONCILED_LABEL" || fail_observer 'reconciled_label must not be empty.'
+
+          repository="$GITHUB_REPOSITORY"
+          default_branch="$(gh api "repos/${repository}" --jq '.default_branch')"
+          test -n "$default_branch" || fail_observer 'Could not resolve the default branch.'
+
+          manifest="$(
+            gh api "repos/${repository}/contents/${RAN_MANIFEST_PATH}?ref=${default_branch}" --jq '.content' |
+              tr -d '\n' |
+              base64 --decode
+          )"
+          version="$(jq -er --arg key "$RAN_MANIFEST_KEY" '.[$key] | select(type == "string" and length > 0)' <<< "$manifest")"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] \
+            || fail_observer "Manifest version is not a supported Release Please version: ${version}"
+
+          tag="v${version}"
+          expected_title="${RAN_RELEASE_PR_TITLE_PREFIX}${version}"
+
+          pull_pages="$(
+            gh api --paginate \
+              "repos/${repository}/pulls?state=closed&base=${default_branch}&per_page=100" \
+              --slurp
+          )"
+          candidates="$(
+            jq -c --arg title "$expected_title" \
+              '[.[][] | select(.merged_at != null and .title == $title)]' \
+              <<< "$pull_pages"
+          )"
+          candidate_count="$(jq -er 'length' <<< "$candidates")"
+          if [[ "$candidate_count" != 1 ]]; then
+            fail_observer "Expected exactly one merged release proposal titled '${expected_title}', found ${candidate_count}."
+          fi
+
+          candidate="$(jq -c '.[0]' <<< "$candidates")"
+          candidate_number="$(jq -er '.number' <<< "$candidate")"
+          candidate_sha="$(jq -er '.merge_commit_sha | select(test("^[0-9a-f]{40}$"))' <<< "$candidate")"
+          merged_at="$(jq -er '.merged_at | select(type == "string" and length > 0)' <<< "$candidate")"
+          reconciled="$(
+            jq -r --arg label "$RAN_RECONCILED_LABEL" \
+              '[.labels[].name] | index($label) != null' \
+              <<< "$candidate"
+          )"
+
+          release_file="$(mktemp)"
+          curl_status=0
+          http_status="$(
+            curl --silent --show-error \
+              --output "$release_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/releases/tags/${tag}"
+          )" || curl_status=$?
+
+          if [[ "$curl_status" -ne 0 ]]; then
+            rm -f "$release_file"
+            fail_observer "Published-release lookup failed at the transport layer with status ${curl_status}."
+          fi
+
+          case "$http_status" in
+            200)
+              release="$(cat "$release_file")"
+              rm -f "$release_file"
+              if ! jq -e \
+                --arg commit "$candidate_sha" \
+                --arg tag "$tag" \
+                '.tag_name == $tag and .target_commitish == $commit and .draft == false and .published_at != null' \
+                <<< "$release" >/dev/null; then
+                fail_observer "Published release ${tag} exists but does not match exact candidate ${candidate_sha}."
+              fi
+
+              tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
+              tag_commit="$(resolve_tag_commit "$tag_ref")"
+              if [[ "$tag_commit" != "$candidate_sha" ]]; then
+                fail_observer "Published tag ${tag} resolves to ${tag_commit}, not exact candidate ${candidate_sha}."
+              fi
+
+              record_state \
+                published \
+                "PR #${candidate_number} / ${tag} is published at exact candidate `${candidate_sha}`."
+              exit 0
+              ;;
+            404)
+              rm -f "$release_file"
+              ;;
+            *)
+              cat "$release_file" >&2
+              rm -f "$release_file"
+              fail_observer "Published-release lookup for ${tag} failed with HTTP ${http_status}."
+              ;;
+          esac
+
+          if [[ "$reconciled" == true ]]; then
+            record_state \
+              reconciled \
+              "PR #${candidate_number} / ${tag} is explicitly marked `${RAN_RECONCILED_LABEL}` and has no conflicting published release."
+            exit 0
+          fi
+
+          merged_epoch="$(date -u -d "$merged_at" +%s)"
+          now_epoch="$(date -u +%s)"
+          if [[ "$merged_epoch" -gt "$now_epoch" ]]; then
+            fail_observer "Release proposal merge time ${merged_at} is in the future."
+          fi
+          age_minutes="$(( (now_epoch - merged_epoch) / 60 ))"
+
+          runs="$(
+            gh api "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100"
+          )"
+          active_runs="$(
+            jq -c \
+              '[.workflow_runs[] | select(.status != "completed") | {id, name, event, status, html_url}]' \
+              <<< "$runs"
+          )"
+          active_count="$(jq -er 'length' <<< "$active_runs")"
+
+          if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
+            record_state \
+              pending \
+              "PR #${candidate_number} / ${tag} is ${age_minutes} minutes old and remains inside the ${RAN_GRACE_MINUTES}-minute publication grace window."
+            exit 0
+          fi
+
+          if [[ "$active_count" -gt 0 ]]; then
+            active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$active_runs")"
+            record_state \
+              pending \
+              "PR #${candidate_number} / ${tag} is beyond the grace window, but exact-candidate automation is still active: ${active_names}."
+            exit 0
+          fi
+
+          {
+            echo '## Release liveness: stranded'
+            echo
+            echo "Merged release PR #${candidate_number} / ${tag} has no exact published terminal state."
+            echo
+            echo "- candidate: `${candidate_sha}`"
+            echo "- merged: `${merged_at}`"
+            echo "- age: ${age_minutes} minutes"
+            echo "- grace: ${RAN_GRACE_MINUTES} minutes"
+            echo "- active exact-candidate runs: 0"
+            echo "- reconciliation label: `${RAN_RECONCILED_LABEL}` absent"
+            echo
+            echo 'Repository-specific recovery remains responsible for choosing whether to publish, repair, cancel, or supersede this candidate.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Release candidate ${tag} at ${candidate_sha} is stranded after ${age_minutes} minutes."
+          exit 1
