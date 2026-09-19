@@ -23,11 +23,6 @@ on:
         required: false
         type: string
         default: 'chore(main): release '
-      reconciled_label:
-        description: Durable PR label marking an explicitly reconciled unpublished candidate.
-        required: false
-        type: string
-        default: 'release: reconciled'
     outputs:
       state:
         description: Observed candidate state when the observer completes successfully.
@@ -54,7 +49,6 @@ jobs:
       RAN_MANIFEST_PATH: ${{ inputs.manifest_path }}
       RAN_MANIFEST_KEY: ${{ inputs.manifest_key }}
       RAN_RELEASE_PR_TITLE_PREFIX: ${{ inputs.release_pr_title_prefix }}
-      RAN_RECONCILED_LABEL: ${{ inputs.reconciled_label }}
     steps:
       - name: Observe current release candidate
         id: observe
@@ -111,7 +105,7 @@ jobs:
             || fail_observer 'manifest_path contains unsupported path syntax.'
           test -n "$RAN_MANIFEST_KEY" || fail_observer 'manifest_key must not be empty.'
           test -n "$RAN_RELEASE_PR_TITLE_PREFIX" || fail_observer 'release_pr_title_prefix must not be empty.'
-          test -n "$RAN_RECONCILED_LABEL" || fail_observer 'reconciled_label must not be empty.'
+          readonly RAN_RECONCILED_LABEL='release: reconciled'
 
           repository="$GITHUB_REPOSITORY"
           default_branch="$(gh api "repos/${repository}" --jq '.default_branch')"
@@ -220,6 +214,44 @@ jobs:
               ;;
           esac
 
+          tag_present=false
+          tag_file="$(mktemp)"
+          tag_curl_status=0
+          tag_http_status="$(
+            curl --silent --show-error \
+              --output "$tag_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/git/ref/tags/${tag}"
+          )" || tag_curl_status=$?
+
+          if [[ "$tag_curl_status" -ne 0 ]]; then
+            rm -f "$tag_file"
+            fail_observer "Tag lookup failed at the transport layer with status ${tag_curl_status}."
+          fi
+
+          case "$tag_http_status" in
+            200)
+              tag_ref="$(cat "$tag_file")"
+              rm -f "$tag_file"
+              tag_commit="$(resolve_tag_commit "$tag_ref")"
+              if [[ "$tag_commit" != "$candidate_sha" ]]; then
+                fail_observer "Existing tag ${tag} resolves to ${tag_commit}, not exact candidate ${candidate_sha}."
+              fi
+              tag_present=true
+              ;;
+            404)
+              rm -f "$tag_file"
+              ;;
+            *)
+              cat "$tag_file" >&2
+              rm -f "$tag_file"
+              fail_observer "Tag lookup for ${tag} failed with HTTP ${tag_http_status}."
+              ;;
+          esac
+
           if [[ "$tagged" == true ]]; then
             fail_observer "PR #${candidate_number} is marked autorelease: tagged, but no published release exists for ${tag}."
           fi
@@ -227,6 +259,9 @@ jobs:
           if [[ "$reconciled" == true ]]; then
             if [[ "$pending" == true ]]; then
               fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL} but still carries autorelease: pending."
+            fi
+            if [[ "$tag_present" == true ]]; then
+              fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL}, but exact tag ${tag} still exists without a published release."
             fi
             record_state \
               reconciled \
@@ -242,12 +277,14 @@ jobs:
           age_minutes="$(( (now_epoch - merged_epoch) / 60 ))"
 
           runs="$(
-            gh api "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100"
+            gh api --paginate \
+              "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" \
+              --slurp
           )"
           active_runs="$(
             jq -c \
               --argjson current_run_id "$GITHUB_RUN_ID" \
-              '[.workflow_runs[] | select(.id != $current_run_id and .status != "completed") | {id, name, event, status, html_url}]' \
+              '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed") | {id, name, event, status, html_url}]' \
               <<< "$runs"
           )"
           active_count="$(jq -er 'length' <<< "$active_runs")"
