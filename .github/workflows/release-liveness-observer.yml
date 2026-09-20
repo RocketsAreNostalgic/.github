@@ -212,6 +212,11 @@ jobs:
               if [[ "$tag_commit" != "$candidate_sha" ]]; then
                 fail_observer "Published tag ${tag} resolves to ${tag_commit}, not exact candidate ${candidate_sha}."
               fi
+              candidate_labels="$(gh api "repos/${repository}/issues/${candidate_number}" --jq '[.labels[].name]')"
+              reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$candidate_labels")"
+              pending="$(jq -r 'index("autorelease: pending") != null' <<< "$candidate_labels")"
+              tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$candidate_labels")"
+
               if [[ "$tagged" != true || "$pending" == true ]]; then
                 if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
                   record_state \
