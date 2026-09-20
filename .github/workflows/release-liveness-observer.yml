@@ -320,6 +320,141 @@ jobs:
             exit 0
           fi
 
+          # Refresh the observable terminal picture immediately before declaring
+          # the candidate stranded. Publication may have started after the
+          # earlier release/run snapshots.
+          final_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+          final_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$final_runs")"
+          final_active_count="$(jq -er 'length' <<< "$final_active_runs")"
+          if [[ "$final_active_count" -gt 0 ]]; then
+            final_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$final_active_runs")"
+            record_state \
+              pending \
+              "PR #${candidate_number} / ${tag} is beyond the grace window, but release-capable exact-candidate automation became active during observation: ${final_active_names}."
+            exit 0
+          fi
+
+          final_release_file="$(mktemp)"
+          final_release_curl_status=0
+          final_release_http_status="$(
+            curl --silent --show-error \
+              --output "$final_release_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/releases/tags/${tag}"
+          )" || final_release_curl_status=$?
+          if [[ "$final_release_curl_status" -ne 0 ]]; then
+            rm -f "$final_release_file"
+            fail_observer "Final published-release lookup failed at the transport layer with status ${final_release_curl_status}."
+          fi
+
+          final_tag_present=false
+          final_tag_commit=''
+          final_tag_file="$(mktemp)"
+          final_tag_curl_status=0
+          final_tag_http_status="$(
+            curl --silent --show-error \
+              --output "$final_tag_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/git/ref/tags/${tag}"
+          )" || final_tag_curl_status=$?
+          if [[ "$final_tag_curl_status" -ne 0 ]]; then
+            rm -f "$final_release_file" "$final_tag_file"
+            fail_observer "Final tag lookup failed at the transport layer with status ${final_tag_curl_status}."
+          fi
+          case "$final_tag_http_status" in
+            200)
+              final_tag_ref="$(cat "$final_tag_file")"
+              rm -f "$final_tag_file"
+              final_tag_commit="$(resolve_tag_commit "$final_tag_ref")"
+              if [[ "$final_tag_commit" != "$candidate_sha" ]]; then
+                rm -f "$final_release_file"
+                fail_observer "Existing tag ${tag} resolves to ${final_tag_commit}, not exact candidate ${candidate_sha}."
+              fi
+              final_tag_present=true
+              ;;
+            404)
+              rm -f "$final_tag_file"
+              ;;
+            *)
+              cat "$final_tag_file" >&2
+              rm -f "$final_release_file" "$final_tag_file"
+              fail_observer "Final tag lookup for ${tag} failed with HTTP ${final_tag_http_status}."
+              ;;
+          esac
+
+          final_candidate_labels="$(gh api "repos/${repository}/issues/${candidate_number}" --jq '[.labels[].name]')"
+          final_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$final_candidate_labels")"
+          final_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$final_candidate_labels")"
+          final_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$final_candidate_labels")"
+
+          case "$final_release_http_status" in
+            200)
+              final_release="$(cat "$final_release_file")"
+              rm -f "$final_release_file"
+              if ! jq -e \
+                --arg commit "$candidate_sha" \
+                --arg tag "$tag" \
+                '.tag_name == $tag and .target_commitish == $commit and .draft == false and .published_at != null' \
+                <<< "$final_release" >/dev/null; then
+                fail_observer "Published release ${tag} appeared during observation but does not match exact candidate ${candidate_sha}."
+              fi
+              if [[ "$final_tag_present" != true ]]; then
+                fail_observer "Published release ${tag} appeared during observation without its final Git tag."
+              fi
+              if [[ "$final_reconciled" == true ]]; then
+                fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+              fi
+              if [[ "$final_tagged" == true && "$final_pending" != true ]]; then
+                record_state \
+                  published \
+                  "PR #${candidate_number} / ${tag} became published at exact candidate ${candidate_sha} during the final liveness recheck."
+              else
+                record_state \
+                  pending \
+                  "PR #${candidate_number} / ${tag} became published at exact candidate ${candidate_sha} during observation; Release Please labels are still transitioning."
+              fi
+              exit 0
+              ;;
+            404)
+              rm -f "$final_release_file"
+              ;;
+            *)
+              cat "$final_release_file" >&2
+              rm -f "$final_release_file"
+              fail_observer "Final published-release lookup for ${tag} failed with HTTP ${final_release_http_status}."
+              ;;
+          esac
+
+          if [[ "$final_tagged" == true ]]; then
+            fail_observer "PR #${candidate_number} became marked autorelease: tagged during observation, but no published release exists for ${tag}."
+          fi
+
+          if [[ "$final_reconciled" == true ]]; then
+            if [[ "$final_pending" == true ]]; then
+              fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL} but still carries autorelease: pending."
+            fi
+            if [[ "$final_tag_present" == true ]]; then
+              fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL}, but exact tag ${tag} exists without a published release."
+            fi
+            record_state \
+              reconciled \
+              "PR #${candidate_number} / ${tag} became explicitly marked ${RAN_RECONCILED_LABEL} during the final liveness recheck."
+            exit 0
+          fi
+
+          if [[ "$final_tag_present" == true && "$tag_present" != true ]]; then
+            record_state \
+              pending \
+              "PR #${candidate_number} / ${tag} gained its exact tag during observation; defer the terminal verdict to the next liveness check."
+            exit 0
+          fi
+
           {
             echo '## Release liveness: stranded'
             echo
