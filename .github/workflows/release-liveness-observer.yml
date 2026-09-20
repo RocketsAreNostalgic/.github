@@ -438,6 +438,64 @@ jobs:
             exit 0
           fi
 
+          # A matching publisher can finish between the final release read and
+          # the settled run snapshot. Re-read publication after observing a
+          # stable no-active-run state before rejecting refreshed labels.
+          settled_release_file="$(mktemp)"
+          settled_release_curl_status=0
+          settled_release_http_status="$(
+            curl --silent --show-error \
+              --output "$settled_release_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/releases/tags/${tag}"
+          )" || settled_release_curl_status=$?
+          if [[ "$settled_release_curl_status" -ne 0 ]]; then
+            rm -f "$settled_release_file"
+            fail_observer "Settled published-release lookup failed at the transport layer with status ${settled_release_curl_status}."
+          fi
+          case "$settled_release_http_status" in
+            200)
+              settled_release="$(cat "$settled_release_file")"
+              rm -f "$settled_release_file"
+              if ! jq -e --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$settled_release" >/dev/null; then
+                fail_observer "Release ${tag} appeared during settled observation but is not a published non-draft release."
+              fi
+              settled_tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
+              settled_tag_commit="$(resolve_tag_commit "$settled_tag_ref")"
+              if [[ "$settled_tag_commit" != "$candidate_sha" ]]; then
+                fail_observer "Published tag ${tag} resolves to ${settled_tag_commit}, not exact candidate ${candidate_sha}."
+              fi
+              settled_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+              settled_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$settled_labels")"
+              settled_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$settled_labels")"
+              settled_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$settled_labels")"
+              if [[ "$settled_reconciled" == true ]]; then
+                fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+              fi
+              if [[ "$settled_tagged" == true && "$settled_pending" != true ]]; then
+                record_state \
+                  published \
+                  "PR #${candidate_number} / ${tag} became published at exact candidate ${candidate_sha} during the settled liveness recheck."
+              else
+                record_state \
+                  pending \
+                  "PR #${candidate_number} / ${tag} became published at exact candidate ${candidate_sha}; Release Please labels are still transitioning."
+              fi
+              exit 0
+              ;;
+            404)
+              rm -f "$settled_release_file"
+              ;;
+            *)
+              cat "$settled_release_file" >&2
+              rm -f "$settled_release_file"
+              fail_observer "Settled published-release lookup for ${tag} failed with HTTP ${settled_release_http_status}."
+              ;;
+          esac
+
           if [[ "$final_tagged" == true ]]; then
             fail_observer "PR #${candidate_number} became marked autorelease: tagged during observation, but no published release exists for ${tag}."
           fi
