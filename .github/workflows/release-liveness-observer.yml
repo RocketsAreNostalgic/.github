@@ -427,6 +427,17 @@ jobs:
               ;;
           esac
 
+          settled_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+          settled_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$settled_runs")"
+          settled_active_count="$(jq -er 'length' <<< "$settled_active_runs")"
+          if [[ "$settled_active_count" -gt 0 ]]; then
+            settled_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$settled_active_runs")"
+            record_state \
+              pending \
+              "PR #${candidate_number} / ${tag} is beyond the grace window, but release-capable exact-candidate automation became active during the final terminal-state reads: ${settled_active_names}."
+            exit 0
+          fi
+
           if [[ "$final_tagged" == true ]]; then
             fail_observer "PR #${candidate_number} became marked autorelease: tagged during observation, but no published release exists for ${tag}."
           fi
@@ -448,17 +459,6 @@ jobs:
             record_state \
               pending \
               "PR #${candidate_number} / ${tag} gained its exact tag during observation; defer the terminal verdict to the next liveness check."
-            exit 0
-          fi
-
-          settled_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
-          settled_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$settled_runs")"
-          settled_active_count="$(jq -er 'length' <<< "$settled_active_runs")"
-          if [[ "$settled_active_count" -gt 0 ]]; then
-            settled_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$settled_active_runs")"
-            record_state \
-              pending \
-              "PR #${candidate_number} / ${tag} is beyond the grace window, but release-capable exact-candidate automation became active during the final terminal-state reads: ${settled_active_names}."
             exit 0
           fi
 
