@@ -221,13 +221,13 @@ jobs:
                 if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
                   record_state \
                     pending \
-                    "PR #${candidate_number} / ${tag} is published at exact candidate `${candidate_sha}`, but Release Please labels are still transitioning inside the ${RAN_GRACE_MINUTES}-minute grace window."
+                    "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}, but Release Please labels are still transitioning inside the ${RAN_GRACE_MINUTES}-minute grace window."
                   exit 0
                 fi
                 if [[ "$active_count" -gt 0 ]]; then
                   record_state \
                     pending \
-                    "PR #${candidate_number} / ${tag} is published at exact candidate `${candidate_sha}`, but Release Please labels are still transitioning while release-capable automation is active: ${active_names}."
+                    "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}, but Release Please labels are still transitioning while release-capable automation is active: ${active_names}."
                   exit 0
                 fi
                 fail_observer "Published release ${tag} exists, but Release Please labels are not terminally reconciled."
@@ -238,7 +238,7 @@ jobs:
 
               record_state \
                 published \
-                "PR #${candidate_number} / ${tag} is published at exact candidate `${candidate_sha}`."
+                "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}."
               exit 0
               ;;
             404)
@@ -302,7 +302,7 @@ jobs:
             fi
             record_state \
               reconciled \
-              "PR #${candidate_number} / ${tag} is explicitly marked `${RAN_RECONCILED_LABEL}`, has no stale pending/tagged label, and has no conflicting published release."
+              "PR #${candidate_number} / ${tag} is explicitly marked ${RAN_RECONCILED_LABEL}, has no stale pending/tagged label, and has no conflicting published release."
             exit 0
           fi
 
@@ -325,12 +325,12 @@ jobs:
             echo
             echo "Merged release PR #${candidate_number} / ${tag} has no exact published terminal state."
             echo
-            echo "- candidate: `${candidate_sha}`"
-            echo "- merged: `${merged_at}`"
+            echo "- candidate: ${candidate_sha}"
+            echo "- merged: ${merged_at}"
             echo "- age: ${age_minutes} minutes"
             echo "- grace: ${RAN_GRACE_MINUTES} minutes"
             echo "- active release-capable exact-candidate runs: 0"
-            echo "- reconciliation label: `${RAN_RECONCILED_LABEL}` absent"
+            echo "- reconciliation label: ${RAN_RECONCILED_LABEL} absent"
             echo
             echo 'Repository-specific recovery remains responsible for choosing whether to publish, repair, cancel, or supersede this candidate.'
           } >> "$GITHUB_STEP_SUMMARY"
