@@ -197,11 +197,30 @@ jobs:
             200)
               release="$(cat "$release_file")"
               rm -f "$release_file"
-              if ! jq -e \
-                --arg tag "$tag" \
-                '.tag_name == $tag and .draft == false and .published_at != null' \
-                <<< "$release" >/dev/null; then
-                fail_observer "Release ${tag} exists but is not a published non-draft release."
+              release_is_published="$(
+                jq -r --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$release"
+              )"
+
+              if [[ "$release_is_published" != true ]]; then
+                if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
+                  record_state \
+                    pending \
+                    "PR #${candidate_number} / ${tag} has a visible draft or otherwise unpublished release inside the ${RAN_GRACE_MINUTES}-minute grace window."
+                  exit 0
+                fi
+
+                transitional_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+                transitional_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$transitional_runs")"
+                transitional_active_count="$(jq -er 'length' <<< "$transitional_active_runs")"
+                if [[ "$transitional_active_count" -gt 0 ]]; then
+                  transitional_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$transitional_active_runs")"
+                  record_state \
+                    pending \
+                    "PR #${candidate_number} / ${tag} has a visible draft or otherwise unpublished release while release-capable automation is active: ${transitional_active_names}."
+                  exit 0
+                fi
+
+                fail_observer "Release ${tag} exists but remains draft or unpublished beyond grace with no release-capable automation active."
               fi
 
               tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
@@ -221,10 +240,15 @@ jobs:
                     "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}, but Release Please labels are still transitioning inside the ${RAN_GRACE_MINUTES}-minute grace window."
                   exit 0
                 fi
-                if [[ "$active_count" -gt 0 ]]; then
+
+                transitional_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+                transitional_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$transitional_runs")"
+                transitional_active_count="$(jq -er 'length' <<< "$transitional_active_runs")"
+                if [[ "$transitional_active_count" -gt 0 ]]; then
+                  transitional_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$transitional_active_runs")"
                   record_state \
                     pending \
-                    "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}, but Release Please labels are still transitioning while release-capable automation is active: ${active_names}."
+                    "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}, but Release Please labels are still transitioning while release-capable automation is active: ${transitional_active_names}."
                   exit 0
                 fi
                 fail_observer "Published release ${tag} exists, but Release Please labels are not terminally reconciled."
