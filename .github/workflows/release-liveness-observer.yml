@@ -917,6 +917,40 @@ jobs:
               record_state pending "PR #${candidate_number} / ${tag} became tagged while release-capable automation is active: ${tagged_active_names}."
               exit 0
             fi
+            tagged_settled_file="$(mktemp)"
+            tagged_settled_status="$(curl --silent --show-error --output "$tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")"
+            case "$tagged_settled_status" in
+              200)
+                tagged_settled_release="$(cat "$tagged_settled_file")"
+                rm -f "$tagged_settled_file"
+                if jq -e --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$tagged_settled_release" >/dev/null; then
+                  tagged_settled_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
+                  tagged_settled_commit="$(resolve_tag_commit "$tagged_settled_ref")"
+                  if [[ "$tagged_settled_commit" != "$candidate_sha" ]]; then
+                    fail_observer "Published tag ${tag} resolves to ${tagged_settled_commit}, not exact candidate ${candidate_sha}."
+                  fi
+                  tagged_settled_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+                  tagged_settled_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$tagged_settled_labels")"
+                  tagged_settled_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$tagged_settled_labels")"
+                  tagged_settled_terminal="$(jq -r 'index("autorelease: tagged") != null' <<< "$tagged_settled_labels")"
+                  if [[ "$tagged_settled_reconciled" == true ]]; then
+                    fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+                  fi
+                  if [[ "$tagged_settled_terminal" == true && "$tagged_settled_pending" != true ]]; then
+                    record_state published "PR #${candidate_number} / ${tag} became published while the settled tagged publisher completed."
+                  else
+                    record_state pending "PR #${candidate_number} / ${tag} became published while the settled tagged publisher completed; Release Please labels are still transitioning."
+                  fi
+                  exit 0
+                fi
+                ;;
+              404) rm -f "$tagged_settled_file" ;;
+              *)
+                cat "$tagged_settled_file" >&2
+                rm -f "$tagged_settled_file"
+                fail_observer "Settled tagged-state release lookup for ${tag} failed with HTTP ${tagged_settled_status}."
+                ;;
+            esac
             fail_observer "PR #${candidate_number} is marked autorelease: tagged after the settled recheck, but no published release exists for ${tag}."
           fi
 
