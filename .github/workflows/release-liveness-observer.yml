@@ -496,24 +496,65 @@ jobs:
               ;;
           esac
 
-          if [[ "$final_tagged" == true ]]; then
-            fail_observer "PR #${candidate_number} became marked autorelease: tagged during observation, but no published release exists for ${tag}."
+          settled_tag_present=false
+          settled_tag_file="$(mktemp)"
+          settled_tag_curl_status=0
+          settled_tag_http_status="$(
+            curl --silent --show-error \
+              --output "$settled_tag_file" \
+              --write-out '%{http_code}' \
+              -H 'Accept: application/vnd.github+json' \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "https://api.github.com/repos/${repository}/git/ref/tags/${tag}"
+          )" || settled_tag_curl_status=$?
+          if [[ "$settled_tag_curl_status" -ne 0 ]]; then
+            rm -f "$settled_tag_file"
+            fail_observer "Settled tag lookup failed at the transport layer with status ${settled_tag_curl_status}."
+          fi
+          case "$settled_tag_http_status" in
+            200)
+              settled_tag_ref="$(cat "$settled_tag_file")"
+              rm -f "$settled_tag_file"
+              settled_tag_commit="$(resolve_tag_commit "$settled_tag_ref")"
+              if [[ "$settled_tag_commit" != "$candidate_sha" ]]; then
+                fail_observer "Existing tag ${tag} resolves to ${settled_tag_commit}, not exact candidate ${candidate_sha}."
+              fi
+              settled_tag_present=true
+              ;;
+            404)
+              rm -f "$settled_tag_file"
+              ;;
+            *)
+              cat "$settled_tag_file" >&2
+              rm -f "$settled_tag_file"
+              fail_observer "Settled tag lookup for ${tag} failed with HTTP ${settled_tag_http_status}."
+              ;;
+          esac
+
+          settled_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+          settled_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$settled_labels")"
+          settled_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$settled_labels")"
+          settled_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$settled_labels")"
+
+          if [[ "$settled_tagged" == true ]]; then
+            fail_observer "PR #${candidate_number} is marked autorelease: tagged after the settled recheck, but no published release exists for ${tag}."
           fi
 
-          if [[ "$final_reconciled" == true ]]; then
-            if [[ "$final_pending" == true ]]; then
+          if [[ "$settled_reconciled" == true ]]; then
+            if [[ "$settled_pending" == true ]]; then
               fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL} but still carries autorelease: pending."
             fi
-            if [[ "$final_tag_present" == true ]]; then
+            if [[ "$settled_tag_present" == true ]]; then
               fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL}, but exact tag ${tag} exists without a published release."
             fi
             record_state \
               reconciled \
-              "PR #${candidate_number} / ${tag} became explicitly marked ${RAN_RECONCILED_LABEL} during the final liveness recheck."
+              "PR #${candidate_number} / ${tag} became explicitly marked ${RAN_RECONCILED_LABEL} during the settled liveness recheck."
             exit 0
           fi
 
-          if [[ "$final_tag_present" == true && "$tag_present" != true ]]; then
+          if [[ "$settled_tag_present" == true && "$tag_present" != true ]]; then
             record_state \
               pending \
               "PR #${candidate_number} / ${tag} gained its exact tag during observation; defer the terminal verdict to the next liveness check."
