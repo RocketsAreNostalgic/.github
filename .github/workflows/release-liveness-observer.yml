@@ -475,12 +475,7 @@ jobs:
             fi
             initial_tagged_settled_file="$(mktemp)"
             initial_tagged_settled_curl_status=0
-            tagged_settled_curl_status=0
-            tagged_settled_status="$(curl --silent --show-error --output "$initial_tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")" || initial_tagged_settled_curl_status=)" || tagged_settled_curl_status=$?
-            if [[ "$tagged_settled_curl_status" -ne 0 ]]; then
-              rm -f "$tagged_settled_file"
-              fail_observer "tagged settled lookup failed at the transport layer with status ${tagged_settled_curl_status}."
-            fi
+            initial_tagged_settled_status="$(curl --silent --show-error --output "$initial_tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")" || initial_tagged_settled_curl_status=$?
             if [[ "$initial_tagged_settled_curl_status" -ne 0 ]]; then
               rm -f "$initial_tagged_settled_file"
               fail_observer "initial tagged settled lookup failed at the transport layer with status ${initial_tagged_settled_curl_status}."
@@ -975,7 +970,12 @@ jobs:
               exit 0
             fi
             tagged_settled_file="$(mktemp)"
-            tagged_settled_status="$(curl --silent --show-error --output "$tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")"
+            tagged_settled_curl_status=0
+            tagged_settled_status="$(curl --silent --show-error --output "$tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")" || tagged_settled_curl_status=$?
+            if [[ "$tagged_settled_curl_status" -ne 0 ]]; then
+              rm -f "$tagged_settled_file"
+              fail_observer "Tagged-settlement release lookup failed at the transport layer with status ${tagged_settled_curl_status}."
+            fi
             case "$tagged_settled_status" in
               200)
                 tagged_settled_release="$(cat "$tagged_settled_file")"
