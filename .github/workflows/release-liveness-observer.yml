@@ -334,9 +334,25 @@ jobs:
             if [[ "$tag_present" == true ]]; then
               fail_observer "PR #${candidate_number} is marked ${RAN_RECONCILED_LABEL}, but exact tag ${tag} still exists without a published release."
             fi
+            if [[ "$active_count" -gt 0 ]]; then
+              record_state \
+                pending \
+                "PR #${candidate_number} / ${tag} is marked ${RAN_RECONCILED_LABEL}, but release-capable exact-candidate automation is still active: ${active_names}."
+              exit 0
+            fi
+            reconciled_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+            reconciled_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$reconciled_runs")"
+            reconciled_active_count="$(jq -er 'length' <<< "$reconciled_active_runs")"
+            if [[ "$reconciled_active_count" -gt 0 ]]; then
+              reconciled_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$reconciled_active_runs")"
+              record_state \
+                pending \
+                "PR #${candidate_number} / ${tag} is marked ${RAN_RECONCILED_LABEL}, but release-capable exact-candidate automation became active: ${reconciled_active_names}."
+              exit 0
+            fi
             record_state \
               reconciled \
-              "PR #${candidate_number} / ${tag} is explicitly marked ${RAN_RECONCILED_LABEL}, has no stale pending/tagged label, and has no conflicting published release."
+              "PR #${candidate_number} / ${tag} is explicitly marked ${RAN_RECONCILED_LABEL}, has no stale pending/tagged label, no conflicting published release, and no active release-capable automation."
             exit 0
           fi
 
@@ -509,6 +525,55 @@ jobs:
                     "PR #${candidate_number} / ${tag} has a draft or unpublished release during the settled recheck while release-capable automation is active: ${draft_active_names}."
                   exit 0
                 fi
+                draft_release_file="$(mktemp)"
+                draft_release_curl_status=0
+                draft_release_http_status="$(
+                  curl --silent --show-error \
+                    --output "$draft_release_file" \
+                    --write-out '%{http_code}' \
+                    -H 'Accept: application/vnd.github+json' \
+                    -H "Authorization: Bearer ${GH_TOKEN}" \
+                    -H 'X-GitHub-Api-Version: 2026-03-10' \
+                    "https://api.github.com/repos/${repository}/releases/tags/${tag}"
+                )" || draft_release_curl_status=$?
+                if [[ "$draft_release_curl_status" -ne 0 ]]; then
+                  rm -f "$draft_release_file"
+                  fail_observer "Draft-settlement release lookup failed at the transport layer with status ${draft_release_curl_status}."
+                fi
+                case "$draft_release_http_status" in
+                  200)
+                    draft_release="$(cat "$draft_release_file")"
+                    rm -f "$draft_release_file"
+                    if jq -e --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$draft_release" >/dev/null; then
+                      draft_tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
+                      draft_tag_commit="$(resolve_tag_commit "$draft_tag_ref")"
+                      if [[ "$draft_tag_commit" != "$candidate_sha" ]]; then
+                        fail_observer "Published tag ${tag} resolves to ${draft_tag_commit}, not exact candidate ${candidate_sha}."
+                      fi
+                      draft_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+                      draft_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$draft_labels")"
+                      draft_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$draft_labels")"
+                      draft_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$draft_labels")"
+                      if [[ "$draft_reconciled" == true ]]; then
+                        fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+                      fi
+                      if [[ "$draft_tagged" == true && "$draft_pending" != true ]]; then
+                        record_state published "PR #${candidate_number} / ${tag} became published while the draft publisher settled."
+                      else
+                        record_state pending "PR #${candidate_number} / ${tag} became published while the draft publisher settled; Release Please labels are still transitioning."
+                      fi
+                      exit 0
+                    fi
+                    ;;
+                  404)
+                    rm -f "$draft_release_file"
+                    ;;
+                  *)
+                    cat "$draft_release_file" >&2
+                    rm -f "$draft_release_file"
+                    fail_observer "Draft-settlement release lookup for ${tag} failed with HTTP ${draft_release_http_status}."
+                    ;;
+                esac
                 fail_observer "Release ${tag} remains draft or unpublished after the settled recheck with no release-capable automation active."
               fi
               settled_tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
@@ -601,27 +666,47 @@ jobs:
               rm -f "$tagged_release_file"
               fail_observer "Tagged-state release lookup failed at the transport layer with status ${tagged_release_curl_status}."
             fi
-            if [[ "$tagged_release_http_status" == 200 ]]; then
-              tagged_release="$(cat "$tagged_release_file")"
-              rm -f "$tagged_release_file"
-              if jq -e --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$tagged_release" >/dev/null; then
-                record_state \
-                  published \
-                  "PR #${candidate_number} / ${tag} became published while the settled terminal labels were being read."
-                exit 0
-              fi
-            else
-              rm -f "$tagged_release_file"
-            fi
+            case "$tagged_release_http_status" in
+              200)
+                tagged_release="$(cat "$tagged_release_file")"
+                rm -f "$tagged_release_file"
+                if jq -e --arg tag "$tag" '.tag_name == $tag and .draft == false and .published_at != null' <<< "$tagged_release" >/dev/null; then
+                  tagged_tag_ref="$(gh api "repos/${repository}/git/ref/tags/${tag}")"
+                  tagged_tag_commit="$(resolve_tag_commit "$tagged_tag_ref")"
+                  if [[ "$tagged_tag_commit" != "$candidate_sha" ]]; then
+                    fail_observer "Published tag ${tag} resolves to ${tagged_tag_commit}, not exact candidate ${candidate_sha}."
+                  fi
+                  tagged_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+                  tagged_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$tagged_labels")"
+                  tagged_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$tagged_labels")"
+                  tagged_terminal="$(jq -r 'index("autorelease: tagged") != null' <<< "$tagged_labels")"
+                  if [[ "$tagged_reconciled" == true ]]; then
+                    fail_observer "Published release ${tag} also carries the unpublished reconciliation marker ${RAN_RECONCILED_LABEL}."
+                  fi
+                  if [[ "$tagged_terminal" == true && "$tagged_pending" != true ]]; then
+                    record_state published "PR #${candidate_number} / ${tag} became published while the settled terminal labels were being read."
+                  else
+                    record_state pending "PR #${candidate_number} / ${tag} became published while terminal labels were being read; Release Please labels are still transitioning."
+                  fi
+                  exit 0
+                fi
+                ;;
+              404)
+                rm -f "$tagged_release_file"
+                ;;
+              *)
+                cat "$tagged_release_file" >&2
+                rm -f "$tagged_release_file"
+                fail_observer "Tagged-state release lookup for ${tag} failed with HTTP ${tagged_release_http_status}."
+                ;;
+            esac
 
             tagged_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
             tagged_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$tagged_runs")"
             tagged_active_count="$(jq -er 'length' <<< "$tagged_active_runs")"
             if [[ "$tagged_active_count" -gt 0 ]]; then
               tagged_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$tagged_active_runs")"
-              record_state \
-                pending \
-                "PR #${candidate_number} / ${tag} became tagged while release-capable automation is active: ${tagged_active_names}."
+              record_state pending "PR #${candidate_number} / ${tag} became tagged while release-capable automation is active: ${tagged_active_names}."
               exit 0
             fi
             fail_observer "PR #${candidate_number} is marked autorelease: tagged after the settled recheck, but no published release exists for ${tag}."
