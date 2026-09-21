@@ -528,7 +528,15 @@ jobs:
                     initial_tagged_recovery_tag_ref="$(cat "$initial_tagged_recovery_tag_file")"
                     rm -f "$initial_tagged_recovery_tag_file"
                     initial_tagged_recovery_tag_commit="$(resolve_tag_commit "$initial_tagged_recovery_tag_ref")"
-                    fail_observer "Release ${tag} remains absent, but tag ${tag} exists at ${initial_tagged_recovery_tag_commit}."
+                    initial_tagged_recovery_tag_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+                    initial_tagged_recovery_tag_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$initial_tagged_recovery_tag_runs")"
+                    initial_tagged_recovery_tag_active_count="$(jq -er 'length' <<< "$initial_tagged_recovery_tag_active_runs")"
+                    if [[ "$initial_tagged_recovery_tag_active_count" -gt 0 ]]; then
+                      initial_tagged_recovery_tag_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$initial_tagged_recovery_tag_active_runs")"
+                      record_state pending "PR #${candidate_number} / ${tag} gained tag ${tag} at ${initial_tagged_recovery_tag_commit} while release-capable automation is active: ${initial_tagged_recovery_tag_active_names}."
+                      exit 0
+                    fi
+                    fail_observer "Release ${tag} remains absent, but tag ${tag} exists at ${initial_tagged_recovery_tag_commit} with no release-capable automation active."
                     ;;
                   *)
                     cat "$initial_tagged_recovery_tag_file" >&2
