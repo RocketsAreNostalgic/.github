@@ -296,7 +296,15 @@ jobs:
                     initial_settled_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$initial_settled_labels")"
                     initial_settled_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$initial_settled_labels")"
                     if [[ "$initial_settled_reconciled" == true && "$initial_settled_pending" != true && "$initial_settled_tagged" != true ]]; then
-                      record_state reconciled "PR #${candidate_number} / ${tag} became explicitly reconciled while the initial draft was removed."
+                      removed_draft_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+                      removed_draft_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$removed_draft_runs")"
+                      removed_draft_active_count="$(jq -er 'length' <<< "$removed_draft_active_runs")"
+                      if [[ "$removed_draft_active_count" -gt 0 ]]; then
+                        removed_draft_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$removed_draft_active_runs")"
+                        record_state pending "PR #${candidate_number} / ${tag} became explicitly reconciled while the initial draft was removed, but release-capable automation is active: ${removed_draft_active_names}."
+                        exit 0
+                      fi
+                      record_state reconciled "PR #${candidate_number} / ${tag} became explicitly reconciled while the initial draft was removed and no release-capable automation remains active."
                       exit 0
                     fi
                     ;;
@@ -505,7 +513,46 @@ jobs:
                   exit 0
                 fi
                 ;;
-              404) rm -f "$initial_tagged_settled_file" ;;
+              404)
+                rm -f "$initial_tagged_settled_file"
+                initial_tagged_recovery_tag_file="$(mktemp)"
+                initial_tagged_recovery_tag_curl_status=0
+                initial_tagged_recovery_tag_status="$(curl --silent --show-error --output "$initial_tagged_recovery_tag_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/git/ref/tags/${tag}")" || initial_tagged_recovery_tag_curl_status=$?
+                if [[ "$initial_tagged_recovery_tag_curl_status" -ne 0 ]]; then
+                  rm -f "$initial_tagged_recovery_tag_file"
+                  fail_observer "Initial tagged recovery tag lookup failed at the transport layer with status ${initial_tagged_recovery_tag_curl_status}."
+                fi
+                case "$initial_tagged_recovery_tag_status" in
+                  404) rm -f "$initial_tagged_recovery_tag_file" ;;
+                  200)
+                    initial_tagged_recovery_tag_ref="$(cat "$initial_tagged_recovery_tag_file")"
+                    rm -f "$initial_tagged_recovery_tag_file"
+                    initial_tagged_recovery_tag_commit="$(resolve_tag_commit "$initial_tagged_recovery_tag_ref")"
+                    fail_observer "Release ${tag} remains absent, but tag ${tag} exists at ${initial_tagged_recovery_tag_commit}."
+                    ;;
+                  *)
+                    cat "$initial_tagged_recovery_tag_file" >&2
+                    rm -f "$initial_tagged_recovery_tag_file"
+                    fail_observer "Initial tagged recovery tag lookup for ${tag} failed with HTTP ${initial_tagged_recovery_tag_status}."
+                    ;;
+                esac
+                initial_tagged_recovery_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+                initial_tagged_recovery_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$initial_tagged_recovery_labels")"
+                initial_tagged_recovery_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$initial_tagged_recovery_labels")"
+                initial_tagged_recovery_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$initial_tagged_recovery_labels")"
+                if [[ "$initial_tagged_recovery_reconciled" == true && "$initial_tagged_recovery_pending" != true && "$initial_tagged_recovery_tagged" != true ]]; then
+                  initial_tagged_recovery_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+                  initial_tagged_recovery_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$initial_tagged_recovery_runs")"
+                  initial_tagged_recovery_active_count="$(jq -er 'length' <<< "$initial_tagged_recovery_active_runs")"
+                  if [[ "$initial_tagged_recovery_active_count" -gt 0 ]]; then
+                    initial_tagged_recovery_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$initial_tagged_recovery_active_runs")"
+                    record_state pending "PR #${candidate_number} / ${tag} became reconciled while tagged publication was removed, but release-capable automation is active: ${initial_tagged_recovery_active_names}."
+                  else
+                    record_state reconciled "PR #${candidate_number} / ${tag} became explicitly reconciled while the stale tagged publication state was removed."
+                  fi
+                  exit 0
+                fi
+                ;;
               *)
                 cat "$initial_tagged_settled_file" >&2
                 rm -f "$initial_tagged_settled_file"
