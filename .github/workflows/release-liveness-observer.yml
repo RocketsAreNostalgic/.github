@@ -262,6 +262,43 @@ jobs:
                     ;;
                   404)
                     rm -f "$initial_settled_file"
+                    initial_settled_tag_file="$(mktemp)"
+                    initial_settled_tag_curl_status=0
+                    initial_settled_tag_status="$(
+                      curl --silent --show-error \
+                        --output "$initial_settled_tag_file" \
+                        --write-out '%{http_code}' \
+                        -H 'Accept: application/vnd.github+json' \
+                        -H "Authorization: Bearer ${GH_TOKEN}" \
+                        -H 'X-GitHub-Api-Version: 2026-03-10' \
+                        "https://api.github.com/repos/${repository}/git/ref/tags/${tag}"
+                    )" || initial_settled_tag_curl_status=$?
+                    if [[ "$initial_settled_tag_curl_status" -ne 0 ]]; then
+                      rm -f "$initial_settled_tag_file"
+                      fail_observer "Initial draft-settlement tag lookup failed at the transport layer with status ${initial_settled_tag_curl_status}."
+                    fi
+                    case "$initial_settled_tag_status" in
+                      404) rm -f "$initial_settled_tag_file" ;;
+                      200)
+                        initial_settled_tag_ref="$(cat "$initial_settled_tag_file")"
+                        rm -f "$initial_settled_tag_file"
+                        initial_settled_tag_commit="$(resolve_tag_commit "$initial_settled_tag_ref")"
+                        fail_observer "Release ${tag} disappeared during draft settlement, but tag ${tag} exists at ${initial_settled_tag_commit}."
+                        ;;
+                      *)
+                        cat "$initial_settled_tag_file" >&2
+                        rm -f "$initial_settled_tag_file"
+                        fail_observer "Initial draft-settlement tag lookup for ${tag} failed with HTTP ${initial_settled_tag_status}."
+                        ;;
+                    esac
+                    initial_settled_labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+                    initial_settled_reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" 'index($label) != null' <<< "$initial_settled_labels")"
+                    initial_settled_pending="$(jq -r 'index("autorelease: pending") != null' <<< "$initial_settled_labels")"
+                    initial_settled_tagged="$(jq -r 'index("autorelease: tagged") != null' <<< "$initial_settled_labels")"
+                    if [[ "$initial_settled_reconciled" == true && "$initial_settled_pending" != true && "$initial_settled_tagged" != true ]]; then
+                      record_state reconciled "PR #${candidate_number} / ${tag} became explicitly reconciled while the initial draft was removed."
+                      exit 0
+                    fi
                     ;;
                   *)
                     cat "$initial_settled_file" >&2
@@ -390,7 +427,12 @@ jobs:
               exit 0
             fi
             initial_tagged_release_file="$(mktemp)"
-            initial_tagged_release_status="$(curl --silent --show-error --output "$initial_tagged_release_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")"
+            initial_tagged_release_curl_status=0
+            initial_tagged_release_status="$(curl --silent --show-error --output "$initial_tagged_release_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")" || initial_tagged_release_curl_status=$?
+            if [[ "$initial_tagged_release_curl_status" -ne 0 ]]; then
+              rm -f "$initial_tagged_release_file"
+              fail_observer "initial tagged release lookup failed at the transport layer with status ${initial_tagged_release_curl_status}."
+            fi
             case "$initial_tagged_release_status" in
               200)
                 initial_tagged_release="$(cat "$initial_tagged_release_file")"
@@ -432,7 +474,17 @@ jobs:
               exit 0
             fi
             initial_tagged_settled_file="$(mktemp)"
-            initial_tagged_settled_status="$(curl --silent --show-error --output "$initial_tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")"
+            initial_tagged_settled_curl_status=0
+            tagged_settled_curl_status=0
+            tagged_settled_status="$(curl --silent --show-error --output "$initial_tagged_settled_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/releases/tags/${tag}")" || initial_tagged_settled_curl_status=)" || tagged_settled_curl_status=$?
+            if [[ "$tagged_settled_curl_status" -ne 0 ]]; then
+              rm -f "$tagged_settled_file"
+              fail_observer "tagged settled lookup failed at the transport layer with status ${tagged_settled_curl_status}."
+            fi
+            if [[ "$initial_tagged_settled_curl_status" -ne 0 ]]; then
+              rm -f "$initial_tagged_settled_file"
+              fail_observer "initial tagged settled lookup failed at the transport layer with status ${initial_tagged_settled_curl_status}."
+            fi
             case "$initial_tagged_settled_status" in
               200)
                 initial_tagged_settled_release="$(cat "$initial_tagged_settled_file")"
@@ -530,7 +582,12 @@ jobs:
                 ;;
             esac
             reconciliation_tag_file="$(mktemp)"
-            reconciliation_tag_status="$(curl --silent --show-error --output "$reconciliation_tag_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/git/ref/tags/${tag}")"
+            reconciliation_tag_curl_status=0
+            reconciliation_tag_status="$(curl --silent --show-error --output "$reconciliation_tag_file" --write-out '%{http_code}' -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2026-03-10' "https://api.github.com/repos/${repository}/git/ref/tags/${tag}")" || reconciliation_tag_curl_status=$?
+            if [[ "$reconciliation_tag_curl_status" -ne 0 ]]; then
+              rm -f "$reconciliation_tag_file"
+              fail_observer "reconciliation tag lookup failed at the transport layer with status ${reconciliation_tag_curl_status}."
+            fi
             case "$reconciliation_tag_status" in
               404) rm -f "$reconciliation_tag_file" ;;
               200)
@@ -951,6 +1008,14 @@ jobs:
                 fail_observer "Settled tagged-state release lookup for ${tag} failed with HTTP ${tagged_settled_status}."
                 ;;
             esac
+            tagged_final_runs="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+            tagged_final_active_runs="$(jq -c --argjson current_run_id "$GITHUB_RUN_ID" --argjson workflow_names "$active_workflow_names" '[.[].workflow_runs[] | select(.id != $current_run_id and .status != "completed" and (.name as $name | ($workflow_names | index($name)) != null)) | {id, name, event, status, html_url}]' <<< "$tagged_final_runs")"
+            tagged_final_active_count="$(jq -er 'length' <<< "$tagged_final_active_runs")"
+            if [[ "$tagged_final_active_count" -gt 0 ]]; then
+              tagged_final_active_names="$(jq -r '[.[] | "\(.name) (#\(.id), \(.status))"] | join(", ")' <<< "$tagged_final_active_runs")"
+              record_state pending "PR #${candidate_number} / ${tag} remains tagged without a published release, but release-capable automation became active after the tagged-state reread: ${tagged_final_active_names}."
+              exit 0
+            fi
             fail_observer "PR #${candidate_number} is marked autorelease: tagged after the settled recheck, but no published release exists for ${tag}."
           fi
 
