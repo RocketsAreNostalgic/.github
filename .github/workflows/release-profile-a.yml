@@ -3,14 +3,10 @@ name: RAN Profile A Release
 on:
   workflow_call:
     inputs:
-      admitted-sha: { required: true, type: string }
-      upstream-event: { required: true, type: string }
-      upstream-conclusion: { required: true, type: string }
-      upstream-branch: { required: true, type: string }
-      upstream-repository: { required: true, type: string }
-      upstream-repository-id: { required: true, type: string }
-      expected-workflow-path: { required: true, type: string }
-      upstream-workflow-path: { required: true, type: string }
+      expected-workflow-path:
+        description: Canonical repository-relative upstream Quality workflow path.
+        required: true
+        type: string
       release-config:
         required: false
         type: string
@@ -22,18 +18,57 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: release-profile-a-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
-  release:
-    name: Release Please
+  admit:
+    name: Admit exact Quality revision
     if: >-
       ${{
-        inputs.upstream-event == 'push'
-        && inputs.upstream-conclusion == 'success'
-        && inputs.upstream-branch == 'main'
-        && inputs.upstream-repository == github.repository
-        && inputs.upstream-repository-id == github.repository_id
-        && inputs.upstream-workflow-path == inputs.expected-workflow-path
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.event == 'push'
+        && github.event.workflow_run.conclusion == 'success'
+        && github.event.workflow_run.head_branch == 'main'
+        && github.event.workflow_run.head_repository.full_name == github.repository
+        && github.event.workflow_run.head_repository.id == github.repository_id
+        && github.event.workflow_run.path == inputs.expected-workflow-path
       }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.identity.outputs.sha }}
+    steps:
+      - name: Validate admitted revision
+        id: identity
+        env:
+          RAN_ADMITTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_ADMITTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          printf 'sha=%s\n' "$RAN_ADMITTED_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Check out exact admitted revision
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Verify exact admitted checkout
+        env:
+          RAN_ADMITTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RAN_ADMITTED_SHA"
+
+  release:
+    name: Release Please
+    needs: admit
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:
@@ -41,32 +76,19 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - name: Validate admitted revision
+      - name: Require admitted revision is still main
         env:
-          RAN_ADMITTED_SHA: ${{ inputs.admitted-sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$RAN_ADMITTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')" = "$RAN_ADMITTED_SHA"
 
-      - name: Check out exact admitted revision
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-          ref: ${{ inputs.admitted-sha }}
-
-      - name: Verify exact admitted checkout
-        env:
-          RAN_ADMITTED_SHA: ${{ inputs.admitted-sha }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$RAN_ADMITTED_SHA"
-
-      - name: Run Release Please
+      - name: Run Release Please against main
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: ${{ inputs.release-config }}
           manifest-file: ${{ inputs.release-manifest }}
+          target-branch: main
