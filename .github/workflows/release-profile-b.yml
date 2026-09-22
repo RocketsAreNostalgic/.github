@@ -1,0 +1,329 @@
+name: RAN Profile B Release
+
+on:
+  workflow_call:
+    inputs:
+      expected-workflow-path:
+        description: Canonical repository-relative upstream Quality workflow path.
+        required: true
+        type: string
+      release-config:
+        required: false
+        type: string
+        default: release-please-config.json
+      release-manifest:
+        required: false
+        type: string
+        default: .release-please-manifest.json
+      release-pr-head:
+        description: Canonical Release Please branch name whose exact head may need Quality dispatch.
+        required: true
+        type: string
+      artifact-prefix:
+        description: Prefix of the exact run-bound Quality artifact, before -<run-id>-<attempt>.
+        required: true
+        type: string
+      promotion-manifest:
+        description: File name inside the downloaded Quality artifact describing exact release assets.
+        required: false
+        type: string
+        default: ran-profile-b-promotion.json
+
+permissions: {}
+
+concurrency:
+  group: release-profile-b-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  admit:
+    name: Admit exact Quality revision
+    if: >-
+      ${{
+        github.event_name == 'workflow_run'
+        && github.event.workflow_run.event == 'push'
+        && github.event.workflow_run.conclusion == 'success'
+        && github.event.workflow_run.head_branch == 'main'
+        && github.event.workflow_run.head_repository.full_name == github.repository
+        && github.event.workflow_run.head_repository.id == github.repository_id
+        && github.event.workflow_run.path == inputs.expected-workflow-path
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      sha: ${{ steps.identity.outputs.sha }}
+    steps:
+      - name: Validate admitted revision
+        id: identity
+        env:
+          RAN_ADMITTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_ADMITTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+          printf 'sha=%s\n' "$RAN_ADMITTED_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Check out exact admitted revision
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Verify exact admitted checkout
+        env:
+          RAN_ADMITTED_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RAN_ADMITTED_SHA"
+
+  release:
+    name: Release Please + exact asset promotion
+    needs: admit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      actions: write
+    steps:
+      - name: Require admitted revision is still main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')" = "$RAN_ADMITTED_SHA"
+
+      - name: Require Profile B Release Please configuration
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
+          RAN_RELEASE_CONFIG: ${{ inputs.release-config }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_RELEASE_CONFIG" =~ ^[A-Za-z0-9._/-]+$ ]]
+          config="$(
+            gh api "repos/${GITHUB_REPOSITORY}/contents/${RAN_RELEASE_CONFIG}?ref=${RAN_ADMITTED_SHA}" --jq '.content' |
+              tr -d '\n' |
+              base64 --decode
+          )"
+          jq -e '
+            . as $root
+            | $root.draft == true
+            and $root["force-tag-creation"] == true
+            and $root["skip-github-release"] != true
+            and all(($root.packages // {})[]?;
+              (.draft // $root.draft) == true
+              and (.["force-tag-creation"] // $root["force-tag-creation"]) == true
+              and (.["skip-github-release"] // $root["skip-github-release"]) != true
+            )
+          ' <<< "$config" >/dev/null
+
+      - name: Run Release Please against main
+        id: release-please
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: ${{ inputs.release-config }}
+          manifest-file: ${{ inputs.release-manifest }}
+          target-branch: main
+
+      - name: Ensure exact Release Please candidate has Quality
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_RELEASE_PR_HEAD: ${{ inputs.release-pr-head }}
+          RAN_QUALITY_WORKFLOW_PATH: ${{ inputs.expected-workflow-path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git check-ref-format --branch "$RAN_RELEASE_PR_HEAD" >/dev/null
+
+          open_prs="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls?state=open&base=main&per_page=100")"
+          candidates="$(jq -cer             --arg bot 'github-actions[bot]'             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             'add | [.[] | select(
+              .state == "open"
+              and .user.login == $bot
+              and .base.ref == "main"
+              and .head.ref == $head
+              and .head.repo.full_name == $repository
+            )]' <<< "$open_prs")"
+          count="$(jq -er 'length' <<< "$candidates")"
+          if [[ "$count" == 0 ]]; then
+            exit 0
+          fi
+          test "$count" == 1
+
+          head_sha="$(jq -er '.[0].head.sha' <<< "$candidates")"
+          [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]]
+          ref_sha="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/git/matching-refs/heads/" --jq             '.[] | select(.ref == ("refs/heads/" + env.RAN_RELEASE_PR_HEAD)) | .object.sha' | sort -u)"
+          test "$(printf '%s\n' "$ref_sha" | sed '/^$/d' | wc -l)" -eq 1
+          test "$ref_sha" = "$head_sha"
+
+          workflows="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/actions/workflows?per_page=100")"
+          workflow_ids="$(jq -cer --arg path "$RAN_QUALITY_WORKFLOW_PATH" '[.[].workflows[] | select(.path == $path) | .id] | unique' <<< "$workflows")"
+          test "$(jq -er 'length' <<< "$workflow_ids")" == 1
+          workflow_id="$(jq -er '.[0]' <<< "$workflow_ids")"
+          runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?head_sha=${head_sha}&per_page=100")"
+          covered="$(jq -r             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             --arg sha "$head_sha"             --argjson workflow_id "$workflow_id"             'any(.workflow_runs[];
+              .workflow_id == $workflow_id
+              and .path == $ENV.RAN_QUALITY_WORKFLOW_PATH
+              and (.event == "pull_request" or .event == "workflow_dispatch")
+              and .head_branch == $head
+              and .head_repository.full_name == $repository
+              and .head_sha == $sha
+              and (
+                (.status == "completed" and .conclusion == "success")
+                or (.status != "completed")
+              )
+            )' <<< "$runs")"
+          if [[ "$covered" == true ]]; then
+            exit 0
+          fi
+
+          jq -nc --arg ref "$RAN_RELEASE_PR_HEAD" '{ref: $ref}' |
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/dispatches" --input - >/dev/null
+
+      - name: Resolve exact Release Please publication state
+        id: publication
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
+          RAN_RELEASE_CREATED: ${{ steps.release-please.outputs.release_created }}
+          RAN_RELEASE_SHA: ${{ steps.release-please.outputs.sha }}
+          RAN_RELEASE_TAG: ${{ steps.release-please.outputs.tag_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          release_pages="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/releases?per_page=100")"
+          matches="$(jq -cer             --arg sha "$RAN_ADMITTED_SHA"             'add | [.[] | select(.target_commitish == $sha)]'             <<< "$release_pages")"
+          count="$(jq -er 'length' <<< "$matches")"
+
+          if [[ "$RAN_RELEASE_CREATED" == true ]]; then
+            test "$RAN_RELEASE_SHA" = "$RAN_ADMITTED_SHA"
+            [[ -n "$RAN_RELEASE_TAG" ]]
+            test "$count" == 1
+            release_json="$(jq -cer --arg tag "$RAN_RELEASE_TAG" '.[0] | select(.tag_name == $tag)' <<< "$matches")"
+            test "$(jq -er '.draft' <<< "$release_json")" = true
+          else
+            if [[ "$count" == 0 ]]; then
+              echo 'promotion-required=false' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            test "$count" == 1
+            release_json="$(jq -cer '.[0]' <<< "$matches")"
+          fi
+
+          tag="$(jq -er '.tag_name' <<< "$release_json")"
+          if [[ "$(jq -er '.draft' <<< "$release_json")" == true ]]; then
+            state=draft
+          else
+            test "$(jq -er '.immutable' <<< "$release_json")" = true
+            state=published
+          fi
+
+          tag_ref="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}")"
+          jq -e --arg sha "$RAN_ADMITTED_SHA"             '.object.type == "commit" and .object.sha == $sha'             <<< "$tag_ref" >/dev/null
+
+          printf 'promotion-required=true\nstate=%s\ntag=%s\n' "$state" "$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Download exact Quality artifact
+        if: steps.publication.outputs.promotion-required == 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ inputs.artifact-prefix }}-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
+          path: promotion
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Verify and promote exact tested assets
+        if: steps.publication.outputs.promotion-required == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
+          RAN_PROMOTION_MANIFEST: ${{ inputs.promotion-manifest }}
+          RAN_PUBLICATION_STATE: ${{ steps.publication.outputs.state }}
+          RAN_RELEASE_TAG: ${{ steps.publication.outputs.tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_PROMOTION_MANIFEST" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
+          manifest="promotion/${RAN_PROMOTION_MANIFEST}"
+          test -f "$manifest"
+
+          jq -e             --arg repository "$GITHUB_REPOSITORY"             --arg sha "$RAN_ADMITTED_SHA"             --arg tag "$RAN_RELEASE_TAG"             '.schema == "ran-profile-b-promotion"
+              and .schema_version == 1
+              and .repository == $repository
+              and .quality_commit == $sha
+              and .source_commit == $sha
+              and .tag == $tag
+              and (.assets | type == "array" and length >= 1 and length <= 8)
+              and all(.assets[];
+                (.name | type == "string" and test("^[A-Za-z0-9][A-Za-z0-9._-]*$"))
+                and (.sha256 | type == "string" and test("^[0-9a-f]{64}$"))
+              )
+              and ([.assets[].name] | length == (unique | length))'             "$manifest" >/dev/null
+
+          while IFS=$'\t' read -r name sha256; do
+            test -f "promotion/$name"
+            test "$(sha256sum "promotion/$name" | awk '{print $1}')" = "$sha256"
+          done < <(jq -r '.assets[] | [.name, .sha256] | @tsv' "$manifest")
+
+          expected_names="$(jq -c '[.assets[].name] | sort' "$manifest")"
+          expected_digests="$(jq -c '[.assets[] | {name, digest: ("sha256:" + .sha256)}] | sort_by(.name)' "$manifest")"
+
+          release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
+          jq -e --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG"             '.tag_name == $tag and .target_commitish == $sha'             <<< "$release_json" >/dev/null
+
+          remote_names="$(jq -c '[.assets[].name] | sort' <<< "$release_json")"
+          jq -e --argjson expected "$expected_names" '([.assets[].name] - $expected) | length == 0' <<< "$release_json" >/dev/null
+
+          while IFS=$'\t' read -r name sha256; do
+            existing="$(jq -cer --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
+            count="$(jq -er 'length' <<< "$existing")"
+            if [[ "$count" == 1 ]]; then
+              test "$(jq -er '.[0].digest' <<< "$existing")" = "sha256:${sha256}"
+              continue
+            fi
+            test "$count" == 0
+            if [[ "$RAN_PUBLICATION_STATE" != draft ]]; then
+              echo "::error::Published immutable release is missing expected asset ${name}."
+              exit 1
+            fi
+            gh release upload "$RAN_RELEASE_TAG" "promotion/$name" --repo "$GITHUB_REPOSITORY"
+          done < <(jq -r '.assets[] | [.name, .sha256] | @tsv' "$manifest")
+
+          release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
+          test "$(jq -c '[.assets[].name] | sort' <<< "$release_json")" = "$expected_names"
+          test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
+
+          if [[ "$RAN_PUBLICATION_STATE" == draft ]]; then
+            # Immutable releases are an owner-managed external production constraint.
+            # GitHub's immutable-release settings endpoint requires repository
+            # Administration-read, which the automatic GITHUB_TOKEN cannot request.
+            # Do not add a higher-privilege standing token merely to re-read that
+            # admin setting here; #57 owns final platform-settings reconciliation.
+            release_id="$(jq -er '.id' <<< "$release_json")"
+            prerelease_before="$(jq -er '.prerelease' <<< "$release_json")"
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${release_id}"               -F draft=false >/dev/null
+            release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
+            test "$(jq -er '.prerelease' <<< "$release_json")" = "$prerelease_before"
+          fi
+
+          immutable=false
+          for delay in 0 2 2 2 2; do
+            sleep "$delay"
+            release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
+            immutable="$(jq -r '.immutable' <<< "$release_json")"
+            [[ "$immutable" == true ]] && break
+          done
+          test "$immutable" = true
+          jq -e --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG"             '.tag_name == $tag and .draft == false and .immutable == true and .target_commitish == $sha'             <<< "$release_json" >/dev/null
+          test "$(jq -c '[.assets[].name] | sort' <<< "$release_json")" = "$expected_names"
+          test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
