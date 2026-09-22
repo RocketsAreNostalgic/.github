@@ -106,8 +106,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$RAN_RELEASE_PR_HEAD" =~ ^[A-Za-z0-9._/-]+$ ]]
-          [[ "$RAN_RELEASE_PR_HEAD" != *'..'* ]]
+          git check-ref-format --branch "$RAN_RELEASE_PR_HEAD" >/dev/null
 
           open_prs="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls?state=open&base=main&per_page=100")"
           candidates="$(jq -cer             --arg bot 'github-actions[bot]'             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             'add | [.[] | select(
@@ -125,7 +124,10 @@ jobs:
 
           head_sha="$(jq -er '.[0].head.sha' <<< "$candidates")"
           [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]]
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${RAN_RELEASE_PR_HEAD}" --jq '.object.sha')" = "$head_sha"
+          ref_sha="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/git/matching-refs/heads/" --jq \
+            '.[] | select(.ref == ("refs/heads/" + env.RAN_RELEASE_PR_HEAD)) | .object.sha' | sort -u)"
+          test "$(printf '%s\n' "$ref_sha" | sed '/^$/d' | wc -l)" -eq 1
+          test "$ref_sha" = "$head_sha"
 
           workflows="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/actions/workflows?per_page=100")"
           workflow_ids="$(jq -cer --arg path "$RAN_QUALITY_WORKFLOW_PATH" '[.[].workflows[] | select(.path == $path) | .id] | unique' <<< "$workflows")"
