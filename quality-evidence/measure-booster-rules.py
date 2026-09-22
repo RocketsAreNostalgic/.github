@@ -107,7 +107,9 @@ with ThreadPoolExecutor(max_workers=3) as pool:
 # metadata and auxiliary control results are retained from the reviewed evidence
 # seed; all per-repository baseline/strict/fix measurements are replaced by this run.
 seed=SEED
-aggregate={k:seed[k] for k in ('purpose','tools','runtime','alignment_control')}
+aggregate={k:seed[k] for k in ('purpose','tools','runtime')}
+# Auxiliary control/probe measurements are not copied from the seed. They are
+# intentionally omitted unless this run executes them, preventing mixed-run evidence.
 aggregate['repositories']={}
 aggregate['totals']={'alignment':0,'checked_files':0,'methods':0,'tracked_files':0,'variables_properties':0,'yoda':0}
 for repo, meta in META.items():
@@ -142,7 +144,7 @@ for repo, meta in META.items():
    category='yoda' if code.startswith('WordPress.PHP.YodaConditions') else 'naming' if 'NamingConventions' in code else 'alignment'
    split.setdefault(location,{}).setdefault(category,0)
    split[location][category]+=1
- row={k:previous[k] for k in ('sha','config','configured_roots','local_rules','other_exception_probe','outside_phpcs') if k in previous}
+ row={k:previous[k] for k in ('sha','config','configured_roots','local_rules','outside_phpcs') if k in previous}
  row.update({
   'baseline_exit':measured['baseline']['exit'],
   'baseline_totals':measured['baseline']['totals'],
@@ -160,5 +162,5 @@ for repo, meta in META.items():
  aggregate['totals']['variables_properties']+=counts['variables_properties']
  aggregate['totals']['yoda']+=counts['yoda']
  aggregate['totals']['alignment']+=counts['alignment']
- aggregate['totals']['tracked_files']+=int(previous.get('tracked_php_files', row['checked_php_files']))
+ aggregate['totals']['tracked_files']+=row['tracked_php_files']
 (OUT/'booster-rule-results.json').write_text(json.dumps(aggregate,indent=2,sort_keys=True)+'\n')
