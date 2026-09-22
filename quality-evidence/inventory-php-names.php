@@ -1,5 +1,5 @@
 <?php
-/** Read-only declaration/caller inventory; requires nikic/php-parser 5.8.0. */
+/** Audit-aid declaration/caller inventory; output is a new local measurement, not historical provenance. */
 declare(strict_types=1);
 
 if ($argc !== 4) {
