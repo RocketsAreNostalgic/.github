@@ -128,15 +128,21 @@ $walk = function ($node, array $ctx) use (&$walk, &$out, $visibility, $typeName)
 };
 foreach (glob($root . '/ran-*', GLOB_ONLYDIR) as $directory) {
     $repo = basename($directory);
-    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS));
-    foreach ($iterator as $file) {
-        if (!$file->isFile() || 'php' !== $file->getExtension()) {
-            continue;
+    $tracked = [];
+    exec('git -C ' . escapeshellarg($directory) . ' ls-files -z -- ' . escapeshellarg('*.php'), $chunks, $status);
+    if (0 !== $status) {
+        throw new RuntimeException("Unable to enumerate tracked PHP files for {$repo}.");
+    }
+    $paths = array_values(array_filter(explode("\0", implode("\n", $chunks)), static fn(string $path): bool => '' !== $path));
+    foreach ($paths as $relative) {
+        $pathname = $directory . '/' . $relative;
+        $file = new SplFileInfo($pathname);
+        if (!$file->isFile()) {
+            throw new RuntimeException("Tracked PHP file is missing: {$repo}/{$relative}");
         }
-        $relative = substr($file->getPathname(), strlen($directory) + 1);
-        $out['files'][] = ['repo' => $repo, 'file' => $relative, 'sha256' => hash_file('sha256', $file->getPathname())];
+        $out['files'][] = ['repo' => $repo, 'file' => $relative, 'sha256' => hash_file('sha256', $pathname)];
         try {
-            $ast = $parser->parse(file_get_contents($file->getPathname()));
+            $ast = $parser->parse(file_get_contents($pathname));
             $traverser = new PhpParser\NodeTraverser(new PhpParser\NodeVisitor\NameResolver());
             $ast = $traverser->traverse($ast);
             foreach ($ast as $node) {
