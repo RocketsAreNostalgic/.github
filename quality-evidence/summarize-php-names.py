@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Join AST inventory to the existing exact-revision PHPCS probes.
+"""Audit aid joining a local AST inventory to local PHPCS probe output.
 
 Usage: python3 summarize-php-names.py LAB_ROOT RAW_INVENTORY OUTPUT_JSON
 LAB_ROOT is the disposable tree used by measure-booster-rules.py, including its
