@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run only in a disposable Starter archive with its locked tools installed.
-Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json
+Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION
 Requires php on PATH. Does not execute application code or Composer scripts.
 """
 from concurrent.futures import ThreadPoolExecutor
@@ -15,6 +15,8 @@ import tempfile
 
 root = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
+revision = sys.argv[3]
+assert len(revision) == 40 and all(c in '0123456789abcdef' for c in revision)
 php = shutil.which('php')
 assert php and (root / 'vendor/autoload.php').is_file()
 assert not (root / '.git').exists(), 'Use a disposable archive, not a Git checkout'
@@ -135,6 +137,46 @@ try:
             'scripts/build-release.php', 'inc/Base/Config.php',
             'templates/features/auth.php', 'tests/Unit/ExampleFeatureControllerTest.php']))
 finally:
-    output.write_text(json.dumps(result, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
+    def compact_tool(tool, value):
+        row = {'exit': value['exit']}
+        if tool == 'phpcs' and value.get('stdout', '').strip():
+            report = json.loads(value['stdout'])
+            messages = [m for details in report.get('files', {}).values() for m in details.get('messages', [])]
+            row['diagnostics'] = sorted({m['source'] for m in messages})
+            totals = report.get('totals', {})
+            row['totals'] = {k: totals.get(k, 0) for k in ('errors', 'fixable', 'warnings')}
+        return row
+
+    def compact_value(key, value):
+        if isinstance(value, dict) and 'exit' in value:
+            tool = 'phpcs' if key in ('phpcs', 'phpcs_with_warnings') else key
+            return compact_tool(tool, value)
+        if isinstance(value, dict):
+            return {k: compact_value(k, v) for k, v in value.items()}
+        return value
+
+    compact = {
+        'revision': revision,
+        'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
+        'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
+        'fixtures': compact_value('fixtures', result['fixtures']),
+        'representatives': compact_value('representatives', result['representatives']),
+    }
+    finder = subprocess.run(
+        [php, '-r', 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'],
+        cwd=root, env=env, check=True, capture_output=True, text=True
+    )
+    phpcs_report = json.loads(run(cs)['stdout'])
+    sniff_list = subprocess.run([php, 'vendor/bin/phpcs', '--standard=.phpcs.xml', '-e'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout
+    compact['baseline'] = {
+        'fixer_exit': check(root / 'scripts/build-release.php')['fixer']['exit'],
+        'fixer_files': [line for line in finder.stdout.splitlines() if line],
+        'phpcs_exit': 0 if phpcs_report.get('totals', {}).get('errors', 0) == 0 else 2,
+        'phpcs_files': len(phpcs_report.get('files', {})),
+        'phpcs_sniffs': sum(1 for line in sniff_list.splitlines() if line.lstrip().startswith('- ')),
+    }
+    representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
+    compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
+    output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
     shutil.rmtree(work)
     shutil.rmtree(env['HOME'])
