@@ -18,6 +18,9 @@ data = json.loads(raw.read_text())
 assert not data['errors'], data['errors']
 metadata = json.loads((lab / 'snapshots.json').read_text())
 assert {r['repo'] for r in data['files']} == set(metadata), 'Snapshot repository set differs from revision metadata'
+parser_identity=data.get('toolchain',{}).get('parser')
+assert parser_identity and parser_identity.get('name') == 'nikic/php-parser', 'AST inventory parser identity missing'
+assert parser_identity.get('version') == 'v5.8.0' or parser_identity.get('version') == '5.8.0', f'Unexpected parser version: {parser_identity}'
 import subprocess
 for repo, meta in metadata.items():
     snapshot = lab / repo
@@ -32,6 +35,13 @@ for repo, meta in metadata.items():
         check=True, capture_output=True, text=True
     ).stdout
     assert status == '', f'{repo}: snapshot must remain clean while inventory is summarized'
+    expected = subprocess.run(
+        ['git', '-C', str(snapshot), 'ls-files', '-z', '--', '*.php'],
+        check=True, capture_output=True
+    ).stdout.decode().split('\0')
+    expected = {path for path in expected if path}
+    actual_files = {row['file'] for row in data['files'] if row['repo'] == repo}
+    assert actual_files == expected, f'{repo}: AST inventory path set differs from tracked PHP set'
 runtime = lambda path: not path.startswith(('tests/', 'scripts/'))
 coord = lambda row: (row['repo'], row['file'], row['line'], row['name'])
 for row in data['files']:
@@ -101,7 +111,7 @@ external_ancestors = Counter(p for c in production_classes.values() for p in c['
 external_method_candidates = [dict(r, external_ancestors=sorted(p for p in ancestors(r['class']) if p not in production_classes)) for r in camel_methods if runtime(r['file']) and any(p not in production_classes for p in ancestors(r['class']))]
 
 summary = {'revisions': {repo: meta['sha'] for repo, meta in metadata.items()}, 'method': {
-    'parser': 'nikic/php-parser 5.8.0',
+    'parser': f"{parser_identity['name']} {parser_identity['version']} @ {parser_identity.get('reference')}",
     'scope': f"All {len(data['files'])} tracked PHP files parsed; counts of flagged declarations retain the original PHPCS scope and inline exceptions. A separate camelCase candidate inventory includes methods skipped by WPCS inheritance heuristics; magic methods starting __ are excluded.",
     'caller_resolution': 'Static class calls, $this, directly typed parameters/properties and immediately instantiated receivers only. Does not resolve flow, chained returns, aliases, dynamic dispatch, reflection or PHP embedded in strings.',
     'variable_groups': 'Distinct file / lexical function-or-closure scope / name groups with at least one reported variable occurrence. Captures may be separate groups; not unique logical symbols or edit counts.',
