@@ -158,8 +158,12 @@ try:
         list(pool.map(representative_case, [
             'scripts/build-release.php', 'inc/Base/Config.php',
             'templates/features/auth.php', 'tests/Unit/ExampleFeatureControllerTest.php']))
-finally:
-    def compact_tool(tool, value):
+except Exception:
+    shutil.rmtree(work, ignore_errors=True)
+    shutil.rmtree(env['HOME'], ignore_errors=True)
+    raise
+
+def compact_tool(tool, value):
         row = {'exit': value['exit']}
         if tool == 'phpcs' and value.get('stdout', '').strip():
             report = json.loads(value['stdout'])
@@ -169,7 +173,7 @@ finally:
             row['totals'] = {k: totals.get(k, 0) for k in ('errors', 'fixable', 'warnings')}
         return row
 
-    def compact_value(key, value):
+def compact_value(key, value):
         if isinstance(value, dict) and 'exit' in value:
             tool = 'phpcs' if key in ('phpcs', 'phpcs_with_warnings') else key
             return compact_tool(tool, value)
@@ -177,28 +181,28 @@ finally:
             return {k: compact_value(k, v) for k, v in value.items()}
         return value
 
-    shutil.rmtree(work)
-    compact = {
+shutil.rmtree(work)
+compact = {
         'revision': revision,
         'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
         'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
         'fixtures': compact_value('fixtures', result['fixtures']),
         'representatives': compact_value('representatives', result['representatives']),
     }
-    finder = subprocess.run(
+finder = subprocess.run(
         [php, '-r', 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'],
         cwd=root, env=env, check=True, capture_output=True, text=True
     )
-    phpcs_report = json.loads(run(cs)['stdout'])
-    sniff_list = subprocess.run([php, 'vendor/bin/phpcs', '--standard=.phpcs.xml', '-e'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout
-    compact['baseline'] = {
+phpcs_report = json.loads(run(cs)['stdout'])
+sniff_list = subprocess.run([php, 'vendor/bin/phpcs', '--standard=.phpcs.xml', '-e'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout
+compact['baseline'] = {
         'fixer_exit': check(root / 'scripts/build-release.php')['fixer']['exit'],
         'fixer_files': [line for line in finder.stdout.splitlines() if line],
         'phpcs_exit': 0 if phpcs_report.get('totals', {}).get('errors', 0) == 0 else 2,
         'phpcs_files': len(phpcs_report.get('files', {})),
         'phpcs_sniffs': sum(1 for line in sniff_list.splitlines() if line.lstrip().startswith('- ')),
     }
-    representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
-    compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
-    output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
-    shutil.rmtree(env['HOME'])
+representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
+compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
+output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
+shutil.rmtree(env['HOME'])
