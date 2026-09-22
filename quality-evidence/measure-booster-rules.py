@@ -12,9 +12,15 @@ ROOT=Path(sys.argv[1]).resolve()
 PHP=Path(sys.argv[2]).resolve()
 VENDOR=Path(sys.argv[3]).resolve()
 META=json.loads(Path(__file__).with_name('booster-rule-results.json').read_text())['repositories']
-for repo in META:
- assert not (ROOT/repo/'.git').exists(), 'Use disposable source copies, not Git checkouts'
- assert not (ROOT/repo/'audit-strict.xml').exists(), 'Reserved audit filename already exists'
+for repo, meta in META.items():
+ snapshot=ROOT/repo
+ assert (snapshot/'.git').exists(), 'Use disposable exact-revision Git checkouts'
+ head=subprocess.run(['git','-C',str(snapshot),'rev-parse','HEAD'],check=True,capture_output=True,text=True).stdout.strip()
+ assert head == meta['sha'], f'{repo}: checkout HEAD {head} != expected {meta["sha"]}'
+ status=subprocess.run(['git','-C',str(snapshot),'status','--porcelain=v1','--untracked-files=all'],check=True,capture_output=True,text=True).stdout
+ assert status == '', f'{repo}: checkout must be clean before probing'
+ assert not (snapshot/'audit-strict.xml').exists(), 'Reserved audit filename already exists'
+(ROOT/'snapshots.json').write_text(json.dumps({repo: {'sha': meta['sha']} for repo, meta in META.items()}, indent=2, sort_keys=True)+'\n')
 
 OUT=ROOT/'results';OUT.mkdir(exist_ok=True)
 ENV={'PATH':str(PHP.parent)+':/usr/bin:/bin','HOME':tempfile.mkdtemp(prefix='booster-rule-home-')}
