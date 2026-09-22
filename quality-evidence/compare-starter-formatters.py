@@ -53,7 +53,7 @@ def run(cmd):
     is_phpcs = len(cmd) > 1 and cmd[1].endswith('/phpcs')
     is_phpcbf = len(cmd) > 1 and cmd[1].endswith('/phpcbf')
     is_fixer = len(cmd) > 1 and cmd[1].endswith('/php-cs-fixer')
-    allowed = (0, 1) if is_fixer else (0, 1, 2, 3) if (is_phpcs or is_phpcbf) else (0,)
+    allowed = (0, 8) if is_fixer else (0, 1, 2) if is_phpcs else (0, 1, 2, 3) if is_phpcbf else (0,)
     if p.returncode not in allowed:
         raise RuntimeError(f'Unexpected tool exit {p.returncode}: {p.stdout}{p.stderr}')
     if is_phpcs:
