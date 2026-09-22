@@ -136,14 +136,14 @@ parallel. PHP-CS-Fixer's cache is disabled and its runner is sequential; PHPCS
 uses one worker per case. Neither application PHP nor Composer scripts run.
 
 Reproduce against the same verified disposable source archive with its locked dependencies and PHPCS
-standards installed, with exact PHP 8.4.23 on `PATH`. Before extracting/installing tools, verify the source archive SHA-256 and write that verified digest to `.ran-formatter-source.sha256` at the disposable root; the harness requires the same digest argument:
+standards installed, with exact PHP 8.4.23 on `PATH`. Before installing tools, generate a JSON source manifest from the verified inspected revision/archive that maps every tracked source path to its SHA-256. Keep that manifest outside the disposable root. The harness hashes every listed source file before executing any formatter and records the manifest digest:
 
 ```sh
 php -r 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'
 php vendor/bin/phpcs --standard=.phpcs.xml --report=json -v
 php vendor/bin/phpcs --standard=.phpcs.xml -e
 test "$(php -r 'echo PHP_VERSION;')" = 8.4.23
-python3 /path/to/quality-evidence/compare-starter-formatters.py "$PWD" /tmp/starter-formatters.json 31f48fda13d7b9671f88d0ecf249af6aad251c52 5fa2b5f1cc9d7f79b19718926b4f4f0bb6949db52073b2fabf8ae52de3993af5
+python3 /path/to/quality-evidence/compare-starter-formatters.py "$PWD" /tmp/starter-formatters.json 31f48fda13d7b9671f88d0ecf249af6aad251c52 /tmp/starter-source-manifest.json
 ```
 
 Do not run the harness in a working checkout with concurrent edits: it restores
