@@ -71,12 +71,12 @@ automatically.
 
 ## Recommended implementation boundary
 
-Prefer one PHPCS/PHPCBF style authority if representative comparison proves it
-preserves every intended check. Retain Starter's stronger docs/generic checks;
-do not copy Booster naming/Yoda exceptions into the clean reference. If the
-comparison identifies a useful unique behavior, first decide whether a narrow
-PHPCS rule can express it. Retain a second formatter only for a documented need
-with matching scope and stable combined output.
+Use PHPCS/PHPCBF as the single approved style authority. Retain Starter's
+stronger docs/generic checks; do not copy Booster naming/Yoda exceptions into
+the clean reference. Any useful behavior uniquely demonstrated by the old
+PHP-CS-Fixer path must be represented through a reviewed PHPCS/PHPCBF rule and
+scope before the second formatter is removed. Preserving PHP-CS-Fixer would
+require a new explicit owner decision; this audit grants no such exception.
 
 The next implementation PR should:
 
@@ -198,14 +198,14 @@ codes, diagnostic identities, stability results and the representative test diff
 All tracked archive files, including Composer manifests and locks, matched the
 original source snapshot after the experiment.
 
-Recommendation: proceed toward one PHPCS/PHPCBF authority, but do not describe
-removal of PHP-CS-Fixer as behavior-preserving yet. Decide whether alignment is
-an intended blocking rule and at what scope. A reviewed change to the specific
-PHPCS alignment diagnostic is a narrower candidate than enabling every warning.
-If alignment is deliberately retired, record that policy change explicitly.
-Re-test array-arrow and assignment behavior on the implementation candidate,
-including the test-file example above; the warning control proves the synthetic
-assignment case, not every alignment variant.
+Recommendation: implement the approved single PHPCS/PHPCBF authority, but do
+not describe removal of PHP-CS-Fixer as behavior-preserving until its intended
+alignment behavior is represented there. Alignment remains an intended blocking
+check; implementation must select and validate the precise PHPCS rule and scope
+rather than enabling every warning indiscriminately. Re-test array-arrow and
+assignment behavior on the implementation candidate, including the test-file
+example above; the warning control proves the synthetic assignment case, not
+every alignment variant.
 
 These are finite formatter examples on PHP 8.4, not proof of universal tool
 equivalence, PHP 8.5 execution, or the full Starter quality suite. The initial
