@@ -184,14 +184,14 @@ embedded inside strings, downstream forks and installations still require
 cohort-specific checks. No application source was executed by the AST audit.
 No production names, API versions, package pins, tags or releases changed.
 
-## Evidence and reproduction
+## Evidence and bounded re-checks
 
 [Machine-readable declaration/caller inventory](quality-evidence/booster-naming-inventory.json)
 contains exact source revisions, category counts, all public runtime method
 candidates, flagged public properties, interface relationships and representative
 call sites. Paths and original diagnostic scopes remain explicit.
 
-After reproducing the original exact-source PHPCS probes into the disposable
+After repeating the relevant PHPCS probes as a new local measurement in the disposable
 lab, run with PHP 8.4.23 and `nikic/php-parser` 5.8.0:
 
 ```sh
@@ -203,6 +203,6 @@ python3 quality-evidence/summarize-php-names.py \
 
 The join checks source SHA-256 hashes against the parsed inputs, reports parser
 errors, and requires every original method diagnostic to resolve to a declaration.
-Raw AST data is reproducible and is not committed. Parser candidate names are
+Raw AST data from a rerun is a new local measurement and is not committed. Record the rerun's source/tool inputs independently; parser candidate names are
 not independently asserted WPCS violations; upstream heuristics, existing scope
 and external signatures still require the dispositions described above.
