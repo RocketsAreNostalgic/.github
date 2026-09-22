@@ -60,6 +60,33 @@ Maintained source code must use appropriate automated quality tooling where a ma
 - A repository must not claim support for a runtime or platform range that its compatibility checks contradict.
 - Ordinary CI must execute project-controlled code with the minimum practical token permissions and without persisted checkout credentials unless a documented workflow operation genuinely requires them.
 
+## PHP formatting authority
+
+Maintained RAN WordPress PHP uses **PHPCS to check and PHPCBF to fix**, through
+the applicable shared RAN WordPress ruleset. These are companion commands from
+the same package and must use the same rules, first-party paths and exclusions.
+`composer standards` is the check; `composer standards:fix` is the mutating fixer.
+
+PHP-CS-Fixer is not a second organisation formatting authority. Existing use is
+migration debt to remove, together with its dependency, configuration, cache
+entries and obsolete command callers. Preserve intended checks in PHPCS and
+prove failure and repeatability there; do not widen a second formatter's scope
+or preserve accidental formatting preferences merely because they existed.
+A future exception requires a concrete unmet need and explicit review; none is
+approved for Starter by its historical use.
+
+The Booster suite must converge on one documented WordPress-derived convention.
+Existing per-repository differences are audit findings, not automatically valid
+exceptions. Review repeated naming/condition exceptions as suite policy; retain
+only justified project-specific requirements. Stronger checks must be assessed
+for transfer into the shared baseline rather than indefinitely duplicated.
+
+Completion requires matching check/fix coverage, retained tests/analysis and
+compatibility gates, representative negative fixtures, stable repeated fixes,
+updated local/CI callers, and a current adoption row with exact-head evidence.
+A repository does not satisfy the policy merely by renaming Composer scripts.
+Workbench and purpose-built fixtures retain their recorded exemptions.
+
 ## WordPress PHP
 
 Maintained WordPress PHP code must use WordPress Coding Standards (WPCS) through PHP_CodeSniffer.
