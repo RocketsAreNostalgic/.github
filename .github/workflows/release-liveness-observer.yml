@@ -274,7 +274,6 @@ jobs:
                 fail_observer "Release object does not identify expected tag ${tag}."
               fi
               if jq -e '.draft == false and .published_at != null' <<< "$release" >/dev/null; then
-                [[ -n "$tag_commit" ]] || fail_observer "Published release ${tag} has no final Git tag."
                 [[ "$reconciled" != true ]] || fail_observer "Published release ${tag} also carries ${RAN_RECONCILED_LABEL}."
               fi
             fi
@@ -290,6 +289,10 @@ jobs:
             tagged="$(jq -r '.labels | index("autorelease: tagged") != null' <<< "$snapshot")"
 
             if [[ "$release_http" == 200 ]] && jq -e '.draft == false and .published_at != null' <<< "$release" >/dev/null; then
+              if [[ -z "$tag_commit" ]]; then
+                printf '%s\n' nonterminal
+                return 0
+              fi
               if [[ "$tagged" == true && "$pending" != true && "$reconciled" != true ]]; then
                 printf '%s\n' published
               else
@@ -323,7 +326,11 @@ jobs:
           terminal_final="$(snapshot_terminal)"
           validate_terminal_snapshot "$terminal_final"
 
-          publisher_activity="$(jq -cs 'add | unique_by(.id)' <(printf '%s\n' "$publishers_before") <(printf '%s\n' "$publishers_after"))"
+          publishers_final="$(snapshot_publishers)"
+          publisher_activity="$(jq -cs 'add | unique_by(.id)' \
+            <(printf '%s\n' "$publishers_before") \
+            <(printf '%s\n' "$publishers_after") \
+            <(printf '%s\n' "$publishers_final"))"
           publisher_activity_count="$(jq -er 'length' <<< "$publisher_activity")"
           publisher_activity_names="$(jq -r '[.[] | "$(.name) (#$(.id), $(.status), updated $(.updated_at))"] | join(", ")' <<< "$publisher_activity")"
 
@@ -351,6 +358,14 @@ jobs:
           if [[ "$publisher_activity_count" -gt 0 ]]; then
             record_state pending "PR #${candidate_number} / ${tag} has release-capable exact-candidate activity during this observation: ${publisher_activity_names}."
             exit 0
+          fi
+
+          final_release_http="$(jq -r '.release_http' <<< "$terminal_final")"
+          final_release="$(jq -c '.release' <<< "$terminal_final")"
+          final_tag_commit="$(jq -r '.tag_commit' <<< "$terminal_final")"
+          if [[ "$terminal_stable" == true && "$final_release_http" == 200 && -z "$final_tag_commit" ]] \
+            && jq -e '.draft == false and .published_at != null' <<< "$final_release" >/dev/null; then
+            fail_observer "Published release ${tag} has no final Git tag after stable terminal snapshots and no publisher activity."
           fi
 
           # A terminal reconciliation is accepted only from a stable pair of
