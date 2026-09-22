@@ -23,14 +23,18 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      actions: write
     uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-a.yml@<approved-immutable-ref>
     with:
       expected-workflow-path: .github/workflows/quality.yml
+      release-pr-head: release-please--branches--main--components--<component>
 ```
 
 Do not use `secrets: inherit`. The reusable workflow uses the caller's automatic `GITHUB_TOKEN`. GitHub does not permit a called workflow to elevate token permissions, so the caller job explicitly grants only the scopes required by Release Please.
 
-The caller names the canonical Quality workflow in `workflows:` and supplies its canonical path. Consumers pin the reusable workflow to an approved immutable organisation ref.
+The caller names the canonical Quality workflow in `workflows:`, supplies its canonical path, and supplies the canonical Release Please branch name from its configuration. Consumers pin the reusable workflow to an approved immutable organisation ref.
+
+Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore includes one bounded qualification step: after Release Please runs, it finds exactly one bot-owned open candidate at the configured branch, binds its exact head SHA, and dispatches the repository's existing read-only Quality workflow only when no successful or in-flight pull-request/workflow-dispatch run already covers that exact head. This is merge qualification, not release/version state.
 
 ## Contract
 
@@ -44,4 +48,4 @@ The main-tip check is a fail-closed stale-run guard, not an atomic compare-and-s
 
 Profile A intentionally does not implement SemVer/changelog policy, Release Please branch/title/label parsing, merge-parent/tree reconstruction, candidate markers, manual lifecycle reconciliation, historical recovery, or generic Actions API run rereads.
 
-Repositories whose Release Please-created PR cannot obtain required read-only Quality through normal event behavior must add the smallest exact-head Quality dispatch needed by their merge policy; that is candidate qualification, not release publication semantics, and should be evaluated during consumer migration.
+The candidate Quality dispatch is part of the shared Profile A contract because `GITHUB_TOKEN` event suppression is common to Release Please consumers with required PR checks. Repository Quality remains repository-owned and read-only; the shared workflow does not interpret its result beyond avoiding duplicate dispatch.
