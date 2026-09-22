@@ -4,6 +4,16 @@ Owner: [Starter #24](https://github.com/RocketsAreNostalgic/ran-starter-plugin/i
 Programme: [.github #66](https://github.com/RocketsAreNostalgic/.github/issues/66).
 Inspected Starter revision: `31f48fda13d7b9671f88d0ecf249af6aad251c52`.
 
+## Owner decision after the audit
+
+The owner has approved consolidation on PHPCS/PHPCBF. PHP-CS-Fixer is to be
+removed from Starter, including its dependency, configuration and callers.
+The findings below describe the old implementation; they do not authorise its
+preservation. Intended alignment checks move into the PHPCS ruleset, with
+negative-fixture and repeatability evidence. The precise old fixer's whitespace
+choices are not an independent standard to perpetuate. No permanent second
+formatter exception is approved. Implementation remains tracked in Starter #24.
+
 ## Findings
 
 Starter's second formatter has a much narrower surface than its name suggests.
