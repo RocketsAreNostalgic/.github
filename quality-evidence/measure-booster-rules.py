@@ -90,3 +90,39 @@ def measure(repo):
  return repo
 with ThreadPoolExecutor(max_workers=3) as pool:
  for repo in pool.map(measure,META):print('DONE',repo,flush=True)
+
+
+# Emit the exact aggregate evidence schema used by the audit. Static tool/runtime
+# metadata and auxiliary control results are retained from the reviewed evidence
+# seed; all per-repository baseline/strict/fix measurements are replaced by this run.
+seed=json.loads(Path(__file__).with_name('booster-rule-results.json').read_text())
+aggregate={k:seed[k] for k in ('purpose','tools','runtime','alignment_control')}
+aggregate['repositories']={}
+aggregate['totals']={'alignment':0,'checked_files':0,'methods':0,'tracked_files':0,'variables_properties':0,'yoda':0}
+for repo, meta in META.items():
+ measured=json.loads((OUT/(repo+'.json')).read_text())
+ previous=seed['repositories'][repo]
+ diagnostics=measured['strict']['diagnostics']
+ counts={
+  'alignment':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if k.startswith('Generic.Formatting.MultipleStatementAlignment') or k.startswith('WordPress.Arrays.MultipleStatementAlignment')),
+  'methods':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if k.endswith('.MethodNameInvalid')),
+  'variables_properties':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if '.ValidVariableName.' in k),
+  'yoda':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if k.startswith('WordPress.PHP.YodaConditions')),
+ }
+ row=dict(previous)
+ row.update({
+  'baseline_exit':measured['baseline']['exit'],
+  'baseline_totals':measured['baseline']['totals'],
+  'checked_php_files':len(measured['baseline']['files']),
+  'counts':counts,
+  'diagnostics':diagnostics,
+  'fixes':measured['fixes'],
+ })
+ aggregate['repositories'][repo]=row
+ aggregate['totals']['checked_files']+=row['checked_php_files']
+ aggregate['totals']['methods']+=counts['methods']
+ aggregate['totals']['variables_properties']+=counts['variables_properties']
+ aggregate['totals']['yoda']+=counts['yoda']
+ aggregate['totals']['alignment']+=counts['alignment']
+ aggregate['totals']['tracked_files']+=int(previous.get('tracked_php_files', row['checked_php_files']))
+(OUT/'booster-rule-results.json').write_text(json.dumps(aggregate,indent=2,sort_keys=True)+'\n')
