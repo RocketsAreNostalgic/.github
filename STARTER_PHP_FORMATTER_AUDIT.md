@@ -136,7 +136,7 @@ parallel. PHP-CS-Fixer's cache is disabled and its runner is sequential; PHPCS
 uses one worker per case. Neither application PHP nor Composer scripts run.
 
 Reproduce against the same verified disposable source archive with its locked dependencies and PHPCS
-standards installed, with exact PHP 8.4.23 on `PATH`. Before installing tools, generate a JSON source manifest from the verified inspected revision/archive that maps every tracked source path to its SHA-256. Keep that manifest outside the disposable root. The harness hashes every listed source file before executing any formatter and records the manifest digest:
+standards installed, with exact PHP 8.4.23 on `PATH`. Before installing tools, generate an authoritative JSON source-manifest envelope from the verified inspected revision/archive with `revision` and a complete `files` map from every tracked source path to its SHA-256. Keep that manifest outside the disposable root. The harness hashes every listed source file before executing any formatter and records the manifest digest:
 
 ```sh
 php -r 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'
