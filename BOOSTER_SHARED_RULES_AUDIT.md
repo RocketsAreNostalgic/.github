@@ -165,14 +165,13 @@ change has been proposed in an implementation PR by this experiment.
 ## Revisions, method and limits
 
 The [machine-readable results](quality-evidence/booster-rule-results.json)
-contain full source revisions, locked tool versions/references, effective local
-rule exceptions, diagnostic samples, path exclusions, control results and
-second-pass measurements. The [reproduction harness](quality-evidence/measure-booster-rules.py)
-runs the primary baseline and candidate comparison against disposable clean
-Git checkouts pinned to the exact recorded revisions. It verifies each checkout
-HEAD and rejects tracked modifications or untracked files before probing; the
-inventory enumerates only Git-tracked PHP paths, so ignored/generated PHP does
-not enter revision-labelled evidence.
+are the retained audit snapshot: source revisions, observed tool identities,
+effective local rule exceptions, diagnostic samples, path exclusions, control
+results and second-pass measurements from the investigation. The accompanying
+scripts are **audit aids**, not a canonical provenance or reproducible-build
+system. They document the measurement techniques and support bounded re-checks;
+they are not claimed to regenerate the committed JSON byte-for-byte or to
+authenticate arbitrary local inputs as the historical run.
 
 | Repository | Exact default-branch snapshot |
 | --- | --- |
@@ -204,9 +203,11 @@ type to error. Run PHPCS selecting those five sniff families; measure alignment
 and Yoda PHPCBF passes independently from restored snapshots. The broader
 exception probe separately enables just the three named recurring rule families.
 
-Reproduce the primary measurements with the seven exact tracked source trees
-under a disposable directory, a PHP binary and the matching registered tool
-installation:
+To repeat or challenge the primary measurements, prepare the seven recorded
+source revisions under a disposable directory and use a matching PHP/tool
+installation. Treat the resulting output as a **new measurement** whose
+environment and source state must be recorded independently; do not treat the
+script as a regeneration or provenance verifier for the committed snapshot:
 
 ```sh
 python3 quality-evidence/measure-booster-rules.py /tmp/booster-audit /path/to/php /path/to/vendor
