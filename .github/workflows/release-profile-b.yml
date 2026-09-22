@@ -300,13 +300,14 @@ jobs:
 
           if [[ "$RAN_PUBLICATION_STATE" == draft ]]; then
             if [[ "$IMMUTABLE_RELEASES_ENABLED" != true ]]; then
-              echo '::error::Enable GitHub immutable releases and set RAN_IMMUTABLE_RELEASES_ENABLED=true. The verified release remains a draft.'
+              echo '::error::GitHub immutable releases must be enabled and RAN_IMMUTABLE_RELEASES_ENABLED must be the exact string true. The verified release remains a draft.'
               exit 1
             fi
-            version_tag="${RAN_RELEASE_TAG#v}"
-            latest=(--latest)
-            [[ "$version_tag" == *-* ]] && latest=(--prerelease)
-            gh release edit "$RAN_RELEASE_TAG" --draft=false "${latest[@]}" --repo "$GITHUB_REPOSITORY"
+            release_id="$(jq -er '.id' <<< "$release_json")"
+            prerelease_before="$(jq -er '.prerelease' <<< "$release_json")"
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${release_id}"               -F draft=false >/dev/null
+            release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
+            test "$(jq -er '.prerelease' <<< "$release_json")" = "$prerelease_before"
           fi
 
           immutable=false
