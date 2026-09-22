@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run only in a disposable Starter archive with its locked tools installed.
-Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION
+Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION SOURCE_SHA256
 Requires php on PATH. Does not execute application code or Composer scripts.
 """
 from concurrent.futures import ThreadPoolExecutor
@@ -16,10 +16,15 @@ import tempfile
 root = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
 revision = sys.argv[3]
+source_sha256 = sys.argv[4]
+assert len(source_sha256) == 64 and all(c in '0123456789abcdef' for c in source_sha256)
 assert len(revision) == 40 and all(c in '0123456789abcdef' for c in revision)
 php = shutil.which('php')
 assert php and (root / 'vendor/autoload.php').is_file()
 assert not (root / '.git').exists(), 'Use a disposable archive, not a Git checkout'
+source_manifest = root / '.ran-formatter-source.sha256'
+assert source_manifest.is_file(), 'Source archive must include the verified .ran-formatter-source.sha256 marker'
+assert source_manifest.read_text().strip() == source_sha256, 'Source archive checksum marker does not match the expected archive digest'
 env = {'PATH': os.environ['PATH'], 'HOME': tempfile.mkdtemp(prefix='formatter-home-')}
 fix = [php, 'vendor/bin/php-cs-fixer', 'fix', '--config=scripts/.php-cs-fixer.php',
        '--allow-risky=yes', '--using-cache=no', '--sequential', '--path-mode=override']
