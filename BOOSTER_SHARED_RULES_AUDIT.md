@@ -50,7 +50,7 @@ returned PHPCS exit 2 with two fixable warnings. The proposed error promotion
 returned exit 2 with two fixable errors. Both block today. Moving alignment into
 an explicit shared contract need not produce a suite formatting sweep.
 
-## Naming is a compatibility decision
+## Naming requires a coordinated migration
 
 The flagged methods include actual public contracts, such as
 [Branch Updater's `AdmittedArchiveSource::verifyCurrentHead()`](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/blob/15253ac03878b01da254d6702a9753103354d8e9/src/Contract/AdmittedArchiveSource.php).
@@ -145,14 +145,14 @@ exempt because a separate fixture repository can be exempt.
    It requires 181 reviewed findings to be addressed at these scopes, with
    behavior/contract tests on each implementation candidate. Do not add a
    second formatter just to automate these rewrites.
-4. **Make naming an explicit decision before rollout.** Preserve established
-   public OOP contracts during a quality-tool migration. Choose a documented
-   Booster camelCase OOP convention or a separately planned coordinated
-   snake_case API migration. The current blanket variable suppression covers
-   far more than public contracts and is not automatically ratified by this
-   assessment. Separate API-bound identifiers from local implementation names
-   before narrowing that rule. A profile which merely copies every current
-   suppression would perpetuate the problem.
+4. **Apply the owner's subsequent beta naming decision.** Public visibility
+   does not freeze RAN-owned APIs. Target WordPress `snake_case` for methods,
+   properties, parameters and locals, with coordinated declarations, callers,
+   named arguments, tests and releases. Preserve only demonstrated external
+   signature constraints. The [declaration/caller follow-up](BOOSTER_NAMING_MIGRATION.md)
+   replaces the earlier open choice between a Booster camelCase convention and
+   snake_case migration. It also identifies methods hidden by WPCS's inheritance
+   heuristic, beyond the diagnostic counts in this historical probe.
 5. **Remove or narrow demonstrated redundant suppressions and reconcile
    coverage separately.** Use the concrete findings above. These smaller edits
    can be reviewed independently of naming, release architecture and bulk
