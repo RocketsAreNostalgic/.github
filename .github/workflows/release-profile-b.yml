@@ -83,7 +83,7 @@ jobs:
     name: Release Please + exact asset promotion
     needs: admit
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30
     permissions:
       contents: write
       issues: write
@@ -223,8 +223,8 @@ jobs:
               gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/dispatches" --input - >/dev/null
           fi
 
-          for attempt in {1..40}; do
-            sleep 3
+          for attempt in {1..300}; do
+            sleep 5
             state="$(coverage_state)"
             if [[ "$state" == success ]]; then
               test "$(read_candidate_ref)" = "$head_sha"
