@@ -168,8 +168,11 @@ The [machine-readable results](quality-evidence/booster-rule-results.json)
 contain full source revisions, locked tool versions/references, effective local
 rule exceptions, diagnostic samples, path exclusions, control results and
 second-pass measurements. The [reproduction harness](quality-evidence/measure-booster-rules.py)
-runs the primary baseline and candidate comparison against disposable source
-copies; it deliberately rejects ordinary Git checkouts.
+runs the primary baseline and candidate comparison against disposable clean
+Git checkouts pinned to the exact recorded revisions. It verifies each checkout
+HEAD and rejects tracked modifications or untracked files before probing; the
+inventory enumerates only Git-tracked PHP paths, so ignored/generated PHP does
+not enter revision-labelled evidence.
 
 | Repository | Exact default-branch snapshot |
 | --- | --- |
