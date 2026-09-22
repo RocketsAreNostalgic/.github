@@ -1,0 +1,409 @@
+name: RAN Release Liveness Observer
+
+on:
+  workflow_call:
+    inputs:
+      grace_minutes:
+        description: Minutes after the merged release proposal before an unresolved candidate is stranded.
+        required: false
+        type: number
+        default: 60
+      manifest_path:
+        description: Repository-relative Release Please manifest path.
+        required: false
+        type: string
+        default: .release-please-manifest.json
+      release_pr_title_prefix:
+        description: Exact title prefix used by the merged Release Please proposal.
+        required: false
+        type: string
+        default: 'chore(main): release '
+      active_workflow_names:
+        description: Comma-separated workflow names whose active exact-candidate runs may keep publication pending.
+        required: false
+        type: string
+        default: 'Release Please'
+    outputs:
+      state:
+        description: Observed candidate state when the observer completes successfully.
+        value: ${{ jobs.observe.outputs.state }}
+
+permissions:
+  actions: read
+  contents: read
+  pull-requests: read
+
+jobs:
+  observe:
+    name: Observe release terminal state
+    concurrency:
+      group: release-liveness-${{ github.repository }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      state: ${{ steps.observe.outputs.state }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RAN_GRACE_MINUTES: ${{ inputs.grace_minutes }}
+      RAN_MANIFEST_PATH: ${{ inputs.manifest_path }}
+      RAN_RELEASE_PR_TITLE_PREFIX: ${{ inputs.release_pr_title_prefix }}
+      RAN_ACTIVE_WORKFLOW_NAMES: ${{ inputs.active_workflow_names }}
+    steps:
+      - name: Observe current release candidate
+        id: observe
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail_observer() {
+            local message="$1"
+            {
+              echo '## Release liveness: observer error'
+              echo
+              echo "$message"
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::$message"
+            exit 1
+          }
+
+          record_state() {
+            local state="$1" detail="$2"
+            echo "state=${state}" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Release liveness: ${state}"
+              echo
+              echo "$detail"
+            } >> "$GITHUB_STEP_SUMMARY"
+          }
+
+          resolve_tag_commit() {
+            local object_json="$1" object_type object_sha depth
+            for depth in {1..16}; do
+              object_type="$(jq -er '.object.type' <<< "$object_json")"
+              object_sha="$(jq -er '.object.sha | select(test("^[0-9a-f]{40}$"))' <<< "$object_json")"
+              case "$object_type" in
+                commit)
+                  printf '%s\n' "$object_sha"
+                  return 0
+                  ;;
+                tag)
+                  object_json="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${object_sha}")"
+                  ;;
+                *)
+                  echo "::error::Unsupported Git tag object type: ${object_type}" >&2
+                  return 1
+                  ;;
+              esac
+            done
+            echo '::error::Git tag indirection exceeds the supported depth.' >&2
+            return 1
+          }
+
+          [[ "$RAN_GRACE_MINUTES" =~ ^[0-9]+$ ]] || fail_observer 'grace_minutes must be a non-negative integer.'
+          [[ "$RAN_MANIFEST_PATH" =~ ^[A-Za-z0-9._/-]+$ && "$RAN_MANIFEST_PATH" != *'..'* ]] \
+            || fail_observer 'manifest_path contains unsupported path syntax.'
+          test -n "$RAN_RELEASE_PR_TITLE_PREFIX" || fail_observer 'release_pr_title_prefix must not be empty.'
+          test -n "$RAN_ACTIVE_WORKFLOW_NAMES" || fail_observer 'active_workflow_names must not be empty.'
+          readonly RAN_RECONCILED_LABEL='release: reconciled'
+
+          repository="$GITHUB_REPOSITORY"
+          default_branch="$(gh api "repos/${repository}" --jq '.default_branch')"
+          test -n "$default_branch" || fail_observer 'Could not resolve the default branch.'
+
+          manifest="$(
+            gh api --method GET "repos/${repository}/contents/${RAN_MANIFEST_PATH}" \
+              -f ref="$default_branch" \
+              --jq '.content' |
+              tr -d '\n' |
+              base64 --decode
+          )"
+          version="$(jq -er '.["."] | select(type == "string" and length > 0)' <<< "$manifest")"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] \
+            || fail_observer "Manifest version is not a supported Release Please version: ${version}"
+
+          tag="v${version}"
+          expected_title="${RAN_RELEASE_PR_TITLE_PREFIX}${version}"
+
+          pull_pages="$(
+            gh api --paginate --method GET \
+              "repos/${repository}/pulls" \
+              -f state=closed \
+              -f base="$default_branch" \
+              -F per_page=100 \
+              --slurp
+          )"
+          candidates="$(
+            jq -c --arg title "$expected_title" \
+              '[.[][] | select(
+                .merged_at != null and
+                .title == $title and
+                ([.labels[].name] | index("autorelease: abandoned") == null)
+              )]' \
+              <<< "$pull_pages"
+          )"
+          candidate_count="$(jq -er 'length' <<< "$candidates")"
+          if [[ "$candidate_count" != 1 ]]; then
+            fail_observer "Expected exactly one merged release proposal titled '${expected_title}', found ${candidate_count}."
+          fi
+
+          candidate="$(jq -c '.[0]' <<< "$candidates")"
+          candidate_number="$(jq -er '.number' <<< "$candidate")"
+          candidate_sha="$(jq -er '.merge_commit_sha | select(test("^[0-9a-f]{40}$"))' <<< "$candidate")"
+          merged_at="$(jq -er '.merged_at | select(type == "string" and length > 0)' <<< "$candidate")"
+          merged_epoch="$(date -u -d "$merged_at" +%s)"
+          now_epoch="$(date -u +%s)"
+          if [[ "$merged_epoch" -gt "$now_epoch" ]]; then
+            fail_observer "Release proposal merge time ${merged_at} is in the future."
+          fi
+          age_minutes="$(( (now_epoch - merged_epoch) / 60 ))"
+
+
+          # Liveness is observed as a bounded read-only transaction rather than
+          # as a chain of one-off API reads. We take two complete terminal-state
+          # snapshots around publisher observations. Runs that start OR finish
+          # during this observation window count as activity, so a publisher
+          # cannot disappear merely because it reached "completed" between reads.
+          active_workflow_names="$(jq -Rce 'split(",") | map(gsub("^[[:space:]]+|[[:space:]]+$"; "")) | map(select(length > 0)) | unique | select(length > 0)' <<< "$RAN_ACTIVE_WORKFLOW_NAMES")" || fail_observer 'active_workflow_names must contain at least one workflow name.'
+          observation_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          snapshot_terminal() {
+            local release_file release_curl_status release_http_status release_json
+            local tag_file tag_curl_status tag_http_status tag_json tag_commit
+            local labels
+
+            release_file="$(mktemp)"
+            release_curl_status=0
+            release_http_status="$(
+              curl --silent --show-error                 --output "$release_file"                 --write-out '%{http_code}'                 -H 'Accept: application/vnd.github+json'                 -H "Authorization: Bearer ${GH_TOKEN}"                 -H 'X-GitHub-Api-Version: 2026-03-10'                 "https://api.github.com/repos/${repository}/releases/tags/${tag}"
+            )" || release_curl_status=$?
+            if [[ "$release_curl_status" -ne 0 ]]; then
+              rm -f "$release_file"
+              fail_observer "Release snapshot failed at the transport layer with status ${release_curl_status}."
+            fi
+            case "$release_http_status" in
+              200)
+                release_json="$(cat "$release_file")"
+                rm -f "$release_file"
+                ;;
+              404)
+                rm -f "$release_file"
+                release_json='null'
+                ;;
+              *)
+                cat "$release_file" >&2
+                rm -f "$release_file"
+                fail_observer "Release snapshot for ${tag} failed with HTTP ${release_http_status}."
+                ;;
+            esac
+
+            tag_file="$(mktemp)"
+            tag_curl_status=0
+            tag_http_status="$(
+              curl --silent --show-error                 --output "$tag_file"                 --write-out '%{http_code}'                 -H 'Accept: application/vnd.github+json'                 -H "Authorization: Bearer ${GH_TOKEN}"                 -H 'X-GitHub-Api-Version: 2026-03-10'                 "https://api.github.com/repos/${repository}/git/ref/tags/${tag}"
+            )" || tag_curl_status=$?
+            if [[ "$tag_curl_status" -ne 0 ]]; then
+              rm -f "$tag_file"
+              fail_observer "Tag snapshot failed at the transport layer with status ${tag_curl_status}."
+            fi
+            case "$tag_http_status" in
+              200)
+                tag_json="$(cat "$tag_file")"
+                rm -f "$tag_file"
+                tag_commit="$(resolve_tag_commit "$tag_json")"
+                if [[ "$tag_commit" != "$candidate_sha" ]]; then
+                  fail_observer "Existing tag ${tag} resolves to ${tag_commit}, not exact candidate ${candidate_sha}."
+                fi
+                ;;
+              404)
+                rm -f "$tag_file"
+                tag_commit=''
+                ;;
+              *)
+                cat "$tag_file" >&2
+                rm -f "$tag_file"
+                fail_observer "Tag snapshot for ${tag} failed with HTTP ${tag_http_status}."
+                ;;
+            esac
+
+            labels="$(gh api "repos/${repository}/pulls/${candidate_number}" --jq '[.labels[].name]')"
+
+            jq -cn               --argjson release "$release_json"               --arg release_http "$release_http_status"               --arg tag_commit "$tag_commit"               --argjson labels "$labels"               '{
+                release_http: $release_http,
+                release: $release,
+                tag_commit: $tag_commit,
+                labels: $labels
+              }'
+          }
+
+          snapshot_publishers() {
+            local pages
+            pages="$(gh api --paginate "repos/${repository}/actions/runs?head_sha=${candidate_sha}&per_page=100" --slurp)"
+            jq -c               --argjson current_run_id "$GITHUB_RUN_ID"               --argjson workflow_names "$active_workflow_names"               --arg started "$observation_started_at"               '[.[].workflow_runs[]
+                | select(.id != $current_run_id)
+                | select(.name as $name | ($workflow_names | index($name)) != null)
+                | select(
+                    .status != "completed" or
+                    (.created_at // "") >= $started or
+                    (.updated_at // "") >= $started
+                  )
+                | {
+                    id,
+                    name,
+                    event,
+                    status,
+                    conclusion,
+                    created_at,
+                    updated_at,
+                    html_url
+                  }
+              ]' <<< "$pages"
+          }
+
+          validate_terminal_snapshot() {
+            local snapshot="$1" release_http release tag_commit reconciled pending tagged
+            release_http="$(jq -r '.release_http' <<< "$snapshot")"
+            release="$(jq -c '.release' <<< "$snapshot")"
+            tag_commit="$(jq -r '.tag_commit' <<< "$snapshot")"
+            reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" '.labels | index($label) != null' <<< "$snapshot")"
+            pending="$(jq -r '.labels | index("autorelease: pending") != null' <<< "$snapshot")"
+            tagged="$(jq -r '.labels | index("autorelease: tagged") != null' <<< "$snapshot")"
+
+            if [[ "$release_http" == 200 ]]; then
+              if ! jq -e --arg tag "$tag" '.tag_name == $tag' <<< "$release" >/dev/null; then
+                fail_observer "Release object does not identify expected tag ${tag}."
+              fi
+              if jq -e '.draft == false and .published_at != null' <<< "$release" >/dev/null; then
+                [[ "$reconciled" != true ]] || fail_observer "Published release ${tag} also carries ${RAN_RECONCILED_LABEL}."
+              fi
+            fi
+          }
+
+          classify_terminal_snapshot() {
+            local snapshot="$1" release_http release tag_commit reconciled pending tagged
+            release_http="$(jq -r '.release_http' <<< "$snapshot")"
+            release="$(jq -c '.release' <<< "$snapshot")"
+            tag_commit="$(jq -r '.tag_commit' <<< "$snapshot")"
+            reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" '.labels | index($label) != null' <<< "$snapshot")"
+            pending="$(jq -r '.labels | index("autorelease: pending") != null' <<< "$snapshot")"
+            tagged="$(jq -r '.labels | index("autorelease: tagged") != null' <<< "$snapshot")"
+
+            if [[ "$release_http" == 200 ]] && jq -e '.draft == false and .published_at != null' <<< "$release" >/dev/null; then
+              if [[ -z "$tag_commit" ]]; then
+                printf '%s\n' nonterminal
+                return 0
+              fi
+              if [[ "$tagged" == true && "$pending" != true && "$reconciled" != true ]]; then
+                printf '%s\n' published
+              else
+                printf '%s\n' pending
+              fi
+              return 0
+            fi
+
+            if [[ "$release_http" == 404 && -z "$tag_commit" && "$reconciled" == true && "$pending" != true && "$tagged" != true ]]; then
+              printf '%s\n' reconciled
+              return 0
+            fi
+
+            printf '%s\n' nonterminal
+          }
+
+          terminal_before="$(snapshot_terminal)"
+          validate_terminal_snapshot "$terminal_before"
+
+          publishers_before="$(snapshot_publishers)"
+
+          terminal_after="$(snapshot_terminal)"
+          validate_terminal_snapshot "$terminal_after"
+
+          publishers_after="$(snapshot_publishers)"
+
+          # Close the remaining observation-boundary race: take one final
+          # terminal snapshot after the last publisher read. Any publisher
+          # that starts after publishers_after but mutates release/tag/labels
+          # will therefore make the terminal picture change and force pending.
+          terminal_final="$(snapshot_terminal)"
+          validate_terminal_snapshot "$terminal_final"
+
+          publishers_final="$(snapshot_publishers)"
+          publisher_activity="$(jq -cs 'add | unique_by(.id)' \
+            <(printf '%s\n' "$publishers_before") \
+            <(printf '%s\n' "$publishers_after") \
+            <(printf '%s\n' "$publishers_final"))"
+          publisher_activity_count="$(jq -er 'length' <<< "$publisher_activity")"
+          publisher_activity_names="$(jq -r '[.[] | "$(.name) (#$(.id), $(.status), updated $(.updated_at))"] | join(", ")' <<< "$publisher_activity")"
+
+          terminal_state="$(classify_terminal_snapshot "$terminal_final")"
+          terminal_stable=false
+          if [[ "$terminal_before" == "$terminal_after" && "$terminal_after" == "$terminal_final" ]]; then
+            terminal_stable=true
+          fi
+
+          # Positive publication is self-authenticating through the exact final
+          # tag. Transitional labels remain pending rather than becoming an
+          # observer error.
+          if [[ "$terminal_state" == published ]]; then
+            record_state published "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}."
+            exit 0
+          fi
+          if [[ "$terminal_state" == pending ]]; then
+            record_state pending "PR #${candidate_number} / ${tag} has an exact published release, but Release Please labels are still transitioning."
+            exit 0
+          fi
+
+          # Any relevant publisher that was active OR changed during this
+          # observation window fences negative/reconciliation decisions. This
+          # includes publishers that start and finish between API reads.
+          if [[ "$publisher_activity_count" -gt 0 ]]; then
+            record_state pending "PR #${candidate_number} / ${tag} has release-capable exact-candidate activity during this observation: ${publisher_activity_names}."
+            exit 0
+          fi
+
+          final_release_http="$(jq -r '.release_http' <<< "$terminal_final")"
+          final_release="$(jq -c '.release' <<< "$terminal_final")"
+          final_tag_commit="$(jq -r '.tag_commit' <<< "$terminal_final")"
+          if [[ "$terminal_stable" == true && "$final_release_http" == 200 && -z "$final_tag_commit" ]] \
+            && jq -e '.draft == false and .published_at != null' <<< "$final_release" >/dev/null; then
+            fail_observer "Published release ${tag} has no final Git tag after stable terminal snapshots and no publisher activity."
+          fi
+
+          # A terminal reconciliation is accepted only from a stable pair of
+          # complete terminal snapshots with no publisher activity in between.
+          if [[ "$terminal_state" == reconciled ]]; then
+            if [[ "$terminal_stable" != true ]]; then
+              record_state pending "PR #${candidate_number} / ${tag} reached reconciliation while terminal state was changing; defer confirmation to the next observation."
+              exit 0
+            fi
+            record_state reconciled "PR #${candidate_number} / ${tag} is explicitly reconciled with stable release/tag/label state and no publisher activity during observation."
+            exit 0
+          fi
+
+          if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
+            record_state pending "PR #${candidate_number} / ${tag} remains nonterminal inside the ${RAN_GRACE_MINUTES}-minute publication grace window."
+            exit 0
+          fi
+
+          # A changed terminal picture is never called stranded in the same
+          # observation. Let the next observer pass establish stability.
+          if [[ "$terminal_stable" != true ]]; then
+            record_state pending "PR #${candidate_number} / ${tag} changed release/tag/label state during observation; defer the terminal verdict."
+            exit 0
+          fi
+
+          {
+            echo '## Release liveness: stranded'
+            echo
+            echo "Merged release PR #${candidate_number} / ${tag} has no exact published terminal state."
+            echo
+            echo "- candidate: ${candidate_sha}"
+            echo "- merged: ${merged_at}"
+            echo "- age: ${age_minutes} minutes"
+            echo "- grace: ${RAN_GRACE_MINUTES} minutes"
+            echo "- release-capable activity during observation: 0"
+            echo "- reconciliation label: ${RAN_RECONCILED_LABEL} absent or nonterminal"
+            echo
+            echo 'Repository-specific recovery remains responsible for choosing whether to publish, repair, cancel, or supersede this candidate.'
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::Release candidate ${tag} at ${candidate_sha} is stranded after ${age_minutes} minutes."
+          exit 1
