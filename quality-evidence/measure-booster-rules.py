@@ -120,13 +120,38 @@ for repo, meta in META.items():
   'variables_properties':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if '.ValidVariableName.' in k),
   'yoda':sum(v['errors']+v['warnings'] for k,v in diagnostics.items() if k.startswith('WordPress.PHP.YodaConditions')),
  }
- row=dict(previous)
+ split={}
+ for code, detail in diagnostics.items():
+  category='yoda' if code.startswith('WordPress.PHP.YodaConditions') else 'naming' if 'NamingConventions' in code else 'alignment'
+  for path in detail['files']:
+   location='tests_scripts' if path.startswith(('tests/','scripts/')) else 'other'
+   split.setdefault(location,{}).setdefault(category,0)
+  for example in detail['examples']:
+   location='tests_scripts' if example['path'].startswith(('tests/','scripts/')) else 'other'
+   split.setdefault(location,{}).setdefault(category,0)
+  for location in split:
+   # Exact diagnostic distribution is derived from the strict report below.
+   pass
+ # Recompute path/category counts from every strict message, not the seed.
+ strict_report=json.loads((OUT/(repo+'-strict.log')).read_text())
+ split={}
+ for path, details in strict_report['files'].items():
+  location='tests_scripts' if path.startswith(('tests/','scripts/')) else 'other'
+  for message in details['messages']:
+   code=message['source']
+   category='yoda' if code.startswith('WordPress.PHP.YodaConditions') else 'naming' if 'NamingConventions' in code else 'alignment'
+   split.setdefault(location,{}).setdefault(category,0)
+   split[location][category]+=1
+ row={k:previous[k] for k in ('sha','config','configured_roots','local_rules','other_exception_probe','outside_phpcs') if k in previous}
  row.update({
   'baseline_exit':measured['baseline']['exit'],
   'baseline_totals':measured['baseline']['totals'],
   'checked_php_files':len(measured['baseline']['files']),
+  'tracked_php_files':int(subprocess.run(['git','-C',str(ROOT/repo),'ls-files','-z','--','*.php'],check=True,capture_output=True).stdout.count(b'\\0')),
   'counts':counts,
   'diagnostics':diagnostics,
+  'strict_totals':measured['strict']['totals'],
+  'split':split,
   'fixes':measured['fixes'],
  })
  aggregate['repositories'][repo]=row
