@@ -231,6 +231,12 @@ applying #42; default-branch publisher tests listed above are not instructions
 to restore retired machinery. The same rule applies to subsequent coordinated
 Profile B consumers.
 
+Starter now has a bounded [runtime formatter comparison](STARTER_PHP_FORMATTER_AUDIT.md)
+on PHP 8.4.23 at the recorded revision. Its configured one-file fixer check and
+42-file PHPCS check pass, but negative fixtures demonstrate that the two gates
+do not enforce alignment equally. This is formatter evidence only; it is not
+a complete Starter install, application test, or new CI proof.
+
 Remaining acceptance is source-specific: complete the canonical commands,
 repair parser failure/discovery handling, decide Starter's formatter replacement
 with behavioral proof, add evidenced analysis for Migrator/Admin Shell, expand
