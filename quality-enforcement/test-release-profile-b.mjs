@@ -28,6 +28,8 @@ const required = [
   'Ensure exact Release Please candidate has Quality',
   'dispatches',
   'coverage_state()',
+  'for attempt in {1..300}',
+  'sleep 5',
   '($exact | length) > 0',
   'head_sha=${head_sha}',
   'No successful Quality run covered exact Release Please candidate',
