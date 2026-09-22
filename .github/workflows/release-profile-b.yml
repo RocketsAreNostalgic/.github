@@ -119,9 +119,10 @@ jobs:
             and $root["force-tag-creation"] == true
             and $root["skip-github-release"] != true
             and all(($root.packages // {})[]?;
-              (.draft // $root.draft) == true
-              and (.["force-tag-creation"] // $root["force-tag-creation"]) == true
-              and (.["skip-github-release"] // $root["skip-github-release"]) != true
+              type == "object"
+              and (if has("draft") then .draft else $root.draft end) == true
+              and (if has("force-tag-creation") then .["force-tag-creation"] else $root["force-tag-creation"] end) == true
+              and (if has("skip-github-release") then .["skip-github-release"] else $root["skip-github-release"] end) != true
             )
           ' <<< "$config" >/dev/null
 
