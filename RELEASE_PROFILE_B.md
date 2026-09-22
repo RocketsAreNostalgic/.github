@@ -111,8 +111,14 @@ After exact successful-main admission:
 6. Download the exact triggering Quality artifact by workflow run ID and attempt.
 7. Verify repository/SHA/tag binding and every declared asset digest.
 8. Accept an already-present asset only when its GitHub-reported digest is exact. Missing draft assets are uploaded once. Conflicting or unexpected assets fail closed.
-9. Publish the draft only when immutable releases are enabled.
+9. Revalidate the captured release ID, tag, admitted target SHA, original prerelease boolean and expected draft/published state on the post-upload response before publication. Metadata changes fail closed before the publication PATCH. Publish the draft only when immutable releases are enabled.
 10. Read back exact tag target, asset names/digests, non-draft state and `immutable == true`.
+
+The original boolean `prerelease` classification is captured during publication resolution and retained through initial promotion validation, pre-publication validation and final readback. Changes in either direction fail closed; stable `false` is valid.
+
+The resolved Release Please release ID is carried through promotion and readback, with its tag and admitted target SHA checked again. Draft releases are read through `/releases/{release_id}` because `/releases/tags/{tag}` can return HTTP 404 before publication. This uses the existing release identity; it does not create a replacement release.
+
+Asset uploads use the captured release ID's endpoint on `uploads.github.com`, sending the exact verified file as the raw request body. Publishing also targets that same ID. No mutation re-resolves the tag to select a release; deletion/recreation under the same tag therefore fails closed against the original ID.
 
 The workflow never uses `--clobber`.
 

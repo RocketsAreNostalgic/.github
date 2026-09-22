@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const workflow = readFileSync('.github/workflows/release-profile-b.yml', 'utf8');
 const docs = readFileSync('RELEASE_PROFILE_B.md', 'utf8');
@@ -47,7 +50,7 @@ const required = [
   'sha256sum',
   '.target_commitish == $sha',
   '.immutable',
-  'gh release upload',
+  'https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}/assets?name=${name}',
   'prerelease_before',
   'gh api --method PATCH',
   'googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7',
@@ -56,6 +59,7 @@ for (const token of required) assert.ok(workflow.includes(token), `missing contr
 
 for (const forbidden of [
   '--clobber',
+  'gh release upload',
   'autorelease: pending',
   'autorelease: tagged',
   'merge_commit_sha',
@@ -79,10 +83,10 @@ assert.ok(release.includes('pull-requests: write'));
 assert.ok(release.includes('issues: write'));
 assert.ok(release.includes('actions: write'));
 
-// Execute the actual pre-publication capture, not a copy of its jq expression.
-// End before the first API mutation; every fixture is local JSON only.
-const captureStart = workflow.indexOf('            release_id=');
-const captureEnd = workflow.indexOf('            gh api --method PATCH', captureStart);
+// Execute the actual classification capture at publication resolution.
+// Every fixture is local JSON only; preserve legitimate false and reject non-booleans.
+const captureStart = workflow.indexOf("          # Capture Release Please's classification");
+const captureEnd = workflow.indexOf('          release_id=', captureStart);
 assert.ok(captureStart >= 0 && captureEnd > captureStart, 'missing prerelease capture boundary');
 const capture = workflow.slice(captureStart, captureEnd);
 assert.ok(capture.includes('prerelease_before='));
@@ -117,6 +121,162 @@ for (const [name, releaseJson, expected] of booleanCases) {
     assert.equal(result.status, 0, `${name}: ${result.stderr}`);
     assert.equal(result.stdout.trim(), expected, `${name}: preserve Release Please's boolean`);
   }
+}
+
+// Exercise the actual first promotion lookup. A draft is readable by ID while
+// the tag endpoint returns 404, matching the observed production failure.
+const promotion = workflow.slice(workflow.indexOf('      - name: Verify and promote exact tested assets'));
+const lookupStart = promotion.indexOf('          release_json=');
+const lookupEnd = promotion.indexOf('          remote_names=', lookupStart);
+assert.ok(lookupStart >= 0 && lookupEnd > lookupStart);
+const lookup = promotion.slice(lookupStart, lookupEnd);
+assert.ok(!promotion.includes('/releases/tags/'), 'promotion must keep the resolved release ID');
+assert.ok(workflow.includes('release-id=%s'));
+assert.ok(workflow.includes('prerelease=%s'));
+assert.ok(workflow.includes('RAN_RELEASE_PRERELEASE: ${{ steps.publication.outputs.prerelease }}'));
+assert.ok(workflow.includes('RAN_RELEASE_ID: ${{ steps.publication.outputs.release-id }}'));
+const exactRelease = { id: 394078148, tag_name: 'v1.3.3', target_commitish: 'a'.repeat(40), draft: true, prerelease: false };
+for (const [name, fixture, expectedStatus] of [
+  ['draft by ID', exactRelease, 0],
+  ['published by ID', { ...exactRelease, draft: false, immutable: true }, 0],
+  ['wrong ID', { ...exactRelease, id: 2 }, 1],
+  ['wrong tag', { ...exactRelease, tag_name: 'v1.3.4' }, 1],
+  ['wrong target', { ...exactRelease, target_commitish: 'b'.repeat(40) }, 1],
+]) {
+  const result = spawnSync('bash', ['-c', `set -euo pipefail
+gh() {
+  if [[ "$*" == "api repos/example/repo/releases/394078148" ]]; then
+    printf '%s\\n' "$RAN_TEST_RELEASE_JSON"
+  else
+    echo 'Not Found (HTTP 404)' >&2
+    return 1
+  fi
+}
+${lookup}`], {
+    encoding: 'utf8',
+    env: { ...process.env, GITHUB_REPOSITORY: 'example/repo',
+      RAN_RELEASE_ID: '394078148', RAN_RELEASE_TAG: 'v1.3.3', RAN_RELEASE_PRERELEASE: 'false',
+      RAN_ADMITTED_SHA: 'a'.repeat(40), RAN_TEST_RELEASE_JSON: JSON.stringify(fixture) },
+    timeout: 10000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.status, expectedStatus, `${name}: ${result.stderr}`);
+}
+
+// Run the entire promotion step against a local API simulator, including raw
+// uploads, publication and immutable readback. Unexpected/tag-based calls fail.
+const promotionScript = promotion.slice(promotion.indexOf('        run: |') + '        run: |'.length)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+for (const scenario of ['stable', 'prerelease', 'published', 'deleted-before-upload',
+  'drift-id', 'drift-tag', 'drift-target', 'drift-draft', 'drift-draft-null',
+  'drift-stable-to-prerelease', 'drift-prerelease-to-stable',
+  'early-stable-to-prerelease', 'early-prerelease-to-stable']) {
+  const dir = mkdtempSync(join(tmpdir(), 'profile-b-promotion-'));
+  try {
+    mkdirSync(join(dir, 'promotion'));
+    const assets = [ ['example.zip', Buffer.from([0, 1, 2, 255, 10])], ['example.zip.sha256', Buffer.from('checksum fixture\n')] ]
+      .map(([name, bytes]) => {
+        writeFileSync(join(dir, 'promotion', name), bytes);
+        return { name, sha256: createHash('sha256').update(bytes).digest('hex') };
+      });
+    writeFileSync(join(dir, 'promotion', 'ran-profile-b-promotion.json'), JSON.stringify({
+      schema: 'ran-profile-b-promotion', schema_version: 1, repository: 'example/repo',
+      quality_commit: 'a'.repeat(40), source_commit: 'a'.repeat(40), tag: 'v1.3.3', assets,
+    }));
+    const published = scenario === 'published';
+    const originalPrerelease = scenario === 'prerelease' || scenario.endsWith('prerelease-to-stable');
+    writeFileSync(join(dir, 'state.json'), JSON.stringify({ ...exactRelease,
+      draft: !published, immutable: published, prerelease: originalPrerelease,
+      assets: published ? assets.map(a => ({ name: a.name, digest: 'sha256:' + a.sha256 })) : [],
+    }));
+    writeFileSync(join(dir, 'calls.json'), '[]');
+    writeFileSync(join(dir, 'gh'), `#!/usr/bin/env node
+const fs = require('node:fs');
+const crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const args = process.argv.slice(2);
+assert.equal(args.shift(), 'api');
+let method = 'GET', input, endpoint, header, field;
+while (args.length) {
+  const arg = args.shift();
+  if (arg === '--method') method = args.shift();
+  else if (arg === '--input') input = args.shift();
+  else if (arg === '-H') header = args.shift();
+  else if (arg === '-F') field = args.shift();
+  else { assert.equal(endpoint, undefined); endpoint = arg; }
+}
+const calls = JSON.parse(fs.readFileSync('calls.json'));
+calls.push({ method, endpoint }); fs.writeFileSync('calls.json', JSON.stringify(calls));
+const state = JSON.parse(fs.readFileSync('state.json'));
+const api = 'repos/example/repo/releases/394078148';
+if (method === 'GET') {
+  assert.equal(endpoint, api);
+  if (calls.filter(c => c.method === 'GET').length === 1 && process.env.RAN_TEST_SCENARIO.startsWith('early-')) {
+    state.prerelease = !state.prerelease;
+  }
+  // Simulate an external edit after upload, on the response used to publish.
+  if (calls.filter(c => c.method === 'GET').length === 2) {
+    switch (process.env.RAN_TEST_SCENARIO) {
+      case 'drift-stable-to-prerelease': state.prerelease = true; break;
+      case 'drift-prerelease-to-stable': state.prerelease = false; break;
+      case 'drift-id': state.id = 2; break;
+      case 'drift-tag': state.tag_name = 'v9.9.9'; break;
+      case 'drift-target': state.target_commitish = 'b'.repeat(40); break;
+      case 'drift-draft': state.draft = false; state.immutable = true; break;
+      case 'drift-draft-null': state.draft = null; break;
+    }
+  }
+} else if (method === 'POST') {
+  const url = new URL(endpoint);
+  assert.equal(url.origin + url.pathname, 'https://uploads.github.com/' + api + '/assets');
+  if (process.env.RAN_TEST_SCENARIO === 'deleted-before-upload') process.exit(1);
+  assert.equal(state.draft, true);
+  assert.equal(header, 'Content-Type: application/octet-stream');
+  const name = url.searchParams.get('name');
+  assert.equal(input, 'promotion/' + name);
+  assert.ok(!state.assets.some(a => a.name === name));
+  state.assets.push({ name, digest: 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(input)).digest('hex') });
+} else if (method === 'PATCH') {
+  assert.equal(endpoint, api); assert.equal(field, 'draft=false');
+  assert.equal(state.assets.length, 2);
+  state.draft = false; state.immutable = true;
+} else throw Error('unexpected API mutation');
+fs.writeFileSync('state.json', JSON.stringify(state));
+console.log(JSON.stringify(state));
+`, { mode: 0o755 });
+    const result = spawnSync('bash', ['-c', promotionScript], {
+      cwd: dir, encoding: 'utf8', timeout: 20000,
+      env: { ...process.env, PATH: dir + ':' + process.env.PATH,
+        GITHUB_REPOSITORY: 'example/repo', RAN_RELEASE_ID: '394078148',
+        RAN_RELEASE_TAG: 'v1.3.3', RAN_ADMITTED_SHA: 'a'.repeat(40),
+        RAN_RELEASE_PRERELEASE: String(originalPrerelease),
+        RAN_PROMOTION_MANIFEST: 'ran-profile-b-promotion.json',
+        RAN_PUBLICATION_STATE: published ? 'published' : 'draft', RAN_TEST_SCENARIO: scenario },
+    });
+    assert.ifError(result.error);
+    const calls = JSON.parse(readFileSync(join(dir, 'calls.json')));
+    const mutations = calls.filter(c => c.method !== 'GET');
+    const state = JSON.parse(readFileSync(join(dir, 'state.json')));
+    if (scenario === 'deleted-before-upload') {
+      assert.notEqual(result.status, 0);
+      assert.equal(state.assets.length, 0);
+      assert.equal(state.draft, true);
+      assert.deepEqual(mutations.map(c => c.method), ['POST']);
+    } else if (scenario.startsWith('early-')) {
+      assert.notEqual(result.status, 0);
+      assert.deepEqual(mutations, [], 'classification drift before upload must prevent all mutations');
+    } else if (scenario.startsWith('drift-')) {
+      assert.notEqual(result.status, 0, scenario + ': changed release must fail closed');
+      assert.equal(state.assets.length, 2);
+      assert.deepEqual(mutations.map(c => c.method), ['POST', 'POST'],
+        scenario + ': no publication PATCH after changed identity/state');
+    } else {
+      assert.equal(result.status, 0, scenario + ': ' + result.stderr);
+      assert.deepEqual(mutations.map(c => c.method), published ? [] : ['POST', 'POST', 'PATCH']);
+      assert.equal(state.immutable, true);
+      assert.equal(state.prerelease, originalPrerelease);
+    }
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 }
 
 assert.ok(docs.includes('must support `workflow_dispatch` with no required inputs'));
