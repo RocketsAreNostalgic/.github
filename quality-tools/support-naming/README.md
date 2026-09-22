@@ -30,8 +30,11 @@ inputs produce identical file bytes. Existing output is never overwritten.
 
 The tool reads pinned Git objects, including files excluded from distribution
 archives. It ignores uncommitted working-tree contents. It validates source
-hashes, expected replacement counts, destination identifier collisions and path
-boundaries before creating output. A validation failure creates no output.
+hashes, commit object types, expected replacement counts, token-kind spelling,
+destination identifier collisions and normalized path boundaries before creating
+output. Literal mappings are validated together and cannot overlap or cascade.
+Case-folded target aliases are rejected conservatively on every host; files are
+created exclusively to prevent filesystem aliases from overwriting output. A validation failure creates no output.
 An I/O failure during output creation can leave an incomplete disposable output;
 discard it and rerun into a new directory.
 
@@ -120,9 +123,13 @@ released version, weaken a runtime hash check, or expand an active Profile B PR.
 On 22 September 2026, the pinned candidate was exercised with PHP 8.4.23 and
 Node 24.11.0:
 
-- Seven preview-tool tests passed, including exact-token/data preservation,
-  pinned-object reads despite a dirty worktree, bad hashes/counts, collision
-  detection, path boundaries and overwrite refusal.
+- Thirteen preview-tool tests passed, including exact-token/data preservation,
+  pinned-object reads despite a dirty worktree, bad hashes/counts, identifier
+  collisions, commit-object verification, token-kind spelling, case aliases,
+  literal overlap/cascade refusal, normalized Windows path keys and nested
+  containment. Windows path normalization is a portable function test, not a
+  claim of a native Windows execution. The hardened preview reproduces all ten
+  original candidate files byte-for-byte.
 - Support's full existing `composer check` passed with naming suppressions
   removed, including level-8 analysis and release-control tests. Both PHPCBF
   passes exited zero and changed no bytes. PHPStan reported a nonfatal optional

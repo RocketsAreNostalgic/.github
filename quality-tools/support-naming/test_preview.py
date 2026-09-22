@@ -100,6 +100,54 @@ class PreviewTest(unittest.TestCase):
         self.assertEqual(0, self.run_preview().returncode)
         self.assertIn("['oldName' => 'kept-data']", (self.root / "output/demo/example.php").read_text())
 
+    def test_tree_revision_is_rejected(self):
+        self.manifest["repositories"]["demo"] = self.git("rev-parse", "HEAD^{tree}").strip()
+        result = self.run_preview()
+        self.assertIn("commit object", result.stderr)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_token_kind_controls_destination_spelling(self):
+        for index, name in [(0, "$old_name"), (1, "old_var")]:
+            manifest = copy.deepcopy(self.manifest)
+            manifest["files"][0]["tokens"][index]["to"] = name
+            result = self.run_preview(manifest)
+            self.assertIn("Invalid identifier rule", result.stderr)
+            self.assertFalse((self.root / "output").exists())
+
+    def test_case_alias_targets_are_rejected(self):
+        other = copy.deepcopy(self.manifest["files"][0])
+        other["path"] = "EXAMPLE.php"
+        self.manifest["files"].append(other)
+        result = self.run_preview()
+        self.assertIn("Duplicate target path", result.stderr)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_literal_cascades_and_overlaps_are_rejected(self):
+        for pairs in [[("oldName", "nextName", 5), ("nextName", "final_name", 5)],
+                      [("oldName", "nextName", 5), ("Name", "name", 5)]]:
+            manifest = copy.deepcopy(self.manifest)
+            manifest["files"][0]["tokens"] = []
+            manifest["files"][0]["literals"] = [
+                {"from": a, "to": b, "count": count, "reason": "negative fixture"}
+                for a, b, count in pairs]
+            result = self.run_preview(manifest)
+            self.assertNotEqual(0, result.returncode)
+            self.assertRegex(result.stderr, "Cascading|Overlapping")
+            self.assertFalse((self.root / "output").exists())
+
+    def test_windows_path_keys_normalize_case_and_separators(self):
+        code = "require $argv[1]; echo preview_path_key($argv[2]);"
+        result = subprocess.run([PHP, "-r", code, str(SCRIPT.resolve()),
+                                 r"C:\Repos\Demo\tmp/preview"], text=True, capture_output=True)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertEqual("c:/repos/demo/tmp/preview", result.stdout)
+
+    def test_nested_output_inside_input_repository_is_rejected(self):
+        parent = self.repo / "tmp"
+        parent.mkdir()
+        self.assertNotEqual(0, self.run_preview(output=parent / "preview").returncode)
+        self.assertFalse((parent / "preview").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

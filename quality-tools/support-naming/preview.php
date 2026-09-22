@@ -10,22 +10,9 @@ function preview_path(string $path): void {
     }
 }
 
-function preview_source(string $root, array $manifest, array $file): string {
-    $repo = $file['repository'];
-    preview_path($repo);
-    preview_path($file['path']);
-    if (false !== strpos($repo, '/') || !isset($manifest['repositories'][$repo])) {
-        throw new RuntimeException('Unknown repository.');
-    }
-    $revision = $manifest['repositories'][$repo];
-    if (!preg_match('/\A[0-9a-f]{40}\z/', $revision)) {
-        throw new RuntimeException('An exact commit is required.');
-    }
-    $process = proc_open(
-        array('git', '-C', $root . '/' . $repo, 'show', $revision . ':' . $file['path']),
-        array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes
-    );
+function preview_git(string $repository, array $arguments): string {
+    $process = proc_open(array_merge(array('git', '-C', $repository), $arguments),
+        array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     if (!is_resource($process)) {
         throw new RuntimeException('Could not read pinned Git source.');
     }
@@ -37,6 +24,29 @@ function preview_source(string $root, array $manifest, array $file): string {
     if (0 !== proc_close($process) || !is_string($source)) {
         throw new RuntimeException('Pinned source unavailable: ' . $error);
     }
+    return $source;
+}
+
+function preview_path_key(string $path): string {
+    // Conservatively reject case aliases even on case-sensitive hosts.
+    return strtolower(str_replace('\\', '/', $path));
+}
+
+function preview_source(string $root, array $manifest, array $file): string {
+    $repo = $file['repository'];
+    preview_path($repo);
+    preview_path($file['path']);
+    if (false !== strpos($repo, '/') || !isset($manifest['repositories'][$repo])) {
+        throw new RuntimeException('Unknown repository.');
+    }
+    $revision = $manifest['repositories'][$repo];
+    if (!preg_match('/\A[0-9a-f]{40}\z/', $revision)) {
+        throw new RuntimeException('An exact commit is required.');
+    }
+    if ('commit' !== trim(preview_git($root . '/' . $repo, array('cat-file', '-t', $revision)))) {
+        throw new RuntimeException('Pinned revision must be a commit object.');
+    }
+    $source = preview_git($root . '/' . $repo, array('show', $revision . ':' . $file['path']));
     if (!hash_equals($file['sha256'], hash('sha256', $source))) {
         throw new RuntimeException('Source hash mismatch: ' . $repo . '/' . $file['path']);
     }
@@ -50,7 +60,8 @@ function preview_rename(string $source, array $file): array {
     $destinations = array();
     foreach ($rules as $rule) {
         if (!in_array($rule['kind'], array('T_STRING', 'T_VARIABLE'), true)
-            || !preg_match('/\A\$?[a-z_][a-z0-9_]*\z/', $rule['to'])
+            || !preg_match('T_VARIABLE' === $rule['kind']
+                ? '/\A\$[a-z_][a-z0-9_]*\z/' : '/\A[a-z_][a-z0-9_]*\z/', $rule['to'])
             || $rule['from'] === $rule['to'] || $rule['count'] < 1) {
             throw new RuntimeException('Invalid identifier rule.');
         }
@@ -93,15 +104,44 @@ function preview_rename(string $source, array $file): array {
         }
     }
     $literal_count = 0;
-    foreach ($file['literals'] ?? array() as $rule) {
-        if (empty($rule['reason']) || '' === $rule['from']
+    $literal_rules = $file['literals'] ?? array();
+    $replacements = array();
+    $ranges = array();
+    foreach ($literal_rules as $rule) {
+        if (empty($rule['reason']) || '' === $rule['from'] || $rule['count'] < 1
+            || $rule['from'] === $rule['to'] || isset($replacements[$rule['from']])
             || substr_count($result, $rule['from']) !== $rule['count']) {
             throw new RuntimeException('Unreviewed literal or literal count mismatch.');
         }
-        $result = str_replace($rule['from'], $rule['to'], $result);
+        foreach ($literal_rules as $other) {
+            if ('' !== $other['from'] && str_contains($rule['to'], $other['from'])) {
+                throw new RuntimeException('Cascading literal mappings are forbidden.');
+            }
+        }
+        $offset = 0;
+        while (false !== ($position = strpos($result, $rule['from'], $offset))) {
+            $end = $position + strlen($rule['from']);
+            foreach ($ranges as $range) {
+                if ($position < $range[1] && $end > $range[0]) {
+                    throw new RuntimeException('Overlapping literal mappings are forbidden.');
+                }
+            }
+            $ranges[] = array($position, $end);
+            $offset = $position + 1;
+        }
+        $replacements[$rule['from']] = $rule['to'];
         $literal_count += $rule['count'];
     }
+    $result = strtr($result, $replacements);
+    if ('php' === strtolower(pathinfo($file['path'], PATHINFO_EXTENSION))) {
+        token_get_all($result, TOKEN_PARSE);
+    }
     return array($result, array_sum($counts), $literal_count);
+}
+
+// Functions can be loaded independently for portable path regression tests.
+if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') !== __FILE__) {
+    return;
 }
 
 try {
@@ -125,7 +165,8 @@ try {
     foreach ($manifest['repositories'] as $repo => $revision) {
         preview_path($repo);
         $repo_root = realpath($root . '/' . $repo);
-        if (false === $repo_root || $output === $repo_root || 0 === strpos($output, $repo_root . '/')) {
+        if (false === $repo_root || preview_path_key($output) === preview_path_key($repo_root)
+            || 0 === strpos(preview_path_key($output), rtrim(preview_path_key($repo_root), '/') . '/')) {
             throw new RuntimeException('Output must be outside the input repositories.');
         }
     }
@@ -134,14 +175,17 @@ try {
         preview_source($root, $manifest, $guard);
     }
     $prepared = array();
+    $path_keys = array();
     $report = array('revisions' => $manifest['repositories'], 'files' => array(),
         'pending_steps' => $manifest['derived_steps'] ?? array(),
         'generated_copy' => 'pending supported sync script; not hand-edited');
     foreach ($manifest['files'] as $file) {
         $path = $file['repository'] . '/' . $file['path'];
-        if (isset($prepared[$path])) {
+        $key = preview_path_key($path);
+        if (isset($path_keys[$key])) {
             throw new RuntimeException('Duplicate target path.');
         }
+        $path_keys[$key] = true;
         list($contents, $tokens, $literals) = preview_rename(preview_source($root, $manifest, $file), $file);
         $prepared[$path] = $contents;
         $report['files'][$path] = array('token_edits' => $tokens, 'literal_edits' => $literals, 'sha256' => hash('sha256', $contents));
@@ -154,7 +198,12 @@ try {
         if (!is_dir(dirname($target)) && !mkdir(dirname($target), 0700, true)) {
             throw new RuntimeException('Could not create preview directory.');
         }
-        if (strlen($contents) !== file_put_contents($target, $contents)) {
+        if (false === ($handle = fopen($target, 'xb'))) {
+            throw new RuntimeException('Could not exclusively create preview file.');
+        }
+        $written = fwrite($handle, $contents);
+        fclose($handle);
+        if (strlen($contents) !== $written) {
             throw new RuntimeException('Could not write preview file.');
         }
     }
