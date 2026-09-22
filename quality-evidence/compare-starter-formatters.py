@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run only in a disposable Starter archive with its locked tools installed.
+"""Audit aid for repeating Starter formatter comparisons in a disposable environment.
 Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION SOURCE_MANIFEST
 Requires php on PATH. Does not execute application code or Composer scripts.
 """
