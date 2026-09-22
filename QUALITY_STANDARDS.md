@@ -214,6 +214,13 @@ edits, or enforcement need their own reviewed evidence.
 Existing dependency-audit gates remain required where adopted. A live advisory
 lookup is network- and time-dependent even against a locked graph; document that
 requirement rather than describing it as offline or reproducible source proof.
+For example, Release Updater currently runs `audit:composer` (`composer audit
+--locked --no-interaction`) inside `check`. Preserve that command and its exit
+status, including advisory or lookup failures; do not convert a failed lookup
+into success or move the gate out of the required path during command adoption.
+This contract does not add an audit gate to repositories that do not have one.
+Any future change to audit placement, exclusions or enforcement requires an
+explicit policy decision and corresponding CI evidence.
 
 #### Adoption and role-based exceptions
 
