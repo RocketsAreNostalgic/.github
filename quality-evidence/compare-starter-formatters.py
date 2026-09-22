@@ -50,8 +50,17 @@ cbf = [php, 'vendor/bin/phpcbf', '--standard=.phpcs.xml', '--parallel=1', '-q']
 
 def run(cmd):
     p = subprocess.run(cmd, cwd=root, env=env, capture_output=True, text=True, timeout=120)
-    if cmd[:len(cbf)] == cbf and p.returncode not in (0, 1, 2, 3):
-        raise RuntimeError(p.stdout + p.stderr)
+    is_phpcs = len(cmd) > 1 and cmd[1].endswith('/phpcs')
+    is_phpcbf = len(cmd) > 1 and cmd[1].endswith('/phpcbf')
+    is_fixer = len(cmd) > 1 and cmd[1].endswith('/php-cs-fixer')
+    allowed = (0, 1) if is_fixer else (0, 1, 2, 3) if (is_phpcs or is_phpcbf) else (0,)
+    if p.returncode not in allowed:
+        raise RuntimeError(f'Unexpected tool exit {p.returncode}: {p.stdout}{p.stderr}')
+    if is_phpcs:
+        try:
+            json.loads(p.stdout)
+        except json.JSONDecodeError as error:
+            raise RuntimeError(f'PHPCS did not emit a valid JSON report: {p.stdout}{p.stderr}') from error
     return {'exit': p.returncode, 'stdout': p.stdout.replace(str(root), '<starter>'),
             'stderr': p.stderr.replace(str(root), '<starter>')}
 
