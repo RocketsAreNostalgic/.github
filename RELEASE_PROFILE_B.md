@@ -50,17 +50,13 @@ Release Please remains authoritative for version calculation, changelog, release
 
 The shared workflow verifies this configuration from the admitted commit before invoking Release Please.
 
-## Immutable-release deployment prerequisite
+## Immutable-release platform prerequisite
 
-Profile B also requires the caller repository (or its organization) to expose the Actions variable:
+Profile B assumes the owner-managed GitHub immutable-release policy is already enabled for the consumer repository. In RAN this is an organization-wide production constraint owned by #47/#57, not a repository workflow preference.
 
-```text
-RAN_IMMUTABLE_RELEASES_ENABLED=true
-```
+GitHub's immutable-release settings endpoint requires repository Administration-read. The automatic `GITHUB_TOKEN` cannot request that permission, and an empirical Profile B contract probe returned HTTP 403. The shared release workflow therefore does not introduce a higher-privilege standing token merely to re-authenticate an administrator-controlled platform setting.
 
-This variable is a fail-closed operator assertion used before a draft is published. It is not publication authority and does not replace GitHub's immutable-release setting. GitHub's repository/organization immutable-release control remains the authoritative platform policy; the workflow still requires the published release API response to report `immutable == true`.
-
-The variable exists because the automatic `GITHUB_TOKEN` used by the reusable workflow does not have repository-administration read permission for GitHub's immutable-release settings endpoint. If the variable is absent or not exactly `true`, the verified draft and its assets remain unpublished.
+The workflow still publishes only after all tested assets are attached and then requires the published API response to report `immutable == true`. If the owner-managed platform control is changed, that is an architecture/settings violation to be reconciled under #57 rather than a reason to add broader workflow credentials.
 
 ## Quality prerequisite
 
