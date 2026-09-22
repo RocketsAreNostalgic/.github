@@ -84,10 +84,11 @@ The next implementation PR should:
    against the implementation candidate if its source, lock or rules change;
    preserve the distinction between directory and dotfile selection.
 2. Build on the negative fixtures and representative-file results below.
-   Resolve the observed alignment difference explicitly: retain the intended
-   check, add a reviewed PHPCS replacement, or approve its retirement.
-   These finite examples do not prove equivalence for every PHP construct
-   or inline suppression.
+   Resolve the observed alignment difference by expressing the intended check
+   in the PHPCS/PHPCBF authority. Validate the precise rule and scope with
+   negative fixtures before removing PHP-CS-Fixer; retirement of the alignment
+   check itself is not an approved option. These finite examples do not prove
+   equivalence for every PHP construct or inline suppression.
 3. Apply the proposed formatting path twice and verify byte stability. Run its
    corresponding checks after each pass so a second formatter cannot hide a
    conflict by rewriting the first formatter's result. Keep broad source
