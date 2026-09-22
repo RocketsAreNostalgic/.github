@@ -24,7 +24,6 @@ jobs:
       issues: write
       pull-requests: write
       actions: write
-      actions: write
     uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-a.yml@<approved-immutable-ref>
     with:
       expected-workflow-path: .github/workflows/quality.yml
