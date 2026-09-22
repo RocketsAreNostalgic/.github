@@ -126,29 +126,21 @@ this records the downloaded artifact, not an independently signed provenance
 claim. Composer's SHA-256 matched its published checksum:
 `f446ea719708bb85fcbf4ef18def5d0515f1f9b4d703f6d820c9c1656e10a2f2`.
 
-The [comparison harness](quality-evidence/compare-starter-formatters.py) directly emits the committed compact evidence schema, including the inspected revision, baseline scope, exit codes, diagnostics, representative fixer diff and second-pass byte stability. It checks PHP-CS-Fixer
-and PHPCS before changes, after each formatter and after the combined sequence.
-It separately measures PHPCBF alone. Explicit `--path-mode=override` selects
-negative fixtures and representative files outside the configured finder; those
-runs investigate a hypothetical broader scope, not today's `composer cs` scope.
-Execution is sequential within each case, with four independent cases in
-parallel. PHP-CS-Fixer's cache is disabled and its runner is sequential; PHPCS
-uses one worker per case. Neither application PHP nor Composer scripts run.
+The [comparison harness](quality-evidence/compare-starter-formatters.py)
+is retained as an **audit aid** showing how the fixture and representative-file
+comparisons were performed. The committed
+[compact results](quality-evidence/starter-formatter-results.json) are the
+historical evidence snapshot from the recorded environment above; the harness
+is not a canonical provenance system and is not claimed to regenerate that JSON
+byte-for-byte from arbitrary local archives or dependency installations.
 
-Reproduce against the same verified disposable source archive with its locked dependencies and PHPCS
-standards installed, with exact PHP 8.4.23 on `PATH`. Before installing tools, generate an authoritative JSON source-manifest envelope from the verified inspected revision/archive with `revision` and a complete `files` map from every tracked source path to its SHA-256. Keep that manifest outside the disposable root. The harness hashes every listed source file before executing any formatter and records the manifest digest:
-
-```sh
-php -r 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'
-php vendor/bin/phpcs --standard=.phpcs.xml --report=json -v
-php vendor/bin/phpcs --standard=.phpcs.xml -e
-test "$(php -r 'echo PHP_VERSION;')" = 8.4.23
-python3 /path/to/quality-evidence/compare-starter-formatters.py "$PWD" /tmp/starter-formatters.json 31f48fda13d7b9671f88d0ecf249af6aad251c52 /tmp/starter-source-manifest.json
-```
-
-Do not run the harness in a working checkout with concurrent edits: it restores
-representative files after temporary formatting. Keep generated dependency/tool
-state and raw local logs outside the consumer repository's tracked files.
+A reviewer can repeat or challenge individual observations with the recorded
+Starter revision, PHP/tool versions and fixtures, but any rerun is a new
+measurement and must record its own source/tool environment. In particular,
+do not infer historical provenance merely because a local harness invocation
+completes successfully. The implementation decision rests on the reviewed
+snapshot plus the concrete diagnostics described below, not on a permanent
+reproducible-build guarantee for this investigation.
 
 ### Detection is not equivalent
 
