@@ -15,6 +15,10 @@ on:
         required: false
         type: string
         default: .release-please-manifest.json
+      release-pr-head:
+        description: Canonical Release Please branch name whose exact head may need Quality dispatch.
+        required: true
+        type: string
 
 permissions: {}
 
@@ -75,6 +79,7 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+      actions: write
     steps:
       - name: Require admitted revision is still main
         env:
@@ -92,3 +97,53 @@ jobs:
           config-file: ${{ inputs.release-config }}
           manifest-file: ${{ inputs.release-manifest }}
           target-branch: main
+
+      - name: Ensure exact Release Please candidate has Quality
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RAN_RELEASE_PR_HEAD: ${{ inputs.release-pr-head }}
+          RAN_QUALITY_WORKFLOW_PATH: ${{ inputs.expected-workflow-path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_RELEASE_PR_HEAD" =~ ^[A-Za-z0-9._/-]+$ ]]
+          [[ "$RAN_RELEASE_PR_HEAD" != *'..'* ]]
+
+          open_prs="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls?state=open&base=main&per_page=100")"
+          candidates="$(jq -cer             --arg bot 'github-actions[bot]'             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             'add | [.[] | select(
+              .state == "open"
+              and .user.login == $bot
+              and .base.ref == "main"
+              and .head.ref == $head
+              and .head.repo.full_name == $repository
+            )]' <<< "$open_prs")"
+          count="$(jq -er 'length' <<< "$candidates")"
+          if [[ "$count" == 0 ]]; then
+            exit 0
+          fi
+          test "$count" == 1
+
+          head_sha="$(jq -er '.[0].head.sha' <<< "$candidates")"
+          [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]]
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${RAN_RELEASE_PR_HEAD}" --jq '.object.sha')" = "$head_sha"
+
+          workflow_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${RAN_QUALITY_WORKFLOW_PATH}" --jq '.id')"
+          runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?head_sha=${head_sha}&per_page=100")"
+          covered="$(jq -r             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             --arg sha "$head_sha"             --argjson workflow_id "$workflow_id"             'any(.workflow_runs[];
+              .workflow_id == $workflow_id
+              and .path == $ENV.RAN_QUALITY_WORKFLOW_PATH
+              and (.event == "pull_request" or .event == "workflow_dispatch")
+              and .head_branch == $head
+              and .head_repository.full_name == $repository
+              and .head_sha == $sha
+              and (
+                (.status == "completed" and .conclusion == "success")
+                or (.status != "completed")
+              )
+            )' <<< "$runs")"
+          if [[ "$covered" == true ]]; then
+            exit 0
+          fi
+
+          jq -nc --arg ref "$RAN_RELEASE_PR_HEAD" '{ref: $ref}' |
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/dispatches" --input - >/dev/null
