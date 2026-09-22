@@ -18,15 +18,20 @@ data = json.loads(raw.read_text())
 assert not data['errors'], data['errors']
 metadata = json.loads((lab / 'snapshots.json').read_text())
 assert {r['repo'] for r in data['files']} == set(metadata), 'Snapshot repository set differs from revision metadata'
+import subprocess
 for repo, meta in metadata.items():
     snapshot = lab / repo
     assert (snapshot / '.git').exists(), f'{repo}: snapshot must be a Git checkout'
-    import subprocess
     actual = subprocess.run(
         ['git', '-C', str(snapshot), 'rev-parse', 'HEAD'],
         check=True, capture_output=True, text=True
     ).stdout.strip()
     assert actual == meta['sha'], f'{repo}: snapshot HEAD {actual} != recorded {meta["sha"]}'
+    status = subprocess.run(
+        ['git', '-C', str(snapshot), 'status', '--porcelain=v1', '--untracked-files=all'],
+        check=True, capture_output=True, text=True
+    ).stdout
+    assert status == '', f'{repo}: snapshot must remain clean while inventory is summarized'
 runtime = lambda path: not path.startswith(('tests/', 'scripts/'))
 coord = lambda row: (row['repo'], row['file'], row['line'], row['name'])
 for row in data['files']:
