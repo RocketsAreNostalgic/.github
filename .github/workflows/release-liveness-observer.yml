@@ -151,18 +151,6 @@ jobs:
           candidate_number="$(jq -er '.number' <<< "$candidate")"
           candidate_sha="$(jq -er '.merge_commit_sha | select(test("^[0-9a-f]{40}$"))' <<< "$candidate")"
           merged_at="$(jq -er '.merged_at | select(type == "string" and length > 0)' <<< "$candidate")"
-          reconciled="$(
-            jq -r --arg label "$RAN_RECONCILED_LABEL" \
-              '[.labels[].name] | index($label) != null' \
-              <<< "$candidate"
-          )"
-          pending="$(
-            jq -r '[.labels[].name] | index("autorelease: pending") != null' <<< "$candidate"
-          )"
-          tagged="$(
-            jq -r '[.labels[].name] | index("autorelease: tagged") != null' <<< "$candidate"
-          )"
-
           merged_epoch="$(date -u -d "$merged_at" +%s)"
           now_epoch="$(date -u +%s)"
           if [[ "$merged_epoch" -gt "$now_epoch" ]]; then
@@ -327,11 +315,23 @@ jobs:
           validate_terminal_snapshot "$terminal_after"
 
           publishers_after="$(snapshot_publishers)"
+
+          # Close the remaining observation-boundary race: take one final
+          # terminal snapshot after the last publisher read. Any publisher
+          # that starts after publishers_after but mutates release/tag/labels
+          # will therefore make the terminal picture change and force pending.
+          terminal_final="$(snapshot_terminal)"
+          validate_terminal_snapshot "$terminal_final"
+
           publisher_activity="$(jq -cs 'add | unique_by(.id)' <(printf '%s\n' "$publishers_before") <(printf '%s\n' "$publishers_after"))"
           publisher_activity_count="$(jq -er 'length' <<< "$publisher_activity")"
           publisher_activity_names="$(jq -r '[.[] | "$(.name) (#$(.id), $(.status), updated $(.updated_at))"] | join(", ")' <<< "$publisher_activity")"
 
-          terminal_state="$(classify_terminal_snapshot "$terminal_after")"
+          terminal_state="$(classify_terminal_snapshot "$terminal_final")"
+          terminal_stable=false
+          if [[ "$terminal_before" == "$terminal_after" && "$terminal_after" == "$terminal_final" ]]; then
+            terminal_stable=true
+          fi
 
           # Positive publication is self-authenticating through the exact final
           # tag. Transitional labels remain pending rather than becoming an
@@ -356,7 +356,7 @@ jobs:
           # A terminal reconciliation is accepted only from a stable pair of
           # complete terminal snapshots with no publisher activity in between.
           if [[ "$terminal_state" == reconciled ]]; then
-            if [[ "$terminal_before" != "$terminal_after" ]]; then
+            if [[ "$terminal_stable" != true ]]; then
               record_state pending "PR #${candidate_number} / ${tag} reached reconciliation while terminal state was changing; defer confirmation to the next observation."
               exit 0
             fi
@@ -371,7 +371,7 @@ jobs:
 
           # A changed terminal picture is never called stranded in the same
           # observation. Let the next observer pass establish stability.
-          if [[ "$terminal_before" != "$terminal_after" ]]; then
+          if [[ "$terminal_stable" != true ]]; then
             record_state pending "PR #${candidate_number} / ${tag} changed release/tag/label state during observation; defer the terminal verdict."
             exit 0
           fi
