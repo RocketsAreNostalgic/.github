@@ -1,0 +1,307 @@
+{
+  "version": 1,
+  "scope": "Reviewed Support pilot only; read pinned Git objects and produce new disposable copies. No working-tree, lockfile or generated-copy edits.",
+  "repositories": {
+    "ran-updater-support": "d395c37b2a76e5a5e10d9855b3277cde1cec4df3",
+    "ran-wp-branch-updater": "15253ac03878b01da254d6702a9753103354d8e9",
+    "ran-wp-release-updater": "78f30caac2384e6c91188ba780aadc8af2f6fdd4"
+  },
+  "guards": [
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "src/Dependency/ArchiveSafety.php",
+      "sha256": "cdd254daad17095a45a52100f4446e3f84cca831eeff34527bbc88c3eb6b4ec2"
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "scripts/sync-updater-support.php",
+      "sha256": "2d9c60263cacdce80d358400a4ee4fc0514a48f4d41597ddc9b8987e99449f8a"
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "composer.json",
+      "sha256": "35f28771db7311ce43a0edb579d1256c6126062ebf183491c16c295efa9cbf5c"
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "composer.lock",
+      "sha256": "61045a88210cc49fa4f173816955c2f23464842402bb4e72abc4c6cc9f1b72f5"
+    },
+    {
+      "repository": "ran-wp-branch-updater",
+      "path": "composer.json",
+      "sha256": "cc6494ef8507f9903eb99e80f670d536d199aab932a1af9a27e9a3cbae2cdcd6"
+    },
+    {
+      "repository": "ran-wp-branch-updater",
+      "path": "composer.lock",
+      "sha256": "6d4f7dbecc4aac1ab6817b87ea388e359186352b053f03e82ecac90cde195ebb"
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "composer.json",
+      "sha256": "3c8cca5db86d683ba2f45655210ee447d3b7f44696fe929060311efff45909ab"
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "composer.lock",
+      "sha256": "dbbebe786742832c7a87167c7adb8d6c79409ba8ae77c000e315ba5b76e9ab61"
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "runtime-copy.json",
+      "sha256": "b27e778d562284c221d9cdecd49c3e34afe122ed9772bc53e1f325e5909ca052"
+    }
+  ],
+  "files": [
+    {
+      "repository": "ran-updater-support",
+      "path": "src/ArchiveSafety.php",
+      "sha256": "b93fa10fe44869b78e3d702b76c80780305dc6df1abc41790599805632849523",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$originOs",
+          "to": "$origin_os",
+          "count": 4
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$entriesByPath",
+          "to": "$entries_by_path",
+          "count": 5
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$previousPath",
+          "to": "$previous_path",
+          "count": 4
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$previousDirectory",
+          "to": "$previous_directory",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "src/RepositoryRelativePath.php",
+      "sha256": "06c3d9e18af246bc46210908b3f231d2e18e4def31e0c55be174146d73d7462a",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "assertDecodedSegmentIsSafe",
+          "to": "assert_decoded_segment_is_safe",
+          "count": 2
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$firstSegment",
+          "to": "$first_segment",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "tests/contract.php",
+      "sha256": "2d0e60ace4fca95d6e26506e0c8f86d02bec8bd0264bc5014cb9b6a2d529eb7a",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_VARIABLE",
+          "from": "$repositoryPaths",
+          "to": "$repository_paths",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "tests/fixtures/archive-safety.php",
+      "sha256": "c19585594a23095edb9c8271497c4f30841659ed1321d77f958813199fc3ee64",
+      "tokens": [
+        {
+          "kind": "T_VARIABLE",
+          "from": "$pathBytes",
+          "to": "$path_bytes",
+          "count": 10
+        }
+      ]
+    },
+    {
+      "repository": "ran-wp-branch-updater",
+      "path": "src/Archive/ArchiveValidator.php",
+      "sha256": "faf2588d4cd3add986fd36ea54039feb43275d0ef9e6a309540388c7f7b8ebe9",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "src/Archive/ArchiveScanner.php",
+      "sha256": "61e0c834457740ed85aaca8bd94364e14577242862546001b2230dadf84bcba0",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 2
+        },
+        {
+          "kind": "T_STRING",
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "tests/Dependency/ArchiveSafetyDependencyTest.php",
+      "sha256": "4ecb8b9742c152373503f17057f8c4ab385e52c7c428e08e2062a235bc2b00af",
+      "tokens": [
+        {
+          "kind": "T_STRING",
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 1
+        },
+        {
+          "kind": "T_STRING",
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": "README.md",
+      "sha256": "c47293745bdaf5755eac8bae1dcb57502c9fe904f60ff9638f831a0b730a2947",
+      "literals": [
+        {
+          "from": "normalizePath",
+          "to": "normalize_path",
+          "count": 2,
+          "reason": "Reviewed API prose/example, including the public named-argument label."
+        },
+        {
+          "from": "entryTypeFailure",
+          "to": "entry_type_failure",
+          "count": 2,
+          "reason": "Reviewed API prose/example, including the public named-argument label."
+        },
+        {
+          "from": "collisionFailure",
+          "to": "collision_failure",
+          "count": 3,
+          "reason": "Reviewed API prose/example, including the public named-argument label."
+        },
+        {
+          "from": "originOs:",
+          "to": "origin_os:",
+          "count": 1,
+          "reason": "Reviewed API prose/example, including the public named-argument label."
+        }
+      ]
+    },
+    {
+      "repository": "ran-wp-release-updater",
+      "path": "tests/Integration/no-dev-consumer.php",
+      "sha256": "84ed09311c1e81384b019debc0f82834a833413a50d52aa9313fd813961351f8",
+      "literals": [
+        {
+          "from": "$archiveClass::normalizePath(",
+          "to": "$archiveClass::normalize_path(",
+          "count": 2,
+          "reason": "Executable PHP in the nowdoc probe; $archiveClass is explicitly bound to the generated ArchiveSafety class."
+        }
+      ]
+    },
+    {
+      "repository": "ran-updater-support",
+      "path": ".phpcs.xml",
+      "sha256": "06a09b819dca2c389d10f264719ac022fe803189228ba2edf9e2e4f7794ac1c6",
+      "literals": [
+        {
+          "from": "\t<!-- The public helper API intentionally uses modern camelCase method/local names. -->\n\t<rule ref=\"WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid\">\n\t\t<severity>0</severity>\n\t</rule>\n\t<rule ref=\"WordPress.NamingConventions.ValidVariableName\">\n\t\t<severity>0</severity>\n\t</rule>\n\n",
+          "to": "",
+          "count": 1,
+          "reason": "Restore owned-method and variable naming checks after the complete Support preview rename; retain other rules and scope."
+        }
+      ]
+    }
+  ],
+  "derived_steps": [
+    "Regenerate Release ArchiveSafety through scripts/sync-updater-support.php from the exact preview Support source; check parity.",
+    "Recompute runtime-copy.json.package_revision over the sorted bootstrap.php, runtime.php and src/**/*.php content identity; preserve package_version and runtime_protocol.",
+    "Qualify real consumer dependency pins and full required CI after lane handoff; this preview does not update locks."
+  ]
+}
