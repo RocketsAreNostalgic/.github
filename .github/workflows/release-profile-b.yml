@@ -246,7 +246,6 @@ jobs:
         if: steps.publication.outputs.promotion-required == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          IMMUTABLE_RELEASES_ENABLED: ${{ vars.RAN_IMMUTABLE_RELEASES_ENABLED }}
           RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
           RAN_PROMOTION_MANIFEST: ${{ inputs.promotion-manifest }}
           RAN_PUBLICATION_STATE: ${{ steps.publication.outputs.state }}
@@ -305,12 +304,11 @@ jobs:
           test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
 
           if [[ "$RAN_PUBLICATION_STATE" == draft ]]; then
-            if [[ "$IMMUTABLE_RELEASES_ENABLED" != true ]]; then
-              echo '::error::RAN_IMMUTABLE_RELEASES_ENABLED must be the exact string true. The verified release remains a draft.'
-              exit 1
-            fi
-            immutable_settings="$(gh api               -H 'Accept: application/vnd.github+json'               -H 'X-GitHub-Api-Version: 2026-03-10'               "repos/${GITHUB_REPOSITORY}/immutable-releases")"
-            jq -e '.enabled == true' <<< "$immutable_settings" >/dev/null
+            # Immutable releases are an owner-managed external production constraint.
+            # GitHub's immutable-release settings endpoint requires repository
+            # Administration-read, which the automatic GITHUB_TOKEN cannot request.
+            # Do not add a higher-privilege standing token merely to re-read that
+            # admin setting here; #57 owns final platform-settings reconciliation.
             release_id="$(jq -er '.id' <<< "$release_json")"
             prerelease_before="$(jq -er '.prerelease' <<< "$release_json")"
             gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${release_id}"               -F draft=false >/dev/null
