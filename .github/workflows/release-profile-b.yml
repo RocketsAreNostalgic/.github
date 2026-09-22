@@ -277,7 +277,7 @@ jobs:
           jq -e --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG"             '.tag_name == $tag and .target_commitish == $sha'             <<< "$release_json" >/dev/null
 
           remote_names="$(jq -c '[.assets[].name] | sort' <<< "$release_json")"
-          jq -e --argjson expected "$expected_names" 'all(.[]; $expected | index(.) != null)' <<< "$remote_names" >/dev/null
+          jq -e --argjson expected "$expected_names" '([.assets[].name] - $expected) | length == 0' <<< "$release_json" >/dev/null
 
           while IFS=$'\t' read -r name sha256; do
             existing="$(jq -cer --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
