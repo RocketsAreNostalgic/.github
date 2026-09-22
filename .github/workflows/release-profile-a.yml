@@ -1,0 +1,72 @@
+name: RAN Profile A Release
+
+on:
+  workflow_call:
+    inputs:
+      admitted-sha: { required: true, type: string }
+      upstream-event: { required: true, type: string }
+      upstream-conclusion: { required: true, type: string }
+      upstream-branch: { required: true, type: string }
+      upstream-repository: { required: true, type: string }
+      upstream-repository-id: { required: true, type: string }
+      expected-workflow-path: { required: true, type: string }
+      upstream-workflow-path: { required: true, type: string }
+      release-config:
+        required: false
+        type: string
+        default: release-please-config.json
+      release-manifest:
+        required: false
+        type: string
+        default: .release-please-manifest.json
+
+permissions: {}
+
+jobs:
+  release:
+    name: Release Please
+    if: >-
+      ${{
+        inputs.upstream-event == 'push'
+        && inputs.upstream-conclusion == 'success'
+        && inputs.upstream-branch == 'main'
+        && inputs.upstream-repository == github.repository
+        && inputs.upstream-repository-id == github.repository_id
+        && inputs.upstream-workflow-path == inputs.expected-workflow-path
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Validate admitted revision
+        env:
+          RAN_ADMITTED_SHA: ${{ inputs.admitted-sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$RAN_ADMITTED_SHA" =~ ^[0-9a-f]{40}$ ]]
+
+      - name: Check out exact admitted revision
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ inputs.admitted-sha }}
+
+      - name: Verify exact admitted checkout
+        env:
+          RAN_ADMITTED_SHA: ${{ inputs.admitted-sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$RAN_ADMITTED_SHA"
+
+      - name: Run Release Please
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: ${{ inputs.release-config }}
+          manifest-file: ${{ inputs.release-manifest }}
