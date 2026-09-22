@@ -270,6 +270,9 @@ jobs:
             release_json="$(jq -cer '.[0]' <<< "$matches")"
           fi
 
+          # Capture Release Please's classification before promotion.
+          jq -e '.prerelease | type == "boolean"' <<< "$release_json" >/dev/null
+          prerelease_before="$(jq -r '.prerelease' <<< "$release_json")"
           release_id="$(jq -er '.id' <<< "$release_json")"
           [[ "$release_id" =~ ^[1-9][0-9]*$ ]]
           tag="$(jq -er '.tag_name' <<< "$release_json")"
@@ -283,7 +286,7 @@ jobs:
           tag_ref="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}")"
           jq -e --arg sha "$RAN_ADMITTED_SHA"             '.object.type == "commit" and .object.sha == $sha'             <<< "$tag_ref" >/dev/null
 
-          printf 'promotion-required=true\nstate=%s\ntag=%s\nrelease-id=%s\n' "$state" "$tag" "$release_id" >> "$GITHUB_OUTPUT"
+          printf 'promotion-required=true\nstate=%s\ntag=%s\nrelease-id=%s\nprerelease=%s\n' "$state" "$tag" "$release_id" "$prerelease_before" >> "$GITHUB_OUTPUT"
 
       - name: Download exact Quality artifact
         if: steps.publication.outputs.promotion-required == 'true'
@@ -304,9 +307,11 @@ jobs:
           RAN_PUBLICATION_STATE: ${{ steps.publication.outputs.state }}
           RAN_RELEASE_TAG: ${{ steps.publication.outputs.tag }}
           RAN_RELEASE_ID: ${{ steps.publication.outputs.release-id }}
+          RAN_RELEASE_PRERELEASE: ${{ steps.publication.outputs.prerelease }}
         shell: bash
         run: |
           set -euo pipefail
+          [[ "$RAN_RELEASE_PRERELEASE" == true || "$RAN_RELEASE_PRERELEASE" == false ]]
           [[ "$RAN_RELEASE_ID" =~ ^[1-9][0-9]*$ ]]
           [[ "$RAN_PROMOTION_MANIFEST" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
           manifest="promotion/${RAN_PROMOTION_MANIFEST}"
@@ -334,7 +339,7 @@ jobs:
           expected_digests="$(jq -c '[.assets[] | {name, digest: ("sha256:" + .sha256)}] | sort_by(.name)' "$manifest")"
 
           release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
-          jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG"             '(.id | tostring) == $id and .tag_name == $tag and .target_commitish == $sha'             <<< "$release_json" >/dev/null
+          jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG" --argjson prerelease "$RAN_RELEASE_PRERELEASE"             '(.id | tostring) == $id and .tag_name == $tag and .prerelease == $prerelease and .target_commitish == $sha'             <<< "$release_json" >/dev/null
 
           remote_names="$(jq -c '[.assets[].name] | sort' <<< "$release_json")"
           jq -e --argjson expected "$expected_names" '([.assets[].name] - $expected) | length == 0' <<< "$release_json" >/dev/null
@@ -364,8 +369,10 @@ jobs:
             --arg sha "$RAN_ADMITTED_SHA" \
             --arg tag "$RAN_RELEASE_TAG" \
             --arg state "$RAN_PUBLICATION_STATE" \
+            --argjson prerelease "$RAN_RELEASE_PRERELEASE" \
             '(.id | tostring) == $id
               and .tag_name == $tag
+              and .prerelease == $prerelease
               and .target_commitish == $sha
               and (if $state == "draft" then .draft == true
                    elif $state == "published" then .draft == false and .immutable == true
@@ -379,13 +386,9 @@ jobs:
             # Administration-read, which the automatic GITHUB_TOKEN cannot request.
             # Do not add a higher-privilege standing token merely to re-read that
             # admin setting here; #57 owns final platform-settings reconciliation.
-            release_id="$(jq -er '.id' <<< "$release_json")"
-            # Validate type separately: jq -e treats a legitimate false as failure.
-            jq -e '.prerelease | type == "boolean"' <<< "$release_json" >/dev/null
-            prerelease_before="$(jq -r '.prerelease' <<< "$release_json")"
             gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}"               -F draft=false >/dev/null
             release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
-            test "$(jq -er '.prerelease' <<< "$release_json")" = "$prerelease_before"
+            test "$(jq -r '.prerelease' <<< "$release_json")" = "$RAN_RELEASE_PRERELEASE"
           fi
 
           immutable=false
@@ -396,6 +399,6 @@ jobs:
             [[ "$immutable" == true ]] && break
           done
           test "$immutable" = true
-          jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG"             '(.id | tostring) == $id and .tag_name == $tag and .draft == false and .immutable == true and .target_commitish == $sha'             <<< "$release_json" >/dev/null
+          jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG" --argjson prerelease "$RAN_RELEASE_PRERELEASE"             '(.id | tostring) == $id and .tag_name == $tag and .prerelease == $prerelease and .draft == false and .immutable == true and .target_commitish == $sha'             <<< "$release_json" >/dev/null
           test "$(jq -c '[.assets[].name] | sort' <<< "$release_json")" = "$expected_names"
           test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
