@@ -15,9 +15,13 @@ import tempfile
 
 root = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
-revision = sys.argv[3]
+requested_revision = sys.argv[3]
 source_manifest_path = Path(sys.argv[4]).resolve()
-source_manifest = json.loads(source_manifest_path.read_text())
+manifest_envelope = json.loads(source_manifest_path.read_text())
+assert isinstance(manifest_envelope, dict)
+revision = manifest_envelope.get('revision')
+source_manifest = manifest_envelope.get('files')
+assert revision == requested_revision, 'Requested revision differs from authoritative source manifest'
 assert isinstance(source_manifest, dict) and source_manifest
 assert len(revision) == 40 and all(c in '0123456789abcdef' for c in revision)
 php = shutil.which('php')
@@ -27,6 +31,17 @@ for relative, expected in source_manifest.items():
     path = root / relative
     assert path.is_file(), f'Manifest source file missing: {relative}'
     assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, f'Source bytes differ from manifest: {relative}'
+installed_json = root / 'vendor/composer/installed.json'
+assert installed_json.is_file(), 'Composer installed metadata is required'
+installed_data = json.loads(installed_json.read_text())
+installed_packages = installed_data.get('packages', installed_data)
+installed = {p['name']: {'version': p.get('version'), 'reference': (p.get('source') or {}).get('reference')} for p in installed_packages}
+lock_data = json.loads((root / 'composer.lock').read_text())
+locked = {p['name']: {'version': p.get('version'), 'reference': (p.get('source') or {}).get('reference')} for p in lock_data.get('packages-dev', []) + lock_data.get('packages', [])}
+for name in ('friendsofphp/php-cs-fixer','squizlabs/php_codesniffer','wp-coding-standards/wpcs','ran/coding-standards'):
+    assert name in installed and name in locked, f'Missing formatter tool identity: {name}'
+    assert installed[name] == locked[name], f'Installed formatter tool differs from reviewed lock: {name}'
+
 env = {'PATH': os.environ['PATH'], 'HOME': tempfile.mkdtemp(prefix='formatter-home-')}
 fix = [php, 'vendor/bin/php-cs-fixer', 'fix', '--config=scripts/.php-cs-fixer.php',
        '--allow-risky=yes', '--using-cache=no', '--sequential', '--path-mode=override']
@@ -166,6 +181,7 @@ finally:
     compact = {
         'revision': revision,
         'source_manifest_sha256': hashlib.sha256(source_manifest_path.read_bytes()).hexdigest(),
+        'toolchain': {name: installed[name] for name in ('friendsofphp/php-cs-fixer','squizlabs/php_codesniffer','wp-coding-standards/wpcs','ran/coding-standards')},
         'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
         'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
         'fixtures': compact_value('fixtures', result['fixtures']),
