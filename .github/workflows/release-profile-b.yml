@@ -199,7 +199,7 @@ jobs:
               )] as $exact
               | if any($exact[]; .status == "completed" and .conclusion == "success") then "success"
                 elif any($exact[]; .status != "completed") then "active"
-                elif length > 0 then "failed"
+                elif ($exact | length) > 0 then "failed"
                 else "absent"
                 end' <<< "$runs"
           }
