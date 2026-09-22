@@ -111,7 +111,7 @@ After exact successful-main admission:
 6. Download the exact triggering Quality artifact by workflow run ID and attempt.
 7. Verify repository/SHA/tag binding and every declared asset digest.
 8. Accept an already-present asset only when its GitHub-reported digest is exact. Missing draft assets are uploaded once. Conflicting or unexpected assets fail closed.
-9. Publish the draft only when immutable releases are enabled.
+9. Revalidate the captured release ID, tag, admitted target SHA and expected draft/published state on the post-upload response before publication. Metadata changes fail closed before the publication PATCH. Publish the draft only when immutable releases are enabled.
 10. Read back exact tag target, asset names/digests, non-draft state and `immutable == true`.
 
 The resolved Release Please release ID is carried through promotion and readback, with its tag and admitted target SHA checked again. Draft releases are read through `/releases/{release_id}` because `/releases/tags/{tag}` can return HTTP 404 before publication. This uses the existing release identity; it does not create a replacement release.

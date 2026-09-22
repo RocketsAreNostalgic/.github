@@ -358,6 +358,18 @@ jobs:
           done < <(jq -r '.assets[] | [.name, .sha256] | @tsv' "$manifest")
 
           release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
+          # Revalidate the response used for publication before any PATCH.
+          jq -e \
+            --arg id "$RAN_RELEASE_ID" \
+            --arg sha "$RAN_ADMITTED_SHA" \
+            --arg tag "$RAN_RELEASE_TAG" \
+            --arg state "$RAN_PUBLICATION_STATE" \
+            '(.id | tostring) == $id
+              and .tag_name == $tag
+              and .target_commitish == $sha
+              and (if $state == "draft" then .draft == true
+                   elif $state == "published" then .draft == false and .immutable == true
+                   else false end)' <<< "$release_json" >/dev/null
           test "$(jq -c '[.assets[].name] | sort' <<< "$release_json")" = "$expected_names"
           test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
 

@@ -165,7 +165,8 @@ ${lookup}`], {
 // uploads, publication and immutable readback. Unexpected/tag-based calls fail.
 const promotionScript = promotion.slice(promotion.indexOf('        run: |') + '        run: |'.length)
   .split('\n').map(line => line.replace(/^          /, '')).join('\n');
-for (const scenario of ['stable', 'prerelease', 'published', 'deleted-before-upload']) {
+for (const scenario of ['stable', 'prerelease', 'published', 'deleted-before-upload',
+  'drift-id', 'drift-tag', 'drift-target', 'drift-draft', 'drift-draft-null']) {
   const dir = mkdtempSync(join(tmpdir(), 'profile-b-promotion-'));
   try {
     mkdirSync(join(dir, 'promotion'));
@@ -205,6 +206,16 @@ const state = JSON.parse(fs.readFileSync('state.json'));
 const api = 'repos/example/repo/releases/394078148';
 if (method === 'GET') {
   assert.equal(endpoint, api);
+  // Simulate an external edit after upload, on the response used to publish.
+  if (calls.filter(c => c.method === 'GET').length === 2) {
+    switch (process.env.RAN_TEST_SCENARIO) {
+      case 'drift-id': state.id = 2; break;
+      case 'drift-tag': state.tag_name = 'v9.9.9'; break;
+      case 'drift-target': state.target_commitish = 'b'.repeat(40); break;
+      case 'drift-draft': state.draft = false; state.immutable = true; break;
+      case 'drift-draft-null': state.draft = null; break;
+    }
+  }
 } else if (method === 'POST') {
   const url = new URL(endpoint);
   assert.equal(url.origin + url.pathname, 'https://uploads.github.com/' + api + '/assets');
@@ -240,6 +251,11 @@ console.log(JSON.stringify(state));
       assert.equal(state.assets.length, 0);
       assert.equal(state.draft, true);
       assert.deepEqual(mutations.map(c => c.method), ['POST']);
+    } else if (scenario.startsWith('drift-')) {
+      assert.notEqual(result.status, 0, scenario + ': changed release must fail closed');
+      assert.equal(state.assets.length, 2);
+      assert.deepEqual(mutations.map(c => c.method), ['POST', 'POST'],
+        scenario + ': no publication PATCH after changed identity/state');
     } else {
       assert.equal(result.status, 0, scenario + ': ' + result.stderr);
       assert.deepEqual(mutations.map(c => c.method), published ? [] : ['POST', 'POST', 'PATCH']);
