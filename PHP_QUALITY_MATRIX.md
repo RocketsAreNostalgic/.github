@@ -199,11 +199,14 @@ command and formatter contract.
 | Shared default naming/condition rules plus stronger docs/generic checks | Starter: retain its clean-reference identity and local exceptions |
 | Direct WordPress-Extra on resources; tools/tests excluded from those style rules | Admin Shell: build-time role requires a deliberate scope decision |
 
-No suite overlay or blanket suppression is approved by this matrix. Settle the
-forward-looking Booster condition/naming convention under #66 with explicit
-Updater Support disposition. Keep identity, runtime support, bootstrap/native
-primitive, security and fixture exceptions local. A rule shared by six packages
-is evidence to review, not authority to weaken the seventh.
+No suite overlay or blanket suppression is approved by this matrix. The owner
+has settled the forward-looking Booster naming direction: RAN-owned methods,
+properties, parameters and local variables migrate to WordPress snake_case,
+including public members, with only concrete external-signature exceptions.
+The remaining condition-style/Yoda disposition for Updater Support stays open
+under #66. Keep identity, runtime support, bootstrap/native primitive, security
+and fixture exceptions local. A rule shared by six packages is evidence to
+review, not authority to weaken the seventh.
 
 The existing shared-package README owns the conservative PHPCS 3/WPCS 3 version
 boundary. Keep reviewed root PHPCompatibility alpha requirements until an
