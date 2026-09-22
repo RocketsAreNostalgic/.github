@@ -17,10 +17,21 @@ for repo, meta in META.items():
  assert (snapshot/'.git').exists(), 'Use disposable exact-revision Git checkouts'
  head=subprocess.run(['git','-C',str(snapshot),'rev-parse','HEAD'],check=True,capture_output=True,text=True).stdout.strip()
  assert head == meta['sha'], f'{repo}: checkout HEAD {head} != expected {meta["sha"]}'
- status=subprocess.run(['git','-C',str(snapshot),'status','--porcelain=v1','--untracked-files=all'],check=True,capture_output=True,text=True).stdout
- assert status == '', f'{repo}: checkout must be clean before probing'
+ status=subprocess.run(['git','-C',str(snapshot),'status','--porcelain=v1','--untracked-files=all','--ignored'],check=True,capture_output=True,text=True).stdout
+ assert status == '', f'{repo}: checkout must contain only tracked clean revision bytes before probing'
  assert not (snapshot/'audit-strict.xml').exists(), 'Reserved audit filename already exists'
 (ROOT/'snapshots.json').write_text(json.dumps({repo: {'sha': meta['sha']} for repo, meta in META.items()}, indent=2, sort_keys=True)+'\n')
+
+SEED=json.loads(Path(__file__).with_name('booster-rule-results.json').read_text())
+php_version=subprocess.run([str(PHP),'-r','echo PHP_VERSION;'],check=True,capture_output=True,text=True).stdout
+assert ('PHP '+php_version) == SEED['runtime'], f'PHP runtime {php_version} != reviewed {SEED["runtime"]}'
+composer_json=json.loads((VENDOR/'composer/installed.json').read_text())
+packages=composer_json.get('packages', composer_json)
+installed={p['name']:{'version':p.get('version'),'reference':(p.get('source') or {}).get('reference')} for p in packages}
+for name, expected in SEED['tools'].items():
+ actual=installed.get(name)
+ assert actual is not None, f'Missing reviewed tool {name}'
+ assert actual['version'] == expected['version'] and actual['reference'] == expected['reference'], f'{name}: installed identity differs from reviewed evidence'
 
 OUT=ROOT/'results';OUT.mkdir(exist_ok=True)
 ENV={'PATH':str(PHP.parent)+':/usr/bin:/bin','HOME':tempfile.mkdtemp(prefix='booster-rule-home-')}
@@ -95,7 +106,7 @@ with ThreadPoolExecutor(max_workers=3) as pool:
 # Emit the exact aggregate evidence schema used by the audit. Static tool/runtime
 # metadata and auxiliary control results are retained from the reviewed evidence
 # seed; all per-repository baseline/strict/fix measurements are replaced by this run.
-seed=json.loads(Path(__file__).with_name('booster-rule-results.json').read_text())
+seed=SEED
 aggregate={k:seed[k] for k in ('purpose','tools','runtime','alignment_control')}
 aggregate['repositories']={}
 aggregate['totals']={'alignment':0,'checked_files':0,'methods':0,'tracked_files':0,'variables_properties':0,'yoda':0}
