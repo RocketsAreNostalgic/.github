@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const workflow = readFileSync('.github/workflows/release-profile-a.yml', 'utf8');
+const docs = readFileSync('RELEASE_PROFILE_A.md', 'utf8');
 const required = [
   "github.event_name == 'workflow_run'",
   "github.event.workflow_run.event == 'push'",
@@ -17,6 +18,12 @@ const required = [
   'needs: admit',
   "git/ref/heads/main",
   'target-branch: main',
+  'release-pr-head:',
+  'actions: write',
+  'Ensure exact Release Please candidate has Quality',
+  "github-actions[bot]",
+  'head_sha=',
+  'dispatches',
   'googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7',
 ];
 for (const token of required) assert.ok(workflow.includes(token), `missing contract token: ${token}`);
@@ -41,3 +48,5 @@ assert.ok(release.includes('pull-requests: write'));
 assert.ok(release.includes('issues: write'));
 
 console.log('Profile A release contract OK');
+
+assert.ok(docs.includes('must support `workflow_dispatch` with **no required inputs**'));
