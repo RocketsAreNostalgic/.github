@@ -50,6 +50,18 @@ Release Please remains authoritative for version calculation, changelog, release
 
 The shared workflow verifies this configuration from the admitted commit before invoking Release Please.
 
+## Immutable-release deployment prerequisite
+
+Profile B also requires the caller repository (or its organization) to expose the Actions variable:
+
+```text
+RAN_IMMUTABLE_RELEASES_ENABLED=true
+```
+
+This variable is a fail-closed operator assertion used before a draft is published. It is not publication authority and does not replace GitHub's immutable-release setting. GitHub's repository/organization immutable-release control remains the authoritative platform policy; the workflow still requires the published release API response to report `immutable == true`.
+
+The variable exists because the automatic `GITHUB_TOKEN` used by the reusable workflow does not have repository-administration read permission for GitHub's immutable-release settings endpoint. If the variable is absent or not exactly `true`, the verified draft and its assets remain unpublished.
+
 ## Quality prerequisite
 
 The canonical Quality workflow must support `workflow_dispatch` with no required inputs, just as Profile A does. Release Please uses the automatic `GITHUB_TOKEN`, so the shared workflow may need to dispatch Quality at the exact bot-owned release-PR head when ordinary pull-request events are suppressed.
