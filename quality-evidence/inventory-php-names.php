@@ -128,7 +128,7 @@ $walk = function ($node, array $ctx) use (&$walk, &$out, $visibility, $typeName)
 };
 foreach (glob($root . '/ran-*', GLOB_ONLYDIR) as $directory) {
     $repo = basename($directory);
-    $tracked = [];
+    $chunks = [];
     exec('git -C ' . escapeshellarg($directory) . ' ls-files -z -- ' . escapeshellarg('*.php'), $chunks, $status);
     if (0 !== $status) {
         throw new RuntimeException("Unable to enumerate tracked PHP files for {$repo}.");
