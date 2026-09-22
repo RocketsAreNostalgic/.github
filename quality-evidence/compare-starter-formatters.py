@@ -180,8 +180,6 @@ finally:
     shutil.rmtree(work)
     compact = {
         'revision': revision,
-        'source_manifest_sha256': hashlib.sha256(source_manifest_path.read_bytes()).hexdigest(),
-        'toolchain': {name: installed[name] for name in ('friendsofphp/php-cs-fixer','squizlabs/php_codesniffer','wp-coding-standards/wpcs','ran/coding-standards')},
         'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
         'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
         'fixtures': compact_value('fixtures', result['fixtures']),
