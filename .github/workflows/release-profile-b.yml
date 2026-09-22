@@ -146,7 +146,11 @@ jobs:
           git check-ref-format --branch "$RAN_RELEASE_PR_HEAD" >/dev/null
 
           open_prs="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/pulls?state=open&base=main&per_page=100")"
-          candidates="$(jq -cer             --arg bot 'github-actions[bot]'             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             'add | [.[] | select(
+          candidates="$(jq -cer \
+            --arg bot 'github-actions[bot]' \
+            --arg head "$RAN_RELEASE_PR_HEAD" \
+            --arg repository "$GITHUB_REPOSITORY" \
+            'add | [.[] | select(
               .state == "open"
               and .user.login == $bot
               and .base.ref == "main"
@@ -161,7 +165,14 @@ jobs:
 
           head_sha="$(jq -er '.[0].head.sha' <<< "$candidates")"
           [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]]
-          ref_sha="$(gh api --method GET "repos/${GITHUB_REPOSITORY}/git/matching-refs/heads/" --jq             '.[] | select(.ref == ("refs/heads/" + env.RAN_RELEASE_PR_HEAD)) | .object.sha' | sort -u)"
+
+          read_candidate_ref() {
+            gh api --method GET "repos/${GITHUB_REPOSITORY}/git/matching-refs/heads/" --jq \
+              '.[] | select(.ref == ("refs/heads/" + env.RAN_RELEASE_PR_HEAD)) | .object.sha' |
+              sort -u
+          }
+
+          ref_sha="$(read_candidate_ref)"
           test "$(printf '%s\n' "$ref_sha" | sed '/^$/d' | wc -l)" -eq 1
           test "$ref_sha" = "$head_sha"
 
@@ -169,25 +180,64 @@ jobs:
           workflow_ids="$(jq -cer --arg path "$RAN_QUALITY_WORKFLOW_PATH" '[.[].workflows[] | select(.path == $path) | .id] | unique' <<< "$workflows")"
           test "$(jq -er 'length' <<< "$workflow_ids")" == 1
           workflow_id="$(jq -er '.[0]' <<< "$workflow_ids")"
-          runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?head_sha=${head_sha}&per_page=100")"
-          covered="$(jq -r             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             --arg sha "$head_sha"             --argjson workflow_id "$workflow_id"             'any(.workflow_runs[];
-              .workflow_id == $workflow_id
-              and .path == $ENV.RAN_QUALITY_WORKFLOW_PATH
-              and (.event == "pull_request" or .event == "workflow_dispatch")
-              and .head_branch == $head
-              and .head_repository.full_name == $repository
-              and .head_sha == $sha
-              and (
-                (.status == "completed" and .conclusion == "success")
-                or (.status != "completed")
-              )
-            )' <<< "$runs")"
-          if [[ "$covered" == true ]]; then
+
+          coverage_state() {
+            local runs
+            runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?head_sha=${head_sha}&per_page=100")"
+            jq -r \
+              --arg head "$RAN_RELEASE_PR_HEAD" \
+              --arg repository "$GITHUB_REPOSITORY" \
+              --arg sha "$head_sha" \
+              --argjson workflow_id "$workflow_id" \
+              '[.workflow_runs[] | select(
+                .workflow_id == $workflow_id
+                and .path == $ENV.RAN_QUALITY_WORKFLOW_PATH
+                and (.event == "pull_request" or .event == "workflow_dispatch")
+                and .head_branch == $head
+                and .head_repository.full_name == $repository
+                and .head_sha == $sha
+              )] as $exact
+              | if any($exact[]; .status == "completed" and .conclusion == "success") then "success"
+                elif any($exact[]; .status != "completed") then "active"
+                elif length > 0 then "failed"
+                else "absent"
+                end' <<< "$runs"
+          }
+
+          state="$(coverage_state)"
+          if [[ "$state" == success ]]; then
+            test "$(read_candidate_ref)" = "$head_sha"
             exit 0
           fi
+          if [[ "$state" == failed ]]; then
+            echo "::error::Exact Release Please candidate ${head_sha} has failed Quality coverage."
+            exit 1
+          fi
 
-          jq -nc --arg ref "$RAN_RELEASE_PR_HEAD" '{ref: $ref}' |
-            gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/dispatches" --input - >/dev/null
+          if [[ "$state" == absent ]]; then
+            # workflow_dispatch accepts a branch/tag ref, not a raw commit. Bind the
+            # branch again immediately before dispatch, then require the resulting
+            # successful run to report the exact SHA captured above.
+            test "$(read_candidate_ref)" = "$head_sha"
+            jq -nc --arg ref "$RAN_RELEASE_PR_HEAD" '{ref: $ref}' |
+              gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/dispatches" --input - >/dev/null
+          fi
+
+          for attempt in {1..40}; do
+            sleep 3
+            state="$(coverage_state)"
+            if [[ "$state" == success ]]; then
+              test "$(read_candidate_ref)" = "$head_sha"
+              exit 0
+            fi
+            if [[ "$state" == failed ]]; then
+              echo "::error::Exact Release Please candidate ${head_sha} failed Quality qualification."
+              exit 1
+            fi
+          done
+
+          echo "::error::No successful Quality run covered exact Release Please candidate ${head_sha}."
+          exit 1
 
       - name: Resolve exact Release Please publication state
         id: publication
