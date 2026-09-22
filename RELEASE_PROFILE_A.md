@@ -2,7 +2,7 @@
 
 Profile A is the default release architecture for repositories that do not publish an authoritative separately built release asset.
 
-The consumer repository owns the `workflow_run` trigger because GitHub reusable workflows cannot subscribe to another repository's events on behalf of the caller. The caller passes the triggering Quality identity to the organisation-owned reusable workflow.
+The consumer owns the `workflow_run` trigger. GitHub preserves the caller event context in the called workflow, so admission reads `github.event.workflow_run` directly rather than trusting forwarded identity strings.
 
 ## Thin caller
 
@@ -19,35 +19,29 @@ permissions: {}
 
 jobs:
   release:
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
     uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-a.yml@<approved-immutable-ref>
     with:
-      admitted-sha: ${{ github.event.workflow_run.head_sha }}
-      upstream-event: ${{ github.event.workflow_run.event }}
-      upstream-conclusion: ${{ github.event.workflow_run.conclusion }}
-      upstream-branch: ${{ github.event.workflow_run.head_branch }}
-      upstream-repository: ${{ github.event.workflow_run.head_repository.full_name }}
-      upstream-repository-id: ${{ github.event.workflow_run.head_repository.id }}
-      upstream-workflow-path: ${{ github.event.workflow_run.path }}
       expected-workflow-path: .github/workflows/quality.yml
-    secrets: inherit
 ```
 
-The caller must name the canonical Quality workflow in `workflows:` and pass the canonical workflow path explicitly. Consumers pin the reusable workflow to an approved immutable organisation ref.
+Do not use `secrets: inherit`. The reusable workflow uses the caller's automatic `GITHUB_TOKEN`. GitHub does not permit a called workflow to elevate token permissions, so the caller job explicitly grants only the scopes required by Release Please.
+
+The caller names the canonical Quality workflow in `workflows:` and supplies its canonical path. Consumers pin the reusable workflow to an approved immutable organisation ref.
 
 ## Contract
 
-The reusable workflow admits only a successful same-repository `push` Quality run on `main`, with the expected workflow path and a canonical 40-character SHA. It checks out that exact SHA with persisted credentials disabled and verifies HEAD before Release Please receives write authority.
+The read-only admission job requires the actual caller event to be `workflow_run`, then reads the actual event payload and admits only a successful same-repository `push` Quality run on `main` with the expected path and canonical SHA. It checks out that exact SHA without persisted credentials and verifies HEAD.
+
+Only after admission does a separate write-capable job run. Immediately before Release Please it requires current `main` still to equal the admitted SHA, and Release Please is explicitly targeted at `main`. Workflow concurrency serializes Profile A release runs.
 
 Release Please owns version calculation, prerelease progression, changelog generation, release-PR lifecycle, tags and GitHub Releases.
 
-Profile A intentionally does not implement:
+The main-tip check is a fail-closed stale-run guard, not an atomic compare-and-swap with a concurrent push. The architecture deliberately requires the admitted Quality revision still to be current main when Release Please begins; a newer main revision receives its own Quality/release lifecycle.
 
-- SemVer or changelog policy;
-- Release Please branch/title/label parsing;
-- merge-parent or tree reconstruction;
-- candidate markers;
-- manual Release Please lifecycle reconciliation;
-- historical release recovery;
-- a generic Actions API workflow/run reread.
+Profile A intentionally does not implement SemVer/changelog policy, Release Please branch/title/label parsing, merge-parent/tree reconstruction, candidate markers, manual lifecycle reconciliation, historical recovery, or generic Actions API run rereads.
 
-A consumer needing an authoritative separately built release asset is Profile B, not Profile A.
+Repositories whose Release Please-created PR cannot obtain required read-only Quality through normal event behavior must add the smallest exact-head Quality dispatch needed by their merge policy; that is candidate qualification, not release publication semantics, and should be evaluated during consumer migration.
