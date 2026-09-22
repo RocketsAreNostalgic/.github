@@ -60,6 +60,64 @@ Maintained source code must use appropriate automated quality tooling where a ma
 - A repository must not claim support for a runtime or platform range that its compatibility checks contradict.
 - Ordinary CI must execute project-controlled code with the minimum practical token permissions and without persisted checkout credentials unless a documented workflow operation genuinely requires them.
 
+## PHP formatting authority
+
+Maintained RAN WordPress PHP uses **PHPCS to check and PHPCBF to fix**, through
+the applicable shared RAN WordPress ruleset. These are companion commands from
+the same package and must use the same rules, first-party paths and exclusions.
+`composer standards` is the check; `composer standards:fix` is the mutating fixer.
+
+PHP-CS-Fixer is not a second organisation formatting authority. Existing use is
+migration debt to remove, together with its dependency, configuration, cache
+entries and obsolete command callers. Preserve intended checks in PHPCS and
+prove failure and repeatability there; do not widen a second formatter's scope
+or preserve accidental formatting preferences merely because they existed.
+A future exception requires a concrete unmet need and explicit review; none is
+approved for Starter by its historical use.
+
+The Booster suite must converge on one documented WordPress-derived convention.
+Existing per-repository differences are audit findings, not automatically valid
+exceptions. Review repeated naming/condition exceptions as suite policy; retain
+only justified project-specific requirements. Stronger checks must be assessed
+for transfer into the shared baseline rather than indefinitely duplicated.
+
+Completion requires matching check/fix coverage, retained tests/analysis and
+compatibility gates, representative negative fixtures, stable repeated fixes,
+updated local/CI callers, and a current adoption row with exact-head evidence.
+A repository does not satisfy the policy merely by renaming Composer scripts.
+Workbench and purpose-built fixtures retain their recorded exemptions.
+
+## Booster naming during beta
+
+RAN-owned Booster-suite PHP methods, properties, parameters and local variables
+should use WordPress `snake_case`, including public members. Public visibility,
+historical camelCase use and beta package boundaries do not by themselves
+justify exceptions. The owner permits coordinated public API changes during
+beta; migration scope must include declarations, implementations, callers,
+named arguments, callback strings, tests and current documentation.
+
+Retain an exceptional name only for a concrete externally imposed contract,
+such as a PHP magic method or a method required by a third-party interface.
+WordPress hook callback method names are normally RAN-owned: update their
+registered callables with the declaration. PHP identifiers, hook identifiers,
+wire/JSON fields and persisted keys are different contracts; a PHP rename does
+not automatically authorize changing stored or external data schemas.
+
+WPCS 3.4.1 skips method naming in classes with inheritance or implemented
+interfaces. A green WPCS result alone therefore does not prove suite naming
+convergence. Migration acceptance must check owned declarations that upstream
+skips, with narrow explicit external-signature exceptions, and prove the
+check catches a newly introduced noncompliant owned method in such a class.
+Do not exempt an entire class merely because it implements a RAN interface.
+
+Plan connected packages as one migration cohort, certify exact candidate
+revisions together, and update compatibility declarations and dependency pins
+before release. Temporary coexistence aliases need a demonstrated mixed-version
+requirement and a removal condition; they are not the default for this beta
+cleanup. This decision does not authorize merging or publication and does not
+change the recorded Workbench/fixture exemptions or the existing PSR-4
+class/filename policy.
+
 ## WordPress PHP
 
 Maintained WordPress PHP code must use WordPress Coding Standards (WPCS) through PHP_CodeSniffer.
@@ -168,6 +226,82 @@ Shared PHP CI additionally validates Composer configuration strictly and perform
 As with frontend checks, exclusions are limited to concrete environment, privilege, destructive-integration, release, publication, or deployment requirements; they must be documented, and ordinary merge-required checks must still feed the terminal CI `quality` gate.
 
 Repositories may retain focused commands such as `composer test`, `composer standards`, package-manager lint/format commands, integration tests, Plugin Check, archive validation, or targeted compatibility proofs. Aggregate commands do not replace focused evidence required by `AGENTS.md` or CI.
+
+#### PHP command meanings
+
+Maintained Composer repositories adopt the following names during their next
+bounded quality migration. Commands are required only where the corresponding
+surface applies; do not add empty scripts to claim compliance.
+
+| Command | Contract |
+| --- | --- |
+| `composer check` | Non-mutating aggregate of all applicable ordinary source-quality checks. |
+| `composer lint:syntax` | Independent PHP parser sweep; any parser failure makes the command fail. |
+| `composer standards` | PHPCS/WPCS and PHPCompatibility through the applicable shared profile. |
+| `composer standards:fix` | PHPCBF using the same rules and source selection as `standards`. |
+| `composer analyze` | Static analysis with documented paths, level and blocking/advisory status. |
+| `composer test` | Aggregate of ordinary deterministic package tests, including applicable local workflow/contract tests. |
+| `composer check:host` | Additional required checks needing an exact certified external host checkout. |
+| `composer test:integration` | Tests needing a purpose-built WordPress, database or equivalent integration environment. |
+
+`test:*` and other focused product commands remain useful. Existing names may
+remain as documented aliases where a concrete caller needs them; new workflow
+and contributor instructions use the canonical names. Record removed names and
+their replacements. Do not retain aliases solely to avoid finishing a migration.
+
+`check`, `standards`, `analyze` and `test` must not rewrite source. Syntax runners
+must propagate failures and handle source filenames safely. An interpreter or
+file-discovery failure must not silently become a successful empty sweep. Check
+and fix commands must agree on scope, and repeated formatting must be stable.
+Required failures must propagate through aggregates and terminal CI `quality`.
+
+When implementation tests or analysis genuinely need Booster-owned contracts,
+the repository may keep `check` host-independent and expose `check:host` as an
+additional required aggregate. Document the host revision and setup, verify the
+certified checkout in CI, and keep every required host lane in terminal
+`quality`. Do not add the whole host as a production dependency or silently use
+an arbitrary sibling checkout. A host requirement is a concrete environment
+exception, not permission to omit independent ordinary tests or analysis.
+
+Report analysis strictness together with analysed paths and enforcement status.
+Symbol-discovery paths are not analysis coverage. Command renaming does not
+authorise lowering an existing floor, silently promoting an advisory pilot, or
+removing defensive runtime checks. Changes to levels, coverage requiring source
+edits, or enforcement need their own reviewed evidence.
+
+Existing dependency-audit gates remain required where adopted. A live advisory
+lookup is network- and time-dependent even against a locked graph; document that
+requirement rather than describing it as offline or reproducible source proof.
+For example, Release Updater currently runs `audit:composer` (`composer audit
+--locked --no-interaction`) inside `check`. Preserve that command and its exit
+status, including advisory or lookup failures; do not convert a failed lookup
+into success or move the gate out of the required path during command adoption.
+This contract does not add an audit gate to repositories that do not have one.
+Any future change to audit placement, exclusions or enforcement requires an
+explicit policy decision and corresponding CI evidence.
+
+#### Adoption and role-based exceptions
+
+The source-quality programme is tracked in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+with the initial command contract in [#66](https://github.com/RocketsAreNostalgic/.github/issues/66).
+Subsequent Profile B consumer PRs may combine command names, retained-check
+wiring, syntax reliability and matching documentation with release migration.
+Record the before/after check mapping and satisfy both sets of acceptance
+criteria. New analyzers, higher levels, advisory-to-blocking promotion and broad
+style/formatter changes remain separately reviewable. The first Profile B proof
+does not depend on completing this quality programme.
+
+Workbench and fixture repositories are purpose-based exceptions to uniform
+Composer command adoption. Preserve their useful local checks and fixture
+interfaces; change a fixture only for a concrete tested-contract need and
+identify affected consumers. Do not rename fixture scripts for symmetry.
+Applicable security requirements still apply. Inactive/deferred repositories
+retain their recorded dispositions; command policy does not reactivate them.
+
+The initial adoption ledger is in [PHP_QUALITY_ADOPTION.md](PHP_QUALITY_ADOPTION.md).
+Its observations describe migration state, not permanent exceptions or proof
+that unexecuted checks pass. Shared rules, runtime ranges and local security/API
+exceptions retain their existing ownership until separately reviewed.
 
 ## CI contract
 
