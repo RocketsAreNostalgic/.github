@@ -116,6 +116,8 @@ After exact successful-main admission:
 
 The resolved Release Please release ID is carried through promotion and readback, with its tag and admitted target SHA checked again. Draft releases are read through `/releases/{release_id}` because `/releases/tags/{tag}` can return HTTP 404 before publication. This uses the existing release identity; it does not create a replacement release.
 
+Asset uploads use the captured release ID's endpoint on `uploads.github.com`, sending the exact verified file as the raw request body. Publishing also targets that same ID. No mutation re-resolves the tag to select a release; deletion/recreation under the same tag therefore fails closed against the original ID.
+
 The workflow never uses `--clobber`.
 
 ## Retry behavior

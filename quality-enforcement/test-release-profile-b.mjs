@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const workflow = readFileSync('.github/workflows/release-profile-b.yml', 'utf8');
 const docs = readFileSync('RELEASE_PROFILE_B.md', 'utf8');
@@ -47,7 +50,7 @@ const required = [
   'sha256sum',
   '.target_commitish == $sha',
   '.immutable',
-  'gh release upload',
+  'https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}/assets?name=${name}',
   'prerelease_before',
   'gh api --method PATCH',
   'googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7',
@@ -56,6 +59,7 @@ for (const token of required) assert.ok(workflow.includes(token), `missing contr
 
 for (const forbidden of [
   '--clobber',
+  'gh release upload',
   'autorelease: pending',
   'autorelease: tagged',
   'merge_commit_sha',
@@ -155,6 +159,94 @@ ${lookup}`], {
   });
   assert.ifError(result.error);
   assert.equal(result.status, expectedStatus, `${name}: ${result.stderr}`);
+}
+
+// Run the entire promotion step against a local API simulator, including raw
+// uploads, publication and immutable readback. Unexpected/tag-based calls fail.
+const promotionScript = promotion.slice(promotion.indexOf('        run: |') + '        run: |'.length)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+for (const scenario of ['stable', 'prerelease', 'published', 'deleted-before-upload']) {
+  const dir = mkdtempSync(join(tmpdir(), 'profile-b-promotion-'));
+  try {
+    mkdirSync(join(dir, 'promotion'));
+    const assets = [ ['example.zip', Buffer.from([0, 1, 2, 255, 10])], ['example.zip.sha256', Buffer.from('checksum fixture\n')] ]
+      .map(([name, bytes]) => {
+        writeFileSync(join(dir, 'promotion', name), bytes);
+        return { name, sha256: createHash('sha256').update(bytes).digest('hex') };
+      });
+    writeFileSync(join(dir, 'promotion', 'ran-profile-b-promotion.json'), JSON.stringify({
+      schema: 'ran-profile-b-promotion', schema_version: 1, repository: 'example/repo',
+      quality_commit: 'a'.repeat(40), source_commit: 'a'.repeat(40), tag: 'v1.3.3', assets,
+    }));
+    const published = scenario === 'published';
+    writeFileSync(join(dir, 'state.json'), JSON.stringify({ ...exactRelease,
+      draft: !published, immutable: published, prerelease: scenario === 'prerelease',
+      assets: published ? assets.map(a => ({ name: a.name, digest: 'sha256:' + a.sha256 })) : [],
+    }));
+    writeFileSync(join(dir, 'calls.json'), '[]');
+    writeFileSync(join(dir, 'gh'), `#!/usr/bin/env node
+const fs = require('node:fs');
+const crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const args = process.argv.slice(2);
+assert.equal(args.shift(), 'api');
+let method = 'GET', input, endpoint, header, field;
+while (args.length) {
+  const arg = args.shift();
+  if (arg === '--method') method = args.shift();
+  else if (arg === '--input') input = args.shift();
+  else if (arg === '-H') header = args.shift();
+  else if (arg === '-F') field = args.shift();
+  else { assert.equal(endpoint, undefined); endpoint = arg; }
+}
+const calls = JSON.parse(fs.readFileSync('calls.json'));
+calls.push({ method, endpoint }); fs.writeFileSync('calls.json', JSON.stringify(calls));
+const state = JSON.parse(fs.readFileSync('state.json'));
+const api = 'repos/example/repo/releases/394078148';
+if (method === 'GET') {
+  assert.equal(endpoint, api);
+} else if (method === 'POST') {
+  const url = new URL(endpoint);
+  assert.equal(url.origin + url.pathname, 'https://uploads.github.com/' + api + '/assets');
+  if (process.env.RAN_TEST_SCENARIO === 'deleted-before-upload') process.exit(1);
+  assert.equal(state.draft, true);
+  assert.equal(header, 'Content-Type: application/octet-stream');
+  const name = url.searchParams.get('name');
+  assert.equal(input, 'promotion/' + name);
+  assert.ok(!state.assets.some(a => a.name === name));
+  state.assets.push({ name, digest: 'sha256:' + crypto.createHash('sha256').update(fs.readFileSync(input)).digest('hex') });
+} else if (method === 'PATCH') {
+  assert.equal(endpoint, api); assert.equal(field, 'draft=false');
+  assert.equal(state.assets.length, 2);
+  state.draft = false; state.immutable = true;
+} else throw Error('unexpected API mutation');
+fs.writeFileSync('state.json', JSON.stringify(state));
+console.log(JSON.stringify(state));
+`, { mode: 0o755 });
+    const result = spawnSync('bash', ['-c', promotionScript], {
+      cwd: dir, encoding: 'utf8', timeout: 20000,
+      env: { ...process.env, PATH: dir + ':' + process.env.PATH,
+        GITHUB_REPOSITORY: 'example/repo', RAN_RELEASE_ID: '394078148',
+        RAN_RELEASE_TAG: 'v1.3.3', RAN_ADMITTED_SHA: 'a'.repeat(40),
+        RAN_PROMOTION_MANIFEST: 'ran-profile-b-promotion.json',
+        RAN_PUBLICATION_STATE: published ? 'published' : 'draft', RAN_TEST_SCENARIO: scenario },
+    });
+    assert.ifError(result.error);
+    const calls = JSON.parse(readFileSync(join(dir, 'calls.json')));
+    const mutations = calls.filter(c => c.method !== 'GET');
+    const state = JSON.parse(readFileSync(join(dir, 'state.json')));
+    if (scenario === 'deleted-before-upload') {
+      assert.notEqual(result.status, 0);
+      assert.equal(state.assets.length, 0);
+      assert.equal(state.draft, true);
+      assert.deepEqual(mutations.map(c => c.method), ['POST']);
+    } else {
+      assert.equal(result.status, 0, scenario + ': ' + result.stderr);
+      assert.deepEqual(mutations.map(c => c.method), published ? [] : ['POST', 'POST', 'PATCH']);
+      assert.equal(state.immutable, true);
+      assert.equal(state.prerelease, scenario === 'prerelease');
+    }
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 }
 
 assert.ok(docs.includes('must support `workflow_dispatch` with no required inputs'));

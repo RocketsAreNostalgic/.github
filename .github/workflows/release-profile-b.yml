@@ -351,7 +351,10 @@ jobs:
               echo "::error::Published immutable release is missing expected asset ${name}."
               exit 1
             fi
-            gh release upload "$RAN_RELEASE_TAG" "promotion/$name" --repo "$GITHUB_REPOSITORY"
+            gh api --method POST \
+              -H 'Content-Type: application/octet-stream' \
+              --input "promotion/$name" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}/assets?name=${name}" >/dev/null
           done < <(jq -r '.assets[] | [.name, .sha256] | @tsv' "$manifest")
 
           release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
@@ -368,7 +371,7 @@ jobs:
             # Validate type separately: jq -e treats a legitimate false as failure.
             jq -e '.prerelease | type == "boolean"' <<< "$release_json" >/dev/null
             prerelease_before="$(jq -r '.prerelease' <<< "$release_json")"
-            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${release_id}"               -F draft=false >/dev/null
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}"               -F draft=false >/dev/null
             release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
             test "$(jq -er '.prerelease' <<< "$release_json")" = "$prerelease_before"
           fi
