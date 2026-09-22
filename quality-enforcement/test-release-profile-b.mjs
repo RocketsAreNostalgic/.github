@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 const workflow = readFileSync('.github/workflows/release-profile-b.yml', 'utf8');
@@ -77,6 +78,46 @@ assert.ok(release.includes('contents: write'));
 assert.ok(release.includes('pull-requests: write'));
 assert.ok(release.includes('issues: write'));
 assert.ok(release.includes('actions: write'));
+
+// Execute the actual pre-publication capture, not a copy of its jq expression.
+// End before the first API mutation; every fixture is local JSON only.
+const captureStart = workflow.indexOf('            release_id=');
+const captureEnd = workflow.indexOf('            gh api --method PATCH', captureStart);
+assert.ok(captureStart >= 0 && captureEnd > captureStart, 'missing prerelease capture boundary');
+const capture = workflow.slice(captureStart, captureEnd);
+assert.ok(capture.includes('prerelease_before='));
+assert.ok(!capture.includes('gh '), 'boolean fixture must not invoke GitHub');
+
+const booleanCases = [
+  ['prerelease', { id: 1, prerelease: true }, 'true'],
+  ['stable', { id: 1, prerelease: false }, 'false'],
+  ['missing', { id: 1 }, null],
+  ['null', { id: 1, prerelease: null }, null],
+  ['string false', { id: 1, prerelease: 'false' }, null],
+  ['string true', { id: 1, prerelease: 'true' }, null],
+  ['zero', { id: 1, prerelease: 0 }, null],
+  ['one', { id: 1, prerelease: 1 }, null],
+  ['array', { id: 1, prerelease: [] }, null],
+  ['object', { id: 1, prerelease: {} }, null],
+];
+for (const [name, releaseJson, expected] of booleanCases) {
+  const result = spawnSync('bash', ['-c',
+    'set -euo pipefail\nrelease_json="$RAN_TEST_RELEASE_JSON"\n'
+      + capture + '\nprintf "%s\\n" "$prerelease_before"\n',
+  ], {
+    encoding: 'utf8',
+    env: { ...process.env, RAN_TEST_RELEASE_JSON: JSON.stringify(releaseJson) },
+    timeout: 10000,
+  });
+  assert.ifError(result.error);
+  assert.notEqual(result.status, null, `${name}: shell did not exit normally`);
+  if (expected === null) {
+    assert.notEqual(result.status, 0, `${name}: invalid prerelease metadata must fail closed`);
+  } else {
+    assert.equal(result.status, 0, `${name}: ${result.stderr}`);
+    assert.equal(result.stdout.trim(), expected, `${name}: preserve Release Please's boolean`);
+  }
+}
 
 assert.ok(docs.includes('must support `workflow_dispatch` with no required inputs'));
 assert.ok(docs.includes('waits for a successful Quality run whose reported `head_sha` is that exact SHA'));
