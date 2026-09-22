@@ -114,6 +114,8 @@ After exact successful-main admission:
 9. Publish the draft only when immutable releases are enabled.
 10. Read back exact tag target, asset names/digests, non-draft state and `immutable == true`.
 
+The resolved Release Please release ID is carried through promotion and readback, with its tag and admitted target SHA checked again. Draft releases are read through `/releases/{release_id}` because `/releases/tags/{tag}` can return HTTP 404 before publication. This uses the existing release identity; it does not create a replacement release.
+
 The workflow never uses `--clobber`.
 
 ## Retry behavior
