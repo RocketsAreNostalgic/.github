@@ -29,6 +29,7 @@ const required = [
   'dispatches',
   'draft == true',
   'force-tag-creation',
+  'all(($root.packages // {})[]?',
   'skip-github-release',
   'ran-profile-b-promotion',
   'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c',
@@ -38,7 +39,6 @@ const required = [
   'gh release upload',
   'prerelease_before',
   'gh api --method PATCH',
-  'RAN_IMMUTABLE_RELEASES_ENABLED',
   'googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7',
 ];
 for (const token of required) assert.ok(workflow.includes(token), `missing contract token: ${token}`);
@@ -53,6 +53,8 @@ for (const forbidden of [
   'skip-github-release: true',
   'version_tag=',
   '--prerelease',
+  'RAN_IMMUTABLE_RELEASES_ENABLED',
+  'immutable-releases\")',
 ]) assert.ok(!workflow.includes(forbidden), `Profile B must not contain: ${forbidden}`);
 
 const admit = workflow.slice(workflow.indexOf('  admit:'), workflow.indexOf('  release:'));
@@ -70,8 +72,9 @@ assert.ok(docs.includes('must support `workflow_dispatch` with no required input
 assert.ok(docs.includes('"draft": true'));
 assert.ok(docs.includes('"force-tag-creation": true'));
 assert.ok(docs.includes('never uses `--clobber`'));
-assert.ok(docs.includes('RAN_IMMUTABLE_RELEASES_ENABLED=true'));
-assert.ok(docs.includes('does not have repository-administration read permission'));
+assert.ok(docs.includes('organization-wide production constraint'));
+assert.ok(docs.includes('Administration-read'));
+assert.ok(docs.includes('HTTP 403'));
 assert.ok(docs.includes('Missing or expired Quality artifact'));
 
 console.log('Profile B release contract OK');
