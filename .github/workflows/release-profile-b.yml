@@ -361,7 +361,9 @@ jobs:
             # Do not add a higher-privilege standing token merely to re-read that
             # admin setting here; #57 owns final platform-settings reconciliation.
             release_id="$(jq -er '.id' <<< "$release_json")"
-            prerelease_before="$(jq -er '.prerelease' <<< "$release_json")"
+            # Validate type separately: jq -e treats a legitimate false as failure.
+            jq -e '.prerelease | type == "boolean"' <<< "$release_json" >/dev/null
+            prerelease_before="$(jq -r '.prerelease' <<< "$release_json")"
             gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${release_id}"               -F draft=false >/dev/null
             release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RAN_RELEASE_TAG}")"
             test "$(jq -er '.prerelease' <<< "$release_json")" = "$prerelease_before"
