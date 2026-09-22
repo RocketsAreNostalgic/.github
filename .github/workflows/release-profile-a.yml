@@ -127,7 +127,10 @@ jobs:
           [[ "$head_sha" =~ ^[0-9a-f]{40}$ ]]
           test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${RAN_RELEASE_PR_HEAD}" --jq '.object.sha')" = "$head_sha"
 
-          workflow_id="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${RAN_QUALITY_WORKFLOW_PATH}" --jq '.id')"
+          workflows="$(gh api --paginate --slurp "repos/${GITHUB_REPOSITORY}/actions/workflows?per_page=100")"
+          workflow_ids="$(jq -cer --arg path "$RAN_QUALITY_WORKFLOW_PATH" '[.[].workflows[] | select(.path == $path) | .id] | unique' <<< "$workflows")"
+          test "$(jq -er 'length' <<< "$workflow_ids")" == 1
+          workflow_id="$(jq -er '.[0]' <<< "$workflow_ids")"
           runs="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?head_sha=${head_sha}&per_page=100")"
           covered="$(jq -r             --arg head "$RAN_RELEASE_PR_HEAD"             --arg repository "$GITHUB_REPOSITORY"             --arg sha "$head_sha"             --argjson workflow_id "$workflow_id"             'any(.workflow_runs[];
               .workflow_id == $workflow_id
