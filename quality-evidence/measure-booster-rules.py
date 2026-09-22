@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the baseline, naming/Yoda/alignment probes and fix measurements.
+"""Audit aid for repeating baseline, naming/Yoda/alignment probes and fix measurements.
 Usage: python3 measure-booster-rules.py LAB_ROOT PHP_BINARY MATCHING_VENDOR_DIR
 LAB_ROOT contains seven exact source snapshots named as in the accompanying JSON.
 Uses only the external quality toolchain; never installs/runs consumer dependencies.
