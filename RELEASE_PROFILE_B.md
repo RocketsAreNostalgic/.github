@@ -64,6 +64,8 @@ The canonical Quality workflow must support `workflow_dispatch` with no required
 
 Quality must remain read-only.
 
+Because GitHub's workflow-dispatch API accepts a branch or tag ref rather than an immutable commit SHA, the shared workflow binds the Release Please branch to the exact candidate SHA immediately before dispatch and then waits for a successful Quality run whose reported `head_sha` is that exact SHA. A successful run for a newer branch head does not qualify the originally admitted candidate. The candidate branch must still resolve to the bound SHA when qualification succeeds. The wait is bounded to approximately 25 minutes inside a 30-minute release job so a legitimate full Quality run can complete without turning qualification into an unbounded observer.
+
 For every run that can become a production release, Quality uploads one run-bound Actions artifact named:
 
 ```text
