@@ -17,6 +17,12 @@ const required = [
   'needs: admit',
   "git/ref/heads/main",
   'target-branch: main',
+  'release-pr-head:',
+  'actions: write',
+  'Ensure exact Release Please candidate has Quality',
+  "github-actions[bot]",
+  'head_sha=',
+  'dispatches',
   'googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7',
 ];
 for (const token of required) assert.ok(workflow.includes(token), `missing contract token: ${token}`);
