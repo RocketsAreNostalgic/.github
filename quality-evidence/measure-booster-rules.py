@@ -43,7 +43,9 @@ RESTORE=['WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid',NAMES
 def run(repo, label, tool, cfg, args=()):
  cmd=[str(PHP),str(VENDOR/'bin'/tool),'--standard='+cfg,'--parallel=4','-q',*args]
  p=subprocess.run(cmd,cwd=ROOT/repo,env=ENV,capture_output=True,text=True,timeout=900)
- (OUT/(repo+'-'+label+'.log')).write_text(p.stdout+p.stderr)
+ (OUT/(repo+'-'+label+'.log')).write_text(p.stdout)
+ if p.stderr:
+  (OUT/(repo+'-'+label+'.stderr.log')).write_text(p.stderr)
  if p.returncode not in (0,1,2,3): raise RuntimeError(repo+' '+label+' '+str(p.returncode)+' '+p.stdout[-1000:]+p.stderr[-1000:])
  return p
 
@@ -99,7 +101,10 @@ def measure(repo):
   (dest/candidate).unlink(missing_ok=True)
  (OUT/(repo+'.json')).write_text(json.dumps(result,indent=2,sort_keys=True)+'\n')
  return repo
-with ThreadPoolExecutor(max_workers=3) as pool:
- for repo in pool.map(measure,META):print('DONE',repo,flush=True)
+try:
+ with ThreadPoolExecutor(max_workers=3) as pool:
+  for repo in pool.map(measure,META):print('DONE',repo,flush=True)
+finally:
+ shutil.rmtree(ENV['HOME'],ignore_errors=True)
 
 
