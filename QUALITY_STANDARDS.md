@@ -87,6 +87,37 @@ updated local/CI callers, and a current adoption row with exact-head evidence.
 A repository does not satisfy the policy merely by renaming Composer scripts.
 Workbench and purpose-built fixtures retain their recorded exemptions.
 
+## Booster naming during beta
+
+RAN-owned Booster-suite PHP methods, properties, parameters and local variables
+should use WordPress `snake_case`, including public members. Public visibility,
+historical camelCase use and beta package boundaries do not by themselves
+justify exceptions. The owner permits coordinated public API changes during
+beta; migration scope must include declarations, implementations, callers,
+named arguments, callback strings, tests and current documentation.
+
+Retain an exceptional name only for a concrete externally imposed contract,
+such as a PHP magic method or a method required by a third-party interface.
+WordPress hook callback method names are normally RAN-owned: update their
+registered callables with the declaration. PHP identifiers, hook identifiers,
+wire/JSON fields and persisted keys are different contracts; a PHP rename does
+not automatically authorize changing stored or external data schemas.
+
+WPCS 3.4.1 skips method naming in classes with inheritance or implemented
+interfaces. A green WPCS result alone therefore does not prove suite naming
+convergence. Migration acceptance must check owned declarations that upstream
+skips, with narrow explicit external-signature exceptions, and prove the
+check catches a newly introduced noncompliant owned method in such a class.
+Do not exempt an entire class merely because it implements a RAN interface.
+
+Plan connected packages as one migration cohort, certify exact candidate
+revisions together, and update compatibility declarations and dependency pins
+before release. Temporary coexistence aliases need a demonstrated mixed-version
+requirement and a removal condition; they are not the default for this beta
+cleanup. This decision does not authorize merging or publication and does not
+change the recorded Workbench/fixture exemptions or the existing PSR-4
+class/filename policy.
+
 ## WordPress PHP
 
 Maintained WordPress PHP code must use WordPress Coding Standards (WPCS) through PHP_CodeSniffer.
