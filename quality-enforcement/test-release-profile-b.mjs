@@ -27,6 +27,10 @@ const required = [
   'actions: write',
   'Ensure exact Release Please candidate has Quality',
   'dispatches',
+  'coverage_state()',
+  'head_sha=${head_sha}',
+  'No successful Quality run covered exact Release Please candidate',
+  'test "$(read_candidate_ref)" = "$head_sha"',
   'draft == true',
   'force-tag-creation',
   'all(($root.packages // {})[]?',
@@ -72,6 +76,7 @@ assert.ok(release.includes('issues: write'));
 assert.ok(release.includes('actions: write'));
 
 assert.ok(docs.includes('must support `workflow_dispatch` with no required inputs'));
+assert.ok(docs.includes('waits for a successful Quality run whose reported `head_sha` is that exact SHA'));
 assert.ok(docs.includes('"draft": true'));
 assert.ok(docs.includes('"force-tag-creation": true'));
 assert.ok(docs.includes('never uses `--clobber`'));
