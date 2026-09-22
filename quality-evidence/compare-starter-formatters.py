@@ -190,28 +190,33 @@ def compact_value(key, value):
             return {k: compact_value(k, v) for k, v in value.items()}
         return value
 
-shutil.rmtree(work)
-compact = {
-        'revision': revision,
-        'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
-        'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
-        'fixtures': compact_value('fixtures', result['fixtures']),
-        'representatives': compact_value('representatives', result['representatives']),
-    }
-finder = subprocess.run(
-        [php, '-r', 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'],
-        cwd=root, env=env, check=True, capture_output=True, text=True
-    )
-phpcs_report = json.loads(run(cs)['stdout'])
-sniff_list = subprocess.run([php, 'vendor/bin/phpcs', '--standard=.phpcs.xml', '-e'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout
-compact['baseline'] = {
-        'fixer_exit': check(root / 'scripts/build-release.php')['fixer']['exit'],
-        'fixer_files': [line for line in finder.stdout.splitlines() if line],
-        'phpcs_exit': 0 if phpcs_report.get('totals', {}).get('errors', 0) == 0 else 2,
-        'phpcs_files': len(phpcs_report.get('files', {})),
-        'phpcs_sniffs': sum(1 for line in sniff_list.splitlines() if line.lstrip().startswith('- ')),
-    }
-representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
-compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
-output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
-shutil.rmtree(env['HOME'])
+try:
+    shutil.rmtree(work)
+    compact = {
+            'revision': revision,
+            'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
+            'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
+            'fixtures': compact_value('fixtures', result['fixtures']),
+            'representatives': compact_value('representatives', result['representatives']),
+        }
+    finder = subprocess.run(
+            [php, '-r', 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'],
+            cwd=root, env=env, check=True, capture_output=True, text=True
+        )
+    phpcs_report = json.loads(run(cs)['stdout'])
+    sniff_list = subprocess.run([php, 'vendor/bin/phpcs', '--standard=.phpcs.xml', '-e'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout
+    compact['baseline'] = {
+            'fixer_exit': check(root / 'scripts/build-release.php')['fixer']['exit'],
+            'fixer_files': [line for line in finder.stdout.splitlines() if line],
+            'phpcs_exit': 0 if phpcs_report.get('totals', {}).get('errors', 0) == 0 else 2,
+            'phpcs_files': len(phpcs_report.get('files', {})),
+            'phpcs_sniffs': sum(1 for line in sniff_list.splitlines() if line.lstrip().startswith('- ')),
+        }
+    representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
+    compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
+    output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
+    
+finally:
+    shutil.rmtree(work, ignore_errors=True)
+    shutil.rmtree(env['HOME'], ignore_errors=True)
+
