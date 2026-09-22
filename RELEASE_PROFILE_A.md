@@ -24,9 +24,11 @@ jobs:
       issues: write
       pull-requests: write
       actions: write
+      actions: write
     uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-a.yml@<approved-immutable-ref>
     with:
       expected-workflow-path: .github/workflows/quality.yml
+      release-pr-head: release-please--branches--main--components--<component>
       release-pr-head: release-please--branches--main--components--<component>
 ```
 
@@ -49,3 +51,8 @@ The main-tip check is a fail-closed stale-run guard, not an atomic compare-and-s
 Profile A intentionally does not implement SemVer/changelog policy, Release Please branch/title/label parsing, merge-parent/tree reconstruction, candidate markers, manual lifecycle reconciliation, historical recovery, or generic Actions API run rereads.
 
 The candidate Quality dispatch is part of the shared Profile A contract because `GITHUB_TOKEN` event suppression is common to Release Please consumers with required PR checks. Repository Quality remains repository-owned and read-only; the shared workflow does not interpret its result beyond avoiding duplicate dispatch.
+
+
+## Release-PR Quality qualification
+
+Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore contains one bounded qualification step: find exactly one configured bot-owned open candidate, bind its exact head SHA, and dispatch the existing read-only Quality workflow only when no successful or in-flight PR/dispatch run already covers that exact head. This is merge qualification, not release/version state.
