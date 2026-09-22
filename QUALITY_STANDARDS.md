@@ -169,6 +169,75 @@ As with frontend checks, exclusions are limited to concrete environment, privile
 
 Repositories may retain focused commands such as `composer test`, `composer standards`, package-manager lint/format commands, integration tests, Plugin Check, archive validation, or targeted compatibility proofs. Aggregate commands do not replace focused evidence required by `AGENTS.md` or CI.
 
+#### PHP command meanings
+
+Maintained Composer repositories adopt the following names during their next
+bounded quality migration. Commands are required only where the corresponding
+surface applies; do not add empty scripts to claim compliance.
+
+| Command | Contract |
+| --- | --- |
+| `composer check` | Non-mutating aggregate of all applicable ordinary source-quality checks. |
+| `composer lint:syntax` | Independent PHP parser sweep; any parser failure makes the command fail. |
+| `composer standards` | PHPCS/WPCS and PHPCompatibility through the applicable shared profile. |
+| `composer standards:fix` | PHPCBF using the same rules and source selection as `standards`. |
+| `composer analyze` | Static analysis with documented paths, level and blocking/advisory status. |
+| `composer test` | Aggregate of ordinary deterministic package tests, including applicable local workflow/contract tests. |
+| `composer check:host` | Additional required checks needing an exact certified external host checkout. |
+| `composer test:integration` | Tests needing a purpose-built WordPress, database or equivalent integration environment. |
+
+`test:*` and other focused product commands remain useful. Existing names may
+remain as documented aliases where a concrete caller needs them; new workflow
+and contributor instructions use the canonical names. Record removed names and
+their replacements. Do not retain aliases solely to avoid finishing a migration.
+
+`check`, `standards`, `analyze` and `test` must not rewrite source. Syntax runners
+must propagate failures and handle source filenames safely. An interpreter or
+file-discovery failure must not silently become a successful empty sweep. Check
+and fix commands must agree on scope, and repeated formatting must be stable.
+Required failures must propagate through aggregates and terminal CI `quality`.
+
+When implementation tests or analysis genuinely need Booster-owned contracts,
+the repository may keep `check` host-independent and expose `check:host` as an
+additional required aggregate. Document the host revision and setup, verify the
+certified checkout in CI, and keep every required host lane in terminal
+`quality`. Do not add the whole host as a production dependency or silently use
+an arbitrary sibling checkout. A host requirement is a concrete environment
+exception, not permission to omit independent ordinary tests or analysis.
+
+Report analysis strictness together with analysed paths and enforcement status.
+Symbol-discovery paths are not analysis coverage. Command renaming does not
+authorise lowering an existing floor, silently promoting an advisory pilot, or
+removing defensive runtime checks. Changes to levels, coverage requiring source
+edits, or enforcement need their own reviewed evidence.
+
+Existing dependency-audit gates remain required where adopted. A live advisory
+lookup is network- and time-dependent even against a locked graph; document that
+requirement rather than describing it as offline or reproducible source proof.
+
+#### Adoption and role-based exceptions
+
+The source-quality programme is tracked in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+with the initial command contract in [#66](https://github.com/RocketsAreNostalgic/.github/issues/66).
+Subsequent Profile B consumer PRs may combine command names, retained-check
+wiring, syntax reliability and matching documentation with release migration.
+Record the before/after check mapping and satisfy both sets of acceptance
+criteria. New analyzers, higher levels, advisory-to-blocking promotion and broad
+style/formatter changes remain separately reviewable. The first Profile B proof
+does not depend on completing this quality programme.
+
+Workbench and fixture repositories are purpose-based exceptions to uniform
+Composer command adoption. Preserve their useful local checks and fixture
+interfaces; change a fixture only for a concrete tested-contract need and
+identify affected consumers. Do not rename fixture scripts for symmetry.
+Applicable security requirements still apply. Inactive/deferred repositories
+retain their recorded dispositions; command policy does not reactivate them.
+
+The initial adoption ledger is in [PHP_QUALITY_ADOPTION.md](PHP_QUALITY_ADOPTION.md).
+Its observations describe migration state, not permanent exceptions or proof
+that unexecuted checks pass. Shared rules, runtime ranges and local security/API
+exceptions retain their existing ownership until separately reviewed.
+
 ## CI contract
 
 RAN provides reusable GitHub Actions workflows for common source-quality profiles. Repository workflows may call those workflows and add project-specific jobs.
