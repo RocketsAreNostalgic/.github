@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Run only in a disposable Starter archive with its locked tools installed.
-Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION SOURCE_SHA256
+Usage: python3 compare-starter-formatters.py /absolute/disposable/starter output.json REVISION SOURCE_MANIFEST
 Requires php on PATH. Does not execute application code or Composer scripts.
 """
 from concurrent.futures import ThreadPoolExecutor
@@ -16,15 +16,17 @@ import tempfile
 root = Path(sys.argv[1]).resolve()
 output = Path(sys.argv[2]).resolve()
 revision = sys.argv[3]
-source_sha256 = sys.argv[4]
-assert len(source_sha256) == 64 and all(c in '0123456789abcdef' for c in source_sha256)
+source_manifest_path = Path(sys.argv[4]).resolve()
+source_manifest = json.loads(source_manifest_path.read_text())
+assert isinstance(source_manifest, dict) and source_manifest
 assert len(revision) == 40 and all(c in '0123456789abcdef' for c in revision)
 php = shutil.which('php')
 assert php and (root / 'vendor/autoload.php').is_file()
 assert not (root / '.git').exists(), 'Use a disposable archive, not a Git checkout'
-source_manifest = root / '.ran-formatter-source.sha256'
-assert source_manifest.is_file(), 'Source archive must include the verified .ran-formatter-source.sha256 marker'
-assert source_manifest.read_text().strip() == source_sha256, 'Source archive checksum marker does not match the expected archive digest'
+for relative, expected in source_manifest.items():
+    path = root / relative
+    assert path.is_file(), f'Manifest source file missing: {relative}'
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, f'Source bytes differ from manifest: {relative}'
 env = {'PATH': os.environ['PATH'], 'HOME': tempfile.mkdtemp(prefix='formatter-home-')}
 fix = [php, 'vendor/bin/php-cs-fixer', 'fix', '--config=scripts/.php-cs-fixer.php',
        '--allow-risky=yes', '--using-cache=no', '--sequential', '--path-mode=override']
@@ -160,8 +162,10 @@ finally:
             return {k: compact_value(k, v) for k, v in value.items()}
         return value
 
+    shutil.rmtree(work)
     compact = {
         'revision': revision,
+        'source_manifest_sha256': hashlib.sha256(source_manifest_path.read_bytes()).hexdigest(),
         'scope': 'Disposable formatter-only experiment; application dependency extraction incomplete',
         'php': subprocess.run([php, '-r', 'echo PHP_VERSION;'], cwd=root, env=env, check=True, capture_output=True, text=True).stdout,
         'fixtures': compact_value('fixtures', result['fixtures']),
@@ -183,5 +187,4 @@ finally:
     representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
     compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
     output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
-    shutil.rmtree(work)
     shutil.rmtree(env['HOME'])
