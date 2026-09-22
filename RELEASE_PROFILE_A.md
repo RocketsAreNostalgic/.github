@@ -28,7 +28,6 @@ jobs:
     with:
       expected-workflow-path: .github/workflows/quality.yml
       release-pr-head: release-please--branches--main--components--<component>
-      release-pr-head: release-please--branches--main--components--<component>
 ```
 
 Do not use `secrets: inherit`. The reusable workflow uses the caller's automatic `GITHUB_TOKEN`. GitHub does not permit a called workflow to elevate token permissions, so the caller job explicitly grants only the scopes required by Release Please.
@@ -55,3 +54,10 @@ The candidate Quality dispatch is part of the shared Profile A contract because 
 ## Release-PR Quality qualification
 
 Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore contains one bounded qualification step: find exactly one configured bot-owned open candidate, bind its exact head SHA, and dispatch the existing read-only Quality workflow only when no successful or in-flight PR/dispatch run already covers that exact head. This is merge qualification, not release/version state.
+
+
+### Consumer Quality prerequisite
+
+The canonical Quality workflow used for release-PR qualification must support `workflow_dispatch` with **no required inputs**. Profile A dispatches that existing read-only workflow at the exact Release Please candidate branch when GitHub's `GITHUB_TOKEN` event suppression prevents a normal `pull_request` run.
+
+A consumer must not adopt Profile A until this prerequisite is contract-tested locally. The dispatched Quality workflow must continue to qualify the exact dispatched revision and must not gain release-write authority.
