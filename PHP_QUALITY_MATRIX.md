@@ -241,8 +241,9 @@ do not enforce alignment equally. This is formatter evidence only; it is not
 a complete Starter install, application test, or new CI proof.
 
 Remaining acceptance is source-specific: complete the canonical commands,
-repair parser failure/discovery handling, decide Starter's formatter replacement
-with behavioral proof, add evidenced analysis for Migrator/Admin Shell, expand
+repair parser failure/discovery handling, implement and validate Starter's approved
+PHPCS/PHPCBF consolidation (including retained alignment behavior) and remove PHP-CS-Fixer,
+add evidenced analysis for Migrator/Admin Shell, expand
 coverage and review advisory enforcement separately, settle suite style and
 upgrade/drift policy, and reconcile exact reviewed heads after merges.
 Workbench and fixtures retain their purpose-based exemptions; Plugin Library
