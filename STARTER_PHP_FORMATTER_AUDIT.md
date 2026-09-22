@@ -126,8 +126,7 @@ this records the downloaded artifact, not an independently signed provenance
 claim. Composer's SHA-256 matched its published checksum:
 `f446ea719708bb85fcbf4ef18def5d0515f1f9b4d703f6d820c9c1656e10a2f2`.
 
-The [comparison harness](quality-evidence/compare-starter-formatters.py) records
-exit codes, diagnostics and second-pass byte stability. It checks PHP-CS-Fixer
+The [comparison harness](quality-evidence/compare-starter-formatters.py) directly emits the committed compact evidence schema, including the inspected revision, baseline scope, exit codes, diagnostics, representative fixer diff and second-pass byte stability. It checks PHP-CS-Fixer
 and PHPCS before changes, after each formatter and after the combined sequence.
 It separately measures PHPCBF alone. Explicit `--path-mode=override` selects
 negative fixtures and representative files outside the configured finder; those
@@ -143,7 +142,7 @@ standards installed, with PHP 8.4 on `PATH`:
 php -r 'require "vendor/autoload.php"; $c = require "scripts/.php-cs-fixer.php"; foreach ($c->getFinder() as $f) echo $f->getRelativePathname(), PHP_EOL;'
 php vendor/bin/phpcs --standard=.phpcs.xml --report=json -v
 php vendor/bin/phpcs --standard=.phpcs.xml -e
-python3 /path/to/quality-evidence/compare-starter-formatters.py "$PWD" /tmp/starter-formatters.json
+python3 /path/to/quality-evidence/compare-starter-formatters.py "$PWD" /tmp/starter-formatters.json 31f48fda13d7b9671f88d0ecf249af6aad251c52
 ```
 
 Do not run the harness in a working checkout with concurrent edits: it restores
