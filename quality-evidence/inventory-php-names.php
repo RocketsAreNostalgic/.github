@@ -8,8 +8,29 @@ if ($argc !== 4) {
 }
 require $argv[2];
 $root = realpath($argv[1]);
+$composerInstalled = dirname($argv[2]) . '/composer/installed.json';
+if (!is_file($composerInstalled)) {
+    throw new RuntimeException('Parser Composer installed metadata is required.');
+}
+$installed = json_decode((string) file_get_contents($composerInstalled), true, 512, JSON_THROW_ON_ERROR);
+$packages = $installed['packages'] ?? $installed;
+$parserPackage = null;
+foreach ($packages as $package) {
+    if (($package['name'] ?? null) === 'nikic/php-parser') {
+        $parserPackage = $package;
+        break;
+    }
+}
+if (!is_array($parserPackage)) {
+    throw new RuntimeException('nikic/php-parser package identity is missing.');
+}
+$parserIdentity = [
+    'name' => 'nikic/php-parser',
+    'version' => $parserPackage['version'] ?? null,
+    'reference' => $parserPackage['source']['reference'] ?? null,
+];
 $parser = (new PhpParser\ParserFactory())->createForNewestSupportedVersion();
-$out = ['classes' => [], 'methods' => [], 'properties' => [], 'parameters' => [], 'variables' => [], 'calls' => [], 'strings' => [], 'named_arguments' => [], 'files' => [], 'errors' => []];
+$out = ['toolchain' => ['parser' => $parserIdentity], 'classes' => [], 'methods' => [], 'properties' => [], 'parameters' => [], 'variables' => [], 'calls' => [], 'strings' => [], 'named_arguments' => [], 'files' => [], 'errors' => []];
 $visibility = static fn(int $flags): string => ($flags & 4) ? 'private' : (($flags & 2) ? 'protected' : 'public');
 $typeName = static function ($type): ?string {
     if ($type instanceof PhpParser\Node\Name) {
