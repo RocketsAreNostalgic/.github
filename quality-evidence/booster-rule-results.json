@@ -1,0 +1,2442 @@
+{
+  "alignment_control": {
+    "baseline": {
+      "exit": 2,
+      "report": {
+        "files": {
+          "audit-control.php": {
+            "errors": 0,
+            "messages": [
+              {
+                "column": 12,
+                "fixable": true,
+                "line": 3,
+                "message": "Equals sign not aligned with surrounding assignments; expected 7 spaces but found 1 space",
+                "severity": 5,
+                "source": "Generic.Formatting.MultipleStatementAlignment.NotSameWarning",
+                "type": "WARNING"
+              },
+              {
+                "column": 17,
+                "fixable": true,
+                "line": 6,
+                "message": "Array double arrow not aligned correctly; expected 7 space(s) between \"'short'\" and double arrow, but found 1.",
+                "severity": 5,
+                "source": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+                "type": "WARNING"
+              }
+            ],
+            "warnings": 2
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 2,
+          "warnings": 2
+        }
+      }
+    },
+    "candidate": {
+      "exit": 2,
+      "report": {
+        "files": {
+          "audit-control.php": {
+            "errors": 2,
+            "messages": [
+              {
+                "column": 12,
+                "fixable": true,
+                "line": 3,
+                "message": "Equals sign not aligned with surrounding assignments; expected 7 spaces but found 1 space",
+                "severity": 5,
+                "source": "Generic.Formatting.MultipleStatementAlignment.NotSame",
+                "type": "ERROR"
+              },
+              {
+                "column": 17,
+                "fixable": true,
+                "line": 6,
+                "message": "Array double arrow not aligned correctly; expected 7 space(s) between \"'short'\" and double arrow, but found 1.",
+                "severity": 5,
+                "source": "WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned",
+                "type": "ERROR"
+              }
+            ],
+            "warnings": 0
+          }
+        },
+        "totals": {
+          "errors": 2,
+          "fixable": 2,
+          "warnings": 0
+        }
+      }
+    }
+  },
+  "purpose": "Measurement only; no consumer or shared-standard implementation changes",
+  "repositories": {
+    "ran-booster": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 694,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "."
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 1655,
+        "variables_properties": 16704,
+        "yoda": 114
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 1655,
+          "examples": [
+            {
+              "line": 47,
+              "message": "Method name \"toArray\" in class RepositoryDescriptor is not in snake case format, try \"to_array\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            },
+            {
+              "line": 59,
+              "message": "Method name \"assertProviderRepositoryId\" in class RepositoryDescriptor is not in snake case format, try \"assert_provider_repository_id\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            },
+            {
+              "line": 67,
+              "message": "Method name \"requireValue\" in class RepositoryDescriptor is not in snake case format, try \"require_value\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            }
+          ],
+          "files": 208,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.InterpolatedVariableNotSnakeCase": {
+          "errors": 4,
+          "examples": [
+            {
+              "line": 207,
+              "message": "Variable \"$tableName\" is not in valid snake_case format, try \"$table_name\"",
+              "path": "RAN/Storage/Database.php"
+            },
+            {
+              "line": 228,
+              "message": "Variable \"$charsetCollate\" is not in valid snake_case format, try \"$charset_collate\"",
+              "path": "RAN/Storage/Database.php"
+            },
+            {
+              "line": 232,
+              "message": "Variable \"$tableName\" is not in valid snake_case format, try \"$table_name\"",
+              "path": "RAN/Storage/Database.php"
+            }
+          ],
+          "files": 1,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 431,
+          "examples": [
+            {
+              "line": 13,
+              "message": "Member variable \"$diagnosticsFail\" is not in valid snake_case format, try \"$diagnostics_fail\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            },
+            {
+              "line": 15,
+              "message": "Member variable \"$refreshSucceeds\" is not in valid snake_case format, try \"$refresh_succeeds\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            },
+            {
+              "line": 16,
+              "message": "Member variable \"$registrationSucceeds\" is not in valid snake_case format, try \"$registration_succeeds\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            }
+          ],
+          "files": 125,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 2816,
+          "examples": [
+            {
+              "line": 29,
+              "message": "Object property \"$registrationSucceeds\" is not in valid snake_case format, try \"$registration_succeeds\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            },
+            {
+              "line": 33,
+              "message": "Object property \"$refreshFails\" is not in valid snake_case format, try \"$refresh_fails\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            },
+            {
+              "line": 38,
+              "message": "Object property \"$refreshSucceeds\" is not in valid snake_case format, try \"$refresh_succeeds\"",
+              "path": "tests/WordPress/RuntimeUpdaterFacade.php"
+            }
+          ],
+          "files": 227,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 13453,
+          "examples": [
+            {
+              "line": 17,
+              "message": "Variable \"$packageSlug\" is not in valid snake_case format, try \"$package_slug\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            },
+            {
+              "line": 18,
+              "message": "Variable \"$providerRepositoryId\" is not in valid snake_case format, try \"$provider_repository_id\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            },
+            {
+              "line": 20,
+              "message": "Variable \"$defaultBranch\" is not in valid snake_case format, try \"$default_branch\"",
+              "path": "RAN/RepositoryProvider/RepositoryDescriptor.php"
+            }
+          ],
+          "files": 422,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 114,
+          "examples": [
+            {
+              "line": 14,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "RAN/RepositoryProvider/GitReferenceSyntax.php"
+            },
+            {
+              "line": 189,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "RAN/Storage/Database.php"
+            },
+            {
+              "line": 193,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "RAN/Storage/Database.php"
+            }
+          ],
+          "files": 46,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 114,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "RANWordPressPlugin",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidVariableName",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.PHP.YodaConditions",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/",
+            "/views/"
+          ],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UnusedFunctionParameter",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UselessOverridingMethod",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/Container/ContainerTest.php",
+            "/tests/Booster/GitHub/WebhookManagement/WebhookManagementControllerTest.php"
+          ],
+          "ref": "Generic.Files.OneObjectStructurePerFile",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/Booster/GitHub/WebhookManagement/WebhookManagementControllerTest.php"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/Booster/GitHub/WebhookManagement/WebhookManagementControllerTest.php"
+          ],
+          "ref": "WordPress.WP.AlternativeFunctions.parse_url_parse_url",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/Booster/GitHub/WebhookManagement/WebhookManagementControllerTest.php"
+          ],
+          "ref": "WordPress.Security.NonceVerification.Recommended",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/characterization.php"
+          ],
+          "ref": "WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/characterization.php"
+          ],
+          "ref": "WordPress.Security.EscapeOutput.ExceptionNotEscaped",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/characterization.php"
+          ],
+          "ref": "WordPress.Security.EscapeOutput.OutputNotEscaped",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/characterization.php"
+          ],
+          "ref": "WordPress.WP.CapitalPDangit.MisspelledInText",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/RAN/Secrets/SecretsFile.php"
+          ],
+          "ref": "WordPress.WP.AlternativeFunctions",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/RAN/Secrets/SecretsFile.php"
+          ],
+          "ref": "WordPress.PHP.NoSilencedErrors",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/RAN/Secrets/SecretsFile.php"
+          ],
+          "ref": "WordPress.PHP.DevelopmentFunctions.error_log_var_export",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.WP.I18n",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "reserved_parameters": 56,
+          "unused_parameters": 215
+        },
+        "examples": [
+          {
+            "line": 19,
+            "message": "It is recommended not to use reserved keyword \"private\" as function parameter name. Found: $private",
+            "path": "RAN/RepositoryProvider/RepositoryDescriptor.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.privateFound"
+          },
+          {
+            "line": 67,
+            "message": "The method parameter $label is never used",
+            "path": "RAN/RepositoryProvider/RepositoryDescriptor.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"
+          },
+          {
+            "line": 15,
+            "message": "The method parameter $request is never used",
+            "path": "tests/RepositoryProvider/Support/SuppliesProviderDiagnostics.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.Found"
+          },
+          {
+            "line": 15,
+            "message": "It is recommended not to use reserved keyword \"private\" as function parameter name. Found: $private",
+            "path": "RAN/RepositoryProvider/RepositoryReference.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.privateFound"
+          },
+          {
+            "line": 50,
+            "message": "The method parameter $label is never used",
+            "path": "RAN/RepositoryProvider/RepositoryReference.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"
+          }
+        ],
+        "split": {
+          "other": {
+            "reserved_parameters": 17,
+            "unused_parameters": 12
+          },
+          "tests": {
+            "reserved_parameters": 39,
+            "unused_parameters": 203
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 271
+        }
+      },
+      "outside_phpcs": [],
+      "sha": "51613e42df959b76795a1b438de59a06053fb614",
+      "split": {
+        "other": {
+          "naming": 12279,
+          "yoda": 93
+        },
+        "scripts": {
+          "naming": 80,
+          "yoda": 2
+        },
+        "tests": {
+          "naming": 6000,
+          "yoda": 19
+        }
+      },
+      "strict_totals": {
+        "errors": 18473,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 694
+    },
+    "ran-booster-bitbucket": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 19,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "ran-booster-bitbucket.php",
+        "autoload.php",
+        "src",
+        "views"
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 35,
+        "variables_properties": 242,
+        "yoda": 1
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 35,
+          "examples": [
+            {
+              "line": 15,
+              "message": "Method name \"fromMaterial\" in class BitbucketCredential is not in snake case format, try \"from_material\"",
+              "path": "src/Bitbucket/BitbucketCredential.php"
+            },
+            {
+              "line": 34,
+              "message": "Method name \"getWorkspace\" in class BitbucketCredential is not in snake case format, try \"get_workspace\"",
+              "path": "src/Bitbucket/BitbucketCredential.php"
+            },
+            {
+              "line": 55,
+              "message": "Method name \"isWorkspace\" in class BitbucketCredential is not in snake case format, try \"is_workspace\"",
+              "path": "src/Bitbucket/BitbucketCredential.php"
+            }
+          ],
+          "files": 7,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 1,
+          "examples": [
+            {
+              "line": 41,
+              "message": "Member variable \"$credentialPolicy\" is not in valid snake_case format, try \"$credential_policy\"",
+              "path": "src/Bitbucket/BitbucketProvider.php"
+            }
+          ],
+          "files": 1,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 22,
+          "examples": [
+            {
+              "line": 41,
+              "message": "Object property \"$webhookProfiles\" is not in valid snake_case format, try \"$webhook_profiles\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            },
+            {
+              "line": 58,
+              "message": "Object property \"$deliveryEvidence\" is not in valid snake_case format, try \"$delivery_evidence\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            },
+            {
+              "line": 63,
+              "message": "Object property \"$deliveryEvidence\" is not in valid snake_case format, try \"$delivery_evidence\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            }
+          ],
+          "files": 5,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 219,
+          "examples": [
+            {
+              "line": 29,
+              "message": "Variable \"$webhookProfiles\" is not in valid snake_case format, try \"$webhook_profiles\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            },
+            {
+              "line": 30,
+              "message": "Variable \"$deliveryEvidence\" is not in valid snake_case format, try \"$delivery_evidence\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            },
+            {
+              "line": 101,
+              "message": "Variable \"$eventKey\" is not in valid snake_case format, try \"$event_key\"",
+              "path": "src/Bitbucket/BitbucketWebhookNormalizer.php"
+            }
+          ],
+          "files": 12,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 1,
+          "examples": [
+            {
+              "line": 307,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/Bitbucket/BitbucketRepositoryBrowser.php"
+            }
+          ],
+          "files": 1,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 1,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [
+            {
+              "name": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"
+            },
+            {
+              "name": "WordPress.NamingConventions.ValidVariableName"
+            },
+            {
+              "name": "WordPress.PHP.YodaConditions"
+            }
+          ],
+          "paths": [],
+          "ref": "RANWordPressPlugin",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UnusedFunctionParameter",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.WP.I18n",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "reserved_parameters": 1
+        },
+        "examples": [
+          {
+            "line": 6,
+            "message": "It is recommended not to use reserved keyword \"class\" as function parameter name. Found: $class",
+            "path": "autoload.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.classFound"
+          }
+        ],
+        "split": {
+          "other": {
+            "reserved_parameters": 1
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 1
+        }
+      },
+      "outside_phpcs": [
+        "index.php",
+        "scripts/verify-release.php",
+        "tests/Plugin/CoreContractTest.php",
+        "tests/Plugin/CurrentCoreBoundaryTest.php",
+        "tests/Plugin/PluginCompatibilityTest.php",
+        "tests/Plugin/QualityWorkflowFanInContractTest.php",
+        "tests/Plugin/ReleaseVerifierTest.php",
+        "tests/RepositoryProvider/AuthenticatedPreparedArchiveWordPressFunctions.php",
+        "tests/RepositoryProvider/BitbucketApiClientTest.php",
+        "tests/RepositoryProvider/BitbucketArchivePreparerTest.php",
+        "tests/RepositoryProvider/BitbucketCredentialValidationSecretsStub.php",
+        "tests/RepositoryProvider/BitbucketCredentialValidationTransportError.php",
+        "tests/RepositoryProvider/BitbucketCredentialValidatorTest.php",
+        "tests/RepositoryProvider/BitbucketCredentialValidatorWordPressFunctions.php",
+        "tests/RepositoryProvider/BitbucketDiagnosticsBoundaryTest.php",
+        "tests/RepositoryProvider/BitbucketProviderCredentialStore.php",
+        "tests/RepositoryProvider/BitbucketRepositoryBrowserSecretsStub.php",
+        "tests/RepositoryProvider/BitbucketRepositoryBrowserTest.php",
+        "tests/RepositoryProvider/BitbucketRepositoryCoordinatesTest.php",
+        "tests/RepositoryProvider/BitbucketWebhookDeliveryEvidenceTest.php",
+        "tests/RepositoryProvider/BitbucketWebhookNormalizerTest.php",
+        "tests/RepositoryProvider/BitbucketWebhookPolicyTest.php",
+        "tests/WordPress/bitbucket-installed-inert.php",
+        "tests/WordPress/bitbucket-installed-smoke.php",
+        "tests/bootstrap.php",
+        "tests/fixtures/certified-core-checkout.php",
+        "tests/fixtures/plugin-lifecycle.php",
+        "tests/phpstan-bootstrap.php"
+      ],
+      "sha": "95c6b760acfdb75961ea9e1b76610a864c16b048",
+      "split": {
+        "other": {
+          "naming": 277,
+          "yoda": 1
+        }
+      },
+      "strict_totals": {
+        "errors": 278,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 47
+    },
+    "ran-booster-github-provider": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 67,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "."
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 184,
+        "variables_properties": 1669,
+        "yoda": 11
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 184,
+          "examples": [
+            {
+              "line": 85,
+              "message": "Method name \"listedRelease\" in class NeutralReleaseUpdaterFixtures is not in snake case format, try \"listed_release\"",
+              "path": "tests/Support/NeutralReleaseUpdaterFixtures.php"
+            },
+            {
+              "line": 88,
+              "message": "Method name \"maximumArtifactBytes\" in class [Anonymous Class] is not in snake case format, try \"maximum_artifact_bytes\"",
+              "path": "tests/Booster/GitHub/ArchiveLimitBoundaryTest.php"
+            },
+            {
+              "line": 131,
+              "message": "Method name \"branchHead\" in class RepositoryBrowser is not in snake case format, try \"branch_head\"",
+              "path": "src/RepositoryBrowser.php"
+            }
+          ],
+          "files": 17,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.InterpolatedVariableNotSnakeCase": {
+          "errors": 6,
+          "examples": [
+            {
+              "line": 65,
+              "message": "Variable \"$interfaceName\" is not in valid snake_case format, try \"$interface_name\"",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 71,
+              "message": "Variable \"$interfaceName\" is not in valid snake_case format, try \"$interface_name\"",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 76,
+              "message": "Variable \"$interfaceName\" is not in valid snake_case format, try \"$interface_name\"",
+              "path": "tests/host-contract.php"
+            }
+          ],
+          "files": 2,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 48,
+          "examples": [
+            {
+              "line": 10,
+              "message": "Member variable \"$profileReads\" is not in valid snake_case format, try \"$profile_reads\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            },
+            {
+              "line": 16,
+              "message": "Member variable \"$materialReads\" is not in valid snake_case format, try \"$material_reads\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            },
+            {
+              "line": 19,
+              "message": "Member variable \"$eligibleMaterial\" is not in valid snake_case format, try \"$eligible_material\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            }
+          ],
+          "files": 13,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 333,
+          "examples": [
+            {
+              "line": 22,
+              "message": "Object property \"$profileReads\" is not in valid snake_case format, try \"$profile_reads\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            },
+            {
+              "line": 44,
+              "message": "Object property \"$materialReads\" is not in valid snake_case format, try \"$material_reads\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            },
+            {
+              "line": 45,
+              "message": "Object property \"$eligibleMaterial\" is not in valid snake_case format, try \"$eligible_material\"",
+              "path": "tests/Booster/GitHub/ReleaseDeployments/WorkflowAssistance/Support/WorkflowCredentialStore.php"
+            }
+          ],
+          "files": 26,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 1282,
+          "examples": [
+            {
+              "line": 23,
+              "message": "Variable \"$coreRoot\" is not in valid snake_case format, try \"$core_root\"",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 24,
+              "message": "Variable \"$coreRoot\" is not in valid snake_case format, try \"$core_root\"",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 24,
+              "message": "Variable \"$coreRoot\" is not in valid snake_case format, try \"$core_root\"",
+              "path": "tests/host-contract.php"
+            }
+          ],
+          "files": 48,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 11,
+          "examples": [
+            {
+              "line": 70,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 75,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "tests/host-contract.php"
+            },
+            {
+              "line": 254,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/ReleaseDeployments/WorkflowAssistance/TemplatePack.php"
+            }
+          ],
+          "files": 7,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 11,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "RANWordPressLibrary",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidVariableName",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.PHP.YodaConditions",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UnusedFunctionParameter",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "reserved_parameters": 9,
+          "unused_parameters": 10
+        },
+        "examples": [
+          {
+            "line": 30,
+            "message": "The method parameter $priority is never used",
+            "path": "tests/Support/NeutralReleaseUpdaterWordPressFunctions.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"
+          },
+          {
+            "line": 30,
+            "message": "The method parameter $arguments is never used",
+            "path": "tests/Support/NeutralReleaseUpdaterWordPressFunctions.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"
+          },
+          {
+            "line": 40,
+            "message": "The method parameter $hook is never used",
+            "path": "tests/Support/NeutralReleaseUpdaterWordPressFunctions.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.Found"
+          },
+          {
+            "line": 45,
+            "message": "The method parameter $hook is never used",
+            "path": "tests/Support/NeutralReleaseUpdaterWordPressFunctions.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.Found"
+          },
+          {
+            "line": 136,
+            "message": "It is recommended not to use reserved keyword \"private\" as function parameter name. Found: $private",
+            "path": "src/RepositoryBrowser.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.privateFound"
+          }
+        ],
+        "split": {
+          "other": {
+            "reserved_parameters": 5
+          },
+          "tests": {
+            "reserved_parameters": 4,
+            "unused_parameters": 10
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 19
+        }
+      },
+      "outside_phpcs": [],
+      "sha": "ebeb6166b9806b006f1224fa5b291473040a0b86",
+      "split": {
+        "other": {
+          "naming": 1142,
+          "yoda": 9
+        },
+        "tests": {
+          "naming": 711,
+          "yoda": 2
+        }
+      },
+      "strict_totals": {
+        "errors": 1864,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 67
+    },
+    "ran-booster-wp-pusher-migrator": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 41,
+      "config": ".phpcs.xml.dist",
+      "configured_roots": [
+        "."
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 53,
+        "variables_properties": 394,
+        "yoda": 1
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 53,
+          "examples": [
+            {
+              "line": 73,
+              "message": "Method name \"nonceAction\" in class MigrationService is not in snake case format, try \"nonce_action\"",
+              "path": "src/MigrationService.php"
+            },
+            {
+              "line": 84,
+              "message": "Method name \"unchangedSource\" in class MigrationService is not in snake case format, try \"unchanged_source\"",
+              "path": "src/MigrationService.php"
+            },
+            {
+              "line": 104,
+              "message": "Method name \"coreCandidate\" in class MigrationService is not in snake case format, try \"core_candidate\"",
+              "path": "src/MigrationService.php"
+            }
+          ],
+          "files": 11,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.InterpolatedVariableNotSnakeCase": {
+          "errors": 1,
+          "examples": [
+            {
+              "line": 116,
+              "message": "Variable \"$optionsTable\" is not in valid snake_case format, try \"$options_table\"",
+              "path": "src/WpPusherSource.php"
+            }
+          ],
+          "files": 1,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 25,
+          "examples": [
+            {
+              "line": 215,
+              "message": "Member variable \"$reviewCalls\" is not in valid snake_case format, try \"$review_calls\"",
+              "path": "tests/PluginLifecycleTest.php"
+            },
+            {
+              "line": 242,
+              "message": "Member variable \"$renderedOperations\" is not in valid snake_case format, try \"$rendered_operations\"",
+              "path": "tests/PluginLifecycleTest.php"
+            },
+            {
+              "line": 17,
+              "message": "Member variable \"$adminInteraction\" is not in valid snake_case format, try \"$admin_interaction\"",
+              "path": "src/Plugin.php"
+            }
+          ],
+          "files": 8,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 91,
+          "examples": [
+            {
+              "line": 64,
+              "message": "Object property \"$targetVerified\" is not in valid snake_case format, try \"$target_verified\"",
+              "path": "src/MigrationService.php"
+            },
+            {
+              "line": 31,
+              "message": "Object property \"$canonicalUrl\" is not in valid snake_case format, try \"$canonical_url\"",
+              "path": "tests/fixtures/AdminInteractionApi.php"
+            },
+            {
+              "line": 35,
+              "message": "Object property \"$errorRegionId\" is not in valid snake_case format, try \"$error_region_id\"",
+              "path": "tests/fixtures/AdminInteractionApi.php"
+            }
+          ],
+          "files": 12,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 277,
+          "examples": [
+            {
+              "line": 27,
+              "message": "Variable \"$hasError\" is not in valid snake_case format, try \"$has_error\"",
+              "path": "views/source-card.php"
+            },
+            {
+              "line": 30,
+              "message": "Variable \"$applyVisible\" is not in valid snake_case format, try \"$apply_visible\"",
+              "path": "views/source-card.php"
+            },
+            {
+              "line": 31,
+              "message": "Variable \"$applyClass\" is not in valid snake_case format, try \"$apply_class\"",
+              "path": "views/source-card.php"
+            }
+          ],
+          "files": 23,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 1,
+          "examples": [
+            {
+              "line": 27,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/WpPusherPackage.php"
+            }
+          ],
+          "files": 1,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 1,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [
+            {
+              "name": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid"
+            },
+            {
+              "name": "WordPress.NamingConventions.ValidVariableName"
+            },
+            {
+              "name": "WordPress.PHP.YodaConditions"
+            }
+          ],
+          "paths": [],
+          "ref": "RANWordPressPlugin",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/views/",
+            "/tests/"
+          ],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.Files.OneObjectStructurePerFile",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "reserved_parameters": 4
+        },
+        "examples": [
+          {
+            "line": 12,
+            "message": "It is recommended not to use reserved keyword \"class\" as function parameter name. Found: $class",
+            "path": "src/Autoloader.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.classFound"
+          },
+          {
+            "line": 54,
+            "message": "It is recommended not to use reserved keyword \"private\" as function parameter name. Found: $private",
+            "path": "src/WpPusherPackage.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.privateFound"
+          },
+          {
+            "line": 96,
+            "message": "It is recommended not to use reserved keyword \"default\" as function parameter name. Found: $default",
+            "path": "tests/bootstrap.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound"
+          },
+          {
+            "line": 102,
+            "message": "It is recommended not to use reserved keyword \"default\" as function parameter name. Found: $default",
+            "path": "tests/bootstrap.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound"
+          }
+        ],
+        "split": {
+          "other": {
+            "reserved_parameters": 2
+          },
+          "tests": {
+            "reserved_parameters": 2
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 4
+        }
+      },
+      "outside_phpcs": [],
+      "sha": "23ac6e35e8a521bfc5c4b2bc7a53698ec7df36c2",
+      "split": {
+        "other": {
+          "naming": 192,
+          "yoda": 1
+        },
+        "scripts": {
+          "naming": 20
+        },
+        "tests": {
+          "naming": 235
+        }
+      },
+      "strict_totals": {
+        "errors": 448,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 41
+    },
+    "ran-updater-support": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 5,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "."
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 4,
+        "variables_properties": 31,
+        "yoda": 0
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 4,
+          "examples": [
+            {
+              "line": 55,
+              "message": "Method name \"assertDecodedSegmentIsSafe\" in class RepositoryRelativePath is not in snake case format, try \"assert_decoded_segment_is_safe\"",
+              "path": "src/RepositoryRelativePath.php"
+            },
+            {
+              "line": 14,
+              "message": "Method name \"normalizePath\" in class ArchiveSafety is not in snake case format, try \"normalize_path\"",
+              "path": "src/ArchiveSafety.php"
+            },
+            {
+              "line": 45,
+              "message": "Method name \"entryTypeFailure\" in class ArchiveSafety is not in snake case format, try \"entry_type_failure\"",
+              "path": "src/ArchiveSafety.php"
+            }
+          ],
+          "files": 2,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 31,
+          "examples": [
+            {
+              "line": 5,
+              "message": "Variable \"$pathBytes\" is not in valid snake_case format, try \"$path_bytes\"",
+              "path": "tests/fixtures/archive-safety.php"
+            },
+            {
+              "line": 91,
+              "message": "Variable \"$pathBytes\" is not in valid snake_case format, try \"$path_bytes\"",
+              "path": "tests/fixtures/archive-safety.php"
+            },
+            {
+              "line": 93,
+              "message": "Variable \"$pathBytes\" is not in valid snake_case format, try \"$path_bytes\"",
+              "path": "tests/fixtures/archive-safety.php"
+            }
+          ],
+          "files": 4,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "RANWordPressLibrary",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidVariableName",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {},
+        "examples": [],
+        "split": {},
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "outside_phpcs": [],
+      "sha": "d395c37b2a76e5a5e10d9855b3277cde1cec4df3",
+      "split": {
+        "other": {
+          "naming": 22
+        },
+        "tests": {
+          "naming": 13
+        }
+      },
+      "strict_totals": {
+        "errors": 35,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 5
+    },
+    "ran-wp-branch-updater": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 37,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "src",
+        "bootstrap.php"
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 64,
+        "variables_properties": 285,
+        "yoda": 12
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 64,
+          "examples": [
+            {
+              "line": 12,
+              "message": "Method name \"verifyCurrentHead\" in class AdmittedArchiveSource is not in snake case format, try \"verify_current_head\"",
+              "path": "src/Contract/AdmittedArchiveSource.php"
+            },
+            {
+              "line": 8,
+              "message": "Method name \"resolvedRef\" in class AdmittedBranchArtifact is not in snake case format, try \"resolved_ref\"",
+              "path": "src/Contract/AdmittedBranchArtifact.php"
+            },
+            {
+              "line": 9,
+              "message": "Method name \"expectedVersion\" in class AdmittedBranchArtifact is not in snake case format, try \"expected_version\"",
+              "path": "src/Contract/AdmittedBranchArtifact.php"
+            }
+          ],
+          "files": 14,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 4,
+          "examples": [
+            {
+              "line": 17,
+              "message": "Member variable \"$constrainCurrentHead\" is not in valid snake_case format, try \"$constrain_current_head\"",
+              "path": "src/Runtime/ProviderArchiveSource.php"
+            },
+            {
+              "line": 12,
+              "message": "Member variable \"$copyTo\" is not in valid snake_case format, try \"$copy_to\"",
+              "path": "src/Archive/ArchiveOffer.php"
+            },
+            {
+              "line": 24,
+              "message": "Member variable \"$coreOperation\" is not in valid snake_case format, try \"$core_operation\"",
+              "path": "src/WordPress/WordPressCorePackageExecutor.php"
+            }
+          ],
+          "files": 3,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 51,
+          "examples": [
+            {
+              "line": 13,
+              "message": "Object property \"$attemptId\" is not in valid snake_case format, try \"$attempt_id\"",
+              "path": "src/Persistence/FileAttemptJournal.php"
+            },
+            {
+              "line": 17,
+              "message": "Object property \"$attemptId\" is not in valid snake_case format, try \"$attempt_id\"",
+              "path": "src/Persistence/FileAttemptJournal.php"
+            },
+            {
+              "line": 26,
+              "message": "Object property \"$attemptId\" is not in valid snake_case format, try \"$attempt_id\"",
+              "path": "src/Persistence/FileAttemptJournal.php"
+            }
+          ],
+          "files": 11,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 230,
+          "examples": [
+            {
+              "line": 12,
+              "message": "Variable \"$attemptId\" is not in valid snake_case format, try \"$attempt_id\"",
+              "path": "src/Runtime/BranchDeploymentDeclaration.php"
+            },
+            {
+              "line": 13,
+              "message": "Variable \"$packageType\" is not in valid snake_case format, try \"$package_type\"",
+              "path": "src/Runtime/BranchDeploymentDeclaration.php"
+            },
+            {
+              "line": 16,
+              "message": "Variable \"$repositoryId\" is not in valid snake_case format, try \"$repository_id\"",
+              "path": "src/Runtime/BranchDeploymentDeclaration.php"
+            }
+          ],
+          "files": 16,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 12,
+          "examples": [
+            {
+              "line": 165,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/Persistence/FileAttemptStore.php"
+            },
+            {
+              "line": 149,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/Archive/PreparedArchive.php"
+            },
+            {
+              "line": 168,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "src/WordPress/WordPressCorePackageExecutor.php"
+            }
+          ],
+          "files": 3,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 12,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "RANWordPressLibrary",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidVariableName",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.PHP.YodaConditions",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UnusedFunctionParameter",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UselessOverridingMethod",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.Security.EscapeOutput.ExceptionNotEscaped",
+          "severity": "0"
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "overrides": 1,
+          "reserved_parameters": 1,
+          "unused_parameters": 1
+        },
+        "examples": [
+          {
+            "line": 10,
+            "message": "Possible useless method overriding detected",
+            "path": "src/Runtime/AdmittedBranchStageFailure.php",
+            "source": "Generic.CodeAnalysis.UselessOverridingMethod.Found"
+          },
+          {
+            "line": 182,
+            "message": "The method parameter $context is never used",
+            "path": "src/WordPress/WordPressCorePackageExecutor.php",
+            "source": "Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed"
+          },
+          {
+            "line": 294,
+            "message": "It is recommended not to use reserved keyword \"parent\" as function parameter name. Found: $parent",
+            "path": "src/WordPress/WordPressCorePackageExecutor.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.parentFound"
+          }
+        ],
+        "split": {
+          "other": {
+            "overrides": 1,
+            "reserved_parameters": 1,
+            "unused_parameters": 1
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 3
+        }
+      },
+      "outside_phpcs": [
+        "scripts/prepare-consumer-fixture.php",
+        "tests/Support/FixtureProviders.php",
+        "tests/Support/RecordingExecutor.php",
+        "tests/admitted-runner.php",
+        "tests/architecture-normalisation-baseline.php",
+        "tests/archive-normalisation-baseline.php",
+        "tests/consumer-install.php",
+        "tests/contract.php",
+        "tests/core-package-error-code.php",
+        "tests/hard-stop.php",
+        "tests/installed-package-identifier.php",
+        "tests/journal-invariants.php",
+        "tests/prepared-archive-facts.php"
+      ],
+      "sha": "15253ac03878b01da254d6702a9753103354d8e9",
+      "split": {
+        "other": {
+          "naming": 349,
+          "yoda": 12
+        }
+      },
+      "strict_totals": {
+        "errors": 361,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 50
+    },
+    "ran-wp-release-updater": {
+      "baseline_exit": 0,
+      "baseline_totals": {
+        "errors": 0,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "checked_php_files": 92,
+      "config": ".phpcs.xml",
+      "configured_roots": [
+        "."
+      ],
+      "counts": {
+        "alignment": 0,
+        "methods": 274,
+        "variables_properties": 2534,
+        "yoda": 42
+      },
+      "diagnostics": {
+        "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid": {
+          "errors": 274,
+          "examples": [
+            {
+              "line": 55,
+              "message": "Method name \"archiveDirectory\" in class PendingInstallState is not in snake case format, try \"archive_directory\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 58,
+              "message": "Method name \"archiveIdentity\" in class PendingInstallState is not in snake case format, try \"archive_identity\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 62,
+              "message": "Method name \"extractionAdmitted\" in class PendingInstallState is not in snake case format, try \"extraction_admitted\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            }
+          ],
+          "files": 30,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.InterpolatedVariableNotSnakeCase": {
+          "errors": 7,
+          "examples": [
+            {
+              "line": 75,
+              "message": "Variable \"$nameLabel\" is not in valid snake_case format, try \"$name_label\"",
+              "path": "tests/Archive/PackageIdentityValidatorTest.php"
+            },
+            {
+              "line": 126,
+              "message": "Variable \"$dbName\" is not in valid snake_case format, try \"$db_name\"",
+              "path": "tests/Integration/phase-2.4-wordpress-core-proof.php"
+            },
+            {
+              "line": 127,
+              "message": "Variable \"$dbUser\" is not in valid snake_case format, try \"$db_user\"",
+              "path": "tests/Integration/phase-2.4-wordpress-core-proof.php"
+            }
+          ],
+          "files": 3,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.PropertyNotSnakeCase": {
+          "errors": 52,
+          "examples": [
+            {
+              "line": 13,
+              "message": "Member variable \"$extractionAdmitted\" is not in valid snake_case format, try \"$extraction_admitted\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 15,
+              "message": "Member variable \"$stagedManifest\" is not in valid snake_case format, try \"$staged_manifest\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 17,
+              "message": "Member variable \"$archiveDirectory\" is not in valid snake_case format, try \"$archive_directory\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            }
+          ],
+          "files": 14,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase": {
+          "errors": 513,
+          "examples": [
+            {
+              "line": 31,
+              "message": "Object property \"$archiveDirectory\" is not in valid snake_case format, try \"$archive_directory\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 32,
+              "message": "Object property \"$archiveIdentity\" is not in valid snake_case format, try \"$archive_identity\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            },
+            {
+              "line": 34,
+              "message": "Object property \"$multiRun\" is not in valid snake_case format, try \"$multi_run\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            }
+          ],
+          "files": 24,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase": {
+          "errors": 1962,
+          "examples": [
+            {
+              "line": 173,
+              "message": "Variable \"$livenessGuard\" is not in valid snake_case format, try \"$liveness_guard\"",
+              "path": "tests/Archive/TemporaryArtifactCustodyTest.php"
+            },
+            {
+              "line": 194,
+              "message": "Variable \"$livenessGuard\" is not in valid snake_case format, try \"$liveness_guard\"",
+              "path": "tests/Archive/TemporaryArtifactCustodyTest.php"
+            },
+            {
+              "line": 27,
+              "message": "Variable \"$multiRun\" is not in valid snake_case format, try \"$multi_run\"",
+              "path": "src/WordPress/PendingInstallState.php"
+            }
+          ],
+          "files": 64,
+          "fixable": 0,
+          "warnings": 0
+        },
+        "WordPress.PHP.YodaConditions.NotYoda": {
+          "errors": 42,
+          "examples": [
+            {
+              "line": 79,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "runtime.php"
+            },
+            {
+              "line": 83,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "runtime.php"
+            },
+            {
+              "line": 22,
+              "message": "Use Yoda Condition checks, you must.",
+              "path": "tests/Support/MysqliOptionDatabase.php"
+            }
+          ],
+          "files": 13,
+          "fixable": 0,
+          "warnings": 0
+        }
+      },
+      "fixes": {
+        "alignment": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 0,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        },
+        "yoda": {
+          "added_lines": 0,
+          "changed_files": [],
+          "check_exit": 1,
+          "first_exit": 0,
+          "remaining": {
+            "errors": 42,
+            "fixable": 0,
+            "warnings": 0
+          },
+          "removed_lines": 0,
+          "second_exit": 0,
+          "stable": true
+        }
+      },
+      "local_rules": [
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "RANWordPressLibrary",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.NamingConventions.ValidVariableName",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.PHP.YodaConditions",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/",
+            "/scripts/"
+          ],
+          "ref": "WordPress.NamingConventions.PrefixAllGlobals",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UnusedFunctionParameter",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Generic.CodeAnalysis.UselessOverridingMethod",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "Universal.NamingConventions.NoReservedKeywordParameterNames",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.Security.EscapeOutput.ExceptionNotEscaped",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.WP.AlternativeFunctions.json_encode_json_encode",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [],
+          "ref": "WordPress.WP.AlternativeFunctions.parse_url_parse_url",
+          "severity": "0"
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/Archive/",
+            "/src/Provider/GitHub/GitHubArtifactStore.php",
+            "/src/WordPress/InstalledPackageResolver.php",
+            "/src/WordPress/OwnedArchiveStore.php",
+            "/src/WordPress/StagedPackageManifest.php",
+            "/src/WordPress/NativePackageUpdater.php",
+            "/scripts/",
+            "/tests/"
+          ],
+          "ref": "WordPress.WP.AlternativeFunctions",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/Archive/",
+            "/src/Provider/GitHub/GitHubArtifactStore.php",
+            "/src/WordPress/InstalledPackageResolver.php",
+            "/src/WordPress/OwnedArchiveStore.php",
+            "/src/WordPress/StagedPackageManifest.php",
+            "/src/WordPress/NativePackageUpdater.php",
+            "/scripts/",
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.NoSilencedErrors",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/bootstrap.php",
+            "/src/Runtime/RuntimeCopySelector.php"
+          ],
+          "ref": "WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/WordPress/BindingFenceCoordinator.php"
+          ],
+          "ref": "WordPress.DB.PreparedSQL.InterpolatedNotPrepared",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/WordPress/BindingFenceCoordinator.php"
+          ],
+          "ref": "WordPress.DB.PreparedSQL.NotPrepared",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/WordPress/NativePackageUpdater.php",
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/src/WordPress/NativePackageUpdater.php",
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DevelopmentFunctions.error_log_var_export",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Universal.Operators.DisallowShortTernary.Found",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/",
+            "/scripts/"
+          ],
+          "ref": "WordPress.WP.GlobalVariablesOverride.Prohibited",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.system_calls_exec",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/",
+            "/scripts/lint-php.php"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.system_calls_proc_open",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.system_calls_shell_exec",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_putenv",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Universal.Files.SeparateFunctionsFromOO.Mixed",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Universal.Namespaces.DisallowCurlyBraceSyntax.Forbidden",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Universal.Namespaces.OneDeclarationPerFile.MultipleFound",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Universal.Namespaces.DisallowDeclarationWithoutName.Forbidden",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.Files.OneObjectStructurePerFile",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.Classes.DuplicateClassName.Found",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.CodeAnalysis.EmptyStatement.DetectedCatch",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.CodeAnalysis.ForLoopWithTestFunctionCall.NotAllowed",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.NamingConventions.ValidHookName.UseUnderscores",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.DB.RestrictedFunctions.mysql_mysqli_init",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.DB.RestrictedFunctions.mysql_mysqli_real_connect",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.DB.RestrictedFunctions.mysql_mysqli_report",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.serialize_serialize",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Squiz.PHP.Eval.Discouraged",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Generic.Strings.UnnecessaryStringConcat.Found",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/tests/"
+          ],
+          "ref": "Squiz.Operators.IncrementDecrementUsage.NoBrackets",
+          "severity": null
+        },
+        {
+          "excludes": [],
+          "paths": [
+            "/scripts/lint-php.php",
+            "/tests/"
+          ],
+          "ref": "WordPress.Security.EscapeOutput.OutputNotEscaped",
+          "severity": null
+        }
+      ],
+      "other_exception_probe": {
+        "counts": {
+          "reserved_parameters": 8,
+          "unused_parameters": 14
+        },
+        "examples": [
+          {
+            "line": 170,
+            "message": "It is recommended not to use reserved keyword \"match\" as function parameter name. Found: $match",
+            "path": "src/WordPress/InstalledPackageResolver.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.matchFound"
+          },
+          {
+            "line": 12,
+            "message": "It is recommended not to use reserved keyword \"string\" as function parameter name. Found: $string",
+            "path": "tests/Integration/wordpress-integration/distribution.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.stringFound"
+          },
+          {
+            "line": 13,
+            "message": "It is recommended not to use reserved keyword \"class\" as function parameter name. Found: $class",
+            "path": "tests/bootstrap.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.classFound"
+          },
+          {
+            "line": 200,
+            "message": "It is recommended not to use reserved keyword \"private\" as function parameter name. Found: $private",
+            "path": "tests/Documentation/ReadmeExamplesTest.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.privateFound"
+          },
+          {
+            "line": 286,
+            "message": "It is recommended not to use reserved keyword \"parent\" as function parameter name. Found: $parent",
+            "path": "tests/Integration/wordpress-integration.php",
+            "source": "Universal.NamingConventions.NoReservedKeywordParameterNames.parentFound"
+          }
+        ],
+        "split": {
+          "other": {
+            "reserved_parameters": 3
+          },
+          "tests": {
+            "reserved_parameters": 5,
+            "unused_parameters": 14
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "fixable": 0,
+          "warnings": 22
+        }
+      },
+      "outside_phpcs": [
+        "src/Dependency/ArchiveSafety.php"
+      ],
+      "sha": "78f30caac2384e6c91188ba780aadc8af2f6fdd4",
+      "split": {
+        "other": {
+          "naming": 1201,
+          "yoda": 13
+        },
+        "scripts": {
+          "naming": 6
+        },
+        "tests": {
+          "naming": 1601,
+          "yoda": 29
+        }
+      },
+      "strict_totals": {
+        "errors": 2850,
+        "fixable": 0,
+        "warnings": 0
+      },
+      "tracked_php_files": 93
+    }
+  },
+  "runtime": "PHP 8.4.23",
+  "tools": {
+    "phpcompatibility/php-compatibility": {
+      "reference": "e0f0e5a3dc819a4a0f8d679a0f2453d941976e18",
+      "version": "10.0.0-alpha2"
+    },
+    "phpcompatibility/phpcompatibility-paragonie": {
+      "reference": "7a979711c87d8202b52f56c56bd719d09d8ed7f5",
+      "version": "2.0.0-alpha2"
+    },
+    "phpcompatibility/phpcompatibility-wp": {
+      "reference": "bd53f24e7528422ac51d64dc8d53e8d4c4a877b3",
+      "version": "3.0.0-alpha2"
+    },
+    "phpcsstandards/phpcsextra": {
+      "reference": "39467533fdb742446d68c1d10ac33d625ee0311c",
+      "version": "1.5.1"
+    },
+    "phpcsstandards/phpcsutils": {
+      "reference": "5f35d9408c54d7b529501f3c688b6eae562aea1f",
+      "version": "1.2.3"
+    },
+    "ran/coding-standards": {
+      "reference": "0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be",
+      "version": "dev-main"
+    },
+    "squizlabs/php_codesniffer": {
+      "reference": "4c378e1a528ea066890fc2397cbdd2f94eb2fc91",
+      "version": "3.13.6"
+    },
+    "wp-coding-standards/wpcs": {
+      "reference": "ec2ff942335f33683a5957a85d138753876a05cf",
+      "version": "3.4.1"
+    }
+  },
+  "totals": {
+    "alignment": 0,
+    "checked_files": 955,
+    "methods": 2269,
+    "tracked_files": 997,
+    "variables_properties": 21859,
+    "yoda": 181
+  }
+}

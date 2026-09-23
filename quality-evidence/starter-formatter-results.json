@@ -1,0 +1,1242 @@
+{
+  "baseline": {
+    "fixer_exit": 0,
+    "fixer_files": [
+      "scripts/build-release.php"
+    ],
+    "phpcs_exit": 0,
+    "phpcs_files": 42,
+    "phpcs_sniffs": 360
+  },
+  "fixtures": {
+    "alignment": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 0
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true,
+      "phpcs_with_warnings": {
+        "diagnostics": [
+          "Generic.Formatting.MultipleStatementAlignment.NotSameWarning"
+        ],
+        "exit": 2,
+        "totals": {
+          "errors": 0,
+          "fixable": 2,
+          "warnings": 2
+        }
+      }
+    },
+    "baseline": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 0
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "braces": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine",
+            "Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis",
+            "WordPress.WhiteSpace.ControlStructureSpacing.OpenBraceNotSameLine"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 3,
+            "fixable": 3,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "comma-after": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Universal.WhiteSpace.CommaSpacing.NoSpaceAfter"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "comma-before": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Universal.WhiteSpace.CommaSpacing.SpaceBefore"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "concat": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Squiz.Strings.ConcatenationSpacing.PaddingFound"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "line-ending": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Generic.Files.LineEndings.InvalidEOLChar"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "long-array": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Universal.Arrays.DisallowShortArraySyntax.Found"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "single-quote": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Squiz.Strings.DoubleQuoteUsage.NotRequired"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 2,
+            "fixable": 2,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "syntax": {
+      "before": {
+        "fixer": {
+          "exit": 4
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Generic.PHP.Syntax.PHPSyntax",
+            "Squiz.WhiteSpace.SemicolonSpacing.Incorrect"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 2,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "parser": {
+        "exit": 255
+      }
+    },
+    "trailing-code": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    },
+    "trailing-comment": {
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_phpcbf": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [
+            "Squiz.WhiteSpace.SuperfluousWhitespace.EndLine"
+          ],
+          "exit": 2,
+          "totals": {
+            "errors": 1,
+            "fixable": 1,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_cbf": {
+        "exit": 0
+      },
+      "combined_check": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "combined_second_cbf": {
+        "exit": 0
+      },
+      "combined_second_fixer": {
+        "exit": 0
+      },
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "phpcbf": {
+        "exit": 1
+      },
+      "phpcbf_second": {
+        "exit": 0
+      },
+      "phpcbf_stable": true
+    }
+  },
+  "php": "8.4.23",
+  "representative_fixer_diff": "1) tests/Unit/ExampleFeatureControllerTest.php\n      ---------- begin diff ----------\n--- <starter>/tests/Unit/ExampleFeatureControllerTest.php\n+++ <starter>/tests/Unit/ExampleFeatureControllerTest.php\n@@ -41,14 +41,14 @@\n \tpublic function test_missing_feature_is_disabled_without_replacing_plugin_options(): void {\n \t\t$option_name = 'ran_plugin';\n \t\t$options     = array(\n-\t\t\t'Version' => '1.2.3',\n+\t\t\t'Version'       => '1.2.3',\n \t\t\t'other_feature' => true,\n \t\t);\n-\t\t$config      = $this->createMock( ConfigInterface::class );\n+\t\t$config = $this->createMock( ConfigInterface::class );\n \n \t\t$config->method( 'get_config' )->willReturn(\n \t\t\tarray(\n-\t\t\t\t'RAN' => array( 'AppOption' => $option_name ),\n+\t\t\t\t'RAN'  => array( 'AppOption' => $option_name ),\n \t\t\t\t'Slug' => $option_name,\n \t\t\t)\n \t\t);\n@@ -62,8 +62,8 @@\n \t\t\t->with(\n \t\t\t\t$option_name,\n \t\t\t\tarray(\n-\t\t\t\t\t'Version' => '1.2.3',\n-\t\t\t\t\t'other_feature' => true,\n+\t\t\t\t\t'Version'                  => '1.2.3',\n+\t\t\t\t\t'other_feature'            => true,\n \t\t\t\t\t'ExampleFeatureController' => false,\n \t\t\t\t)\n \t\t\t)",
+  "representatives": {
+    "inc/Base/Config.php": {
+      "after_cbf_only": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_combined": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "cbf_apply": {
+        "exit": 0
+      },
+      "cbf_only": {
+        "exit": 0
+      },
+      "cbf_only_second": {
+        "exit": 0
+      },
+      "cbf_only_stable": true,
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "second_cbf": {
+        "exit": 0
+      },
+      "second_fixer": {
+        "exit": 0
+      }
+    },
+    "scripts/build-release.php": {
+      "after_cbf_only": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_combined": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "cbf_apply": {
+        "exit": 0
+      },
+      "cbf_only": {
+        "exit": 0
+      },
+      "cbf_only_second": {
+        "exit": 0
+      },
+      "cbf_only_stable": true,
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "second_cbf": {
+        "exit": 0
+      },
+      "second_fixer": {
+        "exit": 0
+      }
+    },
+    "templates/features/auth.php": {
+      "after_cbf_only": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_combined": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "cbf_apply": {
+        "exit": 0
+      },
+      "cbf_only": {
+        "exit": 0
+      },
+      "cbf_only_second": {
+        "exit": 0
+      },
+      "cbf_only_stable": true,
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "second_cbf": {
+        "exit": 0
+      },
+      "second_fixer": {
+        "exit": 0
+      }
+    },
+    "tests/Unit/ExampleFeatureControllerTest.php": {
+      "after_cbf_only": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_combined": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "after_fixer": {
+        "fixer": {
+          "exit": 0
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "before": {
+        "fixer": {
+          "exit": 8
+        },
+        "phpcs": {
+          "diagnostics": [],
+          "exit": 0,
+          "totals": {
+            "errors": 0,
+            "fixable": 0,
+            "warnings": 0
+          }
+        }
+      },
+      "cbf_apply": {
+        "exit": 0
+      },
+      "cbf_only": {
+        "exit": 0
+      },
+      "cbf_only_second": {
+        "exit": 0
+      },
+      "cbf_only_stable": true,
+      "combined_stable": true,
+      "fixer_apply": {
+        "exit": 0
+      },
+      "second_cbf": {
+        "exit": 0
+      },
+      "second_fixer": {
+        "exit": 0
+      }
+    }
+  },
+  "revision": "31f48fda13d7b9671f88d0ecf249af6aad251c52",
+  "scope": "Disposable formatter-only experiment; application dependency extraction incomplete"
+}
