@@ -175,6 +175,10 @@ foreach (glob($root . '/ran-*', GLOB_ONLYDIR) as $directory) {
     }
 }
 $out['variables'] = array_values($out['variables']);
-file_put_contents($argv[3], json_encode($out, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR) . "\n");
+$json = json_encode($out, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR) . "\n";
+$written = file_put_contents($argv[3], $json);
+if (false === $written || strlen($json) !== $written) {
+    throw new RuntimeException('Failed to write the complete AST inventory output.');
+}
 printf("Parsed %d files; %d methods; %d properties; %d errors.\n", count($out['files']), count($out['methods']), count($out['properties']), count($out['errors']));
 exit($out['errors'] ? 1 : 0);
