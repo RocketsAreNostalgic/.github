@@ -169,7 +169,7 @@ try:
         list(pool.map(representative_case, [
             'scripts/build-release.php', 'inc/Base/Config.php',
             'templates/features/auth.php', 'tests/Unit/ExampleFeatureControllerTest.php']))
-except Exception:
+except BaseException:
     if work is not None:
         shutil.rmtree(work, ignore_errors=True)
     shutil.rmtree(env['HOME'], ignore_errors=True)
