@@ -261,13 +261,19 @@ jobs:
           }
 
           validate_terminal_snapshot() {
-            local snapshot="$1" release_http release tag_commit reconciled pending tagged
+            local snapshot="$1" release_http release tag_commit reconciled pending tagged abandoned
             release_http="$(jq -r '.release_http' <<< "$snapshot")"
             release="$(jq -c '.release' <<< "$snapshot")"
             tag_commit="$(jq -r '.tag_commit' <<< "$snapshot")"
             reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" '.labels | index($label) != null' <<< "$snapshot")"
             pending="$(jq -r '.labels | index("autorelease: pending") != null' <<< "$snapshot")"
             tagged="$(jq -r '.labels | index("autorelease: tagged") != null' <<< "$snapshot")"
+            abandoned="$(jq -r '.labels | index("autorelease: abandoned") != null' <<< "$snapshot")"
+
+            # Discovery excludes abandoned PRs. If that label appears after
+            # discovery, the bound candidate no longer satisfies the same
+            # identity contract, even when a release/tag already exists.
+            [[ "$abandoned" != true ]] || fail_observer "Release proposal PR #${candidate_number} became autorelease: abandoned during observation."
 
             if [[ "$release_http" == 200 ]]; then
               if ! jq -e --arg tag "$tag" '.tag_name == $tag' <<< "$release" >/dev/null; then
