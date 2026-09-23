@@ -25,7 +25,9 @@ def write(v):
 def get(path):
     if path.endswith('/git/tags/'+ 'c'*40): return {'object':{'type':'commit','sha':f.get('tag_sha','a'*40)}}
     if '/pulls/' in path and path.rsplit('/',1)[-1].isdigit(): return {'labels':[{'name':x} for x in f['labels']]}
-    if '/actions/runs?' in path: return [{'workflow_runs':f.get('runs',[])}]
+    if '/actions/runs?' in path:
+        candidate=path.split('head_sha=',1)[1].split('&',1)[0]
+        return [{'workflow_runs':[r for r in f.get('runs',[]) if r.get('head_sha',candidate)==candidate]}]
     if path.endswith('/pulls'): return [f['prs']]
     if '/contents/' in path: return {'content':base64.b64encode(json.dumps({'.':'1.2.3'}).encode()).decode()}
     if path=='repos/RocketsAreNostalgic/probe': return {'default_branch':'main'}
@@ -106,4 +108,5 @@ f=base(); f['tag_status']=500; run('tag API failure',f,error='HTTP 500')
 f=base(); f['curl_fail']='release'; run('release transport failure',f,error='transport layer')
 f=base(); f['gh_fail']='/actions/runs'; run('Actions API failure',f,error='mock GH API failure')
 f=base(); f['runs']=[{'id':14,'name':'Quality','status':'in_progress'}, {'id':15,'name':'Release Please','status':'completed','updated_at':'2026-09-20T00:00:00Z'}]; run('unrelated/completed old runs',f,error='stranded')
+f=base(); f['runs']=[{'id':16,'name':'Release Please','status':'in_progress','head_sha':OTHER}]; run('newer candidate run is not bound',f,error='stranded')
 f=base(); published(f); f['tag']=None; run('published object missing final tag',f,error='no final Git tag')
