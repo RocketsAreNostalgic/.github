@@ -2,9 +2,9 @@
   "version": 1,
   "scope": "Reviewed Support pilot only; read pinned Git objects and produce new disposable copies. No working-tree, lockfile or generated-copy edits.",
   "repositories": {
-    "ran-updater-support": "d395c37b2a76e5a5e10d9855b3277cde1cec4df3",
-    "ran-wp-branch-updater": "15253ac03878b01da254d6702a9753103354d8e9",
-    "ran-wp-release-updater": "78f30caac2384e6c91188ba780aadc8af2f6fdd4"
+    "ran-updater-support": "fb7e07a2c7d6fa3a8a690c0ccbe5199c490db6ee",
+    "ran-wp-branch-updater": "e1bc02eb06b0a435f3e2f9e107aa25e91c3150bb",
+    "ran-wp-release-updater": "26b81a7b05d42e76268eb6b7de17de91989d2aa4"
   },
   "guards": [
     {
@@ -20,7 +20,7 @@
     {
       "repository": "ran-updater-support",
       "path": "composer.json",
-      "sha256": "35f28771db7311ce43a0edb579d1256c6126062ebf183491c16c295efa9cbf5c"
+      "sha256": "070f7922cdfd17c87b8af397ce61084a98663ab7165087823d005d79c72c8564"
     },
     {
       "repository": "ran-updater-support",
@@ -30,7 +30,7 @@
     {
       "repository": "ran-wp-branch-updater",
       "path": "composer.json",
-      "sha256": "cc6494ef8507f9903eb99e80f670d536d199aab932a1af9a27e9a3cbae2cdcd6"
+      "sha256": "038abf01c8cf8776033a023f8d8e72eccded2e2766f4b66a20036303da98778e"
     },
     {
       "repository": "ran-wp-branch-updater",

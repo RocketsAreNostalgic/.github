@@ -44,6 +44,34 @@ caller discovery and review the manifest against the handed-over revisions.
 Do not simply copy this preview onto a newer branch or advance commit hashes
 without reviewing its file hashes, mappings, counts and generated prerequisites.
 
+## Snapshot refresh — 23 September 2026
+
+The manifest now pins the qualified command/rules handoffs:
+
+| Repository | Commit |
+| --- | --- |
+| Support | `fb7e07a2c7d6fa3a8a690c0ccbe5199c490db6ee` |
+| Branch Updater | `e1bc02eb06b0a435f3e2f9e107aa25e91c3150bb` |
+| Release Updater | `26b81a7b05d42e76268eb6b7de17de91989d2aa4` |
+
+Handoff evidence is recorded in Support #35, Branch #59 and Release #60, linked
+above. The three default branches and open PRs were inspected before this refresh.
+Support's open #31 concerns release-observer CI; Branch and Release had no open
+PRs. This records the observed boundary, not ownership of those release workflows.
+
+All selected source files, mappings, counts, locks and generated prerequisites
+remain byte-identical to the earlier pins. Only the guarded Support and Branch
+`composer.json` files changed, through the already-qualified canonical command
+updates. Their diffs were reviewed before refreshing their hashes.
+
+Both the historical and refreshed manifests passed the preview guards on PHP
+8.4.23. All ten emitted candidate files are byte-identical between those runs:
+49 identifier-token edits and 11 literal replacements remain the complete preview
+scope. This refresh did not rerun application suites or regenerate the two derived
+outputs. Earlier disposable composition evidence below remains historical;
+implementation must qualify the actual candidate and its installable dependencies.
+Recheck heads, callers and lane ownership again before applying any source change.
+
 ## Reviewed scope
 
 | Owner | Before | After |
