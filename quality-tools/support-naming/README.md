@@ -59,10 +59,18 @@ above. The three default branches and open PRs were inspected before this refres
 Support's open #31 concerns release-observer CI; Branch and Release had no open
 PRs. This records the observed boundary, not ownership of those release workflows.
 
-All selected source files, mappings, counts, locks and generated prerequisites
-remain byte-identical to the earlier pins. Only the guarded Support and Branch
-`composer.json` files changed, through the already-qualified canonical command
-updates. Their diffs were reviewed before refreshing their hashes.
+Within the manifest-selected candidate and guard files, source files, mappings,
+counts, locks and generated prerequisites remain byte-identical to the earlier
+pins. The only changed files in that selected set are Support and Branch's guarded
+`composer.json` files, through the qualified canonical command updates. Their
+diffs were reviewed before refreshing their hashes.
+
+Outside that selected set, the refreshed Release revision includes the `.phpcs.xml`
+rules handoff from Release #62: it removes the broad useless-override suppression
+and narrows the unused-parameter exception to four explicit test files. That
+ruleset is not a manifest candidate or guard, so the byte-identical preview output
+does not imply an unchanged Release ruleset. The recorded Release #60 handoff
+qualifies that change; this snapshot refresh does not rerun its application proof.
 
 Both the historical and refreshed manifests passed the preview guards on PHP
 8.4.23. All ten emitted candidate files are byte-identical between those runs:
