@@ -8,6 +8,13 @@ if ($argc !== 4) {
 }
 require $argv[2];
 $root = realpath($argv[1]);
+if (false === $root || !is_dir($root)) {
+    throw new RuntimeException('SNAPSHOT_ROOT must resolve to an existing directory.');
+}
+$snapshots = glob($root . '/ran-*', GLOB_ONLYDIR);
+if (false === $snapshots || [] === $snapshots) {
+    throw new RuntimeException('SNAPSHOT_ROOT contains no expected ran-* snapshot directories.');
+}
 $composerInstalled = dirname($argv[2]) . '/composer/installed.json';
 if (!is_file($composerInstalled)) {
     throw new RuntimeException('Parser Composer installed metadata is required.');
@@ -147,7 +154,7 @@ $walk = function ($node, array $ctx) use (&$walk, &$out, $visibility, $typeName)
         }
     }
 };
-foreach (glob($root . '/ran-*', GLOB_ONLYDIR) as $directory) {
+foreach ($snapshots as $directory) {
     $repo = basename($directory);
     $chunks = [];
     exec('git -C ' . escapeshellarg($directory) . ' ls-files -z -- ' . escapeshellarg('*.php'), $chunks, $status);
