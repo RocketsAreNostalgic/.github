@@ -236,7 +236,7 @@ read-only exact-revision CI
 → successful exact trusted-main qualification
 → bounded write-scoped publisher
 → exact tag/release target verification
-→ immutable release/readback where supported
+→ immutable GitHub release/readback
 ```
 
 It does not need WordPress-plugin ZIP provenance if no separately built ZIP is published.
@@ -252,7 +252,7 @@ exact source qualification
 → bounded publisher consuming the exact tested artifact
 → tag/release verification
 → asset readback
-→ immutable publication where compatible
+→ immutable GitHub publication
 → downstream deployment from the canonical published artifact
 ```
 

@@ -118,7 +118,7 @@ At this readback, no scheduled liveness caller exists on the inspected Starter, 
 - Branch-updater recovery remains local because it addresses a specific historical pending-release state.
 - Updater-support and release-updater allow Release Please to reconcile its managed PR before the later exact publisher admits final publication. This is accepted because the PR mutation is not treated as release evidence; tag/release publication remains bound to the exact publisher contract and readback.
 - A non-atomic current-`main` preflight is not mandated as a security boundary. Repositories that require tip-of-main publication must enforce that as part of their local release semantics rather than relying on a read-then-write check.
-- Ecwid no longer has the former push/manual-recovery topology: its steady-state publisher now follows exact successful Quality `workflow_run` admission, with repository-specific bot-owned candidate qualification retained as a stronger local gate.
+- Ecwid's original push/manual-recovery topology was retired before its Profile B migration. Its current `main` uses the shared Profile B caller; fresh post-migration immutable publication proof remains pending under #61.
 - Booster, Booster Bitbucket and bootstrap-template publication retain stronger specialized provenance gates.
 - Duplicate Detector's private-plan lack of default-branch ruleset enforcement is an explicitly recorded temporary settings limitation, with hardening deferred to `ran-duplicate-detector#16` when the repository becomes public.
 
