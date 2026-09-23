@@ -6,7 +6,7 @@ Uses only the external quality toolchain; never installs/runs consumer dependenc
 """
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-import collections, difflib, hashlib, json, os, subprocess, xml.etree.ElementTree as ET
+import collections, difflib, hashlib, json, os, shutil, subprocess, xml.etree.ElementTree as ET
 import sys, tempfile
 ROOT=Path(sys.argv[1]).resolve()
 PHP=Path(sys.argv[2]).resolve()
@@ -44,8 +44,11 @@ def run(repo, label, tool, cfg, args=()):
  cmd=[str(PHP),str(VENDOR/'bin'/tool),'--standard='+cfg,'--parallel=4','-q',*args]
  p=subprocess.run(cmd,cwd=ROOT/repo,env=ENV,capture_output=True,text=True,timeout=900)
  (OUT/(repo+'-'+label+'.log')).write_text(p.stdout)
+ stderr_log=OUT/(repo+'-'+label+'.stderr.log')
  if p.stderr:
-  (OUT/(repo+'-'+label+'.stderr.log')).write_text(p.stderr)
+  stderr_log.write_text(p.stderr)
+ else:
+  stderr_log.unlink(missing_ok=True)
  if p.returncode not in (0,1,2,3): raise RuntimeError(repo+' '+label+' '+str(p.returncode)+' '+p.stdout[-1000:]+p.stderr[-1000:])
  return p
 
