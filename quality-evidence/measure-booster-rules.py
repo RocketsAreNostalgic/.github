@@ -76,8 +76,9 @@ def measure(repo):
     if ex.get('name') in RESTORE:rule.remove(ex)
  rule=ET.SubElement(root,'rule',{'ref':ALIGN[0]});props=ET.SubElement(rule,'properties');ET.SubElement(props,'property',{'name':'error','value':'true'})
  rule=ET.SubElement(root,'rule',{'ref':ALIGN[1]});ET.SubElement(rule,'type').text='error'
- candidate='audit-strict.xml';tree.write(dest/candidate,encoding='unicode')
+ candidate='audit-strict.xml'
  try:
+  tree.write(dest/candidate,encoding='unicode')
   p=run(repo,'strict','phpcs',candidate,['--sniffs='+','.join(NAMES+YODA+ALIGN),'--report=json']);result['strict']=summary(json.loads(p.stdout));result['strict']['exit']=p.returncode
   print(repo,'strict',result['strict']['totals'],flush=True)
   result['fixes']={}
