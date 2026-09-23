@@ -217,8 +217,15 @@ try:
         }
     representative = result['representatives'].get('tests/Unit/ExampleFeatureControllerTest.php', {})
     compact['representative_fixer_diff'] = representative.get('before', {}).get('fixer', {}).get('stdout', '')
-    output.write_text(json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n')
-    
+    rendered = json.dumps(compact, indent=2, sort_keys=True).replace(str(work), '<fixtures>') + '\n'
+    output.parent.mkdir(parents=True, exist_ok=True)
+    temporary_output = output.with_name(output.name + '.tmp')
+    try:
+        temporary_output.write_text(rendered)
+        temporary_output.replace(output)
+    finally:
+        temporary_output.unlink(missing_ok=True)
+
 finally:
     shutil.rmtree(work, ignore_errors=True)
     shutil.rmtree(env['HOME'], ignore_errors=True)
