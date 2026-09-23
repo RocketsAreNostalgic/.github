@@ -107,9 +107,10 @@ fixtures = {
     'braces': base.replace('evidence() {', 'evidence()\n{').replace("$short ) {", "$short )\n\t{"),
     'syntax': base.replace("$short       = 'a';", "$short       = ;"),
 }
-result = {'php': run([php, '-v']), 'fixtures': {}, 'representatives': {}}
-work = Path(tempfile.mkdtemp(prefix='formatter-cases-', dir=root))
+work = None
 try:
+    result = {'php': run([php, '-v']), 'fixtures': {}, 'representatives': {}}
+    work = Path(tempfile.mkdtemp(prefix='formatter-cases-', dir=root))
     def fixture_case(item):
         name, contents = item
         path = work / (name + '.php')
@@ -169,7 +170,8 @@ try:
             'scripts/build-release.php', 'inc/Base/Config.php',
             'templates/features/auth.php', 'tests/Unit/ExampleFeatureControllerTest.php']))
 except Exception:
-    shutil.rmtree(work, ignore_errors=True)
+    if work is not None:
+        shutil.rmtree(work, ignore_errors=True)
     shutil.rmtree(env['HOME'], ignore_errors=True)
     raise
 
