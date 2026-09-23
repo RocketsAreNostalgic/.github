@@ -4,6 +4,20 @@ Owner: [Starter #24](https://github.com/RocketsAreNostalgic/ran-starter-plugin/i
 Programme: [.github #66](https://github.com/RocketsAreNostalgic/.github/issues/66).
 Inspected Starter revision: `31f48fda13d7b9671f88d0ecf249af6aad251c52`.
 
+## Landed disposition (23 September 2026 refresh)
+
+The implementation below has since landed. Starter
+[#25](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/25) merged at
+`4f712793653a338416046deae9a2146b745cf781`: PHP-CS-Fixer, its configuration and
+callers were removed; PHPCS/PHPCBF retain blocking assignment/array alignment,
+canonical commands and negative/fix/repeatability tests. #27 subsequently
+adopted published coding-standards v1.0.0 at
+`0e8a5e6c71f8bd718603f0697efd07ee8e50e4a6`, with passing post-merge Quality.
+The current [matrix](PHP_QUALITY_MATRIX.md) records that evidence and the
+remaining PHP 8.5/reference limitations. All measurements and recommendations
+below describe the original audited revision; do not repeat the completed
+formatter-removal work or treat these old command names as current guidance.
+
 ## Owner decision after the audit
 
 The owner has approved consolidation on PHPCS/PHPCBF. PHP-CS-Fixer is to be
