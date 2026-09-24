@@ -197,9 +197,10 @@ jobs:
                 and .head_repository.full_name == $repository
                 and .head_sha == $sha
               )] as $exact
-              | if any($exact[]; .status == "completed" and .conclusion == "success") then "success"
-                elif any($exact[]; .status != "completed") then "active"
-                elif ($exact | length) > 0 then "failed"
+              | [$exact[] | select(.event != "pull_request" or .conclusion != "action_required")] as $usable
+              | if any($usable[]; .status == "completed" and .conclusion == "success") then "success"
+                elif any($usable[]; .status != "completed") then "active"
+                elif ($usable | length) > 0 then "failed"
                 else "absent"
                 end' <<< "$runs"
           }

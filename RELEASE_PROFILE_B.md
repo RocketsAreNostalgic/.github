@@ -66,6 +66,8 @@ Quality must remain read-only.
 
 Because GitHub's workflow-dispatch API accepts a branch or tag ref rather than an immutable commit SHA, the shared workflow binds the Release Please branch to the exact candidate SHA immediately before dispatch and then waits for a successful Quality run whose reported `head_sha` is that exact SHA. A successful run for a newer branch head does not qualify the originally admitted candidate. The candidate branch must still resolve to the bound SHA when qualification succeeds. The wait is bounded to approximately 25 minutes inside a 30-minute release job so a legitimate full Quality run can complete without turning qualification into an unbounded observer.
 
+GitHub may record the automatic bot-created `pull_request` Quality run as completed with `conclusion: action_required` and no jobs. Profile B treats that specific record as non-execution rather than failed qualification, then uses the exact-head `workflow_dispatch` fallback. An actually executed exact candidate run that completes unsuccessfully still fails closed.
+
 For every run that can become a production release, Quality uploads one run-bound Actions artifact named:
 
 ```text

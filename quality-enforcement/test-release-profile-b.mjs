@@ -34,7 +34,8 @@ const required = [
   'coverage_state()',
   'for attempt in {1..300}',
   'sleep 5',
-  '($exact | length) > 0',
+  '.conclusion != "action_required"',
+  '($usable | length) > 0',
   'head_sha=${head_sha}',
   'No successful Quality run covered exact Release Please candidate',
   'test "$(read_candidate_ref)" = "$head_sha"',
@@ -82,6 +83,68 @@ assert.ok(release.includes('contents: write'));
 assert.ok(release.includes('pull-requests: write'));
 assert.ok(release.includes('issues: write'));
 assert.ok(release.includes('actions: write'));
+
+// Execute the actual candidate-coverage classifier. A GitHub-created Release
+// Please PR may have a pull_request run recorded as action_required with zero
+// jobs; that is non-execution and must fall through to exact-head dispatch.
+const coverageStart = workflow.indexOf('          coverage_state() {');
+const coverageEnd = workflow.indexOf('\n\n          state="$(coverage_state)"', coverageStart);
+assert.ok(coverageStart >= 0 && coverageEnd > coverageStart, 'missing candidate coverage classifier');
+const coverageFunction = workflow.slice(coverageStart, coverageEnd)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+
+const qualityWorkflowId = 42;
+const candidateHead = 'c'.repeat(40);
+const candidateBranch = 'release-please--branches--main--components--example';
+const candidateRepository = 'example/repo';
+const exactRun = (event, status, conclusion) => ({
+  workflow_id: qualityWorkflowId,
+  path: '.github/workflows/quality.yml',
+  event,
+  status,
+  conclusion,
+  head_branch: candidateBranch,
+  head_repository: { full_name: candidateRepository },
+  head_sha: candidateHead,
+});
+const gatedPullRequest = exactRun('pull_request', 'completed', 'action_required');
+const coverageCases = [
+  ['gated pull request only', [gatedPullRequest], 'absent'],
+  ['gated pull request plus active dispatch',
+    [gatedPullRequest, exactRun('workflow_dispatch', 'in_progress', null)], 'active'],
+  ['gated pull request plus failed dispatch',
+    [gatedPullRequest, exactRun('workflow_dispatch', 'completed', 'failure')], 'failed'],
+  ['gated pull request plus successful dispatch',
+    [gatedPullRequest, exactRun('workflow_dispatch', 'completed', 'success')], 'success'],
+  ['executed pull request failure', [exactRun('pull_request', 'completed', 'failure')], 'failed'],
+  ['executed pull request success', [exactRun('pull_request', 'completed', 'success')], 'success'],
+];
+for (const [name, runs, expected] of coverageCases) {
+  const result = spawnSync('bash', ['-c',
+    'set -euo pipefail\n'
+      + 'workflow_id=42\n'
+      + 'head_sha="$RAN_TEST_HEAD_SHA"\n'
+      + 'RAN_RELEASE_PR_HEAD="$RAN_TEST_HEAD_BRANCH"\n'
+      + 'GITHUB_REPOSITORY="$RAN_TEST_REPOSITORY"\n'
+      + 'export RAN_QUALITY_WORKFLOW_PATH=.github/workflows/quality.yml\n'
+      + 'gh() { printf "%s\\n" "$RAN_TEST_RUNS"; }\n'
+      + coverageFunction
+      + '\ncoverage_state\n',
+  ], {
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      RAN_TEST_HEAD_SHA: candidateHead,
+      RAN_TEST_HEAD_BRANCH: candidateBranch,
+      RAN_TEST_REPOSITORY: candidateRepository,
+      RAN_TEST_RUNS: JSON.stringify({ workflow_runs: runs }),
+    },
+    timeout: 10000,
+  });
+  assert.ifError(result.error);
+  assert.equal(result.status, 0, name + ': ' + result.stderr);
+  assert.equal(result.stdout.trim(), expected, name);
+}
 
 // Execute the actual classification capture at publication resolution.
 // Every fixture is local JSON only; preserve legitimate false and reject non-booleans.
@@ -281,6 +344,7 @@ console.log(JSON.stringify(state));
 
 assert.ok(docs.includes('must support `workflow_dispatch` with no required inputs'));
 assert.ok(docs.includes('waits for a successful Quality run whose reported `head_sha` is that exact SHA'));
+assert.ok(docs.includes('conclusion: action_required'));
 assert.ok(docs.includes('"draft": true'));
 assert.ok(docs.includes('"force-tag-creation": true'));
 assert.ok(docs.includes('never uses `--clobber`'));
