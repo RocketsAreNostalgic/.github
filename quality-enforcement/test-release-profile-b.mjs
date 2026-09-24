@@ -118,8 +118,6 @@ const coverageCases = [
     [exactRun('workflow_dispatch', 'completed', 'action_required')], 'failed'],
   ['gated pull request plus successful dispatch',
     [gatedPullRequest, exactRun('workflow_dispatch', 'completed', 'success')], 'success'],
-  ['action-required workflow dispatch remains failed',
-    [exactRun('workflow_dispatch', 'completed', 'action_required')], 'failed'],
   ['executed pull request failure', [exactRun('pull_request', 'completed', 'failure')], 'failed'],
   ['executed pull request success', [exactRun('pull_request', 'completed', 'success')], 'success'],
 ];
