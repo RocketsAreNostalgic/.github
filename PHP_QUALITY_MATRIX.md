@@ -3,7 +3,8 @@
 Owner: [#66](https://github.com/RocketsAreNostalgic/.github/issues/66), under
 [#65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Delivered command policy: [#69](https://github.com/RocketsAreNostalgic/.github/pull/69).
-Source refresh: 23 September 2026 (UTC); supersedes the 22 September snapshot.
+Full source snapshot: 23 September 2026 (UTC); see the superseding landed-slice
+checkpoint below for 24 September changes. Unchanged rows are not freshly requalified.
 
 This records the seven active Booster PHP packages, Starter and Admin Shell at
 the exact default revisions below. It is a configuration and execution-path
@@ -12,7 +13,52 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
-## Revisions and support contracts
+## 24 September 2026 landed-slice checkpoint
+
+This checkpoint supersedes the older pending-command and syntax-defect statuses
+in the 23 September snapshot below. Other rows remain dated evidence, not a fresh
+audit or execution of the whole estate.
+
+| Package | Refreshed main / landed slice | Acceptance and evidence |
+| --- | --- | --- |
+| GitHub Provider | `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800`, [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26) | Canonical commands and separate `check:host` landed. Exact certified Core unchanged. [Post-merge CI](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/35939652100) and [Release Please](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/35939804562) passed. |
+| Release Updater | `458b1c3a224498891145e6af9e7aeb27e2c881de`, [#66](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/66) | `standards`, `standards:fix` and `test` landed; expanded `check` order unchanged. [Post-merge CI](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/35958345069) and [Release Please](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/35958519618) passed. Level-8 analysis still covers a subset, not all production PHP. |
+| Migrator | `829d823afd87923a20f8170671d2f456465424d9`; syntax [#46](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/46) merged at `79a0b742a4236fbb556262f0bb2f574cbc1965bb`, then release repin [#45](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/45) | `lint:syntax` propagates parser/discovery failures; `lint:php` forwards for the retained CI caller. Negative regression rejects the original implementation. [Exact-head PR proof](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35968489297), [syntax-merge Quality](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35971723162) and [Release Please](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35971969710) passed. No PHPStan or focused fixer adoption is claimed. |
+
+All three quality slices received exact-head code/security review. Their runtime
+source, locked dependency identities and certified hosts were preserved. Migrator's
+new regression ran in the required PR baseline; the push-only local Quality job
+does not independently rerun it. The #45 workflow repin is separate release work.
+
+Support's owned-method enforcement and Starter's formatter consolidation remain
+delivered evidence; do not restart them. The coding-standards v1.0.0 release and
+initial four consumers are delivered, not estate-wide activation or Core adoption.
+Starter main has since advanced to `f05f0c667eb950e692e9eb4f98480d40dfe1a76b`;
+its older full matrix row below is deliberately retained as a dated audit.
+
+### Remaining acceptance and sequencing
+
+- **Release gate:** Migrator [#43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+  is the beta.10 release candidate, refreshed to
+  `b7e178f38a411c3796a6d1e4851f1a6aa2555496` at this checkpoint. Automated
+  candidate Quality passed ([run](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35973714819)).
+  Its `RELEASE.md` still requires exact-candidate reproducibility and fresh
+  installed-site migration/refusal/recovery proof. Older candidate evidence
+  cannot approve this candidate. No release merge/publication is authorised here.
+- **Ownership gate:** Core [#54](https://github.com/RocketsAreNostalgic/.github/issues/54)
+  remains open with no explicit handoff. Connected updater/provider/Migrator API
+  naming and dependency/certification changes stay reserved.
+- **Next independent slice:** read-only Release Updater [#60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
+  inventory mapping every shipped PHP file to direct level-8 analysis, symbol
+  discovery, generated-copy exclusion, or uncovered scope. Produce a bounded
+  coverage proposal; do not lower level 8 or silently promote coverage.
+- **Separate later work:** Migrator command completion and PHPStan adoption,
+  remaining consumer naming/condition choices, shared-package version adoption,
+  Starter/Core reference acceptance, upgrade/live-audit policy, proportionate
+  drift validation and contributor coordination with #62. Refresh ownership
+  before implementation; do not churn Migrator's candidate during site proof.
+
+## 23 September source snapshot: revisions and support contracts
 
 | Repository / quality issue | Audited default revision | Declared PHP / WordPress | Configured PHP CI lanes |
 | --- | --- | --- | --- |
