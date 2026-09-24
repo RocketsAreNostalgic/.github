@@ -10,6 +10,8 @@ The governing principle is:
 
 > Same release-trust guarantees where applicable; not necessarily the same release architecture.
 
+The approved direction is [Profile A](RELEASE_PROFILE_A.md) for source releases and [Profile B](RELEASE_PROFILE_B.md) where an authoritative built asset must be promoted. Release Please owns version, changelog, release PR, tag and release lifecycle; Profile B adds exact tested-artifact promotion. Production GitHub releases are subject to the owner-enabled immutable-release policy. The migration and final settings audit remain tracked in [.github#47](https://github.com/RocketsAreNostalgic/.github/issues/47), [#59](https://github.com/RocketsAreNostalgic/.github/issues/59), [#61](https://github.com/RocketsAreNostalgic/.github/issues/61) and [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). This target does not certify every older publisher row or unfinished consumer.
+
 Repository-specific gates may be stronger than this policy and should remain local when they prove product-specific properties. Shared quality infrastructure is evidence infrastructure, not automatically release authority.
 
 This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Source-quality profile adoption and reusable quality-workflow rollout remain separately owned by RocketsAreNostalgic/.github#7.
@@ -178,9 +180,7 @@ Existing safeguards should not be removed until the guarantee they provide has b
 
 Repositories publishing build artifacts must prove the identity of the published bytes across build, transfer, and publication boundaries.
 
-If a repository permits rebuilding or replacing assets for an existing tag, that must be an explicit recovery contract. It must preserve exact source/tag identity, re-run the repository's required artifact proofs, and read back the resulting publication. Mutable recovery is not equivalent to immutable provenance and must be documented as a deliberate exception where retained.
-
-Where immutable GitHub releases are compatible with the release model, prefer them and verify immutability after publication. A repository that deliberately retains mutable recovery must record why immutability would remove a required operational capability and what compensating provenance/readback guarantees apply.
+The production baseline is immutable GitHub releases. Publish a corrected build from freshly qualified source under a new version/tag. A mutable-release exception requires the narrow evidence and owner decision in #59; historical recovery code is not a standing exception. Profile B verifies exact tested asset digests and immutable release readback in its publisher. Release liveness observation does not reproduce those provenance guarantees.
 
 ### 6. Repository settings and bypasses
 
@@ -215,9 +215,15 @@ Where applicable, the publisher should read back and verify:
 - immutable state where required;
 - expected asset names;
 - artifact digests or manifest identity;
-- downstream publication identity, such as a WordPress.org deployment contract.
+- downstream publication identity where enabled, such as a WordPress.org deployment contract.
 
 Recovery and retry paths must preserve the same identity guarantees as the normal path.
+
+### Read-only release liveness
+
+The [shared observer](.github/workflows/release-liveness-observer.yml) evaluates the **current root Release Please manifest version** in its caller repository. It requires exactly one merged, non-abandoned release PR with the expected title/version, binds its merge SHA and intended `v<version>` tag, and resolves the actual Git tag object to a commit. An exact non-draft published release plus the exact tag and settled `autorelease: tagged` label is its `published` result. The separate `release: reconciled` label on that same merged PR, with no public release, final tag, or pending/tagged Release Please label, is its machine-readable `reconciled` result; a repository-local explanation must supply the durable disposition. A hidden or unused draft alone remains nonterminal.
+
+The observer grants only Actions/Contents/Pull-request read permissions. It holds a nonterminal candidate pending during its grace period or while an exact-SHA configured publisher run is active. Stable stale candidates without publication are reported as stranded; an exact published release/tag with unsettled Release Please labels beyond those fences fails with a distinct observer error. Conflicting tag identity, a newly abandoned bound PR, ambiguous PR discovery and unexpected API errors also fail closed. It does not publish, mutate Release Please labels, inspect arbitrary historical manifests, or certify assets, digests, immutability and downstream deployment. A green observation for the current manifest does not dispose of an older incident. Record historical cancellation/supersession under [#29](https://github.com/RocketsAreNostalgic/.github/issues/29) and carry it into #57. The optional WordPress.org destination cannot block canonical qualified GitHub publication while its committed deployment contract is disabled.
 
 ## Accepted architectural patterns
 
@@ -230,7 +236,7 @@ read-only exact-revision CI
 → successful exact trusted-main qualification
 → bounded write-scoped publisher
 → exact tag/release target verification
-→ immutable release/readback where supported
+→ immutable GitHub release/readback
 ```
 
 It does not need WordPress-plugin ZIP provenance if no separately built ZIP is published.
@@ -246,7 +252,7 @@ exact source qualification
 → bounded publisher consuming the exact tested artifact
 → tag/release verification
 → asset readback
-→ immutable publication where compatible
+→ immutable GitHub publication
 → downstream deployment from the canonical published artifact
 ```
 

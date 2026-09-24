@@ -261,13 +261,19 @@ jobs:
           }
 
           validate_terminal_snapshot() {
-            local snapshot="$1" release_http release tag_commit reconciled pending tagged
+            local snapshot="$1" release_http release tag_commit reconciled pending tagged abandoned
             release_http="$(jq -r '.release_http' <<< "$snapshot")"
             release="$(jq -c '.release' <<< "$snapshot")"
             tag_commit="$(jq -r '.tag_commit' <<< "$snapshot")"
             reconciled="$(jq -r --arg label "$RAN_RECONCILED_LABEL" '.labels | index($label) != null' <<< "$snapshot")"
             pending="$(jq -r '.labels | index("autorelease: pending") != null' <<< "$snapshot")"
             tagged="$(jq -r '.labels | index("autorelease: tagged") != null' <<< "$snapshot")"
+            abandoned="$(jq -r '.labels | index("autorelease: abandoned") != null' <<< "$snapshot")"
+
+            # Discovery excludes abandoned PRs. If that label appears after
+            # discovery, the bound candidate no longer satisfies the same
+            # identity contract, even when a release/tag already exists.
+            [[ "$abandoned" != true ]] || fail_observer "Release proposal PR #${candidate_number} became autorelease: abandoned during observation."
 
             if [[ "$release_http" == 200 ]]; then
               if ! jq -e --arg tag "$tag" '.tag_name == $tag' <<< "$release" >/dev/null; then
@@ -340,15 +346,12 @@ jobs:
             terminal_stable=true
           fi
 
-          # Positive publication is self-authenticating through the exact final
-          # tag. Transitional labels remain pending rather than becoming an
-          # observer error.
+          # Exact publication with settled Release Please labels is terminal.
+          # A published release whose labels are still transitioning must pass
+          # through the same activity/grace/stability bounds as other pending
+          # states; it cannot remain green indefinitely after those bounds.
           if [[ "$terminal_state" == published ]]; then
             record_state published "PR #${candidate_number} / ${tag} is published at exact candidate ${candidate_sha}."
-            exit 0
-          fi
-          if [[ "$terminal_state" == pending ]]; then
-            record_state pending "PR #${candidate_number} / ${tag} has an exact published release, but Release Please labels are still transitioning."
             exit 0
           fi
 
@@ -380,7 +383,11 @@ jobs:
           fi
 
           if [[ "$age_minutes" -lt "$RAN_GRACE_MINUTES" ]]; then
-            record_state pending "PR #${candidate_number} / ${tag} remains nonterminal inside the ${RAN_GRACE_MINUTES}-minute publication grace window."
+            if [[ "$terminal_state" == pending ]]; then
+              record_state pending "PR #${candidate_number} / ${tag} has an exact published release, but Release Please labels are transitioning inside the ${RAN_GRACE_MINUTES}-minute grace window."
+            else
+              record_state pending "PR #${candidate_number} / ${tag} remains nonterminal inside the ${RAN_GRACE_MINUTES}-minute publication grace window."
+            fi
             exit 0
           fi
 
@@ -389,6 +396,10 @@ jobs:
           if [[ "$terminal_stable" != true ]]; then
             record_state pending "PR #${candidate_number} / ${tag} changed release/tag/label state during observation; defer the terminal verdict."
             exit 0
+          fi
+
+          if [[ "$terminal_state" == pending ]]; then
+            fail_observer "Published release ${tag} resolves to exact candidate ${candidate_sha}, but PR #${candidate_number} labels remain unsettled after ${age_minutes} minutes without publisher activity."
           fi
 
           {
