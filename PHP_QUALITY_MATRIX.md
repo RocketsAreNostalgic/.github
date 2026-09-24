@@ -2,13 +2,13 @@
 
 Owner: [#66](https://github.com/RocketsAreNostalgic/.github/issues/66), under
 [#65](https://github.com/RocketsAreNostalgic/.github/issues/65).
-Command-policy proposal: [#69](https://github.com/RocketsAreNostalgic/.github/pull/69).
-Snapshot: 22 September 2026.
+Delivered command policy: [#69](https://github.com/RocketsAreNostalgic/.github/pull/69).
+Source refresh: 23 September 2026 (UTC); supersedes the 22 September snapshot.
 
 This records the seven active Booster PHP packages, Starter and Admin Shell at
 the exact default revisions below. It is a configuration and execution-path
 audit, not a fresh passing run of all nine suites or a declaration that every
-row meets the proposed policy. Open migration PRs are recorded separately.
+row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
@@ -16,14 +16,14 @@ and workflows at each linked revision are the source of each row.
 
 | Repository / quality issue | Audited default revision | Declared PHP / WordPress | Configured PHP CI lanes |
 | --- | --- | --- | --- |
-| [Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167) | [51613e42df959b76795a1b438de59a06053fb614](https://github.com/RocketsAreNostalgic/ran-booster/tree/51613e42df959b76795a1b438de59a06053fb614) | `^8.2` / WP 7.0+ | 8.2; WordPress/database matrix separately |
-| [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63) | [95c6b760acfdb75961ea9e1b76610a864c16b048](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/tree/95c6b760acfdb75961ea9e1b76610a864c16b048) | `^8.2` / WP 7.0+ | Independent 8.2/8.5; host and installed proof 8.2 |
-| [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | [ebeb6166b9806b006f1224fa5b291473040a0b86](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/tree/ebeb6166b9806b006f1224fa5b291473040a0b86) | `^8.2` / WP 7.0+ host contract | Independent and implementation 8.2/8.5; host contract 8.2 |
-| [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | [15253ac03878b01da254d6702a9753103354d8e9](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/tree/15253ac03878b01da254d6702a9753103354d8e9) | `^8.2` / no package-wide WP floor declared in PHPCS | 8.2/8.5; installed Composer consumer 8.2 |
-| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | [a5efe7a422524000ed2ec7a7e16fba28b7c25b3a](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/tree/a5efe7a422524000ed2ec7a7e16fba28b7c25b3a) | `^8.2` / WP 6.5+ | 8.2/8.5; Windows, MySQL and installed WP proofs 8.2 |
-| [Updater Support #35](https://github.com/RocketsAreNostalgic/ran-updater-support/issues/35) | [d395c37b2a76e5a5e10d9855b3277cde1cec4df3](https://github.com/RocketsAreNostalgic/ran-updater-support/tree/d395c37b2a76e5a5e10d9855b3277cde1cec4df3) | `^8.2` / no WP runtime floor claimed | 8.2/8.5 |
-| [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | [696ee7ed73a3782875205dc3b86419389dbab31a](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/tree/696ee7ed73a3782875205dc3b86419389dbab31a) | `^8.2` / WP 7.0+ | 8.2 |
-| [Starter #24](https://github.com/RocketsAreNostalgic/ran-starter-plugin/issues/24) | [31f48fda13d7b9671f88d0ecf249af6aad251c52](https://github.com/RocketsAreNostalgic/ran-starter-plugin/tree/31f48fda13d7b9671f88d0ecf249af6aad251c52) | `>=8.4 <8.6` / WP 7.0+ | 8.4; no 8.5 lane in the inspected caller |
+| [Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167) | [000e1a55e8de95e381d6f4b9b3a98971119f336a](https://github.com/RocketsAreNostalgic/ran-booster/tree/000e1a55e8de95e381d6f4b9b3a98971119f336a) | `^8.2` / WP 7.0+ | 8.2; WordPress/database matrix separately |
+| [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63) | [001478d21098effec9219d4aae907762727b60b4](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/tree/001478d21098effec9219d4aae907762727b60b4) | `^8.2` / WP 7.0+ | Independent 8.2/8.5; host and installed proof 8.2 |
+| [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | [0e6911552f5b7e7d3812d0c03600037888e1dfd4](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/tree/0e6911552f5b7e7d3812d0c03600037888e1dfd4) | `^8.2` / WP 7.0+ host contract | Independent and implementation 8.2/8.5; host contract 8.2 |
+| [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | [d382d09e4490ed4438d9ebaea2a06d69d59f0ce3](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/tree/d382d09e4490ed4438d9ebaea2a06d69d59f0ce3) | `^8.2` / no package-wide WP floor declared in PHPCS | 8.2/8.5; installed Composer consumer 8.2 |
+| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | [97a6fbdfcc47dc67b128a3a4007f39dc1d57c11f](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/tree/97a6fbdfcc47dc67b128a3a4007f39dc1d57c11f) | `^8.2` / WP 6.5+ | 8.2/8.5; Windows, MySQL and installed WP proofs 8.2 |
+| [Updater Support #35](https://github.com/RocketsAreNostalgic/ran-updater-support/issues/35) | [6a9cdbc9eb1bbecbafcbe16da931c98928d035e8](https://github.com/RocketsAreNostalgic/ran-updater-support/tree/6a9cdbc9eb1bbecbafcbe16da931c98928d035e8) | `^8.2` / no WP runtime floor claimed | 8.2/8.5 |
+| [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | [e0bfcf2040e3d9159230d18ec24d30d21a40d160](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/tree/e0bfcf2040e3d9159230d18ec24d30d21a40d160) | `^8.2` / WP 7.0+ | 8.2 |
+| [Starter #24](https://github.com/RocketsAreNostalgic/ran-starter-plugin/issues/24) | [0e8a5e6c71f8bd718603f0697efd07ee8e50e4a6](https://github.com/RocketsAreNostalgic/ran-starter-plugin/tree/0e8a5e6c71f8bd718603f0697efd07ee8e50e4a6) | `>=8.4 <8.6` / WP 7.0+ | 8.4; no 8.5 lane in the inspected caller |
 | [Admin Shell #13](https://github.com/RocketsAreNostalgic/ran-admin-shell/issues/13) | [098cfd970f91c3701259fc393697b722d6e2546e](https://github.com/RocketsAreNostalgic/ran-admin-shell/tree/098cfd970f91c3701259fc393697b722d6e2546e) | `>=8.0`; build-time tooling; ruleset records WP 6.5 | 8.0/8.5 |
 
 Declared support and executed versions are different evidence. The table does
@@ -32,12 +32,17 @@ WordPress runtime dependency on a host-neutral library.
 
 ## Locked tools
 
-Core, Bitbucket, GitHub Provider, both updaters, Updater Support, Migrator and
-Starter all lock `ran/coding-standards` at
-`0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be`, PHPCS **3.13.6**, WPCS **3.4.1**,
+The eight shared-profile consumers lock PHPCS **3.13.6**, WPCS **3.4.1**,
 `phpcompatibility/php-compatibility` **10.0.0-alpha2**,
 `phpcompatibility/phpcompatibility-paragonie` **2.0.0-alpha2**, and
-`phpcompatibility/phpcompatibility-wp` **3.0.0-alpha2**.
+`phpcompatibility/phpcompatibility-wp` **3.0.0-alpha2**. Shared-package adoption
+is no longer uniform:
+
+| Consumers | Locked `ran/coding-standards` | Owned-method overlay |
+| --- | --- | --- |
+| Starter, Branch Updater, Release Updater | Released `v1.0.0`, `6af816a02b7d1108ad5c990e9d0fda0af0a13de7`, manifest `^1.0` | Not selected |
+| Updater Support | The same released `v1.0.0` / `^1.0` | `RANOwnedMethods` explicitly enabled |
+| Core, Bitbucket, GitHub Provider, Migrator | `dev-main`, locked `0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be` | Not available in that older locked candidate |
 
 Admin Shell also locks PHPCS **3.13.6** and WPCS **3.4.1**, but directly consumes
 WordPress-Extra and PHPCompatibility **9.3.5**. It has neither the shared RAN
@@ -52,7 +57,7 @@ package nor the PHPCompatibilityWP/Paragonie packages in its lock.
 | Release Updater | 2.2.13 | 2.0.4 | 11.5.56 | PHPCBF |
 | Updater Support | 2.2.13 | None; source does not require it | None; executable PHP contracts | PHPCBF |
 | Migrator | None configured | None | 11.5.56 | No focused fixer script exposed |
-| Starter | 2.2.13 | 2.0.4 | 9.6.35 | PHP-CS-Fixer 3.95.15 and PHPCBF |
+| Starter | 2.2.13 | 2.0.4 | 9.6.35 | PHPCBF only; PHP-CS-Fixer removed |
 | Admin Shell | None configured | None | 9.6.36 | No focused fixer script exposed |
 
 ## Source coverage and analysis enforcement
@@ -70,7 +75,7 @@ use `RANWordPressLibrary`; Admin Shell retains direct ancestry.
 | GitHub Provider | `.` excluding vendor and analysis/test caches | **Blocking level 1 with certified host:** `src/` and `tests/foundation-contract.php`; not part of independent `check`. |
 | Branch Updater | `src/` and `bootstrap.php`; fixtures/maintenance scripts intentionally use syntax and executable contracts | **Blocking level 5:** `src/`; bootstrap/tests/scripts are not analysis roots. |
 | Release Updater | `.` excluding dependencies/caches/workspaces/output and generated `src/Dependency/ArchiveSafety.php`; parity checked separately | **Blocking level 8:** the exact subset below. `scanDirectories: src` supplies symbols and does not analyse all production PHP. |
-| Updater Support | `.` excluding vendor/Node dependencies | **Blocking level 8:** `src/`. |
+| Updater Support | `.` excluding vendor/Node dependencies; `RANOwnedMethods` covers the same scope | **Blocking level 8:** `src/`. |
 | Migrator | `.` excluding dependencies/Git/caches | No configured PHPStan gate; adoption remains a separate task. |
 | Starter | `.` excluding vendor/Node dependencies, including Starter-local WordPress-Docs and generic checks | **Blocking level 1:** plugin entry, `uninstall.php`, `inc/`, `templates/`; `index.php`, tests and scripts are not analysis roots. |
 | Admin Shell | `resources/`, `tools/`, `tests/`; WordPress-Extra excludes tools/tests, compatibility still applies | No configured PHPStan gate. Extensionless `bin/ran-admin-shell` is outside PHPCS roots and `*.php` syntax selection. |
@@ -104,12 +109,12 @@ src/Provider/GitHub/ProspectiveReleaseInspection.php
 | --- | --- | --- |
 | Core | Workflow sweeps repository PHP excluding vendor, Node dependencies and workbench with `find -exec php -l ... \;` | Child parser failure does not propagate from `find`; repair in coordinated command/wiring work. PHPCS is a separate check. |
 | Bitbucket | `lint:syntax`: repository PHP excluding vendor and analysis/test caches, `find` piped to `xargs` | Child parser failure propagates; discovery failure is not protected by pipefail. |
-| GitHub Provider | `lint:syntax`: `src/`, `tests/`, `find` piped to `xargs`; shared CI additionally sweeps repository PHP | PR #26 adds pipefail without changing source selection. |
-| Branch Updater | `lint`: `src/`, `tests/`, `scripts/`, then `bootstrap.php`; shared CI also sweeps repository PHP | PR #60 renames and adds pipefail. |
+| GitHub Provider | `lint:syntax`: `src/`, `tests/`, `find` piped to `xargs`; shared CI additionally sweeps repository PHP | Still no pipefail on main; open PR #26 supplies it. |
+| Branch Updater | `lint:syntax`: `src/`, `tests/`, `scripts/`, then `bootstrap.php`; shared CI also sweeps repository PHP | Renaming and pipefail landed in #60. |
 | Release Updater | `lint:syntax`: PHP runner covers `bootstrap.php`, `runtime.php`, `src/`, `scripts/`, `tests/`; shared CI also sweeps repository PHP | Uses `PHP_BINARY` and propagates parser exits; missing configured paths are currently skipped. Preserve Windows behavior when improving discovery checks. |
-| Updater Support | `lint:php`: `src/`, `tests/`, `find` piped to `xargs`; shared CI also sweeps repository PHP | PR #36 renames and adds pipefail. |
-| Migrator | `lint:php`: repository PHP excluding vendor/Node/Git using `find -exec`; shared PR CI also sweeps repository PHP | Standalone child-failure defect remains in this default snapshot; coordinate with active Profile B PR #41, then quality #42. |
-| Starter | No focused parser script; shared WordPress CI sweeps repository PHP excluding dependencies | Add canonical focused syntax command during adoption; retain independent CI proof. |
+| Updater Support | `lint:syntax`: `src/`, `tests/`, `find` piped to `xargs`; shared CI also sweeps repository PHP | Renaming and pipefail landed in #36. |
+| Migrator | `lint:php`: repository PHP excluding vendor/Node/Git using `find -exec`; shared PR CI also sweeps repository PHP | Standalone child-failure defect remains on the refreshed main after merged Profile B #41; quality #42 owns follow-up. |
+| Starter | `lint:syntax`: repository PHP excluding vendor/Node/Git, through Bash pipefail and `xargs`; shared CI also sweeps repository PHP | Landed in #25; independent parser proof retained. |
 | Admin Shell | No focused parser script; shared PHP CI sweeps repository `*.php` excluding dependencies | Include the extensionless CLI in its future explicit scope; do not assume the generic sweep covers it. |
 
 The shared workflow parser loops reject failed `php -l` calls. Their file
@@ -119,19 +124,20 @@ those checks and assess discovery failure separately when hardening shared CI.
 
 ## Ordinary commands and additional required evidence
 
-All commands in this table are current default-branch names. Canonical command
-adoption is proposed or outstanding, not silently treated as already landed.
+All commands in this table are read from the exact default-branch revisions
+above. Support, Branch and Starter have adopted the canonical surfaces;
+other rows retain the actual remaining differences.
 
 | Repository | Local ordinary contract and focused commands | Additional CI / environment evidence to retain |
 | --- | --- | --- |
 | Core | `composer check` includes i18n/POT and fixture parity, localisation contract, characterization/PHPUnit/bootstrap tests, release-state/fallback contracts, immutable Admin Shell parity, `lint:php` and `analyze`; formatter `lint:php:fix`; `pnpm check` remains required | Published template-pack check; exact runtime archive and conditional candidate readback; WordPress 7.0/7.0.3 with MySQL 8.0/8.4 and MariaDB 10.11, activation/localisation/storage, updater execution, native-lock, hard-stop and intake-race proofs. Existing workflow has lifecycle-specific admission/skip logic. |
-| Bitbucket | `check` is PHPCS + syntax. Host-backed `check:repository` adds unit and release-state contracts. `analyse` is advisory; formatter `lint:php:fix` | Exact Core source/production autoloader; runtime archive, conditional candidate install and `Quality` fan-in. `installed-proof.yml` separately proves the certified Core/add-on installation; it is not a dependency of that fan-in. |
+| Bitbucket | `check` is PHPCS + syntax. Host-backed `check:host` adds unit and release-candidate contracts. `analyze` is advisory; formatter `standards:fix` | Exact Core source/production autoloader; runtime archive, conditional candidate install and terminal `quality` fan-in. `installed-proof.yml` separately proves the certified Core/add-on installation; it is not a dependency of that fan-in. |
 | GitHub Provider | Independent `check`: strict validation, syntax, PHPCS, foundation and Node release-control tests. Host-backed `analyze` and `test:implementation` separate; formatter aliases `format` / `format:php` / `standards:fix` | Exact certified Core contract, implementation PHP matrix, release classification and terminal `quality`. Proposed `check:host` in #26 retains these gates. |
-| Branch Updater | `check`: strict validation, PHPCS, analysis, architecture/archive/prepared-archive/runner/hard-stop/journal/identifier/error-code and release-control contracts, syntax; formatter `standards:fix` | Installed no-dev Composer consumer and release classification; both remain represented in terminal `quality`. |
+| Branch Updater | `check`: strict validation, PHPCS, analysis, architecture/archive/prepared-archive/runner/hard-stop/journal/identifier/error-code and release-control contracts, syntax; formatter `standards:fix` | Installed no-dev Composer consumer plus the baseline feed terminal `quality`; no separate release-classification job remains. |
 | Release Updater | `check`: strict validation, shared-copy parity, live `audit:composer`, syntax, PHPCS, analysis, unit tests and no-dev consumer. Focused `lint:php`, `format:php`, `analyze`; `pnpm check` covers Node control tooling | MySQL CAS isolation/setup-failure proof, Windows portability, installed WordPress 6.5/7.1 integration and terminal `quality`. No-dev install is already inside `check`; preserve it there during renaming. |
-| Updater Support | `check`: strict validation, parser, `standards`, `analyze`, archive-safety contract and release-workflow Node tests; formatter `standards:fix` | Shared 8.2/8.5 profile and terminal `quality`; no certified host needed. |
-| Migrator | `check`: parser, `standards`, PHPUnit and release-candidate contract; `pnpm check` covers shipped CSS | Single runtime archive and certified Core API proof. Default workflow runs non-archive PHP gates separately and a PR terminal `quality`; release migration #41 owns replacement lifecycle wiring. |
-| Starter | `check`: `lint` (`cs:check` + `standards:full`), PHPUnit and `analyze`; `format` runs `cs` then `standards:fix`; `pnpm check` includes generated-asset freshness | Shared WordPress profile plus project release-workflow/archive contract, built archive and installed WordPress activation; terminal `quality`. See [formatter investigation](STARTER_PHP_FORMATTER_AUDIT.md). |
+| Updater Support | `check`: strict validation, parser, `standards`, `analyze`, `test` aggregates archive-safety, owned-method regression and release-workflow tests; formatter `standards:fix` | Shared 8.2/8.5 profile and terminal `quality`; no certified host needed. |
+| Migrator | `check`: parser, `standards`, PHPUnit and release-candidate contract; `pnpm check` covers shipped CSS | Single runtime archive and certified Core API proof. Merged #41 supplies Profile B wiring. Workflow retains non-archive PHP gates and a PR/dispatch terminal `quality`; do not recreate retired lifecycle machinery. |
+| Starter | `check`: `lint:syntax`, `standards`, `test` (unit + quality contract), `analyze`; `standards:fix` is PHPCBF; build wrapper accepts PHPCBF exit 1; `pnpm check` includes generated-asset freshness | Shared WordPress profile plus project release-workflow/archive contract, built archive and installed WordPress activation; terminal `quality`. See [formatter investigation](STARTER_PHP_FORMATTER_AUDIT.md). |
 | Admin Shell | `check`: PHPUnit render/sync contracts + `phpcs`; no Node/frontend command contract | Shared PHP floor/current validation and syntax; terminal `quality`. Preserve consumer-owned resource/provenance and distribution boundaries. |
 
 An additional workflow existing does not establish that branch protection
@@ -170,81 +176,105 @@ projects; retain their declared environment requirements and existing placement.
 ## Shared-package reconciliation and suite decisions
 
 [`ran-coding-standards#1`](https://github.com/RocketsAreNostalgic/ran-coding-standards/issues/1)
-is an existing implementation/release tracker, not a request to create another
-standards package. Implementation PR #2 merged on 11 September. Its current
-default revision is the same `0b03e61a...` candidate locked by the eight
-consumers above. The package exports all four standards with the intended
-inheritance; plugin/library profiles are currently thin named extension points.
-It has a tracked lock, strict validation, structural/consumer-boundary checks,
-positive and negative syntax/compatibility/prefix fixtures, stable-root install
-proof and a separate fresh WordPress-consumer install in CI.
+tracks the existing package. [v1.0.0](https://github.com/RocketsAreNostalgic/ran-coding-standards/releases/tag/v1.0.0)
+was published on 23 September at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7`.
+Shared Profile A / Release Please owns its lifecycle; do not recreate the
+package or manually tag a replacement. The release retains the four baseline
+profiles and adds opt-in `RANOwnedMethods`. Assignment/array alignment errors
+remain blocking even with warnings hidden. Package availability, consumer
+version adoption and owned-method activation are three separate facts.
 
-[Package CI run 34622592664](https://github.com/RocketsAreNostalgic/ran-coding-standards/actions/runs/34622592664)
-succeeded on that exact default candidate. This is observed historical CI,
-not a rerun. The package still has no published GitHub release at audit time.
-Its consumer-install fixture's synthetic `1.0.0` version and README `^1.0`
-example are not evidence of a released version.
-
-Keep #1 open for explicit reference-consumer/release-evidence reconciliation and
-the owner-controlled release decision. Do not recreate completed package work,
-reopen completed organisation migration #7, or treat the newer command-policy
-programme as a prerequisite for proving the older shared ancestry existed.
-Current Starter/Core locks prove consumption, not full acceptance of the new
-command and formatter contract.
-
-| Existing convention | Consumers / disposition |
+| Current naming/condition disposition | Consumers |
 | --- | --- |
-| camelCase methods/variables and non-Yoda accommodation | Core, Bitbucket, GitHub Provider, Branch Updater, Release Updater, Migrator: local, documented exceptions |
-| camelCase accommodation while retaining inherited Yoda rules | Updater Support: actual divergence; no silent condition-style rewrite |
-| Shared default naming/condition rules plus stronger docs/generic checks | Starter: retain its clean-reference identity and local exceptions |
-| Direct WordPress-Extra on resources; tools/tests excluded from those style rules | Admin Shell: build-time role requires a deliberate scope decision |
+| Broad owned-method/variable and Yoda suppressions remain | Core, Bitbucket, GitHub Provider, Branch Updater, Release Updater |
+| Method/variable suppressions remain; Yoda exemption removed | Migrator |
+| Pilot names/locals migrated; inherited WordPress variable/Yoda rules retained; additional owned-method check active | Updater Support |
+| PHPCS/PHPCBF only, explicit blocking alignment and stronger docs/generic checks; owned-method overlay not selected | Starter |
+| Direct WordPress-Extra on resources, with tools/tests outside those style rules | Admin Shell |
 
-No suite overlay or blanket suppression is approved by this matrix. The owner
-has settled the forward-looking Booster naming direction: RAN-owned methods,
-properties, parameters and local variables migrate to WordPress snake_case,
-including public members, with only concrete external-signature exceptions.
-The remaining condition-style/Yoda disposition for Updater Support stays open
-under #66. Keep identity, runtime support, bootstrap/native primitive, security
-and fixture exceptions local. A rule shared by six packages is evidence to
-review, not authority to weaken the seventh.
+These suppressions describe migration debt, not newly approved permanent
+exceptions. The normative policy requires WordPress snake_case for RAN-owned
+methods, properties, parameters and locals, including public beta APIs.
+Support needs no new Yoda waiver. Migrator's landed Yoda cleanup must not be
+recreated. Condition-style convergence for the still-suppressed consumers
+remains separate reviewed work. Preserve concrete external signatures and
+local identity/runtime/security/fixture exceptions.
 
-The existing shared-package README owns the conservative PHPCS 3/WPCS 3 version
-boundary. Keep reviewed root PHPCompatibility alpha requirements until an
-equivalent consumer installation is proved. A versioned package release,
-PHPCS-generation change or analysis upgrade requires its own reviewed lockfile
-change and applicable Starter/Core evidence. Exact PHPStan patch equality is
-not a substitute for comparable coverage and enforcement. A broader upgrade
-cadence, suite overlay and drift automation remain open decisions under #66.
+WPCS 3.4.1 skips method declarations in derived/implementing classes. Support
+now tests the additional enforcement explicitly; neither a green WPCS check
+nor merely locking v1.0.0 proves that boundary in other consumers. Do not
+activate the overlay across unresolved connected APIs in a documentation PR.
+
+The shared-package README retains the PHPCS 3/WPCS 3 boundary and explicit
+root PHPCompatibility alpha requirements. Published-package adoption uses
+reviewed installable lock updates; a PHPCS generation or analysis upgrade needs
+separate qualification. Patch-version equality does not prove equal coverage.
+Broader upgrade cadence and proportionate drift validation remain under #66.
 
 ## Execution evidence and remaining acceptance
 
-The command-adoption PRs below passed their required CI on these exact heads.
-They were open at this snapshot; that evidence does not describe default-branch
-adoption or approval of this documentation.
+The following existing runs were read from GitHub at the source refresh; this
+documentation work did not rerun the estate. Each run reports success on the
+exact audited default revision above. Configured lifecycle/advisory/conditional
+gates retain their meaning; a successful workflow is not proof that every
+conditional lane executed or that unadopted commands have landed.
 
-| PR | Tested head | Observed evidence |
-| --- | --- | --- |
-| [Updater Support #36](https://github.com/RocketsAreNostalgic/ran-updater-support/pull/36) | `035d5cca54e1be421d25581747a21d5988ef4ead` | [CI 35749459276](https://github.com/RocketsAreNostalgic/ran-updater-support/actions/runs/35749459276): PHP 8.2/8.5, terminal quality |
-| [Branch Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/60) | `71e6f9787e1d52a2c402cc3775f48e11da128d2c` | [CI 35749475312](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/35749475312): PHP 8.2/8.5, installed consumer/classification, terminal quality |
-| [GitHub Provider #26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26) | `c1a661e7c9ddb6ef2df982bdec2661f1ef1e7b68` | [CI 35749478950](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/35749478950): PHP 8.2/8.5, host contract/implementation, classification, terminal quality |
+| Repository | Observed main-run evidence |
+| --- | --- |
+| Core | [Quality 35840821194](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/35840821194) |
+| Bitbucket | [Quality 35773826154](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/35773826154) and separate [installed proof 35773825376](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/35773825376) |
+| GitHub Provider | [CI 35785696579](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/35785696579); canonical-command #26 is still open |
+| Branch Updater | [CI 35893102918](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/35893102918) |
+| Release Updater | [CI 35893108548](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/35893108548) |
+| Updater Support | [CI 35933082000](https://github.com/RocketsAreNostalgic/ran-updater-support/actions/runs/35933082000) and [Release Please 35933221013](https://github.com/RocketsAreNostalgic/ran-updater-support/actions/runs/35933221013) |
+| Migrator | [Quality 35785701037](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35785701037) |
+| Starter | [Quality 35886298027](https://github.com/RocketsAreNostalgic/ran-starter-plugin/actions/runs/35886298027); same-SHA cancelled run is not the passing evidence |
+| Admin Shell | No workflow run returned for the exact default SHA; PR-only caller. No new execution proof claimed. |
 
-Migrator's active Profile B PR #41 was separately observed at
-`659199735d83eed1306fd8fc56ccc92340b2961a`. Re-audit its merged result before
-applying #42; default-branch publisher tests listed above are not instructions
-to restore retired machinery. The same rule applies to subsequent coordinated
-Profile B consumers.
+### Landed slices and reference limitations
 
-Starter now has a bounded [runtime formatter comparison](STARTER_PHP_FORMATTER_AUDIT.md)
-on PHP 8.4.23 at the recorded revision. Its configured one-file fixer check and
-42-file PHPCS check pass, but negative fixtures demonstrate that the two gates
-do not enforce alignment equally. This is formatter evidence only; it is not
-a complete Starter install, application test, or new CI proof.
+- Support command #36 and Branch command #60 are merged. Provider
+  [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26)
+  remains open at `c1a661e7c9ddb6ef2df982bdec2661f1ef1e7b68`; its historical green
+  CI is not default-branch adoption or current-base qualification.
+- Starter [#25](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/25)
+  merged at `4f712793653a338416046deae9a2146b745cf781`: PHP-CS-Fixer/config/callers
+  removed, alignment retained in PHPCS, canonical commands and a negative/fix/
+  repeatability contract added. Published-standard #27 then merged at the
+  audited head. The [formatter audit](STARTER_PHP_FORMATTER_AUDIT.md) is historical
+  rationale, not instructions to redo this consolidation. PHP 8.5 execution
+  remains absent from Starter's inspected caller.
+- Support #39, Branch #63 and Release #65 adopted real coding-standards v1.0.0.
+  Support's subsequent [#40](https://github.com/RocketsAreNostalgic/ran-updater-support/pull/40)
+  enables owned-method enforcement: reviewed `f5cc734f61f8c5d7dd371fe54cf4357efa4d6a5e`,
+  merged `6a9cdbc9eb1bbecbafcbe16da931c98928d035e8`, identical tree
+  `2bc41f8d75a4bdcb4ae91347a10a82486287247d`. Exact-head native PHP 8.2/8.5,
+  code/security reviews and post-merge CI passed. Three positive/negative
+  regressions cover inherited/implementing owned methods and narrow external
+  signatures. Removing the opt-in fails the tests; two PHPCBF passes leave PHP
+  byte-stable. No production exceptions were introduced.
+- Support's naming pilot and direct-consumer adoption have shipped as Support
+  beta.4, Branch beta.6 and Release beta.8. These are runtime-adoption evidence
+  recorded in the owning issues, distinct from subsequent development-tool
+  adoption and not permission to alter Core pins.
+- Migrator Profile B #41 merged at `23ac6e35e8a521bfc5c4b2bc7a53698ec7df36c2`.
+  Its refreshed main still has the standalone `find -exec` failure-propagation
+  defect and no PHPStan gate; #42 owns these separate quality gaps.
+- [Published-package reference proof](https://github.com/RocketsAreNostalgic/ran-coding-standards/issues/1#issuecomment-5796195966)
+  records full Starter Composer/frontend checks, and isolated Core constituent
+  PHP proof at `000e1a55e8de95e381d6f4b9b3a98971119f336a`. Core's original
+  aggregate timed out in PHPCS; same-rule parallel PHPCS and normal-mode
+  analysis subsequently passed. This is not a successful original aggregate,
+  frontend/installed qualification, or a Core dependency adoption. Core still
+  locks the older shared candidate. The live-main Quality run above qualifies
+  that committed composition, not the isolated published-package experiment.
 
-Remaining acceptance is source-specific: complete the canonical commands,
-repair parser failure/discovery handling, implement and validate Starter's approved
-PHPCS/PHPCBF consolidation (including retained alignment behavior) and remove PHP-CS-Fixer,
-add evidenced analysis for Migrator/Admin Shell, expand
-coverage and review advisory enforcement separately, settle suite style and
-upgrade/drift policy, and reconcile exact reviewed heads after merges.
-Workbench and fixtures retain their purpose-based exemptions; Plugin Library
-and inactive repositories retain their separate recorded dispositions.
+Remaining work: finish unlanded command surfaces (including Provider #26 and
+Release Updater), parser failure/discovery handling, separately scoped analysis
+adoption/coverage and advisory decisions, remaining shared-package consumers,
+and naming/condition enforcement. #66 also retains upgrade/drift policy,
+reference acceptance and contributor-documentation coordination with #62.
+Core [#54](https://github.com/RocketsAreNostalgic/.github/issues/54) remains open
+without an explicit handoff at refresh; connected API/cohort work stays reserved.
+This matrix neither transfers those claims nor closes broader quality children.
+Workbench/fixture exemptions and deferred/inactive repository dispositions remain.
