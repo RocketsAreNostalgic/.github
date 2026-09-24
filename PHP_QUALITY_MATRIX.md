@@ -58,7 +58,15 @@ its older full matrix row below is deliberately retained as a dated audit.
   drift validation and contributor coordination with #62. Refresh ownership
   before implementation; do not churn Migrator's candidate during site proof.
 
-## 23 September source snapshot: revisions and support contracts
+## Historical audit — 23 September 2026
+
+All remaining sections through the end of this document are historical evidence
+at the linked 23 September revisions. Present-tense statuses and remaining-work
+lists below describe that audit date, not current instructions or ownership.
+The 24 September checkpoint above supersedes its command and parser statuses;
+refresh the owning issues before selecting work. Do not restart delivered slices.
+
+### Revisions and support contracts
 
 | Repository / quality issue | Audited default revision | Declared PHP / WordPress | Configured PHP CI lanes |
 | --- | --- | --- | --- |
@@ -76,7 +84,7 @@ Declared support and executed versions are different evidence. The table does
 not turn a missing CI version into an approved support exception, or impose a
 WordPress runtime dependency on a host-neutral library.
 
-## Locked tools
+### Locked tools
 
 The eight shared-profile consumers lock PHPCS **3.13.6**, WPCS **3.4.1**,
 `phpcompatibility/php-compatibility` **10.0.0-alpha2**,
@@ -106,7 +114,7 @@ package nor the PHPCompatibilityWP/Paragonie packages in its lock.
 | Starter | 2.2.13 | 2.0.4 | 9.6.35 | PHPCBF only; PHP-CS-Fixer removed |
 | Admin Shell | None configured | None | 9.6.36 | No focused fixer script exposed |
 
-## Source coverage and analysis enforcement
+### Source coverage and analysis enforcement
 
 Repository-wide PHPCS selections below retain their actual vendor, generated,
 cache and local exclusions; they do not mean every file is checked under every
@@ -149,7 +157,7 @@ src/Provider/GitHub/ProspectiveReleaseArtifact.php
 src/Provider/GitHub/ProspectiveReleaseInspection.php
 ```
 
-### Independent syntax surfaces
+#### Independent syntax surfaces
 
 | Repository | Default-branch syntax path | Adoption consideration |
 | --- | --- | --- |
@@ -168,7 +176,7 @@ enumeration uses process substitution; successful child checks alone are not
 proof that discovery-error handling meets the new command contract. Preserve
 those checks and assess discovery failure separately when hardening shared CI.
 
-## Ordinary commands and additional required evidence
+### Ordinary commands and additional required evidence
 
 All commands in this table are read from the exact default-branch revisions
 above. Support, Branch and Starter have adopted the canonical surfaces;
@@ -190,7 +198,7 @@ An additional workflow existing does not establish that branch protection
 requires it. This audit traces configured commands and dependencies; it does
 not certify repository rulesets or organisation enforcement activation.
 
-### Certified hosts
+#### Certified hosts
 
 - **GitHub Provider:** Core `ffc11fc8e40618624a785b7fca5193029c6d492e`, released
   `v1.0.0-beta.29`, Provider API 11. Its workflow verifies exact source and host
@@ -209,7 +217,7 @@ not certify repository rulesets or organisation enforcement activation.
   ordinary tests at an arbitrary sibling or update its certification for naming
   symmetry.
 
-### Live audit and dependency resolution
+#### Live audit and dependency resolution
 
 Release Updater's `audit:composer` invokes `composer audit --locked
 --no-interaction` inside `check`. Keep its existing failures blocking. Advisory
@@ -219,7 +227,7 @@ not invoke a live Composer audit. This inventory does not add one implicitly.
 No-dev consumer proofs also run Composer resolution in isolated temporary
 projects; retain their declared environment requirements and existing placement.
 
-## Shared-package reconciliation and suite decisions
+### Shared-package reconciliation and suite decisions
 
 [`ran-coding-standards#1`](https://github.com/RocketsAreNostalgic/ran-coding-standards/issues/1)
 tracks the existing package. [v1.0.0](https://github.com/RocketsAreNostalgic/ran-coding-standards/releases/tag/v1.0.0)
@@ -257,7 +265,7 @@ reviewed installable lock updates; a PHPCS generation or analysis upgrade needs
 separate qualification. Patch-version equality does not prove equal coverage.
 Broader upgrade cadence and proportionate drift validation remain under #66.
 
-## Execution evidence and remaining acceptance
+### Execution evidence and remaining acceptance
 
 The following existing runs were read from GitHub at the source refresh; this
 documentation work did not rerun the estate. Each run reports success on the
@@ -277,7 +285,7 @@ conditional lane executed or that unadopted commands have landed.
 | Starter | [Quality 35886298027](https://github.com/RocketsAreNostalgic/ran-starter-plugin/actions/runs/35886298027); same-SHA cancelled run is not the passing evidence |
 | Admin Shell | No workflow run returned for the exact default SHA; PR-only caller. No new execution proof claimed. |
 
-### Landed slices and reference limitations
+#### Landed slices and reference limitations
 
 - Support command #36 and Branch command #60 are merged. Provider
   [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26)
