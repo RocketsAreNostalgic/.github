@@ -13,6 +13,40 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Release Updater coverage closeout checkpoint — 24 September 2026
+
+This package-only checkpoint supersedes the Release Updater coverage and next-slice
+statements below. Other package rows remain dated evidence, not a fresh estate audit.
+
+| Evidence | Verified disposition |
+| --- | --- |
+| Default revision | `65b31c0aca26363a87180fa5f9ac7081fd661eb9`, generated-helper [#76](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/76) merged; tree `d61bd10d7fd69a74768d2440dee3088c3f6faea5` matches its reviewed head. |
+| Direct analysis | All 36 shipped PHP files: `bootstrap.php`, `runtime.php` and 34 files under `src/`. PHPStan 2.2.13, WordPress extension 2.0.4, blocking level 8, no baseline. `scanDirectories` provides discovery in addition to explicit analysis roots. |
+| Narrow PHPStan exceptions | Five declaration-local `property.unusedType` exceptions for resolver Reflection seams, one `method.unused` for the broker Reflection seam, one `phpstanWP.wpConstant.fetch` for sealed direct-filesystem policy. Bodies remain analysed. |
+| Shared/generated ownership | coding-standards v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7`; updater-support beta.4 at `357db930b407941bd19a9e890c925d3d16ae9b15`. ArchiveSafety is directly analysed but retains its generated-code PHPCS exclusion and mandatory namespace-only parity check. |
+| Commands and runtime | Six canonical commands retained; `check` still includes strict metadata, generated parity, live locked audit, syntax, PHPCS, analysis, unit and no-dev tests. PHPCS 3.13.6 / WPCS 3.4.1; PHP `^8.2`, WordPress floor 6.5. |
+| Exact-main execution | [CI 36070662579](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36070662579) and [Release Please 36070886402](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36070886402) passed. Native PHP 8.2/8.5, WordPress 6.5/7.1, MySQL CAS, Windows and JavaScript still feed terminal quality. |
+| Review and local limits | #76 head `3240ea32d38efa03ac10c5fa0111d7948a2aa0dc` received separate code/security reviews with no Codex findings. Copilot listed no findings despite its recommendation label. Local suite: 467 tests / 24,695 assertions, two portable-PHP `GLOB_BRACE` errors; native CI passed. Sequential no-dev proof passed after a concurrent fixture-copy race. |
+
+The coverage sequence (#67–#69, #71–#76) is delivered; do not restart that
+inventory or treat symbol discovery as the remaining state. Full standards/naming
+acceptance is still open: method/variable/Yoda suppressions remain, reserved-keyword
+parameter checks are disabled, and `RANOwnedMethods` is not active. Security,
+bootstrap and fixture exceptions must remain distinct from this migration debt.
+PHPCS/PHPCBF scope matches, but matching configuration alone is not final
+negative-control/repeated-fix evidence for the remaining naming scope.
+
+Core [#54](https://github.com/RocketsAreNostalgic/.github/issues/54) now records
+completed beta.30 release proof and an explicit handoff to Core #167. Its older
+open/no-handoff status below is historical. A connected naming/API cohort still
+needs fresh ownership, caller and dependency/host composition evidence.
+
+Release Updater [#60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
+remains open for residual acceptance and matrix landing. Release PR #70 is held
+by the owner until the agreed migration is complete; successful coverage CI does
+not authorize a release. This checkpoint makes no new claim about Migrator's
+current release candidate.
+
 ## 24 September 2026 landed-slice checkpoint
 
 This checkpoint supersedes the older pending-command and syntax-defect statuses
