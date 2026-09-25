@@ -188,7 +188,7 @@ for (const [name, releaseJson, expected] of booleanCases) {
 
 // Exercise the actual first promotion lookup. A draft is readable by ID while
 // the tag endpoint returns 404, matching the observed production failure.
-const promotion = workflow.slice(workflow.indexOf('      - name: Verify and promote exact tested assets'));
+const promotion = workflow.slice(workflow.indexOf('      - name: Verify and promote exact tested assets'), workflow.indexOf('      - name: Explain Profile B outcome'));
 const lookupStart = promotion.indexOf('          release_json=');
 const lookupEnd = promotion.indexOf('          remote_names=', lookupStart);
 assert.ok(lookupStart >= 0 && lookupEnd > lookupStart);
@@ -226,6 +226,55 @@ ${lookup}`], {
   assert.equal(result.status, expectedStatus, `${name}: ${result.stderr}`);
 }
 
+// Execute actual resolution for retries, including a previously published mutable
+// release. Evidence must be identity-bound; malformed/unavailable facts stay unknown.
+const resolution = workflow.slice(workflow.indexOf('      - name: Resolve exact Release Please publication state'),
+  workflow.indexOf('      - name: Download exact Quality artifact'));
+const resolutionScript = resolution.slice(resolution.indexOf('        run: |') + '        run: |'.length)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+assert.ok(workflow.includes('steps.promotion.outputs.publication-outcome || steps.publication.outputs.publication-outcome'));
+for (const [name, fixture, status, mutable] of [
+  ['retry mutable release', { ...exactRelease, draft: false, immutable: false }, 1, true],
+  ['retry immutable release', { ...exactRelease, draft: false, immutable: true }, 0, false],
+  ['draft remains draft', { ...exactRelease, immutable: false }, 0, false],
+  ['immutable unavailable', { ...exactRelease, draft: false }, 1, false],
+  ['immutable string false', { ...exactRelease, draft: false, immutable: 'false' }, 1, false],
+  ['draft state unknown', { ...exactRelease, draft: null, immutable: false }, 1, false],
+  ['invalid release identity', { ...exactRelease, id: '1\n::error::bad', draft: false, immutable: false }, 1, false],
+  ['missing tag identity', { ...exactRelease, tag_name: null, draft: false, immutable: false }, 1, false],
+  ['empty tag identity', { ...exactRelease, tag_name: '', draft: false, immutable: false }, 1, false],
+  ['other revision', { ...exactRelease, target_commitish: 'b'.repeat(40), draft: false, immutable: false }, 0, false],
+]) {
+  const dir = mkdtempSync(join(tmpdir(), 'profile-b-resolution-'));
+  try {
+    const output = join(dir, 'outputs');
+    writeFileSync(output, '');
+    const result = spawnSync('bash', ['-c', `
+gh() {
+  if [[ "$*" == 'api --paginate --slurp repos/example/repo/releases?per_page=100' ]]; then
+    printf '%s\\n' "$RAN_TEST_PAGES"
+  elif [[ "$*" == 'api repos/example/repo/git/ref/tags/v1.3.3' ]]; then
+    printf '%s\\n' "$RAN_TEST_TAG"
+  else
+    echo 'Unexpected API call' >&2
+    return 1
+  fi
+}
+${resolutionScript}`], { encoding: 'utf8', timeout: 10000, env: {
+      ...process.env, GITHUB_OUTPUT: output, GITHUB_REPOSITORY: 'example/repo',
+      RAN_ADMITTED_SHA: 'a'.repeat(40), RAN_RELEASE_CREATED: 'false',
+      RAN_RELEASE_SHA: '', RAN_RELEASE_TAG: '',
+      RAN_TEST_PAGES: JSON.stringify([[fixture]]),
+      RAN_TEST_TAG: JSON.stringify({ object: { type: 'commit', sha: 'a'.repeat(40) } }),
+    } });
+    assert.ifError(result.error);
+    assert.equal(result.status, status, name + ': ' + result.stderr);
+    const outputs = readFileSync(output, 'utf8');
+    assert.equal(outputs.includes('publication-outcome=published-mutable'), mutable, name);
+    if (mutable) assert.equal(outputs, 'publication-outcome=published-mutable\nrelease-id=394078148\n');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}
+
 // Run the entire promotion step against a local API simulator, including raw
 // uploads, publication and immutable readback. Unexpected/tag-based calls fail.
 const promotionScript = promotion.slice(promotion.indexOf('        run: |') + '        run: |'.length)
@@ -233,7 +282,7 @@ const promotionScript = promotion.slice(promotion.indexOf('        run: |') + ' 
 for (const scenario of ['stable', 'prerelease', 'published', 'deleted-before-upload',
   'drift-id', 'drift-tag', 'drift-target', 'drift-draft', 'drift-draft-null',
   'drift-stable-to-prerelease', 'drift-prerelease-to-stable',
-  'early-stable-to-prerelease', 'early-prerelease-to-stable']) {
+  'early-stable-to-prerelease', 'early-prerelease-to-stable', 'mutable', 'lost-patch-ack', 'readback-unavailable', 'readback-wrong-identity']) {
   const dir = mkdtempSync(join(tmpdir(), 'profile-b-promotion-'));
   try {
     mkdirSync(join(dir, 'promotion'));
@@ -274,6 +323,8 @@ const state = JSON.parse(fs.readFileSync('state.json'));
 const api = 'repos/example/repo/releases/394078148';
 if (method === 'GET') {
   assert.equal(endpoint, api);
+  if (calls.some(c => c.method === 'PATCH') && process.env.RAN_TEST_SCENARIO === 'readback-unavailable') process.exit(1);
+  if (calls.some(c => c.method === 'PATCH') && process.env.RAN_TEST_SCENARIO === 'readback-wrong-identity') { state.id = 9; state.immutable = false; }
   if (calls.filter(c => c.method === 'GET').length === 1 && process.env.RAN_TEST_SCENARIO.startsWith('early-')) {
     state.prerelease = !state.prerelease;
   }
@@ -302,7 +353,8 @@ if (method === 'GET') {
 } else if (method === 'PATCH') {
   assert.equal(endpoint, api); assert.equal(field, 'draft=false');
   assert.equal(state.assets.length, 2);
-  state.draft = false; state.immutable = true;
+  state.draft = false; state.immutable = process.env.RAN_TEST_SCENARIO !== 'mutable';
+  if (process.env.RAN_TEST_SCENARIO === 'lost-patch-ack') { fs.writeFileSync('state.json', JSON.stringify(state)); process.exit(1); }
 } else throw Error('unexpected API mutation');
 fs.writeFileSync('state.json', JSON.stringify(state));
 console.log(JSON.stringify(state));
@@ -310,6 +362,7 @@ console.log(JSON.stringify(state));
     const result = spawnSync('bash', ['-c', promotionScript], {
       cwd: dir, encoding: 'utf8', timeout: 20000,
       env: { ...process.env, PATH: dir + ':' + process.env.PATH,
+        GITHUB_OUTPUT: join(dir, 'outputs'),
         GITHUB_REPOSITORY: 'example/repo', RAN_RELEASE_ID: '394078148',
         RAN_RELEASE_TAG: 'v1.3.3', RAN_ADMITTED_SHA: 'a'.repeat(40),
         RAN_RELEASE_PRERELEASE: String(originalPrerelease),
@@ -320,7 +373,13 @@ console.log(JSON.stringify(state));
     const calls = JSON.parse(readFileSync(join(dir, 'calls.json')));
     const mutations = calls.filter(c => c.method !== 'GET');
     const state = JSON.parse(readFileSync(join(dir, 'state.json')));
-    if (scenario === 'deleted-before-upload') {
+    const outputs = readFileSync(join(dir, 'outputs'), 'utf8');
+    if (['mutable', 'lost-patch-ack', 'readback-unavailable', 'readback-wrong-identity'].includes(scenario)) {
+      assert.notEqual(result.status, 0, scenario + ': failed publication must stay failed');
+      assert.equal(state.draft, false, scenario + ': publication already happened');
+      assert.ok(outputs.includes('publication-outcome=' + (scenario === 'mutable' ? 'published-mutable' : 'unknown')), scenario + ': truthful outcome');
+      assert.deepEqual(mutations.map(c => c.method), ['POST', 'POST', 'PATCH']);
+    } else if (scenario === 'deleted-before-upload') {
       assert.notEqual(result.status, 0);
       assert.equal(state.assets.length, 0);
       assert.equal(state.draft, true);
@@ -353,4 +412,39 @@ assert.ok(docs.includes('Administration-read'));
 assert.ok(docs.includes('HTTP 403'));
 assert.ok(docs.includes('Missing or expired Quality artifact'));
 
+// Execute reporting without network; hostile identifiers must not inject annotations/Markdown.
+const reporting = workflow.slice(workflow.indexOf('      - name: Explain Profile B outcome'));
+const reportingScript = reporting.slice(reporting.indexOf('        run: |') + '        run: |'.length)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+for (const [stage, publication, expected] of [
+  ['promotion', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
+  ['resolution', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
+  ['promotion', 'unknown', 'Publication outcome is unknown'],
+  ['release-please', '', 'A 403 does not identify a disabled setting'],
+  ['current-main', '', 'stale revision is normal non-publication'],
+  ['artifact', '', 'Do not rebuild substitute bytes'],
+  ['quality', '', 'do not bypass required checks'],
+  ['none', '', 'No promotion required'],
+]) {
+  const dir = mkdtempSync(join(tmpdir(), 'profile-b-diagnostics-'));
+  try {
+    const env = { ...process.env, GITHUB_STEP_SUMMARY: join(dir, 'summary'),
+      GITHUB_REPOSITORY: 'example/repo\n::error::injected<>&`', RAN_SHA: 'a'.repeat(40),
+      RAN_RELEASE_ID: '123', RAN_QUALITY_RUN: '42', RAN_QUALITY_ATTEMPT: '2', RAN_PHASE: 'immutable-readback',
+      RAN_PUBLICATION: publication, RAN_REQUIRED: stage === 'none' ? 'false' : 'true',
+      RAN_MAIN: 'success', RAN_CONFIG: 'success', RAN_PLEASE: 'success', RAN_QUALITY: 'success',
+      RAN_RESOLVE: 'success', RAN_ARTIFACT: 'success', RAN_PROMOTION: 'success' };
+    const key = { resolution: 'RAN_RESOLVE', promotion: 'RAN_PROMOTION', 'release-please': 'RAN_PLEASE', 'current-main': 'RAN_MAIN', artifact: 'RAN_ARTIFACT', quality: 'RAN_QUALITY' }[stage];
+    if (key) env[key] = 'failure';
+    const result = spawnSync('bash', ['-c', reportingScript], { encoding: 'utf8', env, timeout: 10000 });
+    assert.ifError(result.error);
+    assert.equal(result.status, 0, result.stderr);
+    const summary = readFileSync(join(dir, 'summary'), 'utf8');
+    assert.ok(summary.includes(expected), stage + ': ' + summary);
+    assert.ok(!summary.includes('::error::injected'));
+    assert.ok(!summary.includes('<>&'));
+    assert.equal(result.stdout.includes('::error title=Profile B failure::'), stage !== 'none');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}
+assert.ok(!workflow.includes('continue-on-error'));
 console.log('Profile B release contract OK');
