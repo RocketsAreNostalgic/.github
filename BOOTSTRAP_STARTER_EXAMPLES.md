@@ -1,11 +1,12 @@
 # Initial release starter: concrete G0 examples
 
-**PROPOSED documentation, not deployed templates or execution evidence.** Read
-[the contract](BOOTSTRAP_STARTER_CONTRACT.md) with this file. G0 reviews the
-rendered workflow/configuration and the two local adapter interfaces before
-implementation; producer B must still implement/test the adapters and materialize
-the actual template ZIP. These examples are not a claim that an executable
-producer/consumer pair already exists.
+**Frozen G0 examples, not deployed templates or execution evidence.** Read
+[the contract](BOOTSTRAP_STARTER_CONTRACT.md) with this file. G0 was accepted in
+[#84](https://github.com/RocketsAreNostalgic/.github/pull/84); producer B must still
+implement/test the adapters and materialize the qualified template ZIP. These
+examples do not claim an executable producer/consumer pair already exists. Later
+owner decisions distinguish proposal delivery from owner-managed execution
+configuration without changing this workflow/file-map contract.
 
 The fictional target is `example/acorn-plugin`, root plugin `acorn-plugin.php`,
 slug `acorn-plugin`, version `0.1.0`. The forty `1` characters in `bootstrap-sha`
@@ -342,11 +343,20 @@ Created once by Booster from:
 
 You own these files after setup. Booster does not update or repair them.
 
-Before merging:
+Setup PR created does not mean release automation is ready. You may receive this
+proposal before configuring execution settings; Booster does not query repository
+or organization immutability settings or require Administration permission.
+
+Before activating workflows (recommended before merging):
 - review every proposed file and the runtime allowlist;
-- confirm main, Actions/reusable-workflow access, required token permissions,
-  PR creation, immutable releases and your protected-merge checks;
-- check the PR's read-only Quality result and the subsequent main run.
+- configure Actions/reusable-workflow access, runner availability, runtime token
+  permissions, bot PR creation, immutable releases and protected-merge checks;
+- distinguish the site-controlled setup credential from runtime GITHUB_TOKEN;
+- review the PR's read-only Quality execution: a draft PR can run before merge;
+- review what merging activates: main Quality and the shared release workflow;
+- check the PR Quality result and subsequent main run when execution is available.
+Administrative settings are owner-managed and not checked by Booster. Publication
+remains strictly immutable; this recipe has no permissive publication mode.
 
 For a release:
 - use Conventional Commits and review Release Please's version/changelog PR;
@@ -357,6 +367,21 @@ For a release:
 Keep the allowlist current when adding runtime files. Add product-specific
 checks deliberately; complex builds need a maintainer-owned release setup.
 Never overwrite a published release or move its tag to repair a failure.
+
+If no workflow runs, inspect Actions/workflow-policy acceptance and runner/account
+availability in GitHub; in-job diagnostics cannot run before a job starts. For an
+executing failure, use its stage/outcome and the shared Profile B publication and
+retry guidance. A 403 alone does not identify a disabled setting or prove that no
+branch, tag, draft or asset was created.
+Publication precedes immutable readback. A confirmed public mutable release stays
+public despite a red job; an inconclusive readback leaves the outcome unknown.
+Enabling immutability and blindly rerunning cannot qualify that old release.
+Inspect actual Release Please version/manifest/lifecycle and release/tag/asset state
+before taking a maintainer-owned next-version path. No automatic rollback, label
+repair, asset replacement or tag movement is supplied. Respect original event/SHA,
+exact run/attempt artifact custody and current-main admission on retry. Manual
+Quality dispatch does not admit publication. An open release PR or no releasable
+change can be ordinary non-publication; do not infer failure merely from no release.
 
 Security and maintenance:
 - use the template pack repository SECURITY.md / private reporting route;
@@ -374,7 +399,10 @@ There is no background scan, notification guarantee or repair service.
 ```
 
 The actual output must contain concrete official reporting/announcement links,
-not these shorthand descriptions. B updates its outdated managed-update security
+not these shorthand descriptions. Link publication/retry guidance to the existing
+[shared Profile B contract](RELEASE_PROFILE_B.md) using a concrete canonical URL in
+generated output; keep the setup PR and handoff usable without Booster or a
+successful Actions run. B updates its outdated managed-update security
 policy accordingly; the coordinator verifies the reporting/subscription route
 before public feature acceptance. This process applies in production regardless
 of user count. No per-site tracking, telemetry, advisory database, scheduler or
@@ -413,15 +441,20 @@ These steps belong to the integration/test harness, not generated project files:
 6. Verify PR execution stays read-only before authorizing fixture merge. Then
    prove main Quality -> RP proposal -> exact candidate Quality -> separately
    authorized release merge -> fresh main Quality -> immutable ZIP publication.
+   Prove the actual protected release PR can satisfy its required checks at the
+   exact head/event/check source, distinguishing branch protection from rulesets
+   and unsupported merge queues; green dispatch alone is not that evidence.
    Install/read back the exact plugin/theme asset. Confirm maintenance is now
    target-owned and Booster never overwrites later customizations.
 7. Include a repository whose settings do not inherit RAN organization defaults:
-   missing prerequisites must be named, not assumed or silently configured.
+   create the setup PR with incomplete execution settings but valid write
+   authority, then qualify execution after owner configuration. Missing execution
+   prerequisites must be named, not assumed, queried by an admin probe or silently
+   configured. Missing setup write authority still prevents the operation.
    Record actual target IDs/SHAs/assets/results without secrets. Unavailable access
    is an explicit acceptance gap.
 
 The tests may use the two existing disposable sites, but their addresses and safe
-operation boundaries have not been supplied by this proposal. No new production
-releases are required solely to exercise a hypothetical update service. G0 remains
-under review until #81 records acceptance; A/B/C do not gain merge/publication/site
-authority from these examples.
+operation boundaries have not been supplied by these examples. No new production
+releases are required solely to exercise a hypothetical update service. G0 is frozen;
+A/B/C do not gain merge/publication/site authority from these examples.

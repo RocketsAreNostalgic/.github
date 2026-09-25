@@ -1,11 +1,17 @@
-# Initial release starter: G0 contract proposal
+# Initial release starter: frozen G0 contract
 
-**Status: PROPOSED, not implemented or accepted.** This document and
-[the generated examples](BOOTSTRAP_STARTER_EXAMPLES.md) are the documentation-only
-G0 deliverable for [#81](https://github.com/RocketsAreNostalgic/.github/issues/81),
-within #47/#44. The coordinator records the reviewed contract revision and G0
-acceptance in #81 before releasing implementation agents. Opening or merging a
-documentation PR alone does not qualify product code, a release or a deployment.
+**Status: G0 frozen; implementation and qualification remain separate.** This
+contract and [the generated examples](BOOTSTRAP_STARTER_EXAMPLES.md) were reviewed
+in [#84](https://github.com/RocketsAreNostalgic/.github/pull/84), normal-merged as
+`3be15ce9d67688f2b6c15d9563791d315fce780f`. Delivery continues under
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81), within #47/#44.
+The later owner decisions on
+[strict immutability](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839238578),
+[proposal versus execution settings](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839475013)
+and [failure diagnostics](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839662944)
+clarify prerequisites and handoff guidance below; they do not reopen the frozen
+schema, file map or host boundary. Documentation acceptance does not qualify
+product code, a release or a deployment.
 
 ## 1. Product decision
 
@@ -112,23 +118,51 @@ The audited shared workflow has **no configurable default-branch input**: its
 admission, ref checks and RP target all require `main`. The starter must refuse
 another default branch; do not rename it or silently add a shared-workflow feature.
 
-Before the setup PR is represented as ready for use, disclose and verify the
-applicable prerequisites: Actions enabled; access to the public pinned reusable
-workflow and its pinned Actions; permission to create Release Please PRs; the
-caller's required `contents`, `issues`, `pull-requests` and `actions` token scopes;
-GitHub-hosted runner/tool availability; and owner-enabled immutable releases.
-The target owner must keep merge protections and meaningful existing checks.
-A generated workflow cannot silently enable settings or grant itself authority.
+Assessment, preview and creation of the initial draft setup PR may proceed before
+the owner completes Actions, runner, bot-PR or immutable-release configuration.
+These are execution prerequisites, not gates on receiving the recipe. Continue
+to enforce supported-target eligibility, verified pack transport, user/nonce,
+repository identity, current HEAD, exact confirmation-time re-fetch, file conflicts
+and actual workflow-file/branch/PR write authority. Successful setup means
+**“Setup PR created”**, not “All settings verified” or “Release automation ready.”
 
-Prefer authorized readback where available. The normal setup/Actions token may
-not have Administration-read for immutable-release settings; do not add a
-standing admin credential just to probe it. In that case list the setting as
-**owner verification required**, not verified or automatically configured. This
-is an explicit pre-merge operator checklist; immutable publication/readback is
-also mandatory during the integration proof. Test at least one target outside
-assumptions of RAN organization defaults before advertising general GitHub.com
-eligibility. No Blacksmith subscription or AI feature is required by generated
-output.
+Before activating the corresponding automation, the owner must configure Actions;
+access to the public pinned reusable workflow and its pinned Actions; GitHub-hosted
+runner/tool availability; permission for Release Please to create PRs; the caller's
+required `contents`, `issues`, `pull-requests` and `actions` token scopes; and
+immutable releases. Preserve meaningful checks and merge protections. Recommend
+completing this configuration before merging/activating workflows, while explaining
+that read-only Quality can already run on the setup PR and a merge can trigger
+main-push Quality and the shared release workflow. A draft PR or its merge is not
+an inert configuration step.
+
+Booster does not query repository/org immutability settings, even optionally with
+a more privileged credential. Do not add Administration permission, attestation,
+settings polling, automatic configuration or organization enumeration. Describe
+administrative settings as **owner-managed and not checked by Booster**. This does
+not weaken the template pack's mandatory trusted immutable transport or the
+supplied recipe's strict immutable publication/readback requirement. No opt-out,
+permissive publisher or fallback is supplied. Test a target outside assumptions
+of RAN organization defaults before advertising general GitHub.com eligibility.
+No Blacksmith subscription or AI feature is required by generated output.
+
+Static setup-PR and `RELEASE-STARTER.md` guidance must remain useful when no job
+can run: disabled Actions, rejected workflow/policy, or runner/account constraints
+cannot be explained by an annotation inside a job that never starts. Point to the
+[shared Profile B contract](RELEASE_PROFILE_B.md) for publication and retry
+boundaries. Executing jobs may explain observed failures using bounded existing
+evidence; a generic 403 does not establish which administrative setting is wrong.
+
+The publisher attaches tested assets, publishes the draft, then checks
+`immutable == true`. Misconfiguration can therefore leave a **public mutable
+release and a failed job**; never claim publication was prevented or rolled back.
+Inconclusive readback means the publication outcome is unknown. Enabling the
+setting and blindly rerunning does not make an existing mutable release immutable.
+The maintainer must inspect the actual release/tag/assets and Release Please
+version, manifest and lifecycle state, then follow a reviewed next-version path;
+no asset replacement, tag movement, label repair or automatic rollback is provided.
+Retries retain the original event/SHA, exact run/attempt artifact custody and
+current-main admission rules; manual Quality dispatch is not publisher admission.
 
 The setup token stays site-controlled and confined to the GitHub client. It needs
 only the capabilities actually used for reading and creating the bounded branch,
@@ -270,7 +304,8 @@ checks and double-build proof in read-only Quality, adding input-free dispatch.
 Replace input-tar promotion with the final verified ZIP and the existing
 `ran-profile-b-promotion.json` schema; artifact name is
 `ran-booster-release-bootstrap-templates-<run-id>-<attempt>`. One listed public
-asset is the fixed pack ZIP. Shared Profile B remains unchanged.
+asset is the fixed pack ZIP. Shared Profile B retains publication ownership;
+separately reviewed shared diagnostics do not move publisher logic into the pack.
 
 Producer B gives consumer A a non-secret test envelope containing
 `producer_sha`, `workflow_run_id`, `run_attempt`, `artifact_id`, `zip_sha256`,
@@ -341,7 +376,7 @@ concurrent requests, target movement and partial/lost responses.
 
 ## 7. Production maintenance without another product
 
-**Proposed production boundary:** maintain and secure the supplied starter/shared
+**Frozen production boundary:** maintain and secure the supplied starter/shared
 components; communicate known defects through existing project channels; target
 owners maintain their generated copies. Do not ship background monitoring, a
 cached dashboard/status service, scheduler, automatic repair or update engine.
@@ -481,10 +516,10 @@ starter into a security-monitoring platform.
 
 ## 8. Qualification and handoff
 
-G0 review must agree the recipe, schema/map, clean initial-only V3 host cut,
-passive origin/adoption security boundary and exact examples. No A/B release on a merely opened PR.
-Then A owns provider code; B alone owns overlapping #55/#56 pack code. C owns the
-narrow connected Core changes and integrated evidence. No competing writers on
+G0 froze the recipe, schema/map, clean initial-only V3 host cut, passive
+origin/adoption security boundary and exact examples. No A/B release on a merely
+opened PR. A owns provider code; B alone owns overlapping #55/#56 pack code. C
+owns the narrow connected Core changes and integrated evidence. No competing writers on
 pack schema/templates/build/CI. Do not mutate active provider release #24 or
 other agents' documentation branches.
 
@@ -507,12 +542,16 @@ identities and safe mutation authority before live operations. For each supporte
 type, prove installed Booster assessment/preview/confirmation/draft-PR readback;
 then, with separately authorized fixture merge/publication, run the generated
 Quality/RP/release path and verify/install the resulting exact immutable ZIP.
-Exercise pre-merge read-only behavior, changed target, missing settings/permission,
-repeat setup and maintainer edits. At least one non-RAN-default-settings fixture
-must substantiate external-repository support. Tests on disposable sites meet the
+Exercise pre-merge read-only behavior, changed target, setup with incomplete
+execution settings but valid write authority, refusal for missing write permission,
+repeat setup and maintainer edits. Verify actual protected release-PR satisfaction
+for the exact SHA, event and check source; a green dispatched run alone is
+insufficient. Distinguish branch protection from rulesets and unsupported merge
+queues, and return any failure as a narrow evidence-backed qualification amendment.
+At least one non-RAN-default-settings fixture must substantiate external-repository support. Tests on disposable sites meet the
 same production criteria; no results are assumed today.
 
-Every implementation and this proposal receive separate `@codex review` and
+Every implementation and contract amendment receive separate `@codex review` and
 `@codex security review` requests. Resolve all substantive findings on the final
 head. Normal protected merge methods and specific owner approvals remain; Core
 bot release proposals use normal merge commits. No settings/secret/site resets,
@@ -543,8 +582,8 @@ are now the refreshed source baselines for this review.
   [PR execution security](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target),
   [security advisories](https://docs.github.com/en/code-security/concepts/vulnerability-reporting-and-management/repository-security-advisories).
 
-**Review checkpoints still open:** accept the narrow stable/main/source-ready
-recipe, the clean initial-only V3 host boundary, and the production
-communication/adoption-security model; review examples and contract together. Any amendment updates
-both docs and #81 before agents implement. No source behavior or end-to-end proof
-is claimed by this proposal.
+**Review status:** G0 is frozen by #84 and #81; the later linked owner decisions
+supersede the original settings-prerequisite wording. Review amendments against
+that boundary rather than repeating G0. Implementation, exact-artifact and
+installed-feature qualification, protected-merge proof and #85 notices/existing
+documentation remain delivery obligations; this document claims none complete.
