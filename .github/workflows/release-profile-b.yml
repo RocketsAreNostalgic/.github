@@ -91,6 +91,7 @@ jobs:
       actions: write
     steps:
       - name: Require admitted revision is still main
+        id: current-main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
@@ -100,6 +101,7 @@ jobs:
           test "$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq '.object.sha')" = "$RAN_ADMITTED_SHA"
 
       - name: Require Profile B Release Please configuration
+        id: configuration
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAN_ADMITTED_SHA: ${{ needs.admit.outputs.sha }}
@@ -136,6 +138,7 @@ jobs:
           target-branch: main
 
       - name: Ensure exact Release Please candidate has Quality
+        id: candidate-quality
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RAN_RELEASE_PR_HEAD: ${{ inputs.release-pr-head }}
@@ -290,6 +293,7 @@ jobs:
           printf 'promotion-required=true\nstate=%s\ntag=%s\nrelease-id=%s\nprerelease=%s\n' "$state" "$tag" "$release_id" "$prerelease_before" >> "$GITHUB_OUTPUT"
 
       - name: Download exact Quality artifact
+        id: artifact
         if: steps.publication.outputs.promotion-required == 'true'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -300,6 +304,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Verify and promote exact tested assets
+        id: promotion
         if: steps.publication.outputs.promotion-required == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -312,6 +317,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Fixed diagnostic outputs only; do not expose API payloads or commands.
+          phase=asset-verification
+          publication_outcome=unknown
+          report_promotion() {
+            result=$?
+            trap - EXIT
+            printf 'phase=%s\npublication-outcome=%s\n' "$phase" "$publication_outcome" >> "$GITHUB_OUTPUT"
+            exit "$result"
+          }
+          trap report_promotion EXIT
           [[ "$RAN_RELEASE_PRERELEASE" == true || "$RAN_RELEASE_PRERELEASE" == false ]]
           [[ "$RAN_RELEASE_ID" =~ ^[1-9][0-9]*$ ]]
           [[ "$RAN_PROMOTION_MANIFEST" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]
@@ -345,6 +360,7 @@ jobs:
           remote_names="$(jq -c '[.assets[].name] | sort' <<< "$release_json")"
           jq -e --argjson expected "$expected_names" '([.assets[].name] - $expected) | length == 0' <<< "$release_json" >/dev/null
 
+          phase=asset-upload
           while IFS=$'\t' read -r name sha256; do
             existing="$(jq -cer --arg name "$name" '[.assets[] | select(.name == $name)]' <<< "$release_json")"
             count="$(jq -er 'length' <<< "$existing")"
@@ -387,11 +403,14 @@ jobs:
             # Administration-read, which the automatic GITHUB_TOKEN cannot request.
             # Do not add a higher-privilege standing token merely to re-read that
             # admin setting here; #57 owns final platform-settings reconciliation.
+            phase=publication-request
             gh api --method PATCH "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}"               -F draft=false >/dev/null
+            phase=publication-readback
             release_json="$(gh api "repos/${GITHUB_REPOSITORY}/releases/${RAN_RELEASE_ID}")"
             test "$(jq -r '.prerelease' <<< "$release_json")" = "$RAN_RELEASE_PRERELEASE"
           fi
 
+          phase=immutable-readback
           immutable=false
           for delay in 0 2 2 2 2; do
             sleep "$delay"
@@ -399,7 +418,78 @@ jobs:
             immutable="$(jq -r '.immutable' <<< "$release_json")"
             [[ "$immutable" == true ]] && break
           done
+          if jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG" \
+            '(.id | tostring) == $id and .target_commitish == $sha and .tag_name == $tag and .draft == false and .immutable == false' \
+            <<< "$release_json" >/dev/null; then
+            publication_outcome=published-mutable
+          fi
           test "$immutable" = true
           jq -e --arg id "$RAN_RELEASE_ID" --arg sha "$RAN_ADMITTED_SHA" --arg tag "$RAN_RELEASE_TAG" --argjson prerelease "$RAN_RELEASE_PRERELEASE"             '(.id | tostring) == $id and .tag_name == $tag and .prerelease == $prerelease and .draft == false and .immutable == true and .target_commitish == $sha'             <<< "$release_json" >/dev/null
           test "$(jq -c '[.assets[].name] | sort' <<< "$release_json")" = "$expected_names"
           test "$(jq -c '[.assets[] | {name, digest}] | sort_by(.name)' <<< "$release_json")" = "$expected_digests"
+          publication_outcome=published-immutable
+
+      - name: Explain Profile B outcome
+        if: ${{ always() }}
+        env:
+          RAN_MAIN: ${{ steps.current-main.outcome }}
+          RAN_CONFIG: ${{ steps.configuration.outcome }}
+          RAN_PLEASE: ${{ steps.release-please.outcome }}
+          RAN_QUALITY: ${{ steps.candidate-quality.outcome }}
+          RAN_RESOLVE: ${{ steps.publication.outcome }}
+          RAN_ARTIFACT: ${{ steps.artifact.outcome }}
+          RAN_PROMOTION: ${{ steps.promotion.outcome }}
+          RAN_PHASE: ${{ steps.promotion.outputs.phase }}
+          RAN_PUBLICATION: ${{ steps.promotion.outputs.publication-outcome }}
+          RAN_REQUIRED: ${{ steps.publication.outputs.promotion-required }}
+          RAN_SHA: ${{ needs.admit.outputs.sha }}
+          RAN_RELEASE_ID: ${{ steps.publication.outputs.release-id }}
+          RAN_QUALITY_RUN: ${{ github.event.workflow_run.id }}
+          RAN_QUALITY_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          guide=https://github.com/RocketsAreNostalgic/.github/blob/main/RELEASE_PROFILE_B.md#troubleshooting
+          stage=complete
+          advice='Outcome unavailable: inspect skipped or interrupted steps before retrying.'
+          if [[ "$RAN_PROMOTION" == success ]]; then
+            advice='Exact asset promotion completed.'
+          fi
+          mutation='Release Please or promotion may have changed remote state; inspect the identified run and release before retrying.'
+          failed=false
+          for entry in "current-main:$RAN_MAIN" "configuration:$RAN_CONFIG" "release-please:$RAN_PLEASE" "candidate-quality:$RAN_QUALITY" "publication-resolution:$RAN_RESOLVE" "artifact-download:$RAN_ARTIFACT" "promotion:$RAN_PROMOTION"; do
+            if [[ "${entry#*:}" == failure || "${entry#*:}" == cancelled ]]; then
+              stage="${entry%%:*}"
+              failed=true
+              break
+            fi
+          done
+          case "$stage" in
+            current-main) advice='Current-main admission failed or could not be read. A stale revision is normal non-publication; inspect the current main Quality run.'; mutation='This job has not invoked Release Please or promotion.' ;;
+            configuration) advice='Check the admitted Release Please configuration and read authority. Fix source through review.'; mutation='This job has not invoked Release Please or promotion.' ;;
+            release-please) advice='Inspect the Release Please error and existing branches, tags, drafts and PRs. A 403 does not identify a disabled setting. Check bot PR policy, job permissions and applicable rules.' ;;
+            candidate-quality) advice='Inspect exact candidate Quality and required-check source. Dispatch success alone does not prove protected merge eligibility; do not bypass required checks.' ;;
+            publication-resolution) advice='Inspect existing releases and tags for the admitted SHA; do not recreate, move or repair them automatically.' ;;
+            artifact-download) advice='Inspect the original Quality run and attempt artifact. Do not rebuild substitute bytes or use another attempt.' ;;
+            promotion) advice='Inspect asset verification, upload and readback evidence. Do not replace assets or move tags.' ;;
+          esac
+          if [[ "$RAN_PUBLICATION" == published-mutable ]]; then
+            mutation='PUBLIC MUTABLE RELEASE confirmed. Publication was not prevented or rolled back.'
+            advice='Do not blindly rerun. Enabling immutability does not qualify this existing release. Follow the maintainer-owned next-version path in the guide.'
+          elif [[ "$failed" == true && "$stage" == promotion ]]; then
+            mutation='Publication outcome is unknown; assets or publication may already exist. Inspect remote state before any retry.'
+          elif [[ "$failed" == false && "$RAN_REQUIRED" == false ]]; then
+            advice='No promotion required for this admitted revision. Release Please remains authoritative: an open release PR or no releasable change is normal.'
+          fi
+          # Only bounded ASCII identifiers enter summaries; never render API responses.
+          safe() { local value="${1:0:120}"; printf '%s' "$value" | LC_ALL=C tr -cd 'A-Za-z0-9._/-'; }
+          if [[ "$failed" == true ]]; then
+            printf '::error title=Profile B failure::Stage %s. %s %s Guide: %s\n' "$stage" "$mutation" "$advice" "$guide"
+          fi
+          {
+            printf '### Profile B: %s\n\n%s\n\n%s\n\n' "$stage" "$advice" "$mutation"
+            printf 'Repository: `%s`; admitted SHA: `%s`; release ID: `%s`.\n\n' "$(safe "$GITHUB_REPOSITORY")" "$(safe "$RAN_SHA")" "$(safe "$RAN_RELEASE_ID")"
+            printf 'Quality run/attempt: `%s/%s`; promotion stage: `%s`.\n\n' "$(safe "$RAN_QUALITY_RUN")" "$(safe "$RAN_QUALITY_ATTEMPT")" "$(safe "$RAN_PHASE")"
+            printf '[Troubleshooting and stage-specific retry limits](%s).\n' "$guide"
+          } >> "$GITHUB_STEP_SUMMARY"
+          # This reporting step cannot turn an earlier failed job green.
