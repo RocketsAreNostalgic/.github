@@ -460,19 +460,19 @@ installed, published or functionally proven.
 ## 9. Source basis and review status
 
 Audited snapshots (refresh before implementation): `.github`
-`8fefa7da961d5fcb36d706a78578ddb5f39ffa4a`, pack
+`2df8eb927d3d9a43870b4ba039e956e50f41e050`, pack
 `29a194be54c383e91758665d99461017386fe2e8`, provider
 `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800`, Core
-`467070d6f3635f832dc677cb813b13453a2613dd`. These are not release approval or future
-certification pins. Existing .github #83 and Core #176 documentation owners are
-unaffected by these two new files.
+`0c1ace618331a23e068cec6e54a896c634bc8f76`. These are not release approval or future
+certification pins. Completed .github #83 and Core #176 were documentation-only; their merged heads
+are now the refreshed source baselines for this review.
 
 - [Actual shared interface and promotion contract](RELEASE_PROFILE_B.md), backed
   by `.github/workflows/release-profile-b.yml` at the audited `.github` SHA.
 - [Pack schema](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates/blob/29a194be54c383e91758665d99461017386fe2e8/schema/template-pack.schema.json),
   `templates/shared/{release-please.yml,build-release.sh,verify-release.sh,upload-release-assets.sh}.tmpl`,
   `.github/workflows/quality.yml` and `SECURITY.md` at that same pack SHA.
-- [Current mandatory host interface](https://github.com/RocketsAreNostalgic/ran-booster/blob/467070d6f3635f832dc677cb813b13453a2613dd/RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php)
+- [Current mandatory host interface](https://github.com/RocketsAreNostalgic/ran-booster/blob/0c1ace618331a23e068cec6e54a896c634bc8f76/RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php)
   and `RAN/Admin/ReleaseManagement/ReleaseWorkflowRequestController.php` at that Core SHA.
 - [Provider source](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/tree/7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800/src/ReleaseDeployments/WorkflowAssistance).
 - [GitHub reusable workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows),
