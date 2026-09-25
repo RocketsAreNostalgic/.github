@@ -66,12 +66,12 @@ changing the manifest would preserve the wrong recipe.
 | `version.txt` | Keep as the simple strategy's version source; require equality with manifest and WordPress header. This is not a second version calculator. |
 | `release-contents.txt` | Keep as explicit maintainer-reviewable payload authority. The exact committed allowlist, not dirty checkout contents, decides the ZIP. |
 | Generated ownership/managed-update receipt | Remove. Keep only the local state needed to complete/read back the initial operation. |
-| Origin and maintenance information | Put human-readable version/source/digest and support instructions in `RELEASE-STARTER.md` and the setup PR. No machine-readable monitoring protocol. |
+| Origin and maintenance information | Keep human-readable support instructions in `RELEASE-STARTER.md` and one small passive `.ran-booster-release-starter.json` origin record for the bounded read-only adoption security check in section 7. Neither grants write authority or managed-template ownership. |
 | Initial preview, authorization, identity, conflicts and truthful outcome | Keep; the feature creates remote repository changes. |
 | Template-update methods/controls/engine | Remove behavior and UI; the current mandatory host-interface slots need the specific disposition in section 6. |
 | Booster host certification, database matrix, updater graph | Not generated. Retain those where needed to qualify Booster itself. |
 | Arbitrary build hooks, ecosystem detection and deployment destinations | Outside this starter. |
-| Advisory scanner, cached dashboard/adoption status, notification scheduler | Not part of this delivery; production response is section 7, not an implied future service. |
+| Background advisory scanner, cached dashboard/status, notification scheduler or automatic repair | Not part of this delivery. Section 7 retains only the owner-requested on-demand read-only adoption checkpoint plus normal disclosure/subscription guidance. |
 
 ### Execution boundaries
 
@@ -187,7 +187,8 @@ header/optional readme extra-file map, not accepted as arbitrary JSON text.
 Actions expressions such as `${{ github.sha }}` remain literal template content.
 
 The consumer additionally creates `.release-please-manifest.json`, `version.txt`,
-`release-contents.txt` and `RELEASE-STARTER.md` from its verified inputs. All output
+`release-contents.txt`, `.ran-booster-release-starter.json` and `RELEASE-STARTER.md`
+from its verified inputs. All output
 files use Git mode `100644`; scripts are invoked through Bash. It may perform
 only the previewed bounded version-annotation edit to the identified header and
 optional `readme.txt`, and safely append `/CHANGELOG.md` to the normal
@@ -281,9 +282,10 @@ or installed-feature evidence.
 The initial transaction keeps enough local state to bind user, provider/repository,
 package/source revision, target base SHA, exact pack identity, previewed paths and
 content, initial operation ID and created branch/commit/PR. A bounded preview
-expiry (currently 15 minutes) is retained. The origin paragraph is not authority;
-confirmation must recompute and compare verified inputs. No adoption-time security
-scan or receipt migration is needed.
+expiry (currently 15 minutes) is retained. Origin metadata is not authority;
+confirmation must recompute and compare verified inputs. No receipt migration or
+managed-template update state is needed. Package adoption performs only the
+bounded read-only provenance/advisory check in section 7.
 
 Known source boundary:
 
@@ -326,16 +328,65 @@ concurrent requests, target movement and partial/lost responses.
 
 **Proposed production boundary:** maintain and secure the supplied starter/shared
 components; communicate known defects through existing project channels; target
-owners maintain their generated copies. Do not ship automatic advisory matching,
-dashboard/adoption checks, caches, a scheduler or an update engine as part of this
-starter. This is a product-scope choice, not a beta exception or a promise to add
-monitoring later.
+owners maintain their generated copies. Do not ship background monitoring, a
+cached dashboard/status service, scheduler, automatic repair or update engine.
+Retain one bounded **on-demand read-only adoption checkpoint**: after Booster has
+resolved the canonical package repository and exact observed revision, it may
+read the passive origin record and public advisory information described below.
+This is a product-scope choice, not a beta exception or a promise of continuous
+monitoring.
 
-Keep human-readable origin in the PR and `RELEASE-STARTER.md`: exact pack version,
-source commit, archive digest, profile and the shared publisher reference. No
-credentials or site identifiers. It helps identify relevant instructions but
-cannot prove current customized files are affected or fixed. No code consumes it
-as permission to write or as a safety certificate.
+The initial setup writes `.ran-booster-release-starter.json` at repository root,
+in addition to the human-readable setup PR and `RELEASE-STARTER.md`. The JSON is
+consumer-owned output, not a downloaded pack entry and not part of the installable
+plugin/theme payload. It has exactly this shape:
+
+```json
+{
+  "schema": "ran-release-starter-origin",
+  "schema_version": 1,
+  "pack": {
+    "repository": "RocketsAreNostalgic/ran-booster-release-bootstrap-templates",
+    "repository_id": "<verified positive decimal repository ID>",
+    "version": "<canonical X.Y.Z>",
+    "tag": "v<X.Y.Z>",
+    "commit": "<40-lowercase-hex source commit>",
+    "zip_sha256": "<64-lowercase-hex digest>",
+    "profile": "source-ready-wordpress-plugin/3"
+  },
+  "shared_profile_b": {
+    "repository": "RocketsAreNostalgic/.github",
+    "commit": "<40-lowercase-hex pinned reusable-workflow commit>"
+  }
+}
+```
+
+The theme profile uses `source-ready-wordpress-theme/3`. All keys are required;
+additional keys, malformed identity or non-canonical values are invalid. The
+record contains no credentials, site/user identifiers, mutable URLs or target
+write authority. Initial confirmation binds its values to the already verified
+pack/target inputs and previews the file like every other generated path.
+
+When an existing plugin/theme is later **adopted** into Booster, the adoption flow
+may read this file from the exact observed repository revision after canonical
+repository identity is resolved. Missing, invalid or unrecognised provenance does
+**not** block ordinary package adoption: report security status as **not assessed /
+unknown** and continue only under the adoption flow's existing authority. A valid
+record may be compared, read-only, with **published** security advisories from the
+canonical pack/shared-component repositories. Use existing public/authorised
+GitHub read access; do not request write or administration credentials for this
+check. A merely newer starter is informational and never evidence of a
+vulnerability.
+
+The only permitted security outcomes are: recognised origin plus an explicitly
+matching published advisory -> show the advisory, affected identity and manual
+mitigation/fixed revision; recognised origin with no matching published advisory
+-> "no matching known advisory in the checked information", **not** a safety
+certificate; missing/invalid origin or unavailable advisory data -> unknown/not
+assessed. Advisory matching must use explicit affected/fixed pack versions or
+shared-workflow revisions published by the maintainer, not inference from age,
+latest version or arbitrary repository contents. The check performs no repository
+write, setup, regeneration or automatic repair.
 
 Before public feature acceptance, the designated RAN repository maintainer (Ben
 at present) must verify the private report route in the pack/shared component
@@ -361,8 +412,8 @@ starter into a security-monitoring platform.
 
 ## 8. Qualification and handoff
 
-G0 review must agree the recipe, schema/map, current-V2 rejection slots, security
-maintenance boundary and exact examples. No A/B release on a merely opened PR.
+G0 review must agree the recipe, schema/map, current-V2 rejection slots, passive
+origin/adoption security boundary and exact examples. No A/B release on a merely opened PR.
 Then A owns provider code; B alone owns overlapping #55/#56 pack code. C owns the
 narrow connected Core changes and integrated evidence. No competing writers on
 pack schema/templates/build/CI. Do not mutate active provider release #24 or
