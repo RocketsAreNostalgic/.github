@@ -297,18 +297,23 @@ Known source boundary:
 | Provider | `SourceReadyAssessor.php`, `ManagedReleaseBundle.php`, state/record classes: use the new fixed file map; remove managed-update assessment/receipt ownership, preserve initial conflicts and operation outcome. |
 | Core | `RAN/Admin/ReleaseManagement/ReleaseWorkflowRequestController.php`: allow only `inspect`, `setup`, `outcome`; remove `update_inspect`/`update_setup` dispatch and related request/preview branches. Forged old operations fail before credentials/remote I/O. |
 | Core | `ReleaseWorkflowControls.php` composes `ReleaseWorkflowPresenter` and `ReleaseWorkflowDisplay`: remove update buttons, projections/messages and related views/tests; retain initial setup and readback. |
-| Core contract | `RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php` presently REQUIRES both update methods. Simply deleting them from the provider would break class loading on the existing host. |
+| Core contract | `RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php` presently REQUIRES both update methods. The sharp-cut initial-only design must not preserve those dead public slots merely for compatibility. |
 
-**Proposed minimal host disposition:** retain those two mandatory public V2 method
-slots in the provider as direct typed `workflow_invalid_request` failures with no
-credential lookup, remote call or mutation. They are current interface compliance,
-not a hidden update engine or old-pack adapter. Delete all update behavior below
-them and all advertised/reachable Core UI routes. Assert both direct calls and
-forged old POSTs are inert. This avoids inventing a V3 host API or requiring an
-extra transition-only Core release. Reviewers must explicitly accept this narrow
-retention; changing/removing the host interface instead is a coordinated contract
-amendment, not an agent-local cleanup. All surviving references require a written
-current-interface reason, not a generic compatibility claim.
+**G0 host decision:** make the connected Core/provider interface cleanly
+initial-only. Introduce `RepositoryReleaseWorkflowManagementV3` with only the five
+initial `workflow*` operations (status, preview, inspect, setup, outcome), update
+the bundled GitHub provider and Core capability resolution/callers together, and
+remove V2/update-method support from the supported composition once the exact
+candidate tuple is qualified. There is no V2 compatibility adapter, failure-only
+update-method shim or transition-only provider release. The feature is unshipped
+and the owner selected a sharp cut; retaining unreachable public update methods
+would be compatibility machinery without a supported consumer.
+
+Core must reject forged legacy `update_inspect`/`update_setup` requests during
+request validation before credential lookup or provider/remote I/O. Tests cover
+that negative boundary and prove no update capability is advertised or reachable.
+If source refresh discovers another real V2 consumer, stop and return that concrete
+dependency to #81 rather than silently retaining a bridge.
 
 Core's initial-only UI/caller changes belong to integration C, not provider A's
 branch. They are part of G1 candidate composition and G2 adoption, not optional
@@ -412,8 +417,8 @@ starter into a security-monitoring platform.
 
 ## 8. Qualification and handoff
 
-G0 review must agree the recipe, schema/map, current-V2 rejection slots, passive
-origin/adoption security boundary and exact examples. No A/B release on a merely opened PR.
+G0 review must agree the recipe, schema/map, clean initial-only V3 host cut,
+passive origin/adoption security boundary and exact examples. No A/B release on a merely opened PR.
 Then A owns provider code; B alone owns overlapping #55/#56 pack code. C owns the
 narrow connected Core changes and integrated evidence. No competing writers on
 pack schema/templates/build/CI. Do not mutate active provider release #24 or
