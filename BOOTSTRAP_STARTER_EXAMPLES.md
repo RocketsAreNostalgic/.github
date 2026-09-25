@@ -391,9 +391,11 @@ These steps belong to the integration/test harness, not generated project files:
    local ZIP. Label simulated transport as fixture-only. Produce both generated
    file sets and compare them with B's output using identical target inputs.
 3. C qualifies the candidate provider inside an exact Core candidate that removes
-   the old update controls/routes. Prove the mandatory V2 update slots reject
-   without I/O, rather than silently retaining update behavior. Exercise the
-   read-only adoption security checkpoint with matching, non-matching, missing,
+   the old update controls/routes and adopts the clean initial-only
+   `RepositoryReleaseWorkflowManagementV3` contract. Prove V2/update methods are
+   absent from the supported provider/Core composition and forged legacy update
+   operations fail request validation before credentials or remote I/O. Exercise
+   the read-only adoption security checkpoint with matching, non-matching, missing,
    invalid and unavailable advisory/provenance fixtures; none may grant write
    authority or infer vulnerability merely from age. Record original certified-host
    checks separately from this new composition.
