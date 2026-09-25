@@ -38,11 +38,14 @@ maintenance responsibilities as deliberately copied starter code.
   Additional version authorities that cannot be kept coherent by that fixed
   recipe require manual setup; do not infer arbitrary package/build conventions.
 
-The examples use PHP 8.2 for the bounded payload syntax check on GitHub-hosted
-`ubuntu-24.04`. The generated target adapters are Bash and do not install Node or
-a package manager merely because the producer repository itself is Node-based.
-These are explicit tooling choices, not a claim to certify every PHP/WordPress
-version a target declares. Product-specific tests and additional compatibility requirements
+The consumer derives a reviewed PHP syntax runtime from the target's unambiguous
+`Requires PHP` header. The first recipe accepts only declared `major.minor` values
+in the reviewed set `7.4`, `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5`; another or
+missing value is a manual-setup case. Generated Quality uses that exact value for
+the bounded payload syntax check on GitHub-hosted `ubuntu-24.04`. The generated
+target adapters are Bash and do not install Node or a package manager merely
+because the producer repository itself is Node-based. These are explicit tooling
+choices, not a claim to certify every PHP/WordPress version a target declares. Product-specific tests and additional compatibility requirements
 remain target-maintainer work. No artificial Composer project is generated.
 
 Unsupported does not mean insecure or unmanageable by Booster. Explain the exact
@@ -150,7 +153,7 @@ must reject ambiguous duplicate keys and invalid types consistently.
 | --- | --- |
 | `schema_version` | Integer `1`. |
 | `consumer_api` | Integer `3`; no old-format adapter. |
-| `pack_version` | String, stable canonical `X.Y.Z`, no leading-zero numeric components. |
+| `pack_version` | String, stable canonical `X.Y.Z`, no leading-zero numeric components and at most 63 ASCII bytes. |
 | `repository` | Object exactly `{name, id}`: name is `RocketsAreNostalgic/ran-booster-release-bootstrap-templates`; ID is a canonical positive decimal string matching independently fetched repository identity. |
 | `release` | Object exactly `{tag, commit}`: tag equals `v` plus `pack_version`; commit is 40 lowercase hex and equals the resolved source/tag/transport target. **No embedded release ID, optional ID or dummy ID.** |
 | `profiles` | Object with exactly `source-ready-wordpress-plugin/3` and `source-ready-wordpress-theme/3`. |
@@ -165,7 +168,7 @@ replacement values). Shared entries may refer to the same physical member.
 
 | Logical ID | Pack member -> consumer-owned destination | Exact placeholders |
 | --- | --- | --- |
-| `quality-workflow` | `templates/shared/quality.yml.tmpl` -> `.github/workflows/quality.yml` | `PACKAGE_SLUG: slug` |
+| `quality-workflow` | `templates/shared/quality.yml.tmpl` -> `.github/workflows/quality.yml` | `PACKAGE_SLUG: slug`, `PHP_VERSION: php_version` |
 | `release-workflow` | `templates/shared/release-please.yml.tmpl` -> `.github/workflows/release-please.yml` | `PACKAGE_SLUG: slug` |
 | `release-please-config` | `templates/shared/release-please-config.json.tmpl` -> `release-please-config.json` | `BASE_SHA: sha`, `EXTRA_FILES_JSON: json_fragment`, `PACKAGE_SLUG: slug` |
 | `build-release-script` | `templates/shared/build-release.sh.tmpl` -> `scripts/build-release.sh` | `HEADER_PATH: path`, `PACKAGE_SLUG: slug`, `PACKAGE_TYPE: package_type` |
@@ -178,13 +181,19 @@ All pack members are inert regular files, not executable members or symlinks.
 
 Tokens are literal `{{RAN_NAME}}`. Values are derived by the consumer from the
 verified target, never interpreted as expressions. Slugs match
-`[a-z0-9]+(-[a-z0-9]+)*`, bounded to 200 bytes; SHA is 40 lowercase hex; package
-type is `plugin` or `theme`; header is one root filename using ASCII letters,
-digits, dot, underscore or hyphen (neither dot nor dot-dot). URI is the exact
+`[a-z0-9]+(-[a-z0-9]+)*`, bounded to 100 ASCII bytes; `php_version` is one of
+`7.4`, `8.0`, `8.1`, `8.2`, `8.3`, `8.4`, `8.5` and must equal the target's
+verified `Requires PHP` header; SHA is 40 lowercase hex; package type is `plugin`
+or `theme`; header is one root filename using ASCII letters, digits, dot,
+underscore or hyphen (neither dot nor dot-dot). URI is the exact
 canonical `https://github.com/<owner>/<repository>` already bound to the target.
 Reject control characters, quoting/injection tokens and unresolved/unknown
-placeholders. The JSON fragment is serialized by the consumer from its fixed
-header/optional readme extra-file map, not accepted as arbitrary JSON text.
+placeholders. Before setup, require the canonical version to be at most 63 bytes,
+`<slug>-<version>.zip` to be at most 200 bytes, and
+`release-please--branches--main--components--<slug>` to be at most 200 bytes;
+refuse rather than rely on filesystem/ref implementation limits. The JSON fragment
+is serialized by the consumer from its fixed header/optional readme extra-file
+map, not accepted as arbitrary JSON text.
 Actions expressions such as `${{ github.sha }}` remain literal template content.
 
 The consumer additionally creates `.release-please-manifest.json`, `version.txt`,
@@ -292,7 +301,7 @@ Known source boundary:
 
 | Owner | Inspected path/symbols and proposed action |
 | --- | --- |
-| Provider | `src/GitHubProvider.php`: retain five initial `workflow*` operations and current host interface; stop forwarding update operations. |
+| Provider | `src/GitHubProvider.php`: retain five initial `workflow*` operations while moving the supported composition to the clean V3 host interface; remove update forwarding and V2 capability support. |
 | Provider | `src/ReleaseDeployments/WorkflowAssistance/GitHubRepositoryReleaseWorkflow.php`: initial status/preview/inspect/setup/outcome only; remove update implementation. |
 | Provider | `WorkflowApplicationCoordinator.php`: remove `inspectUpdate`, `setupUpdate`, update-bundle logic and old/new managed-template comparisons; retain exact initial mutation/readback checks. |
 | Provider | `SourceReadyAssessor.php`, `ManagedReleaseBundle.php`, state/record classes: use the new fixed file map; remove managed-update assessment/receipt ownership, preserve initial conflicts and operation outcome. |
@@ -389,10 +398,64 @@ matching published advisory -> show the advisory, affected identity and manual
 mitigation/fixed revision; recognised origin with no matching published advisory
 -> "no matching known advisory in the checked information", **not** a safety
 certificate; missing/invalid origin or unavailable advisory data -> unknown/not
-assessed. Advisory matching must use explicit affected/fixed pack versions or
-shared-workflow revisions published by the maintainer, not inference from age,
-latest version or arbitrary repository contents. The check performs no repository
-write, setup, regeneration or automatic repair.
+assessed. Advisory matching uses the bounded machine-readable index below; prose is never
+parsed for affected identity. The check performs no repository write, setup,
+regeneration or automatic repair.
+
+### Machine-readable advisory matching
+
+The canonical pack repository maintains
+`security/release-starter-advisories.json` on its default branch as the small
+current matching index. It is maintenance metadata, not part of the public pack
+ZIP and not copied into target repositories. Adoption fetches it only from the
+already identity-verified canonical pack repository. Bound the response to 64 KiB
+and 64 advisory entries. Missing/unavailable/invalid index data makes the adoption
+security result **unknown/not assessed**; it never falls back to prose matching.
+
+The document has exactly `{schema, schema_version, advisories}`, with
+`schema: "ran-release-starter-advisories"`, integer `schema_version: 1`, and
+an array of unique advisory objects. Each advisory is exactly:
+
+```json
+{
+  "ghsa_id": "GHSA-xxxx-xxxx-xxxx",
+  "repository": "RocketsAreNostalgic/ran-booster-release-bootstrap-templates",
+  "affected": {
+    "pack_versions": ["1.2.3"],
+    "shared_profile_b_commits": []
+  },
+  "fixed": {
+    "pack_version": "1.2.4",
+    "shared_profile_b_commit": null
+  }
+}
+```
+
+`repository` is exactly either the canonical pack repository or
+`RocketsAreNostalgic/.github`. `ghsa_id` is canonical uppercase
+`GHSA-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}-[23456789cfghjmpqrvwx]{4}`.
+`affected.pack_versions` contains unique canonical stable versions (each at most
+63 bytes); `affected.shared_profile_b_commits` contains unique 40-lowercase-hex
+commits. At least one affected list is non-empty. A pack-repository advisory uses
+pack versions; a `.github` advisory uses shared Profile B commits. `fixed`
+contains exactly the corresponding fixed identity and the other field is null.
+No ranges, wildcards, "latest", branch names or free-form conditions are accepted.
+
+For every index entry, the checker must also retrieve the referenced **published**
+GitHub Security Advisory from the named canonical repository and require its
+`ghsa_id`/repository identity to agree. An index entry whose advisory is absent,
+withdrawn, inaccessible or not published makes the security result unknown; do
+not treat the index alone as an advisory. A warning is emitted only when the
+validated origin's exact pack version or shared Profile B commit occurs in the
+corresponding validated affected list. Fixed identities are displayed as manual
+mitigation targets, not automatically installed. Duplicate GHSA IDs, unknown
+fields, malformed identities, oversized data or contradictory duplicate affected
+identities invalidate the whole index for that check.
+
+Maintainers update the index as part of publishing/maintaining the corresponding
+Security Advisory and focused manual fix guidance. Tests cover exact pack and
+workflow matches, no match, malformed/duplicate/oversized index, unpublished or
+missing GHSA, unavailable API/index and fixed-identity display.
 
 Before public feature acceptance, the designated RAN repository maintainer (Ben
 at present) must verify the private report route in the pack/shared component
@@ -481,7 +544,7 @@ are now the refreshed source baselines for this review.
   [security advisories](https://docs.github.com/en/code-security/concepts/vulnerability-reporting-and-management/repository-security-advisories).
 
 **Review checkpoints still open:** accept the narrow stable/main/source-ready
-recipe, the required-V2 rejection-slot disposition, and the production
-communication model; review examples and contract together. Any amendment updates
+recipe, the clean initial-only V3 host boundary, and the production
+communication/adoption-security model; review examples and contract together. Any amendment updates
 both docs and #81 before agents implement. No source behavior or end-to-end proof
 is claimed by this proposal.
