@@ -78,6 +78,23 @@ before `check:host`; the host-contract test checks API shape, not Git identity.
 A passing shape test against another Core checkout is not equivalent
 certification. A later Core release does not automatically repin the Provider.
 
+### Retained Provider title check, not a second release engine
+
+At the recorded revision, the
+[Provider's actual classification script](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/blob/7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800/scripts/release-classification.mjs)
+requires a release-driving Conventional Commit title when a PR changes `src/`
+or the production `require` map in `composer.json`. It accepts a type visible
+in that package's Release Please changelog configuration or an explicit `!`
+breaking marker. It does not calculate the next version, manage lifecycle
+labels, publish a release or supply recovery authority. This is the narrow
+product-specific rule deliberately retained in the
+[#50 migration record](https://github.com/RocketsAreNostalgic/.github/issues/50#issuecomment-5778745871),
+not the retired generic estate classifier. The linked CI revision binds a
+candidate dispatch to the unique same-repository bot-owned Release Please PR
+and exact head before applying that same title rule. Preserve this documented
+boundary; neither retaining nor deleting an unrelated generic classifier is
+implied by the job name.
+
 ## Remaining programme work and current handoffs
 
 Release Updater's 36-file level-8 coverage and its matrix reconciliation landed
