@@ -113,7 +113,10 @@ jobs:
           # Extraction follows independent member/type/resource verification.
           unzip -q "$work/one/$archive" -d "$work/payload"
           find "$work/payload" -type f -name '*.php' -print0 | xargs -0 -r -n1 php -l
-          mkdir -p .ran-booster-release-dist
+          # Never merge a tracked/untracked output tree or symlink into evidence.
+          test ! -e .ran-booster-release-dist
+          test ! -L .ran-booster-release-dist
+          mkdir .ran-booster-release-dist
           cp "$work/one/$archive" ".ran-booster-release-dist/$archive"
           digest="$(sha256sum ".ran-booster-release-dist/$archive" | cut -d ' ' -f 1)"
           jq -n \
@@ -126,6 +129,7 @@ jobs:
               repository:$repository,quality_commit:$source,source_commit:$source,
               tag:$tag,assets:[{name:$name,sha256:$digest}]}' \
             > .ran-booster-release-dist/ran-profile-b-promotion.json
+          test "$(find .ran-booster-release-dist -mindepth 1 -maxdepth 1 -type f | wc -l)" -eq 2
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -137,12 +141,11 @@ jobs:
           retention-days: 30
 ```
 
-The implementation must use a clean destination and assert exactly one expected
-ZIP rather than allow a pre-existing/untracked output to join the artifact glob.
-The producer's generated-output tests must include that negative case. A retained
-build adapter can already call its verifier; the explicit Quality verification
-above documents the required independent check, not a demand for a second
-verification framework.
+The output destination must be newly created and contain exactly the expected ZIP
+and manifest. Producer tests include a pre-existing tree, an extra ZIP and a
+symlink as negative cases. A retained build adapter can already call its verifier;
+the explicit Quality verification above documents the required independent check,
+not a demand for a second verification framework.
 
 PHP syntax is a modest useful starter check, not a claim of semantic correctness
 or a comprehensive declared-platform compatibility suite. Real target tests are
