@@ -226,6 +226,55 @@ ${lookup}`], {
   assert.equal(result.status, expectedStatus, `${name}: ${result.stderr}`);
 }
 
+// Execute actual resolution for retries, including a previously published mutable
+// release. Evidence must be identity-bound; malformed/unavailable facts stay unknown.
+const resolution = workflow.slice(workflow.indexOf('      - name: Resolve exact Release Please publication state'),
+  workflow.indexOf('      - name: Download exact Quality artifact'));
+const resolutionScript = resolution.slice(resolution.indexOf('        run: |') + '        run: |'.length)
+  .split('\n').map(line => line.replace(/^          /, '')).join('\n');
+assert.ok(workflow.includes('steps.promotion.outputs.publication-outcome || steps.publication.outputs.publication-outcome'));
+for (const [name, fixture, status, mutable] of [
+  ['retry mutable release', { ...exactRelease, draft: false, immutable: false }, 1, true],
+  ['retry immutable release', { ...exactRelease, draft: false, immutable: true }, 0, false],
+  ['draft remains draft', { ...exactRelease, immutable: false }, 0, false],
+  ['immutable unavailable', { ...exactRelease, draft: false }, 1, false],
+  ['immutable string false', { ...exactRelease, draft: false, immutable: 'false' }, 1, false],
+  ['draft state unknown', { ...exactRelease, draft: null, immutable: false }, 1, false],
+  ['invalid release identity', { ...exactRelease, id: '1\n::error::bad', draft: false, immutable: false }, 1, false],
+  ['missing tag identity', { ...exactRelease, tag_name: null, draft: false, immutable: false }, 1, false],
+  ['empty tag identity', { ...exactRelease, tag_name: '', draft: false, immutable: false }, 1, false],
+  ['other revision', { ...exactRelease, target_commitish: 'b'.repeat(40), draft: false, immutable: false }, 0, false],
+]) {
+  const dir = mkdtempSync(join(tmpdir(), 'profile-b-resolution-'));
+  try {
+    const output = join(dir, 'outputs');
+    writeFileSync(output, '');
+    const result = spawnSync('bash', ['-c', `
+gh() {
+  if [[ "$*" == 'api --paginate --slurp repos/example/repo/releases?per_page=100' ]]; then
+    printf '%s\\n' "$RAN_TEST_PAGES"
+  elif [[ "$*" == 'api repos/example/repo/git/ref/tags/v1.3.3' ]]; then
+    printf '%s\\n' "$RAN_TEST_TAG"
+  else
+    echo 'Unexpected API call' >&2
+    return 1
+  fi
+}
+${resolutionScript}`], { encoding: 'utf8', timeout: 10000, env: {
+      ...process.env, GITHUB_OUTPUT: output, GITHUB_REPOSITORY: 'example/repo',
+      RAN_ADMITTED_SHA: 'a'.repeat(40), RAN_RELEASE_CREATED: 'false',
+      RAN_RELEASE_SHA: '', RAN_RELEASE_TAG: '',
+      RAN_TEST_PAGES: JSON.stringify([[fixture]]),
+      RAN_TEST_TAG: JSON.stringify({ object: { type: 'commit', sha: 'a'.repeat(40) } }),
+    } });
+    assert.ifError(result.error);
+    assert.equal(result.status, status, name + ': ' + result.stderr);
+    const outputs = readFileSync(output, 'utf8');
+    assert.equal(outputs.includes('publication-outcome=published-mutable'), mutable, name);
+    if (mutable) assert.equal(outputs, 'publication-outcome=published-mutable\nrelease-id=394078148\n');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+}
+
 // Run the entire promotion step against a local API simulator, including raw
 // uploads, publication and immutable readback. Unexpected/tag-based calls fail.
 const promotionScript = promotion.slice(promotion.indexOf('        run: |') + '        run: |'.length)
@@ -369,6 +418,7 @@ const reportingScript = reporting.slice(reporting.indexOf('        run: |') + ' 
   .split('\n').map(line => line.replace(/^          /, '')).join('\n');
 for (const [stage, publication, expected] of [
   ['promotion', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
+  ['resolution', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
   ['promotion', 'unknown', 'Publication outcome is unknown'],
   ['release-please', '', 'A 403 does not identify a disabled setting'],
   ['current-main', '', 'stale revision is normal non-publication'],
@@ -384,7 +434,7 @@ for (const [stage, publication, expected] of [
       RAN_PUBLICATION: publication, RAN_REQUIRED: stage === 'none' ? 'false' : 'true',
       RAN_MAIN: 'success', RAN_CONFIG: 'success', RAN_PLEASE: 'success', RAN_QUALITY: 'success',
       RAN_RESOLVE: 'success', RAN_ARTIFACT: 'success', RAN_PROMOTION: 'success' };
-    const key = { promotion: 'RAN_PROMOTION', 'release-please': 'RAN_PLEASE', 'current-main': 'RAN_MAIN', artifact: 'RAN_ARTIFACT', quality: 'RAN_QUALITY' }[stage];
+    const key = { resolution: 'RAN_RESOLVE', promotion: 'RAN_PROMOTION', 'release-please': 'RAN_PLEASE', 'current-main': 'RAN_MAIN', artifact: 'RAN_ARTIFACT', quality: 'RAN_QUALITY' }[stage];
     if (key) env[key] = 'failure';
     const result = spawnSync('bash', ['-c', reportingScript], { encoding: 'utf8', env, timeout: 10000 });
     assert.ifError(result.error);

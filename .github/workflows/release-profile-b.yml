@@ -280,6 +280,15 @@ jobs:
           release_id="$(jq -er '.id' <<< "$release_json")"
           [[ "$release_id" =~ ^[1-9][0-9]*$ ]]
           tag="$(jq -er '.tag_name' <<< "$release_json")"
+          # A retry may discover the public mutable release left by an earlier
+          # failed readback. Report only identity-bound observed facts, then fail.
+          if jq -e --arg id "$release_id" --arg tag "$tag" --arg sha "$RAN_ADMITTED_SHA" \
+            '(.id | tostring) == $id and (.tag_name | type == "string" and length > 0)
+              and .tag_name == $tag and .target_commitish == $sha
+              and .draft == false and .immutable == false' <<< "$release_json" >/dev/null; then
+            printf 'publication-outcome=published-mutable\nrelease-id=%s\n' "$release_id" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
           if [[ "$(jq -er '.draft' <<< "$release_json")" == true ]]; then
             state=draft
           else
@@ -440,7 +449,7 @@ jobs:
           RAN_ARTIFACT: ${{ steps.artifact.outcome }}
           RAN_PROMOTION: ${{ steps.promotion.outcome }}
           RAN_PHASE: ${{ steps.promotion.outputs.phase }}
-          RAN_PUBLICATION: ${{ steps.promotion.outputs.publication-outcome }}
+          RAN_PUBLICATION: ${{ steps.promotion.outputs.publication-outcome || steps.publication.outputs.publication-outcome }}
           RAN_REQUIRED: ${{ steps.publication.outputs.promotion-required }}
           RAN_SHA: ${{ needs.admit.outputs.sha }}
           RAN_RELEASE_ID: ${{ steps.publication.outputs.release-id }}
