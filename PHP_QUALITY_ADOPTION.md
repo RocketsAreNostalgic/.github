@@ -16,7 +16,7 @@ suite acceptance or transfers active release/quality claims.
 | [Updater Support #35](https://github.com/RocketsAreNostalgic/ran-updater-support/issues/35) | `6a9cdbc9eb1bbecbafcbe16da931c98928d035e8` | #36 merged; `check`, `lint:syntax`, `standards`, `standards:fix`, `analyze`, `test` present. #40 additionally activates owned-method regression enforcement. |
 | [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | `d382d09e4490ed4438d9ebaea2a06d69d59f0ce3` | #60 merged; all six canonical names present. Installed no-dev consumer remains required in CI. |
 | [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800` | #26 merged; all six canonical names and separate certified-host `check:host` present. |
-| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `458b1c3a224498891145e6af9e7aeb27e2c881de` | #66 merged; all six names present, expanded check order unchanged, including live audit and no-dev proof. |
+| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `65b31c0aca26363a87180fa5f9ac7081fd661eb9` | #66 commands retained; #67–#76 coverage sequence complete (excluding held release #70): all 36 shipped PHP files directly analysed at level 8. Live audit, generated parity and no-dev proof remain in check; naming/condition acceptance remains open. |
 | [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | `829d823afd87923a20f8170671d2f456465424d9` | #46 fixed parser/discovery failure propagation and added lint:syntax; lint:php retained for CI. No standards:fix or analyze command yet. #45 separately repinned release workflow. |
 
 The original Support/Branch/Provider cohort all declare PHP `^8.2` and use shared floor/current lanes at 8.2/8.5.
@@ -72,9 +72,13 @@ test against another Core checkout is not equivalent certification.
 
 ## Remaining programme work
 
-The next selected independent slice is a read-only Release Updater #60 analysis
-coverage inventory, preserving level 8. Migrator #43's exact-candidate installed
-WordPress release gate is separate; avoid candidate churn during that proof.
+Release Updater #60's analysis inventory and coverage increments are complete:
+all 36 shipped PHP files are directly analysed at level 8. See the matrix's
+[coverage closeout checkpoint](PHP_QUALITY_MATRIX.md#release-updater-coverage-closeout-checkpoint--24-september-2026)
+for exact-main CI, retained gates and remaining exceptions. Next is residual
+standards/naming acceptance, with a fresh connected-caller/dependency plan before
+API changes. Release #70 remains held; no release authorization follows from
+coverage completion. Migrator release qualification remains separately owned.
 
 
 - Starter supplies clean-reference evidence; Booster's coordinated Profile B
@@ -86,6 +90,7 @@ WordPress release gate is separate; avoid candidate churn during that proof.
 - Starter formatter consolidation and Support owned-method enforcement have
   landed. Remaining commands, consumer naming/condition debt, upgrades and
   proportionate drift validation stay under #65/#66 and the owning children.
-  Core-connected API work still requires the explicit .github#54 handoff.
+  Core #54 now records completed release proof and handoff to #167;
+  refresh that owning issue and its exact tuple before connected API work.
 - Workbench and fixtures retain purpose-based exemptions. Plugin Library stays
   deferred; inactive repositories are not reactivated by this ledger.
