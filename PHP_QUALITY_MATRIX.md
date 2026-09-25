@@ -1,10 +1,10 @@
 # PHP quality acceptance matrix
 
-Owner: [#66](https://github.com/RocketsAreNostalgic/.github/issues/66), under
-[#65](https://github.com/RocketsAreNostalgic/.github/issues/65).
+Owner: [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) with the existing repository quality children.
+Closed [#66](https://github.com/RocketsAreNostalgic/.github/issues/66) is policy/tooling delivery evidence, not an active queue.
 Delivered command policy: [#69](https://github.com/RocketsAreNostalgic/.github/pull/69).
-Full source snapshot: 23 September 2026 (UTC); see the superseding landed-slice
-checkpoint below for 24 September changes. Unchanged rows are not freshly requalified.
+Full source snapshot: 23 September 2026 (UTC); subsequent dated checkpoints
+record scoped changes. Unchanged rows are not freshly requalified.
 
 This records the seven active Booster PHP packages, Starter and Admin Shell at
 the exact default revisions below. It is a configuration and execution-path
@@ -13,10 +13,44 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Current routing and superseded work selections — 25 September 2026
+
+[#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
+retains the previously unchecked programme responsibilities from owner-closed
+#66: matrix upkeep, upgrade/live-audit decisions, drift validation, contributor
+coordination and reference/pilot acceptance. Closure did not waive that work or
+complete consumer adoption. Existing repository children keep their claims.
+
+Core's [#54 release handoff](https://github.com/RocketsAreNostalgic/ran-booster/issues/167#issuecomment-5819326356)
+and all five [#61 WordPress handoffs](https://github.com/RocketsAreNostalgic/.github/issues/61)
+are complete. Their former in-flight reservations no longer apply; residual
+quality stays in [Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167),
+organisation #67 and the local children. Refresh actual API/dependency/host
+claims before overlap; completed release proof is not blanket mutation authority.
+
+Release Updater's coverage and matrix reconciliation are delivered through
+[local #76](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/76)
+and [organisation #82](https://github.com/RocketsAreNostalgic/.github/pull/82).
+Its later [condition slice #77](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/77)
+removed the global Yoda suppression while retaining scoped fixture exclusions.
+Follow [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
+for remaining naming/parameter/exception work and subsequent exact evidence;
+do not repeat the old inventory or treat the 24 September suppression list as
+current. [Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+remains held by the owner. [Migrator #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+retains its own exact-candidate installed-site acceptance.
+
+The dated checkpoints below preserve measurements and historical next-work
+selections, not current reservations or implementation assignments. This routing
+correction runs no runtime suite and changes no policy, check, dependency, host
+pin, release or active claim. Current operational routing is this section and
+the linked owning issues, not superseded present-tense prose in an older snapshot.
+
 ## Release Updater coverage closeout checkpoint — 24 September 2026
 
-This package-only checkpoint supersedes the Release Updater coverage and next-slice
-statements below. Other package rows remain dated evidence, not a fresh estate audit.
+This package-only checkpoint supersedes the older Release Updater coverage
+statements below. Its then-pending matrix/condition work is superseded by the
+25 September routing above. Other package rows remain dated evidence, not a fresh estate audit.
 
 | Evidence | Verified disposition |
 | --- | --- |
@@ -29,29 +63,31 @@ statements below. Other package rows remain dated evidence, not a fresh estate a
 | Review and local limits | #76 head `3240ea32d38efa03ac10c5fa0111d7948a2aa0dc` received separate code/security reviews with no Codex findings. Copilot listed no findings despite its recommendation label. Local suite: 467 tests / 24,695 assertions, two portable-PHP `GLOB_BRACE` errors; native CI passed. Sequential no-dev proof passed after a concurrent fixture-copy race. |
 
 The coverage sequence (#67–#69, #71–#76) is delivered; do not restart that
-inventory or treat symbol discovery as the remaining state. Full standards/naming
-acceptance is still open: method/variable/Yoda suppressions remain, reserved-keyword
-parameter checks are disabled, and `RANOwnedMethods` is not active. Security,
-bootstrap and fixture exceptions must remain distinct from this migration debt.
-PHPCS/PHPCBF scope matches, but matching configuration alone is not final
+inventory or treat symbol discovery as the remaining state. At this checkpoint,
+method/variable/Yoda suppressions remained, reserved-keyword parameter checks
+were disabled, and `RANOwnedMethods` was not active. Later condition work is
+recorded above; full standards/naming acceptance remains with the local owner.
+Security, bootstrap and fixture exceptions remain distinct from migration debt.
+PHPCS/PHPCBF scope matched, but configuration alone was not final
 negative-control/repeated-fix evidence for the remaining naming scope.
 
-Core [#54](https://github.com/RocketsAreNostalgic/.github/issues/54) now records
+Core [#54](https://github.com/RocketsAreNostalgic/.github/issues/54) records
 completed beta.30 release proof and an explicit handoff to Core #167. Its older
 open/no-handoff status below is historical. A connected naming/API cohort still
 needs fresh ownership, caller and dependency/host composition evidence.
 
 Release Updater [#60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
-remains open for residual acceptance and matrix landing. Release PR #70 is held
-by the owner until the agreed migration is complete; successful coverage CI does
-not authorize a release. This checkpoint makes no new claim about Migrator's
-current release candidate.
+remains open for residual acceptance; its coverage-matrix landing is complete
+through organisation #82. [Release PR #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+is held until the agreed migration is complete; successful coverage CI does not
+authorize a release. This checkpoint makes no new claim about Migrator's current candidate.
 
 ## 24 September 2026 landed-slice checkpoint
 
 This checkpoint supersedes the older pending-command and syntax-defect statuses
-in the 23 September snapshot below. Other rows remain dated evidence, not a fresh
-audit or execution of the whole estate.
+in the 23 September snapshot below. Its historical next-work selection is itself
+superseded by the current routing above. Other rows remain dated evidence, not a
+fresh audit or execution of the whole estate.
 
 | Package | Refreshed main / landed slice | Acceptance and evidence |
 | --- | --- | --- |
@@ -70,7 +106,10 @@ initial four consumers are delivered, not estate-wide activation or Core adoptio
 Starter main has since advanced to `f05f0c667eb950e692e9eb4f98480d40dfe1a76b`;
 its older full matrix row below is deliberately retained as a dated audit.
 
-### Remaining acceptance and sequencing
+### Historical next-work selection at that checkpoint — superseded
+
+The following selection is retained as dated history, not operative instructions.
+Use the current routing and local claims above instead.
 
 - **Release gate:** Migrator [#43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
   is the beta.10 release candidate, refreshed to
