@@ -34,7 +34,7 @@ Current lifecycle state:
 
 ### Current and target consumer pins
 
-Consumers execute immutable provider commits, not mutable release tags. The inventory below records the lifecycle-authoritative mapping used by the current estate review; repository-specific terminal aggregation and stronger local gates are tracked in `.github#7` and enforcement composition in `.github#12`.
+Consumers execute immutable provider commits, not mutable release tags. The inventory below records the lifecycle-authoritative provider mapping from the completed quality-foundation review. Repository-specific terminal aggregation and stronger local gates now remain with `.github#65` / `#67` and the existing repository quality children. Completed `.github#7` / `#12` / `#15` are foundation/enforcement-design evidence, not active rollout queues; deferred organisation-required activation is owned by `.github#31`.
 
 | Repository | Repository profile | Caller | Current provider / immutable ref | Target provider / immutable ref | Disposition |
 | --- | --- | --- | --- | --- | --- |
@@ -53,7 +53,7 @@ Consumers execute immutable provider commits, not mutable release tags. The inve
 | `ran-booster-bitbucket` | `wordpress-plugin`; audited PHP-only maintained source surface | `.github/workflows/quality.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep shared PHP baseline; retain WordPress profile |
 | `ran-booster-github-provider` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
 | `ran-booster-workbench` | `node`; internal planning/development tool | `.github/workflows/quality.yml` | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep provider; no release/enforcement ceremony implied |
-| `ran-booster-release-bootstrap-templates` | `node` | `.github/workflows/quality.yml` | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep provider; clean Node/pnpm proof target, with enforcement readiness still pending under `.github#12` |
+| `ran-booster-release-bootstrap-templates` | `node` | `.github/workflows/quality.yml` | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep provider; clean Node/pnpm proof target; repository quality acceptance remains local/#65 and any future organisation-required activation belongs to `.github#31` |
 | `ran-plugin-library` | `php-library` | none | none | v2 if migration is deliberately restarted later | deferred / not planned in current migration programme |
 | `tnyGoogleKey` | historical/private WordPress plugin | none | none | none | out of active estate; re-audit if deliberately revived |
 
@@ -94,7 +94,7 @@ The current shared standards packages satisfy that condition through their self-
 - `ran-coding-standards` verifies exact PR head, immutable Actions, read-only execution, locked Composer install, the package `composer check` contract, PHP floor/current-style coverage, independent PHP lint, and fresh consumer-root installation of every exported standard.
 - `ran-quality-config` verifies exact PR head, immutable Actions, read-only execution, exact Node/pnpm identity, frozen pnpm install, `pnpm check`, packed consumer tests and publishable-package contents.
 
-`ran-booster` remains the high-water WordPress implementation with a specialist evidence/admission lifecycle rather than a generic caller. That disposition remains valid only while its local topology continues to provide equivalent applicable transferable guarantees plus its stronger archive, admission, updater-source, compatibility-matrix and runtime/product evidence. Revisit it if a transferable organisation guarantee is missing or #12 requires a different enforcement composition.
+`ran-booster` remains the high-water WordPress implementation with a specialist evidence/admission lifecycle rather than a generic caller. That disposition remains valid only while its local topology continues to provide equivalent applicable transferable guarantees plus its stronger archive, admission, updater-source, compatibility-matrix and runtime/product evidence. Revisit it if a transferable organisation guarantee is missing; future organisation-required activation/composition changes are coordinated under #31 rather than reopening completed #12.
 
 ## Shared baseline guarantees
 

@@ -1,6 +1,7 @@
 # Booster beta naming migration: declarations, dependencies and sequence
 
-Owner workstream: `.github#65`, policy/evidence child `#66`; policy PR `#69`,
+Owner workstream: `.github#65`; owner-closed `#66` is delivered policy/tooling
+evidence, with residual acceptance retained by #65 and repository children. Policy PR `#69`,
 evidence PR `#70`. This extends the [shared-rule audit](BOOSTER_SHARED_RULES_AUDIT.md).
 It proposes the migration cohorts; it does not rename application code or
 release a new API generation.
@@ -164,11 +165,16 @@ independent and need not wait for the whole naming migration.
 
 ## Active lanes, exemptions and limits
 
-On this refresh, all seven defaults still match the revisions in the original
-shared-rule audit. Bitbucket Profile B PR #64 is active at
-`5c2b5b417d88ee050edb2d48a5d0f9d25358e6da`; this pass changes no consumer
-Composer files, workflows or runtime code. Existing quality PRs and bot-owned
-release PRs keep their current ownership.
+### Historical active-lane snapshot — superseded
+
+At the original audit refresh, all seven defaults matched the recorded revisions
+and Bitbucket Profile B PR #64 was active at
+`5c2b5b417d88ee050edb2d48a5d0f9d25358e6da`. That reservation is now historical:
+organisation #53 records the completed Bitbucket migration and final handoff.
+Do not wait on, rebase around, or reclaim PR #64 from this snapshot. Current
+quality/API work must refresh the owning repository issues and exact dependency/
+host composition before implementation. This documentation reconciliation changes
+no consumer Composer files, workflows or runtime code.
 
 Workbench and dedicated fixtures retain the owner-confirmed command/style
 exemptions. A fixture that calls a changed API may need a focused consumer

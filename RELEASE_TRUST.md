@@ -10,11 +10,11 @@ The governing principle is:
 
 > Same release-trust guarantees where applicable; not necessarily the same release architecture.
 
-The approved direction is [Profile A](RELEASE_PROFILE_A.md) for source releases and [Profile B](RELEASE_PROFILE_B.md) where an authoritative built asset must be promoted. Release Please owns version, changelog, release PR, tag and release lifecycle; Profile B adds exact tested-artifact promotion. Production GitHub releases are subject to the owner-enabled immutable-release policy. The migration and final settings audit remain tracked in [.github#47](https://github.com/RocketsAreNostalgic/.github/issues/47), [#59](https://github.com/RocketsAreNostalgic/.github/issues/59), [#61](https://github.com/RocketsAreNostalgic/.github/issues/61) and [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). This target does not certify every older publisher row or unfinished consumer.
+The approved direction is [Profile A](RELEASE_PROFILE_A.md) for source releases and [Profile B](RELEASE_PROFILE_B.md) where an authoritative built asset must be promoted. Release Please owns version, changelog, release PR, tag and release lifecycle; Profile B adds exact tested-artifact promotion. Production GitHub releases are subject to the owner-enabled immutable-release policy. Remaining implementation and final reconciliation are tracked in [.github#47](https://github.com/RocketsAreNostalgic/.github/issues/47), [#59](https://github.com/RocketsAreNostalgic/.github/issues/59) and [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). [Core #54](https://github.com/RocketsAreNostalgic/.github/issues/54) and the five-consumer [WordPress #61](https://github.com/RocketsAreNostalgic/.github/issues/61) migration are completed evidence/handoff records, not active migration queues. This target does not certify every older publisher row or unfinished consumer.
 
 Repository-specific gates may be stronger than this policy and should remain local when they prove product-specific properties. Shared quality infrastructure is evidence infrastructure, not automatically release authority.
 
-This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Source-quality profile adoption and reusable quality-workflow rollout remain separately owned by RocketsAreNostalgic/.github#7.
+This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Completed quality foundation #7 remains historical evidence; current quality rollout and residual acceptance belong to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65), [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) and the existing repository children. Closed #66 records delivered policy/tooling, with its residual responsibilities explicitly retained under #65; it is not an active queue or a waiver.
 
 ### Deterministic test fixtures
 
@@ -316,11 +316,11 @@ For each repository, establish at least:
 
 ## Relationship to source quality
 
-`.github#7` owns shared quality-profile adoption, shared coding/config packages, reusable read-only quality workflows, source-quality migration, terminal quality fan-in, and staged quality enforcement.
+Completed [`.github#7`](https://github.com/RocketsAreNostalgic/.github/issues/7) records the shared quality foundation. Current source-quality adoption, coding/configuration work and residual command/coverage/naming acceptance are coordinated through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65), [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) and the existing repository children. Closed #66 is policy/tooling delivery evidence, not another active backlog. Deferred organisation-required workflow activation remains separately owned by [#31](https://github.com/RocketsAreNostalgic/.github/issues/31); current repository-required checks retain their authority.
 
 `.github#9` and this policy own release authority, privileged mutation, release-control paths, exact release-candidate identity, artifact provenance, publication/readback, repository bypass policy where it affects release trust, and independent authorization boundaries.
 
-When an audit finds a quality-profile adoption problem rather than a release-trust problem, track it under `.github#7` rather than expanding the release-trust remediation.
+When an audit finds a quality-adoption problem rather than a release-trust problem, route it to #65/#67 and its existing repository quality owner rather than reopening the completed #7 foundation or expanding release-trust remediation. Completed release handoffs do not complete the separate quality acceptance.
 
 ## Maintenance
 
