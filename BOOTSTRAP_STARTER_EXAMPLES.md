@@ -29,8 +29,9 @@ RELEASE-STARTER.md                      origin and maintainer/security handoff
 ```
 
 The initial diff also shows only the bounded header/optional readme version
-annotations and ordinary `.prettierignore` append when needed. Nothing writes
-target main, creates repository secrets or silently changes Actions settings.
+annotations. Formatter/ignore configuration remains target-maintainer owned.
+Nothing writes target main, creates repository secrets or silently changes Actions
+settings.
 Existing target files at any generated path make automatic setup a conflict.
 
 Compared with the old recipe, `upload-release-assets.sh` and
@@ -83,10 +84,6 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
-
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: '24.11.0'
 
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
         with:
@@ -262,8 +259,8 @@ The exact initial WordPress header annotation is bounded and shown in the PR:
 
 `readme.txt` retains its contents and receives the same bounded markers around
 its existing `Stable tag: 0.1.0` line. Conflicting or ambiguous metadata is not
-silently rewritten. A normal `.prettierignore` may receive `/CHANGELOG.md`; the
-starter neither creates a formatter dependency nor weakens unrelated checks.
+silently rewritten. The starter does not edit formatter configuration or invent a
+formatter dependency; target-owned formatting policy remains target-owned.
 The implementation must exercise a real RP candidate to prove these annotations
 and version sources stay coherent, not merely assert that the marker text exists.
 
