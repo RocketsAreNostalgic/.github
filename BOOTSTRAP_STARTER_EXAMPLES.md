@@ -24,6 +24,7 @@ version.txt                            RP simple version source
 release-contents.txt                    explicit committed payload file list
 scripts/build-release.sh               deterministic projection/ZIP adapter
 scripts/verify-release.sh              independent archive/source verification
+.ran-booster-release-starter.json       passive origin for read-only adoption check
 RELEASE-STARTER.md                      origin and maintainer/security handoff
 ```
 
@@ -137,6 +138,7 @@ jobs:
           path: |
             .ran-booster-release-dist/acorn-plugin-*.zip
             .ran-booster-release-dist/ran-profile-b-promotion.json
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 30
 ```
@@ -320,9 +322,12 @@ Neither this table nor an illustrative YAML block is executable feature proof.
 
 ## 7. Human-readable handoff instead of managed state
 
-The consumer writes `RELEASE-STARTER.md` with the following short structure.
-Values in brackets below are replaced from the verified initial pack/target;
-they are prose placeholders, not additional template-pack capabilities.
+The consumer writes the passive `.ran-booster-release-starter.json` origin record
+defined by the contract and `RELEASE-STARTER.md` with the following short
+structure. Values in brackets below are replaced from the verified initial
+pack/target; they are prose placeholders, not additional template-pack
+capabilities. The JSON file is committed repository metadata but is deliberately
+excluded from `release-contents.txt` and therefore from the installable ZIP.
 
 ```text
 Release starter
@@ -357,15 +362,22 @@ Security and maintenance:
 - watch the pack and shared workflow repositories' release announcements;
 - review affected revisions and apply manual fixes, including workflow repins.
 Origin records do not prove customized code is currently affected or fixed.
-There is no automatic advisory scan, notification guarantee or repair service.
+On package adoption, Booster may validate the exact observed repository's passive
+origin record and compare it read-only with published advisories for the canonical
+pack/shared components. A specific match produces a warning and manual mitigation;
+no match means only no matching known advisory in the checked information; missing,
+invalid or unavailable provenance/advisory data is unknown/not assessed and does
+not by itself block ordinary adoption. A newer starter alone is not a vulnerability.
+There is no background scan, notification guarantee or repair service.
 ```
 
 The actual output must contain concrete official reporting/announcement links,
 not these shorthand descriptions. B updates its outdated managed-update security
 policy accordingly; the coordinator verifies the reporting/subscription route
 before public feature acceptance. This process applies in production regardless
-of user count. No per-site tracking, telemetry, advisory database or new
-repository-origin parser is introduced.
+of user count. No per-site tracking, telemetry, advisory database, scheduler or
+write-capable adoption service is introduced. The bounded origin parser/check is
+part of the reviewed initial-only contract and grants no setup/update authority.
 
 ## 8. Exact test exchange and acceptance runbook
 
@@ -380,8 +392,11 @@ These steps belong to the integration/test harness, not generated project files:
    file sets and compare them with B's output using identical target inputs.
 3. C qualifies the candidate provider inside an exact Core candidate that removes
    the old update controls/routes. Prove the mandatory V2 update slots reject
-   without I/O, rather than silently retaining update behavior. Record original
-   certified-host checks separately from this new composition.
+   without I/O, rather than silently retaining update behavior. Exercise the
+   read-only adoption security checkpoint with matching, non-matching, missing,
+   invalid and unavailable advisory/provenance fixtures; none may grant write
+   authority or infer vulnerability merely from age. Record original certified-host
+   checks separately from this new composition.
 4. With explicit approval and real immutable versions, release the complete
    provider, adopt/qualify/release it with the connected Core changes, upgrade the
    named disposable sites, and publish/read back the complete pack via Profile B.
