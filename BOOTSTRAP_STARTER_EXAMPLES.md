@@ -87,7 +87,7 @@ jobs:
 
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
         with:
-          php-version: '8.2'
+          php-version: '{{RAN_PHP_VERSION}}'
           coverage: none
 
       - name: Build and check the exact installable package
@@ -100,12 +100,14 @@ jobs:
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           version="$(git show "${SOURCE_SHA}:version.txt")"
           [[ "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          test "${#version}" -le 63
+          archive="acorn-plugin-${version}.zip"
+          test "${#archive}" -le 200
           test "$(git show "${SOURCE_SHA}:.release-please-manifest.json" | jq -er '."."')" = "$version"
           work="$(mktemp -d)"
           trap 'rm -rf "$work"' EXIT
           bash scripts/build-release.sh "$SOURCE_SHA" "$version" "$work/one"
           bash scripts/build-release.sh "$SOURCE_SHA" "$version" "$work/two"
-          archive="acorn-plugin-${version}.zip"
           cmp "$work/one/$archive" "$work/two/$archive"
           bash scripts/verify-release.sh "$work/one/$archive" "$version" "$SOURCE_SHA"
           # Extraction follows independent member/type/resource verification.
@@ -218,6 +220,9 @@ supply missing permissions/settings to a repository owned by someone else.
 
 The consumer generates the exact `extra-files` array from verified paths. With no
 readme it includes only the header; there is no raw user-supplied JSON parameter.
+For this fixture the verified `Requires PHP: 8.2` header supplies
+`{{RAN_PHP_VERSION}} = 8.2`; targets outside the reviewed PHP-version set are a
+manual-setup case.
 The RP simple strategy owns `version.txt`; it updates the annotated header and
 optional readme. The builder verifies equality and does not calculate or patch a
 version after tests. No `skip-github-release: true` is permitted.
@@ -392,10 +397,12 @@ These steps belong to the integration/test harness, not generated project files:
    `RepositoryReleaseWorkflowManagementV3` contract. Prove V2/update methods are
    absent from the supported provider/Core composition and forged legacy update
    operations fail request validation before credentials or remote I/O. Exercise
-   the read-only adoption security checkpoint with matching, non-matching, missing,
-   invalid and unavailable advisory/provenance fixtures; none may grant write
-   authority or infer vulnerability merely from age. Record original certified-host
-   checks separately from this new composition.
+   the read-only adoption security checkpoint against the bounded
+   `security/release-starter-advisories.json` index with matching, non-matching,
+   missing, invalid, duplicate, oversized, unpublished-GHSA and unavailable
+   advisory/provenance fixtures; none may grant write authority, parse advisory
+   prose for identity or infer vulnerability merely from age. Record original
+   certified-host checks separately from this new composition.
 4. With explicit approval and real immutable versions, release the complete
    provider, adopt/qualify/release it with the connected Core changes, upgrade the
    named disposable sites, and publish/read back the complete pack via Profile B.
