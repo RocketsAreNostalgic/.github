@@ -38,10 +38,11 @@ maintenance responsibilities as deliberately copied starter code.
   Additional version authorities that cannot be kept coherent by that fixed
   recipe require manual setup; do not infer arbitrary package/build conventions.
 
-The examples use PHP 8.2 for syntax checks and Node 24.11.0 for the existing
-packaging/verifier adapter family, on GitHub-hosted `ubuntu-24.04`. These are
-explicit tooling choices, not a claim to certify every PHP/WordPress version a
-target declares. Product-specific tests and additional compatibility requirements
+The examples use PHP 8.2 for the bounded payload syntax check on GitHub-hosted
+`ubuntu-24.04`. The generated target adapters are Bash and do not install Node or
+a package manager merely because the producer repository itself is Node-based.
+These are explicit tooling choices, not a claim to certify every PHP/WordPress
+version a target declares. Product-specific tests and additional compatibility requirements
 remain target-maintainer work. No artificial Composer project is generated.
 
 Unsupported does not mean insecure or unmanageable by Booster. Explain the exact
@@ -191,9 +192,9 @@ The consumer additionally creates `.release-please-manifest.json`, `version.txt`
 from its verified inputs. All output
 files use Git mode `100644`; scripts are invoked through Bash. It may perform
 only the previewed bounded version-annotation edit to the identified header and
-optional `readme.txt`, and safely append `/CHANGELOG.md` to the normal
-`.prettierignore` when needed. Contradictory/custom version or ignore rules are a
-manual case. No target path, mode, operation, permission or trigger can be added
+optional `readme.txt`. Formatter/ignore configuration remains maintainer-owned;
+the starter does not edit `.prettierignore` or add formatter-specific policy.
+Contradictory/custom version rules are a manual case. No target path, mode, operation, permission or trigger can be added
 by downloaded metadata. A new output path requires a reviewed consumer change.
 
 ### Archive and transport
