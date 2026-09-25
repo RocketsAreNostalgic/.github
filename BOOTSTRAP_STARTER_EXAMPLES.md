@@ -177,7 +177,7 @@ jobs:
       issues: write
       pull-requests: write
       actions: write
-    uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-b.yml@8fefa7da961d5fcb36d706a78578ddb5f39ffa4a
+    uses: RocketsAreNostalgic/.github/.github/workflows/release-profile-b.yml@2df8eb927d3d9a43870b4ba039e956e50f41e050
     with:
       expected-workflow-path: .github/workflows/quality.yml
       release-pr-head: release-please--branches--main--components--acorn-plugin
