@@ -13,6 +13,29 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Release Updater residual acceptance checkpoint — 26 September 2026
+
+This supersedes only Release Updater's older remaining-work descriptions.
+Other repositories retain their dated evidence and owners.
+
+| Evidence | Current disposition |
+| --- | --- |
+| Landed main | `58851628c93f554e89ae75bde9ee37e7cf57a5a9`, through result/proof cohorts [#86](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/86)–[#88](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/88). Post-merge [CI 36232990862](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36232990862) and [Release Please 36233087302](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36233087302) passed. |
+| Landed scope | All 36 shipped PHP paths remain directly analysed at level 8. Conditions and reserved-parameter slices are landed. Owned-method naming is enforced for 11 completed files; variables for 10. Remaining naming is not waived. |
+| Proposed archive/provider cohorts | [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89) at `f81c0f237ad529167495859c8372bd66536ba0e7`; [#90](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/90) at `e5e5554edeabd44da3c00089179f5d9f086eb134`. Native quality and separately requested code/security reviews passed. Copilot's three constructor-test findings on the provider PR are addressed by committed regression tests. |
+| Proposed lifecycle/runtime cohort | [#91](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/91) at `d7ef334d4c05c9213c3dd3b08f72f016af0f3b29`. Selected-state and broker naming must land with the explicit protocol-5 transition; the original protocol-4 mixed-copy finding is not waived. Current candidate/review evidence belongs to that PR. |
+| Proposed final enforcement/exception acceptance | [#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92) at `e8ccef78b6ede66d77b82a0532ecc906d8ca533d`. Covers all 35 maintained production PHP files plus the two scripts through path rules, including future files. Generated helper parity/direct analysis and purpose-built fixture boundaries remain; retained exceptions are inventoried in its `QUALITY_ACCEPTANCE.md`. |
+| Local execution limit | Portable PHP's two known `GLOB_BRACE` architecture errors are not a passing full aggregate. Native CI is separate evidence. All stronger runtime, archive, WordPress/MySQL, Windows, no-dev and live-audit gates remain. |
+| Connected adoption | Core `0c1ace618331a23e068cec6e54a896c634bc8f76` still locks updater `0.1.0-beta.7`, declares protocol 4 and has two `protocolVersion()` assertions. Change the dependency, metadata and assertions together in a later installable adoption; no new Core tuple is certified here. |
+
+The stack is proposed, not landed. After owner-authorized sequential merges,
+record each actual main SHA and post-merge qualification, then reconcile this
+checkpoint before closing [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60).
+The package version is unchanged by these implementation PRs; the owner-held
+[release #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+and subsequent Core adoption remain separate decisions. No programme-wide or
+Migrator release closeout is implied.
+
 ## Current routing and superseded work selections — 25 September 2026
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
