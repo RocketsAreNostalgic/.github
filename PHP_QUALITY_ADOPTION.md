@@ -23,7 +23,7 @@ and the existing repository children, not waived or marked complete.
 | [Updater Support #35](https://github.com/RocketsAreNostalgic/ran-updater-support/issues/35) | `6a9cdbc9eb1bbecbafcbe16da931c98928d035e8` | [#36](https://github.com/RocketsAreNostalgic/ran-updater-support/pull/36) merged; `check`, `lint:syntax`, `standards`, `standards:fix`, `analyze`, `test` present. [#40](https://github.com/RocketsAreNostalgic/ran-updater-support/pull/40) additionally activates owned-method enforcement. |
 | [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | `d382d09e4490ed4438d9ebaea2a06d69d59f0ce3` | [#60](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/60) merged; all six canonical names present. Installed no-dev consumer remains required in CI. |
 | [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800` | [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26) merged; six canonical names and separate certified-host `check:host` present. |
-| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `65b31c0aca26363a87180fa5f9ac7081fd661eb9` | [#66](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/66) commands retained; local #67–#76 coverage sequence complete (excluding held release #70): all 36 shipped PHP files direct at level 8. Live audit, generated parity and no-dev proof retained; residual naming/standards remain owned locally. |
+| [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `58851628c93f554e89ae75bde9ee37e7cf57a5a9` | Canonical commands and direct level-8 coverage of all 36 shipped PHP files retained. Conditions, reserved parameters and naming cohorts through [#88](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/88) landed; methods enforced for 11 completed files, variables for 10. Final [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89)–[#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92) stack is proposed, not merged; see the 26 September matrix checkpoint for exact candidates, exceptions and the protocol/Core adoption boundary. |
 | [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | `829d823afd87923a20f8170671d2f456465424d9` | [#46](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/46) fixed parser/discovery failure propagation and added lint:syntax; lint:php retained for CI. No standards:fix or analyze yet at that checkpoint. [#45](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/45) separately repinned release workflow. |
 
 The original Support/Branch/Provider cohort declares PHP `^8.2` and uses shared
@@ -40,6 +40,18 @@ Post-merge evidence is linked in the matrix's
 Provider command PR #26 is delivered; do not recreate it. Older rows remain
 recorded adoption revisions, not a new estate-wide source audit. Refresh the
 linked owner before changing source or a dependency/host composition.
+
+## Release Updater residual acceptance — 26 September 2026
+
+The [matrix checkpoint](PHP_QUALITY_MATRIX.md#release-updater-residual-acceptance-checkpoint--26-september-2026)
+records landed main separately from the proposed final naming/enforcement stack.
+The final candidate adds future-file coverage for maintained production and
+scripts, preserves generated/fixture/security exceptions and directly analyses
+all 36 shipped paths at level 8. A reviewed protocol-5 transition is required
+with the selected-state rename; it is not a package version bump or a certified
+Core dependency adoption. The implementation stack, final merged-main evidence
+and matrix reconciliation must land before [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) closes. [Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70) stays
+owner-held; other repositories' dated rows are not requalified by this update.
 
 ## Command migration mapping
 
