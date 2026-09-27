@@ -4,7 +4,7 @@ Owner: [#65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Contract: [QUALITY_STANDARDS.md](QUALITY_STANDARDS.md#php-command-meanings).
 
 This ledger records the initial bounded command-adoption slice and its
-24 September 2026 landing checkpoints. The nine-repository dated
+subsequent dated landing checkpoints. The nine-repository dated
 source/coverage/tool inventory and observed execution evidence live in
 [PHP_QUALITY_MATRIX.md](PHP_QUALITY_MATRIX.md). Neither document declares full
 suite acceptance, transfers active claims or substitutes a historical revision
@@ -24,6 +24,7 @@ and the existing repository children, not waived or marked complete.
 | [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | `d382d09e4490ed4438d9ebaea2a06d69d59f0ce3` | [#60](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/60) merged; all six canonical names present. Installed no-dev consumer remains required in CI. |
 | [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800` | [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26) merged; six canonical names and separate certified-host `check:host` present. |
 | [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `5ad94e972446f08c7408828cf7e4ac42c2eee78d` | Canonical commands and direct level-8 coverage of all 36 shipped PHP files retained. Naming and exception acceptance landed through [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89)–[#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92): owned methods/variables cover all maintained production paths and both scripts, including future files. See the 27 September matrix checkpoint for exact-head reviews, merged-main runs, retained exceptions and the separate protocol/Core adoption boundary. |
+| [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63) | `5e0732e0ea386402b239d6982c753bc1f0f4b6d5` | [#68](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/68) makes existing level-3 analysis blocking through `check:host`; `check` remains Core-independent. Direct roots still cover 18 of 20 shipped PHP files; view/index coverage is a separate proposal. Post-merge Quality, installed proof and Release Please passed. See the [27 September matrix checkpoint](PHP_QUALITY_MATRIX.md#bitbucket-blocking-analysis-checkpoint--27-september-2026) for exact host, reviews and retained gates. |
 | [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | `829d823afd87923a20f8170671d2f456465424d9` | [#46](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/46) fixed parser/discovery failure propagation and added lint:syntax; lint:php retained for CI. No standards:fix or analyze yet at that checkpoint. [#45](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/45) separately repinned release workflow. |
 
 The original Support/Branch/Provider cohort declares PHP `^8.2` and uses shared
