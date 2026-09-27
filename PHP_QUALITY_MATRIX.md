@@ -13,6 +13,71 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Bitbucket blocking analysis checkpoint — 27 September 2026
+
+This package-only checkpoint supersedes Bitbucket's advisory-analysis statements
+in the 23 September snapshot below. It does not requalify other repository rows.
+[Bitbucket #68](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/68)
+was squash-merged at `5e0732e0ea386402b239d6982c753bc1f0f4b6d5` from reviewed
+head `39921fa24c50d67d196bba8b12814cde4df7ca3b`; both have tree
+`346724672790f3a4e8bd6acc1e35cffd4042df41`.
+
+`composer check` remains Core-independent PHPCS plus syntax. `composer check:host`
+now runs required level-3 `analyze`, unit tests, release-candidate contracts and
+`check`, in that order. The separate advisory CI step was removed; analysis
+failure propagates through Repository quality to terminal Quality. The focused
+`composer analyze` uses the same configuration. `standards` and `standards:fix`
+remain the PHPCS/PHPCBF pair. RELEASE.md and contributor/agent guidance agree.
+
+The certified host remains Core v1.0.0-beta.29, tag target
+`ffc11fc8e40618624a785b7fca5193029c6d492e`, archive source
+`ff35be100a9f5c6cd77a84bcfc3734227106b0b8`, with only its locked production
+dependencies installed. Set `RAN_BOOSTER_CORE_PATH` and
+`RAN_BOOSTER_CORE_VENDOR_AUTOLOAD` as documented in the add-on. Runtime support
+remains PHP 8.2+ / WordPress 7.0+. PHPStan 2.2.8 and WordPress extension 2.0.3
+remain locked; no level, roots, baseline, dependency or runtime source changed.
+
+### Shipped PHP coverage at the landed revision
+
+The release allowlist selects 20 PHP files. Direct analysis is distinguished
+from bootstrap/autoloader symbol availability; loading a symbol is not proof
+that its implementation or an included view is directly analysed.
+
+| Scope | Count | Disposition |
+| --- | --- | --- |
+| `autoload.php`, `ran-booster-bitbucket.php` | 2 | Direct blocking level 3. |
+| All PHP under `src/Bitbucket/` | 16 | Direct blocking level 3 through the `src` directory root, including future PHP files there. |
+| `views/documentation.php` | 1 | Shipped executable view, outside direct roots. Included by `Plugin`; inclusion alone is not direct coverage evidence. |
+| `index.php` | 1 | Shipped inert “Silence is golden” file, outside direct roots. |
+| Core production contracts, Composer/WordPress symbols and `tests/phpstan-bootstrap.php` | Outside shipped add-on PHP | Bootstrap/autoloader/extension context; not additional directly analysed add-on roots. |
+| `scripts/verify-release.php`, tests and fixtures | Not shipped | Outside direct analysis roots; retained syntax/test/archive checks have separate purposes. |
+| Generated PHP copies | 0 | No generated-copy exclusion is needed for the allowlisted PHP. |
+
+The smallest next coverage proposal is to measure `views/` and `index.php` at
+unchanged level 3 against the same certified host, then add those roots only
+with clean results and a negative control proving view failures reach the host
+aggregate. This is a proposal, not landed coverage. Higher levels, shared-standard
+version adoption and connected API/naming work remain separate reviewed slices
+coordinated through #65 and the existing package owners.
+
+### Qualification and retained gates
+
+Final-head code and security reviews completed clean after both Codex/Copilot
+findings about stale RELEASE.md wording were fixed and resolved. Native Quality,
+Repository quality, PHP 8.2/8.5, runtime archive, separate Certified Core installed
+proof and GitGuardian passed. Local implementation proof recorded zero analysis
+errors, 196 tests / 2,159 assertions and release-candidate validation (1 valid /
+12 invalid). A temporary source return-type violation failed `check:host` before
+PHPUnit; it was removed before the final clean aggregate.
+
+Successful post-merge runs on `5e0732e0ea386402b239d6982c753bc1f0f4b6d5`:
+[Quality 36355112140](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36355112140),
+[Certified Core installed proof 36355111457](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36355111457),
+and [Release Please 36355229655](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36355229655).
+The installed proof remains a separate workflow, not a terminal Quality dependency.
+Release-candidate install readback remains conditional. No release publication,
+new certified composition or programme-wide acceptance is claimed.
+
 ## Release Updater naming and exception acceptance — 27 September 2026
 
 This checkpoint supersedes Release Updater's proposed status in the dated
@@ -88,8 +153,12 @@ Migrator release closeout is implied.
 
 ## Current routing and superseded work selections — 25 September 2026
 
-Release Updater routing reconciled on 27 September; other owner routing below
-retains its 25 September scope.
+Release Updater and Bitbucket routing reconciled on 27 September; other owner
+routing below retains its 25 September scope.
+
+Bitbucket’s [blocking-analysis checkpoint](#bitbucket-blocking-analysis-checkpoint--27-september-2026)
+records landed enforcement and the remaining view/index coverage proposal. Do
+not recreate the advisory-to-blocking promotion from the older audit rows.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
