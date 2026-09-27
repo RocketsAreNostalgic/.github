@@ -88,6 +88,9 @@ Migrator release closeout is implied.
 
 ## Current routing and superseded work selections — 25 September 2026
 
+Release Updater routing reconciled on 27 September; other owner routing below
+retains its 25 September scope.
+
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
 #66: matrix upkeep, upgrade/live-audit decisions, drift validation, contributor
@@ -106,10 +109,16 @@ Release Updater's coverage and matrix reconciliation are delivered through
 and [organisation #82](https://github.com/RocketsAreNostalgic/.github/pull/82).
 Its later [condition slice #77](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/77)
 removed the global Yoda suppression while retaining scoped fixture exclusions.
-Follow [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
-for remaining naming/parameter/exception work and subsequent exact evidence;
-do not repeat the old inventory or treat the 24 September suppression list as
-current. [Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+Remaining naming and exception implementation subsequently landed through
+[local #89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89)–[#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92).
+The [27 September acceptance checkpoint](#release-updater-naming-and-exception-acceptance--27-september-2026)
+records the final reviewed heads, merged-main qualification and matrix reconciliation.
+[Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
+is the acceptance/closure record, not a queue to restart completed naming,
+parameter, condition or exception slices. Publication and the coordinated
+Core dependency/protocol-metadata/test adoption remain separate decisions.
+Do not treat the historical suppression lists as current.
+[Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
 remains held by the owner. [Migrator #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
 retains its own exact-candidate installed-site acceptance.
 
