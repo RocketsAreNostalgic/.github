@@ -13,7 +13,54 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Bitbucket shipped-PHP coverage acceptance — 28 September 2026
+
+This checkpoint supersedes the proposed view/index coverage increment in the
+27 September blocking-analysis checkpoint below. [Bitbucket #69](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/69)
+landed as `80895ee9ffe0bf4e49b38939115c8946438f5a60` from reviewed head
+`0b0a4cfc6f62142e0fffb4d5680c10442cd36081`. Both trees are
+`230555708705a7d57aabe48b9d4d7d6794aa1977`.
+
+| Shipped scope | Files | Direct analysis |
+| --- | ---: | --- |
+| `autoload.php`, plugin entrypoint | 2 | Blocking level 3 |
+| `src/Bitbucket/` | 16 | Blocking level 3 via `src/` |
+| `views/documentation.php` | 1 | Blocking level 3 via `views/` |
+| `index.php` | 1 | Blocking level 3; inert file included |
+| **Total** | **20** | **All shipped PHP directly covered** |
+
+Directory roots include future PHP files under `src/` and `views/`. Bootstrap,
+Core and WordPress symbols remain analysis context, not additional direct roots.
+Tests, fixtures and the unshipped release verifier retain their separate checks.
+No generated PHP copy exists in this package's release allowlist.
+
+The implementation changes only analysis configuration and contributor/release
+guidance. Level 3, locked tools, runtime PHP, dependency locks and the exact Core
+beta.29 tuple recorded below are unchanged. The temporary documentation-view
+return-type violation failed `check:host` during analysis before PHPUnit; the
+probe was removed. Final local aggregate passed: all 20 paths clean, 196 tests /
+2,159 assertions, candidate validator (1 valid / 12 invalid), PHPCS and syntax.
+Exact implementation-candidate archive build/verification passed; the final
+head's native runtime archive and certified installed proof also passed.
+
+Final-head code/security reviews were clean, both earlier release-guidance
+findings resolved, and all applicable checks passed. Successful post-merge runs
+at `80895ee9ffe0bf4e49b38939115c8946438f5a60`:
+[Quality 36357893395](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36357893395),
+[Certified Core installed proof 36357892887](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36357892887),
+and [Release Please 36357983946](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36357983946).
+
+This closes the identified shipped-path coverage gap, not the wider quality
+programme. Higher analysis levels, shared-standard version adoption and
+connected naming/API work remain separate decisions under #65 and the package
+owners. No release publication or new certified Core composition is claimed.
+Dates in this checkpoint use Europe/London; GitHub run timestamps may show
+27 September UTC.
+
 ## Bitbucket blocking analysis checkpoint — 27 September 2026
+
+Historical enforcement checkpoint; its proposed view/index increment is
+superseded by the 28 September coverage acceptance above.
 
 This package-only checkpoint supersedes Bitbucket's advisory-analysis statements
 in the 23 September snapshot below. It does not requalify other repository rows.
@@ -153,12 +200,13 @@ Migrator release closeout is implied.
 
 ## Current routing and superseded work selections — 25 September 2026
 
-Release Updater and Bitbucket routing reconciled on 27 September; other owner
-routing below retains its 25 September scope.
+Release Updater routing reconciled on 27 September and Bitbucket on 28 September;
+other owner routing below retains its 25 September scope.
 
-Bitbucket’s [blocking-analysis checkpoint](#bitbucket-blocking-analysis-checkpoint--27-september-2026)
-records landed enforcement and the remaining view/index coverage proposal. Do
-not recreate the advisory-to-blocking promotion from the older audit rows.
+Bitbucket’s [shipped-PHP coverage acceptance](#bitbucket-shipped-php-coverage-acceptance--28-september-2026)
+records landed blocking level-3 analysis of all 20 shipped PHP files. Do not
+recreate either the enforcement promotion or the completed view/index increment
+from older audit rows.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
