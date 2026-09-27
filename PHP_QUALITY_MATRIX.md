@@ -13,7 +13,83 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Release Updater naming and exception acceptance — 27 September 2026
+
+This checkpoint supersedes Release Updater's proposed status in the dated
+26 September checkpoint below. Other repository rows remain dated evidence.
+The owner-authorized implementation stack is squash-merged in dependency order.
+Each dependent PR was retargeted with its complete reviewed tree unchanged,
+then received fresh native CI and separately requested code/security reviews.
+All actionable review threads were resolved before merging; each merge tree
+matches its qualified candidate.
+
+| PR | Reviewed final head | Squash merge | Successful post-merge runs |
+| --- | --- | --- | --- |
+| [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89) | `f81c0f237ad529167495859c8372bd66536ba0e7` | `292021627b09389086c79cbccd0ba61967f4b305` | [CI 36327464181](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36327464181); [Release Please 36327579636](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36327579636) |
+| [#90](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/90) | `967532565ea32d1e912a7a71ca92a1852afc8235` | `afe771850a8461e5cd23b168ebddfe0053c674eb` | [CI 36327855092](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36327855092); [Release Please 36327972845](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36327972845) |
+| [#91](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/91) | `7ac5be8ab58c7476e550df6d527b33b33bbb044d` | `3d0f2942b18590c9cd5ab264a6c63d44ae9087e2` | [CI 36328265492](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36328265492); [Release Please 36328383429](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36328383429) |
+| [#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92) | `a2700e62bd7090cf664a842c1094f8e77fb15efb` | `5ad94e972446f08c7408828cf7e4ac42c2eee78d` | [CI 36328610084](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36328610084); [Release Please 36328744769](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36328744769) |
+
+The final main checkpoint is `5ad94e972446f08c7408828cf7e4ac42c2eee78d`.
+Owned-method and variable naming now cover all 35 maintained production PHP
+files and both scripts through path rules, including future files. All 36
+shipped PHP files retain direct blocking level-8 analysis. Generated
+ArchiveSafety retains namespace-only parity and its PHPCS exclusion;
+purpose-built fixture interfaces remain exempt from mechanical naming changes.
+The [acceptance record](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/blob/5ad94e972446f08c7408828cf7e4ac42c2eee78d/QUALITY_ACCEPTANCE.md)
+documents the retained security/native/JSON/bootstrap/fixture exceptions and
+seven declaration-local PHPStan exceptions. No broad production naming waiver,
+analysis baseline or lower analysis level is introduced.
+
+Native PHP 8.2/8.5, WordPress 6.5/7.1, MySQL CAS, Windows, JavaScript,
+no-dev consumers, live Composer audit and generated/runtime-copy checks remain.
+Negative controls and repeated PHPCBF stability evidence are recorded in the
+implementation PRs. The final local full run was 474 tests / 24,739 assertions
+with the two known portable-PHP `GLOB_BRACE` errors; it is not a green aggregate.
+Native CI supplies separate successful qualification.
+
+The coordinated lifecycle/runtime change advances the cross-copy protocol to 5;
+both protocol-4/5 load orders fail closed without replacing or mutating the
+established broker. Final runtime content identity is
+`07696b27292b1c999714e31b06f2fd0d79d0d3e19e334eb17136c37b027c9a24`.
+Package version remains `1.0.0-beta.8`. The [held release #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+requires a separate owner publication decision.
+
+The bounded Core audit at `0c1ace618331a23e068cec6e54a896c634bc8f76` and
+[Core #167 handoff](https://github.com/RocketsAreNostalgic/ran-booster/issues/167#issuecomment-5845449902)
+identify the later coordinated dependency/protocol-metadata/test adoption.
+No new Core host tuple is certified by this package acceptance. This checkpoint
+supplies the final matrix reconciliation for [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60);
+the wider #65 programme and Migrator's separate release proof remain open work.
+
+## Release Updater residual acceptance checkpoint — 26 September 2026
+
+Historical pre-merge checkpoint; superseded by the 27 September landed record above.
+This superseded only Release Updater's older remaining-work descriptions.
+Other repositories retain their dated evidence and owners.
+
+| Evidence | Current disposition |
+| --- | --- |
+| Landed main | `58851628c93f554e89ae75bde9ee37e7cf57a5a9`, through result/proof cohorts [#86](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/86)–[#88](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/88). Post-merge [CI 36232990862](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36232990862) and [Release Please 36233087302](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36233087302) passed. |
+| Landed scope | All 36 shipped PHP paths remain directly analysed at level 8. Conditions and reserved-parameter slices are landed. Owned-method naming is enforced for 11 completed files; variables for 10. Remaining naming is not waived. |
+| Proposed archive/provider cohorts | [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89) at `f81c0f237ad529167495859c8372bd66536ba0e7`; [#90](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/90) at `e5e5554edeabd44da3c00089179f5d9f086eb134`. Native quality and separately requested code/security reviews passed. Copilot's three constructor-test findings on the provider PR are addressed by committed regression tests. |
+| Proposed lifecycle/runtime cohort | [#91](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/91) at `d7ef334d4c05c9213c3dd3b08f72f016af0f3b29`. Selected-state and broker naming must land with the explicit protocol-5 transition; the original protocol-4 mixed-copy finding is not waived. Current candidate/review evidence belongs to that PR. |
+| Proposed final enforcement/exception acceptance | [#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92) at `e8ccef78b6ede66d77b82a0532ecc906d8ca533d`. Covers all 35 maintained production PHP files plus the two scripts through path rules, including future files. Generated helper parity/direct analysis and purpose-built fixture boundaries remain; retained exceptions are inventoried in its `QUALITY_ACCEPTANCE.md`. |
+| Local execution limit | Portable PHP's two known `GLOB_BRACE` architecture errors are not a passing full aggregate. Native CI is separate evidence. All stronger runtime, archive, WordPress/MySQL, Windows, no-dev and live-audit gates remain. |
+| Connected adoption | Core `0c1ace618331a23e068cec6e54a896c634bc8f76` still locks updater `0.1.0-beta.7`, declares protocol 4 and has two `protocolVersion()` assertions. Change the dependency, metadata and assertions together in a later installable adoption; no new Core tuple is certified here. |
+
+The stack is proposed, not landed. After owner-authorized sequential merges,
+record each actual main SHA and post-merge qualification, then reconcile this
+checkpoint before closing [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60).
+The package version is unchanged by these implementation PRs; the owner-held
+[release #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+and subsequent Core adoption remain separate decisions. No programme-wide or
+Migrator release closeout is implied.
+
 ## Current routing and superseded work selections — 25 September 2026
+
+Release Updater routing reconciled on 27 September; other owner routing below
+retains its 25 September scope.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
@@ -33,10 +109,16 @@ Release Updater's coverage and matrix reconciliation are delivered through
 and [organisation #82](https://github.com/RocketsAreNostalgic/.github/pull/82).
 Its later [condition slice #77](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/77)
 removed the global Yoda suppression while retaining scoped fixture exclusions.
-Follow [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
-for remaining naming/parameter/exception work and subsequent exact evidence;
-do not repeat the old inventory or treat the 24 September suppression list as
-current. [Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
+Remaining naming and exception implementation subsequently landed through
+[local #89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89)–[#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92).
+The [27 September acceptance checkpoint](#release-updater-naming-and-exception-acceptance--27-september-2026)
+records the final reviewed heads, merged-main qualification and matrix reconciliation.
+[Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
+is the acceptance/closure record, not a queue to restart completed naming,
+parameter, condition or exception slices. Publication and the coordinated
+Core dependency/protocol-metadata/test adoption remain separate decisions.
+Do not treat the historical suppression lists as current.
+[Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
 remains held by the owner. [Migrator #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
 retains its own exact-candidate installed-site acceptance.
 
