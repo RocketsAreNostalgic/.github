@@ -194,7 +194,7 @@
     },
     "RocketsAreNostalgic/ran-admin-shell": {
       "profile": "php-library",
-      "approved_commit": "85902698496e7e40ae876e7b98733a7d0ab810d9",
+      "approved_commit": "7de4946cfe6be6a3da854d576cedd45e385d2ebd",
       "inputs": {
         "php-floor": "8.0",
         "php-current": "8.5",
@@ -256,7 +256,7 @@
         {
           "path": "tests",
           "type": "tree",
-          "oid": "4f07ad1a6884fb1a8f6e49c99c64c3a9911bc2c7"
+          "oid": "6f442beefc5a1dfca94e4737426e9d6b0514b950"
         },
         {
           "path": "fixtures",
