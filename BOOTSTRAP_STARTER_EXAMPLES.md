@@ -8,6 +8,12 @@ examples do not claim an executable producer/consumer pair already exists. Later
 owner decisions distinguish proposal delivery from owner-managed execution
 configuration without changing this workflow/file-map contract.
 
+**Delivery sequencing:** the [owner decision in #81](https://github.com/RocketsAreNostalgic/.github/issues/81#temporary-delivery-deferral--owner-decision-28-september-2026)
+defers UI implementation and owner-verified end-to-end onboarding/integration
+until local interactive verification can resume. Non-UI contract preparation
+may continue within existing claims and automated gates. The acceptance below
+remains required; this deferral does not change the frozen technical contract.
+
 The fictional target is `example/acorn-plugin`, root plugin `acorn-plugin.php`,
 slug `acorn-plugin`, version `0.1.0`. The forty `1` characters in `bootstrap-sha`
 are explicitly a **fixture base**, not a real commit or adoption pin. The consumer
