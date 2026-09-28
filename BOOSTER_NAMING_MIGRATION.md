@@ -6,6 +6,30 @@ evidence PR `#70`. This extends the [shared-rule audit](BOOSTER_SHARED_RULES_AUD
 It proposes the migration cohorts; it does not rename application code or
 release a new API generation.
 
+## Current routing — Bitbucket handoff, 28 September 2026
+
+This document's counts and cohort inventory below are historical audit evidence,
+not current reservations or completed-name counts. Live ownership and sequencing
+remain in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65#rollout-plan-and-agent-handoffs).
+
+The Bitbucket quality agent's batch is merged through
+[Bitbucket #77](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/77)
+at `6c9e4c44bc1832495913826e999fb091701184dd`: blocking level 8/all 20 shipped
+paths, syntax failure propagation and Yoda enforcement are delivered. No
+Bitbucket implementation PR remains qualified-but-open at this checkpoint.
+[Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63)
+has the current evidence and remaining acceptance; release #75 is separately held.
+
+Owned-name migration and shared-standard adoption are **planned, not claimed or
+implemented** by this batch. Refresh actual callers, external signatures and
+inherited-method enforcement before choosing the next bounded scope. Connected
+Core/API/host/dependency work remains with
+[Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167)'s owner;
+this handoff neither reserves those files nor certifies a new composition.
+[The current matrix checkpoint](PHP_QUALITY_MATRIX.md#bitbucket-syntax-and-condition-acceptance--28-september-2026)
+records the delivered proof. Other packages' live status must be read from their
+owning issues; no UI/integration acceptance or publication is inferred.
+
 ## Decision
 
 The owner has confirmed that public APIs may change during beta. Target
