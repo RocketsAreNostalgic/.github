@@ -247,10 +247,10 @@ Migrator release closeout is implied.
 Release Updater routing reconciled on 27 September and Bitbucket on 28 September;
 other owner routing below retains its 25 September scope.
 
-Bitbucket’s [shipped-PHP coverage acceptance](#bitbucket-shipped-php-coverage-acceptance--28-september-2026)
-records landed blocking level-3 analysis of all 20 shipped PHP files. Do not
-recreate either the enforcement promotion or the completed view/index increment
-from older audit rows.
+Bitbucket’s [level-8 acceptance](#bitbucket-level-8-acceptance--28-september-2026)
+records landed blocking level-8 analysis of all 20 shipped PHP files. Do not
+recreate the enforcement promotion, completed view/index increment or resolved
+analysis-model findings from older audit rows.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
