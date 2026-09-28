@@ -233,7 +233,7 @@ const resolution = workflow.slice(workflow.indexOf('      - name: Resolve exact 
 const resolutionScript = resolution.slice(resolution.indexOf('        run: |') + '        run: |'.length)
   .split('\n').map(line => line.replace(/^          /, '')).join('\n');
 assert.ok(workflow.includes('steps.promotion.outputs.publication-outcome || steps.publication.outputs.publication-outcome'));
-for (const [name, fixture, status, mutable] of [
+for (const [name, fixture, status, mutable, tagState = 'valid'] of [
   ['retry mutable release', { ...exactRelease, draft: false, immutable: false }, 1, true],
   ['retry immutable release', { ...exactRelease, draft: false, immutable: true }, 0, false],
   ['draft remains draft', { ...exactRelease, immutable: false }, 0, false],
@@ -243,6 +243,10 @@ for (const [name, fixture, status, mutable] of [
   ['invalid release identity', { ...exactRelease, id: '1\n::error::bad', draft: false, immutable: false }, 1, false],
   ['missing tag identity', { ...exactRelease, tag_name: null, draft: false, immutable: false }, 1, false],
   ['empty tag identity', { ...exactRelease, tag_name: '', draft: false, immutable: false }, 1, false],
+  ['moved mutable tag', { ...exactRelease, draft: false, immutable: false }, 1, false, 'moved'],
+  ['deleted mutable tag', { ...exactRelease, draft: false, immutable: false }, 1, false, 'deleted'],
+  ['moved immutable tag', { ...exactRelease, draft: false, immutable: true }, 1, false, 'moved'],
+  ['invalid classification', { ...exactRelease, prerelease: null }, 1, false],
   ['other revision', { ...exactRelease, target_commitish: 'b'.repeat(40), draft: false, immutable: false }, 0, false],
 ]) {
   const dir = mkdtempSync(join(tmpdir(), 'profile-b-resolution-'));
@@ -254,6 +258,7 @@ gh() {
   if [[ "$*" == 'api --paginate --slurp repos/example/repo/releases?per_page=100' ]]; then
     printf '%s\\n' "$RAN_TEST_PAGES"
   elif [[ "$*" == 'api repos/example/repo/git/ref/tags/v1.3.3' ]]; then
+    [[ "$RAN_TEST_TAG_STATE" != deleted ]] || return 1
     printf '%s\\n' "$RAN_TEST_TAG"
   else
     echo 'Unexpected API call' >&2
@@ -265,13 +270,17 @@ ${resolutionScript}`], { encoding: 'utf8', timeout: 10000, env: {
       RAN_ADMITTED_SHA: 'a'.repeat(40), RAN_RELEASE_CREATED: 'false',
       RAN_RELEASE_SHA: '', RAN_RELEASE_TAG: '',
       RAN_TEST_PAGES: JSON.stringify([[fixture]]),
-      RAN_TEST_TAG: JSON.stringify({ object: { type: 'commit', sha: 'a'.repeat(40) } }),
+      RAN_TEST_TAG_STATE: tagState,
+      RAN_TEST_TAG: JSON.stringify({ object: { type: 'commit', sha: (tagState === 'moved' ? 'b' : 'a').repeat(40) } }),
     } });
     assert.ifError(result.error);
     assert.equal(result.status, status, name + ': ' + result.stderr);
     const outputs = readFileSync(output, 'utf8');
     assert.equal(outputs.includes('publication-outcome=published-mutable'), mutable, name);
-    if (mutable) assert.equal(outputs, 'publication-outcome=published-mutable\nrelease-id=394078148\n');
+    if (mutable) assert.equal(outputs, 'release-id=394078148\npublication-outcome=published-mutable\n');
+    const validMatchedId = fixture.id === exactRelease.id && fixture.target_commitish === 'a'.repeat(40);
+    assert.equal(outputs.includes('release-id=394078148\n'), validMatchedId, name + ': retained safe identity');
+    if (status !== 0) assert.ok(!outputs.includes('promotion-required=true'), name + ': no failed promotion admission');
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }
 
@@ -416,10 +425,14 @@ assert.ok(docs.includes('Missing or expired Quality artifact'));
 const reporting = workflow.slice(workflow.indexOf('      - name: Explain Profile B outcome'));
 const reportingScript = reporting.slice(reporting.indexOf('        run: |') + '        run: |'.length)
   .split('\n').map(line => line.replace(/^          /, '')).join('\n');
-for (const [stage, publication, expected] of [
+for (const [stage, publication, expected, phase = 'immutable-readback'] of [
   ['promotion', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
   ['resolution', 'published-mutable', 'PUBLIC MUTABLE RELEASE confirmed'],
   ['promotion', 'unknown', 'Publication outcome is unknown'],
+  ['promotion', 'unknown', 'This promotion attempt did not request publication', 'asset-verification'],
+  ['promotion', 'unknown', 'This promotion attempt did not request publication', 'asset-upload'],
+  ['promotion', 'unknown', 'Publication outcome is unknown', 'publication-request'],
+  ['promotion', 'unknown', 'Publication outcome is unknown', 'publication-readback'],
   ['release-please', '', 'A 403 does not identify a disabled setting'],
   ['current-main', '', 'stale revision is normal non-publication'],
   ['artifact', '', 'Do not rebuild substitute bytes'],
@@ -430,7 +443,7 @@ for (const [stage, publication, expected] of [
   try {
     const env = { ...process.env, GITHUB_STEP_SUMMARY: join(dir, 'summary'),
       GITHUB_REPOSITORY: 'example/repo\n::error::injected<>&`', RAN_SHA: 'a'.repeat(40),
-      RAN_RELEASE_ID: '123', RAN_QUALITY_RUN: '42', RAN_QUALITY_ATTEMPT: '2', RAN_PHASE: 'immutable-readback',
+      RAN_RELEASE_ID: '123', RAN_QUALITY_RUN: '42', RAN_QUALITY_ATTEMPT: '2', RAN_PHASE: phase,
       RAN_PUBLICATION: publication, RAN_REQUIRED: stage === 'none' ? 'false' : 'true',
       RAN_MAIN: 'success', RAN_CONFIG: 'success', RAN_PLEASE: 'success', RAN_QUALITY: 'success',
       RAN_RESOLVE: 'success', RAN_ARTIFACT: 'success', RAN_PROMOTION: 'success' };
