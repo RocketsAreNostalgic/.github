@@ -268,7 +268,8 @@
         "vendor",
         ".phpcs.xml",
         ".phpcs.xml.dist",
-        "phpcs.xml"
+        "phpcs.xml",
+        "resources/.gitattributes"
       ]
     }
   }

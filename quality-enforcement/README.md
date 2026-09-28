@@ -316,3 +316,9 @@ reviewed. Enrol repositories incrementally:
 
 Do not target a repository that has no entry in `contracts.json`; the validator
 will deliberately fail closed with `No approved quality contract`.
+
+Admin Shell also rejects `resources/.gitattributes`: nested attribute overrides
+could change the export of its two resource files without changing the protected
+root attributes. The CLI and tool trees are protected recursively. PHPStan uses
+an explicit `--configuration=phpstan.neon.dist`, so default-discovery shadows
+cannot replace the protected analyzer configuration.
