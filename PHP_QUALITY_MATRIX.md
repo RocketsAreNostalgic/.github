@@ -13,9 +13,53 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Bitbucket level-8 acceptance — 28 September 2026
+
+This is the current Bitbucket analysis checkpoint; the coverage/enforcement
+checkpoints below are historical. [Bitbucket #74](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/74)
+landed at `7b87a77eb98b16aa163c28358386605f28860d5b` from reviewed head
+`bf5bb55485e1c856f85dd368460fd356c5341e5d`, preserving tree
+`dd4187aca4f0501de881bba7d442def35016966c`.
+
+| Acceptance surface | Landed evidence |
+| --- | --- |
+| Direct analysis | Blocking PHPStan level 8: `autoload.php`, plugin entrypoint, `src/`, `views/`, `index.php`; all 20 shipped PHP paths match the archive inventory. Directory roots cover future PHP files. |
+| Locked tools | PHPStan 2.2.8, phpstan-wordpress 2.0.3, wordpress-stubs 6.9.4, PHPUnit 11.5.56, PHPCS 3.13.6, WPCS 3.4.1; RAN standards remain locked at `0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be`. |
+| Runtime / certified host | PHP 8.2+, WordPress 7.0+, Provider API 11 / Add-on API 16. Core beta.29 tag target `ffc11fc8e40618624a785b7fca5193029c6d492e`, archive source `ff35be100a9f5c6cd77a84bcfc3734227106b0b8`, production dependencies only. |
+| Commands | Independent `check` retains PHPCS/syntax. Required `check:host` runs `analyze`, unit tests, candidate validator and `check`; native Repository quality feeds terminal Quality. `standards` / `standards:fix` use the same PHPCS/PHPCBF ruleset. Separate certified installed proof remains required evidence. |
+| Positive / negative analysis | Every intermediate level 3–8 clean. Nullable method-call probe passes 3/7, fails default `analyze` and `check:host` at 8 before tests; probe removed. |
+| Behaviour / archive | 196 tests / 2,238 assertions; candidate validator 1 valid / 12 invalid, PHPCS, syntax, strict Composer validation and exact-candidate archive verification pass. |
+| Native / review | PHP 8.2/8.5, repository, runtime archive, terminal Quality and certified-Core WordPress 7.0.3 installed proof pass. Separate exact-head code/security reviews and Copilot have no actionable findings; zero unresolved threads at merge. |
+
+The preceding #70–#73 slices documented the section return shape, removed three
+checks redundant against a native array type, modelled the filterable HTTP
+response as `mixed` with an analysis-only stub, and removed the redundant
+`method_exists()` after `is_wp_error()` narrowing. Nested response/ref validation,
+transport classification and hostile-input guards remain. The level promotion
+itself changed only configuration and four guidance files: no new suppressions,
+production casts, dependency/host/API changes or coverage exclusions.
+
+Successful post-merge runs on the actual merged commit:
+[Quality 36404964013](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36404964013),
+[Certified Core installed proof 36404962903](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36404962903),
+and [Release Please 36405203248](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36405203248).
+This records implementation acceptance, not publication: the latest published
+artifact at this checkpoint is still v0.1.0-beta.14. Release PR #75 is separate.
+
+Remaining under #65: shared-standard adoption and scoped naming/condition
+acceptance coordinated with Core #167; matrix/drift/reference policy; and the
+reproduced `lint:syntax` discovery-failure propagation defect. The current
+`find | xargs` command rejects parser errors but can return success after `find`
+fails. A separate fix is being prepared, not claimed landed here. The old locked
+standard also predates inherited-method enforcement; green configured PHPCS is
+not proof of completed naming. Tests/fixtures retain their purpose-built scope.
+Other package rows are not requalified by this checkpoint.
+
 ## Bitbucket shipped-PHP coverage acceptance — 28 September 2026
 
-This checkpoint supersedes the proposed view/index coverage increment in the
+Historical coverage checkpoint; level-8 acceptance above supersedes its
+level-3 and pending-promotion statements. This checkpoint supersedes the
+proposed view/index coverage increment in the
 27 September blocking-analysis checkpoint below. [Bitbucket #69](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/69)
 landed as `80895ee9ffe0bf4e49b38939115c8946438f5a60` from reviewed head
 `0b0a4cfc6f62142e0fffb4d5680c10442cd36081`. Both trees are
@@ -203,10 +247,10 @@ Migrator release closeout is implied.
 Release Updater routing reconciled on 27 September and Bitbucket on 28 September;
 other owner routing below retains its 25 September scope.
 
-Bitbucket’s [shipped-PHP coverage acceptance](#bitbucket-shipped-php-coverage-acceptance--28-september-2026)
-records landed blocking level-3 analysis of all 20 shipped PHP files. Do not
-recreate either the enforcement promotion or the completed view/index increment
-from older audit rows.
+Bitbucket’s [level-8 acceptance](#bitbucket-level-8-acceptance--28-september-2026)
+records landed blocking level-8 analysis of all 20 shipped PHP files. Do not
+recreate the enforcement promotion, completed view/index increment or resolved
+analysis-model findings from older audit rows.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
