@@ -13,6 +13,12 @@ clarify prerequisites and handoff guidance below; they do not reopen the frozen
 schema, file map or host boundary. Documentation acceptance does not qualify
 product code, a release or a deployment.
 
+**Delivery sequencing:** the [owner decision in #81](https://github.com/RocketsAreNostalgic/.github/issues/81#temporary-delivery-deferral--owner-decision-28-september-2026)
+defers UI implementation and owner-verified end-to-end onboarding/integration
+until local interactive verification can resume. Non-UI contract preparation
+may continue within existing claims and automated gates. The acceptance below
+remains required; this deferral does not change the frozen technical contract.
+
 ## 1. Product decision
 
 Deliver one small, production-ready **initial setup** assistant for a source-ready
@@ -520,8 +526,8 @@ G0 froze the recipe, schema/map, clean initial-only V3 host cut, passive
 origin/adoption security boundary and exact examples. No A/B release on a merely
 opened PR. A owns provider code; B alone owns overlapping #55/#56 pack code. C
 owns the narrow connected Core changes and integrated evidence. No competing writers on
-pack schema/templates/build/CI. Do not mutate active provider release #24 or
-other agents' documentation branches.
+pack schema/templates/build/CI. Release proposals and dependency adoption remain
+separate from feature preparation; preserve other agents' branch ownership.
 
 G1 uses named exact provider, producer and Core candidate SHAs, actual ZIP digest,
 independent/native ZIP negatives, plugin/theme output, safe initial setup and
