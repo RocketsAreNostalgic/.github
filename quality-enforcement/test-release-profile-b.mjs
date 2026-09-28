@@ -149,7 +149,7 @@ for (const [name, runs, expected] of coverageCases) {
 // Execute the actual classification capture at publication resolution.
 // Every fixture is local JSON only; preserve legitimate false and reject non-booleans.
 const captureStart = workflow.indexOf("          # Capture Release Please's classification");
-const captureEnd = workflow.indexOf('          release_id=', captureStart);
+const captureEnd = workflow.indexOf("          jq -e '.tag_name", captureStart);
 assert.ok(captureStart >= 0 && captureEnd > captureStart, 'missing prerelease capture boundary');
 const capture = workflow.slice(captureStart, captureEnd);
 assert.ok(capture.includes('prerelease_before='));
