@@ -264,7 +264,6 @@ jobs:
             [[ -n "$RAN_RELEASE_TAG" ]]
             test "$count" == 1
             release_json="$(jq -cer --arg tag "$RAN_RELEASE_TAG" '.[0] | select(.tag_name == $tag)' <<< "$matches")"
-            test "$(jq -er '.draft' <<< "$release_json")" = true
           else
             if [[ "$count" == 0 ]]; then
               echo 'promotion-required=false' >> "$GITHUB_OUTPUT"
@@ -274,19 +273,27 @@ jobs:
             release_json="$(jq -cer '.[0]' <<< "$matches")"
           fi
 
+          # Preserve the validated object ID even when later validation fails.
+          release_id="$(jq -er '.id' <<< "$release_json")"
+          [[ "$release_id" =~ ^[1-9][0-9]*$ ]]
+          printf 'release-id=%s\n' "$release_id" >> "$GITHUB_OUTPUT"
+          if [[ "$RAN_RELEASE_CREATED" == true ]]; then
+            test "$(jq -er '.draft' <<< "$release_json")" = true
+          fi
           # Capture Release Please's classification before promotion.
           jq -e '.prerelease | type == "boolean"' <<< "$release_json" >/dev/null
           prerelease_before="$(jq -r '.prerelease' <<< "$release_json")"
-          release_id="$(jq -er '.id' <<< "$release_json")"
-          [[ "$release_id" =~ ^[1-9][0-9]*$ ]]
+          jq -e '.tag_name | type == "string" and length > 0' <<< "$release_json" >/dev/null
           tag="$(jq -er '.tag_name' <<< "$release_json")"
+          tag_ref="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}")"
+          jq -e --arg sha "$RAN_ADMITTED_SHA" '.object.type == "commit" and .object.sha == $sha' <<< "$tag_ref" >/dev/null
           # A retry may discover the public mutable release left by an earlier
           # failed readback. Report only identity-bound observed facts, then fail.
           if jq -e --arg id "$release_id" --arg tag "$tag" --arg sha "$RAN_ADMITTED_SHA" \
             '(.id | tostring) == $id and (.tag_name | type == "string" and length > 0)
               and .tag_name == $tag and .target_commitish == $sha
               and .draft == false and .immutable == false' <<< "$release_json" >/dev/null; then
-            printf 'publication-outcome=published-mutable\nrelease-id=%s\n' "$release_id" >> "$GITHUB_OUTPUT"
+            printf 'publication-outcome=published-mutable\n' >> "$GITHUB_OUTPUT"
             exit 1
           fi
           if [[ "$(jq -er '.draft' <<< "$release_json")" == true ]]; then
@@ -296,10 +303,7 @@ jobs:
             state=published
           fi
 
-          tag_ref="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}")"
-          jq -e --arg sha "$RAN_ADMITTED_SHA"             '.object.type == "commit" and .object.sha == $sha'             <<< "$tag_ref" >/dev/null
-
-          printf 'promotion-required=true\nstate=%s\ntag=%s\nrelease-id=%s\nprerelease=%s\n' "$state" "$tag" "$release_id" "$prerelease_before" >> "$GITHUB_OUTPUT"
+          printf 'promotion-required=true\nstate=%s\ntag=%s\nprerelease=%s\n' "$state" "$tag" "$prerelease_before" >> "$GITHUB_OUTPUT"
 
       - name: Download exact Quality artifact
         id: artifact
@@ -486,7 +490,11 @@ jobs:
             mutation='PUBLIC MUTABLE RELEASE confirmed. Publication was not prevented or rolled back.'
             advice='Do not blindly rerun. Enabling immutability does not qualify this existing release. Follow the maintainer-owned next-version path in the guide.'
           elif [[ "$failed" == true && "$stage" == promotion ]]; then
-            mutation='Publication outcome is unknown; assets or publication may already exist. Inspect remote state before any retry.'
+            case "$RAN_PHASE" in
+              asset-verification|asset-upload)
+                mutation='This promotion attempt did not request publication. Asset uploads may have occurred; inspect the resolved release and its current state before retrying.' ;;
+              *) mutation='Publication outcome is unknown; assets or publication may already exist. Inspect remote state before any retry.' ;;
+            esac
           elif [[ "$failed" == false && "$RAN_REQUIRED" == false ]]; then
             advice='No promotion required for this admitted revision. Release Please remains authoritative: an open release PR or no releasable change is normal.'
           fi
