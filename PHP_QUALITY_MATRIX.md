@@ -13,9 +13,44 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Bitbucket syntax and condition acceptance — 28 September 2026
+
+Current Bitbucket source checkpoint: `6c9e4c44bc1832495913826e999fb091701184dd`.
+This supersedes pending syntax/condition work in the dated analysis checkpoint
+below. Residual acceptance remains with [#65](https://github.com/RocketsAreNostalgic/.github/issues/65);
+[Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63)
+stays closed with its operative handoff at the top.
+
+| Disposition | Evidence / boundary |
+| --- | --- |
+| Merged: syntax failure propagation | [Bitbucket #76](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/76), merge `2d8bd45c56f398941a81d691363fb38ca2cb4f35`, reviewed head `0967a41707c1dc4c652f0c4bc44e524f211f986f`. Parser, discovery and empty-selection failures propagate; disposable actual-command regression runs in independent `check`. Restoring the previous command fails that regression. |
+| Merged: Yoda conditions | [Bitbucket #77](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/77), merge `6c9e4c44bc1832495913826e999fb091701184dd`, reviewed head `2593cb8fa7451fc9aa1d8725f77908e2ad377637`, identical tree `88e8a80beac1ce9db675d27fcfc79959a44a3db2`. Removes only the Yoda exclusion and reverses one side-effect-free strict pagination comparison. |
+| Retained proof | Blocking level 8 on all 20 shipped PHP paths; full local host aggregate 196 tests / 2,241 assertions; candidate validator 1 valid / 12 invalid. Pagination characterization passes before/after (3 tests / 40 assertions). Old-condition negative control fails actual `composer check`; two canonical fixer passes are byte-stable. |
+| Exact candidate / reviews | #77 archive SHA-256 `000de37206f6e2b0855af992b4e83010165f8230dc185858ad2133befe97304f`; native Quality [36409871859](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36409871859) and installed proof [36409871139](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36409871139) pass. Separate exact-head code/security reviews are clean; no unresolved threads at merge. |
+| Qualified but open | No Bitbucket implementation PR remains open at this batch checkpoint. Release Please [#75](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/75) is separate and held; this row does not qualify it or authorize publication. |
+| Planned, not claimed | Shared-standard version adoption and scoped owned-name migration require fresh caller/exception inventory and coordination with Core #167. The locked standard predates inherited-method enforcement. Broader naming, matrix/drift/reference and upgrade/audit policy acceptance remain open. |
+
+#76 post-merge Quality `36409469777`, installed proof `36409469189` and
+Release Please `36409701513` all passed. #77 post-merge Quality [36412770675](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36412770675)
+and installed proof [36412770199](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36412770199)
+passed on the actual merged commit. Release Please
+[36412933793](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36412933793)
+failed at its exact-candidate Quality step after updating #75. The release head
+`3d1f92b8e280679495b1b55d90f21a1e1a99e55a` has Quality `36412970741` and
+installed proof `36412970176` at `action_required`; its qualification remains
+blocked. This is separate from the passing merged-source checks, and no release
+publication occurred.
+Core beta.29 certification, PHP 8.2/8.5 lanes, WordPress support, Provider API
+11 / Add-on API 16, dependency locks and publication controls are unchanged.
+The organisation level-8 matrix PR [#91](https://github.com/RocketsAreNostalgic/.github/pull/91)
+also merged at `eee0c8246c51de78e3c246e73cb7e5877703c907` using the owner's
+one-off regular-merge exception; that exception is not general merge authority.
+Other package rows and historical inventory counts are not requalified here.
+
 ## Bitbucket level-8 acceptance — 28 September 2026
 
-This is the current Bitbucket analysis checkpoint; the coverage/enforcement
+This records the landed level-8 analysis checkpoint; the syntax/condition
+checkpoint above supplies the later batch disposition. Earlier coverage/enforcement
 checkpoints below are historical. [Bitbucket #74](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/74)
 landed at `7b87a77eb98b16aa163c28358386605f28860d5b` from reviewed head
 `bf5bb55485e1c856f85dd368460fd356c5341e5d`, preserving tree
@@ -46,11 +81,10 @@ and [Release Please 36405203248](https://github.com/RocketsAreNostalgic/ran-boos
 This records implementation acceptance, not publication: the latest published
 artifact at this checkpoint is still v0.1.0-beta.14. Release PR #75 is separate.
 
-Remaining under #65: shared-standard adoption and scoped naming/condition
-acceptance coordinated with Core #167; matrix/drift/reference policy; and the
-reproduced `lint:syntax` discovery-failure propagation defect. The current
-`find | xargs` command rejects parser errors but can return success after `find`
-fails. A separate fix is being prepared, not claimed landed here. The old locked
+At this earlier checkpoint, shared-standard adoption, naming/condition acceptance
+and a reproduced `lint:syntax` discovery-failure defect remained open. The syntax
+and Yoda items subsequently landed in #76/#77 as recorded above; owned naming,
+shared-standard adoption and programme matrix/drift/reference policy remain open. The old locked
 standard also predates inherited-method enforcement; green configured PHPCS is
 not proof of completed naming. Tests/fixtures retain their purpose-built scope.
 Other package rows are not requalified by this checkpoint.
