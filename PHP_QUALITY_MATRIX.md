@@ -1,6 +1,6 @@
 # PHP quality acceptance matrix
 
-Independent repositories outside the Booster package lane are tracked in the [satellite PHP quality matrix](SATELLITE_QUALITY_MATRIX.md).
+The seven independent repositories in the satellite quality lane are tracked in the [satellite PHP quality matrix](SATELLITE_QUALITY_MATRIX.md). Starter's entries remain here.
 
 Owner: [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) with the existing repository quality children.
 Closed [#66](https://github.com/RocketsAreNostalgic/.github/issues/66) is policy/tooling delivery evidence, not an active queue.
