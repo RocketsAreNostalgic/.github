@@ -194,7 +194,7 @@
     },
     "RocketsAreNostalgic/ran-admin-shell": {
       "profile": "php-library",
-      "approved_commit": "098cfd970f91c3701259fc393697b722d6e2546e",
+      "approved_commit": "85902698496e7e40ae876e7b98733a7d0ab810d9",
       "inputs": {
         "php-floor": "8.0",
         "php-current": "8.5",
@@ -211,17 +211,27 @@
         {
           "path": "composer.json",
           "type": "blob",
-          "oid": "9eee27389dd5c73d84e6276ecdef46c474ac006a"
+          "oid": "e42a115de586185b7bcbbe4668e61cdcf03c0b7e"
         },
         {
           "path": "composer.lock",
           "type": "blob",
-          "oid": "d397879f9cf5106b29358dc8449b17b854a77c76"
+          "oid": "7ae160d505f2e5baf443294f821587c7c6fb5e43"
         },
         {
           "path": "phpcs.xml.dist",
           "type": "blob",
-          "oid": "2797f8d08d38ed02b945c69c819b3f69caa9bb7f"
+          "oid": "e55f3285ae09d6d41f0aaf87f8f24e2320cef0a6"
+        },
+        {
+          "path": "phpcs-tooling.xml.dist",
+          "type": "blob",
+          "oid": "f5d64ce90cc8dacf9e6ef019b2833ae752a9d6ee"
+        },
+        {
+          "path": "phpstan.neon.dist",
+          "type": "blob",
+          "oid": "f96998636f486e9586a6bca9bd4b0fc2d97b07bc"
         },
         {
           "path": "phpunit.xml.dist",
@@ -229,9 +239,24 @@
           "oid": "b299c263c87bfda3cccebb4c0f508435a1feb388"
         },
         {
+          "path": ".gitattributes",
+          "type": "blob",
+          "oid": "954f828cb144528901de9fb7fa925d5410bf2a9b"
+        },
+        {
+          "path": "bin",
+          "type": "tree",
+          "oid": "fed98dbf674421f8321e1bcc6604dc0e3401355d"
+        },
+        {
+          "path": "tools",
+          "type": "tree",
+          "oid": "5b076440c38ac51cc49be99ef4bf3aea49d6c80e"
+        },
+        {
           "path": "tests",
           "type": "tree",
-          "oid": "8a1c43be4e246a4156f7f6d26ed8b8b26c25d2df"
+          "oid": "4f07ad1a6884fb1a8f6e49c99c64c3a9911bc2c7"
         },
         {
           "path": "fixtures",

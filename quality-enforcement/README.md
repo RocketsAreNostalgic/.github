@@ -244,6 +244,14 @@ implicitly trusted.
   against exact Admin Shell head `76005e2c31b64d25121f98f4585f2db92d161a0e`
   passed repository run `35239182921` and required run `35239183776`.
 
+The September quality follow-up refreshes Admin Shell's approved object graph
+for its canonical commands, split resource/tool rules, level-5 analysis and
+exported Composer-consumer proof. `bin/`, `tools/`, both PHPCS configurations,
+`phpstan.neon.dist` and `.gitattributes` join the existing manifest/lock/tests/
+fixtures protection. The archive attributes affect what the distribution test
+installs, so they are a transitive test input. This registry refresh does not
+activate a ruleset or certify a new live organisation enforcement run.
+
 Admin Shell's protected aggregate invokes
 `phpunit --configuration phpunit.xml.dist` explicitly, so the protected PHPUnit
 configuration does not rely on automatic filename precedence.

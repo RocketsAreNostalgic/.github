@@ -13,6 +13,29 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Admin Shell acceptance checkpoint — 28 September 2026
+
+This checkpoint supersedes the historical Admin Shell rows below. Other package
+rows retain their own dated evidence and ownership.
+
+| Surface | Current evidence |
+| --- | --- |
+| Landed source | Commands #14 at `dd8fbed71ad94578d8c96adb3f114e6d7babc349`; shared standards #15 at `3453fdb73532bf355c9e8dd0a230c0eac6118492`; blocking analysis #16 at `aea62ff76281f776fb986cb47d9ece620457c166`. |
+| Role/support | Build-time Composer library; PHP >=8.0, locked platform 8.0.30; resources model WordPress 6.5. No runtime library/plugin registration or consumer lock adoption. |
+| Locked tools | RAN v1.0.0; PHPCS 3.13.6; WPCS 3.4.1; PHPCompatibility 10.0.0-alpha2, Paragonie 2.0.0-alpha2, WP 3.0.0-alpha2; PHPStan 2.2.16; WP stubs 6.5.7; PHPUnit 9.6.36. |
+| Commands | `check` = `lint:syntax`, `standards`, `analyze`, `test`; `standards:fix` runs both matching resource/tooling rulesets and correctly handles successful PHPCBF exit 1. |
+| Standards/syntax | Resources use RANWordPressLibrary; standalone CLI/tools/tests use RAN + PHPCompatibility without WordPress polyfills. Syntax additionally covers preview fixtures and explicitly discovers the extensionless CLI. Real-binary negative/fix/repeatability and failure-propagation tests are retained. |
+| Analysis | Blocking level 5, PHP 8.0 target, 512 MB; all six maintained PHP paths: CLI, renderer and four tools. WordPress stubs/PHPCS source are symbol discovery only. No baseline or ignored errors. Tests/preview fixtures retain their separate gates. |
+| Analysis limit | Level 6 measured 28 missing parameter/return/iterable-value declarations in SyncCommand. A future ratchet is separate from accepting the evidenced level-5 floor. |
+| Distribution acceptance | [Admin Shell #17](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/17), merge `85902698496e7e40ae876e7b98733a7d0ab810d9`, reviewed head `483c06433e2210c6a5d38ad095fe8ea1c9f3904a`, identical tree `d0934bbe9c4957e89b81d1fc7179a7849de7c61f`: committed export installed by real Composer, immutable metadata/provenance and drift negatives, stable synchronization, no-dev removal preserving consumer bytes. Dist installation and every installed file are verified; repository agent instructions are excluded. |
+| Execution/reviews | #16 exact-head Quality 36237161226 passes PHP 8.0/8.5 and terminal quality; zero unresolved threads; final-head automated code review and fresh manual security reconciliation recorded on the PR. Its automated security summary remained stale and is not represented as a new automated review. #17 local PHP 8.4.23 aggregate passes 22 tests / 145 assertions and native PHP 8.0/8.5 CI passes; final-head code review and fresh manual source-security assessment are recorded on #17; all findings are resolved. |
+| Protected contract | Updated `quality-enforcement/contracts.json` for the accepted tree, including tooling rules, analyzer config, CLI/tools and archive attributes. Registry validation is separate from live ruleset activation; no settings/enforcement rollout is claimed. |
+
+The local workflow is PR-only: matching merge-tree identity carries the reviewed
+proof, and no separate post-merge workflow is invented. Actual plugin release
+allowlists, installed WordPress and deferred UI acceptance remain consumer-owned.
+No package tag, Packagist publication or consumer adoption is included here.
+
 ## Bitbucket syntax and condition acceptance — 28 September 2026
 
 Current Bitbucket source checkpoint: `6c9e4c44bc1832495913826e999fb091701184dd`.
