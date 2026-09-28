@@ -113,7 +113,7 @@ After exact successful-main admission:
 6. Download the exact triggering Quality artifact by workflow run ID and attempt.
 7. Verify repository/SHA/tag binding and every declared asset digest.
 8. Accept an already-present asset only when its GitHub-reported digest is exact. Missing draft assets are uploaded once. Conflicting or unexpected assets fail closed.
-9. Revalidate the captured release ID, tag, admitted target SHA, original prerelease boolean and expected draft/published state on the post-upload response before publication. Metadata changes fail closed before the publication PATCH. Publish the draft only when immutable releases are enabled.
+9. Revalidate the captured release ID, tag, admitted target SHA, original prerelease boolean and expected draft/published state on the post-upload response before publication. Metadata changes fail closed before the publication PATCH. Publish the draft, then require immutable readback. The workflow does not query the administrative setting; a misconfigured repository can publish a mutable release and then fail.
 10. Read back exact tag target, asset names/digests, non-draft state and `immutable == true`.
 
 The original boolean `prerelease` classification is captured during publication resolution and retained through initial promotion validation, pre-publication validation and final readback. Changes in either direction fail closed; stable `false` is valid.
@@ -150,3 +150,31 @@ Remain local:
 - any downstream product deployment adapter.
 
 Shared Profile B does not weaken these checks. It changes only who owns generic release orchestration.
+
+## Troubleshooting
+
+Proposal delivery and execution prerequisites are separate. The initial starter PR can be proposed before owner-managed immutability, Actions, runner and bot-PR settings are ready. Complete these prerequisites before merging or activating workflows, and review what can run on both the setup PR and its merge. Booster does not verify administrative settings. Strict immutable publication remains required; there is no permissive mode.
+
+The executing publisher reports its failing stage, bounded repository/SHA/release identity and original Quality run/attempt. It does not print API bodies, diagnose an administrative setting from a generic 403, or claim that failure means no remote mutation occurred. Release Please can already have created or changed a branch, PR, tag or draft before a later failure.
+
+| Observed stage/condition | Maintainer action and retry boundary |
+| --- | --- |
+| No workflow run, Actions disabled, policy or invalid YAML rejection | Read the Actions UI and workflow validation messages; verify owner-managed Actions policies and workflow configuration. No job exists to emit custom diagnostics. Review source fixes normally. |
+| Job queued, runner unavailable, account/billing constraint | Inspect runner availability and account limits in GitHub. Job diagnostics cannot run before allocation. Preserve the original event/revision when retrying. |
+| Current-main admission fails | Inspect whether the admitted SHA is stale or the API read failed. A stale successful Quality run is normal non-publication; use the current main push Quality run. Manual or PR Quality does not admit publication. |
+| Release Please fails or bot PR creation is refused | Inspect the action error, bot PR policy, job permissions and branch/tag rules. A 403 alone does not identify which setting is wrong. Inspect existing remote state before any rerun. |
+| Exact candidate Quality fails/times out, or required checks block merge | Inspect the exact PR head, event and required-check source. A green dispatched run alone is insufficient proof for protected merge. Distinguish branch protection, rulesets and unsupported merge queues; do not disable checks or broaden tokens. |
+| Quality build or artifact verification fails | Fix product construction in read-only Quality. Do not run target-owned troubleshooting scripts in the privileged publisher. |
+| Artifact download fails or artifact expires | Check the triggering run ID and attempt. Never rebuild substitute bytes or substitute another attempt's artifact. A new main push Quality run must establish new custody where needed. |
+| Draft upload/verification fails | Inspect the identified draft, exact tag/target, names and digests. Only the same admitted revision, original run/attempt artifact and still-current main may resume missing exact draft assets; conflicts fail closed. Never replace assets or move tags. |
+| Publication acknowledgement/readback unavailable or identity changed | Outcome is unknown. Inspect the exact release ID and remote state before retrying: publication or uploads may already have happened. No rollback is implied. |
+| Published mutable release confirmed | Publication happened; the job is red because strict immutable qualification failed. Do not blindly rerun or assume rollback. Use the next-version path below. |
+| Exact immutable published release with exact assets | Retry can be a no-op only within the original admission/custody constraints. |
+
+An open release PR or no releasable change is normal non-publication. Release Please remains the classification authority; this workflow does not reproduce its version or label decision engine. Successful candidate Quality is also separate from protected merge qualification.
+
+### Published mutable release: next-version path
+
+Enabling the owner-managed setting affects future publication; it does not make an already published mutable release immutable. Keep the failed job's evidence and inspect the actual Release Please PR, manifest/version, tag, release and lifecycle state. A failed publisher does not imply Release Please did not advance that state. A maintainer must establish a legitimate next release through the normal reviewed Release Please process, confirm the new version and exact main revision, and obtain a fresh qualifying main push Quality artifact before publication. Verify the new release's actual immutable readback. Do not automatically edit lifecycle labels, replace assets, move tags, delete releases or replay the old version. If Release Please state is inconsistent, stop for maintainer investigation rather than inventing a repair.
+
+Rerunning a release job does not change its original event/SHA or its upstream Quality run/attempt. The admitted revision must still be current main and the original artifact must still be available. Dispatching Quality manually is not publisher admission. These limits also apply after fixing permission or owner-managed execution settings.
