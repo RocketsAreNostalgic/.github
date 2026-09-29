@@ -39,9 +39,42 @@ proof, and no separate post-merge workflow is invented. Actual plugin release
 allowlists, installed WordPress and deferred UI acceptance remain consumer-owned.
 No package tag, Packagist publication or consumer adoption is included here.
 
+## Bitbucket owned-naming checkpoint — 29 September 2026
+
+This checkpoint supersedes older Bitbucket statements that shared-standard
+adoption and owned naming are wholly planned. It distinguishes delivered main
+from open candidates; it does not certify the connected Core naming migration.
+Bitbucket #63 remains closed bounded history, with residual acceptance and live
+ownership in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65).
+
+| Disposition | Exact evidence |
+| --- | --- |
+| Merged baseline | Main `99f8159579b783656dae83478f7fc3a17a31f016` through #87. #78 adopts coding-standards v1.0.0; #79–#86 migrate owned identifiers through Provider/Validator; #87 enforces naming across current and future production files, removes four local blanket suppressions and includes index.php. All twenty shipped PHP paths are directly checked. #87 reviewed head `7916ff141dde0bb2be8c972fed755d0a61fb1859` preserved tree `7f6301470100030ff8c8c4daf02f961d66228988`. |
+| Candidate proof | #87 exact-head Quality `36533617240` passed runtime archive, PHP 8.2/8.5, repository quality and terminal Quality; certified-Core installed proof `36533611031` passed. Local host aggregate 197 tests / 2,247 assertions, candidate validator 1 valid / 12 invalid and exact-head archive SHA-256 `3476b7221866380164708a4b94201391c6977927223f4cfd336474d65f41caff` passed. Eight actual-command negative controls, fixture/future-class positives, autoloader token parity and two byte-stable fixers passed on the byte-identical candidate tree. Final-head code review clear, zero review threads; hosted security review returned a usage limit and is not represented as passing. The owner made the #87 merge decision with that limitation disclosed. |
+| Current main checks | #87 post-merge Quality `36555639339`, certified-Core installed proof `36555638521` and Release Please `36555856368` passed on the actual squash commit. #86's post-merge runs also passed historically. Source qualification is distinct from release publication. |
+| Held release | [Bitbucket #75](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/75) at `e6a6632305a8f799c2a04b843bd27bdb6cf7976a`: dispatched exact-candidate Quality `36555896639` passed, including release-candidate installed readback; bot pull_request Quality `36555899650` and installed proof `36555898585` remain action_required. Separate release/publication decision required. |
+
+The locked standard is v1.0.0 at
+`6af816a02b7d1108ad5c990e9d0fda0af0a13de7`. Blocking PHPStan 8 directly covers
+all 20 shipped PHP paths. PHP 8.2/8.5 lanes, WordPress 7.0+, Provider API 11 /
+Add-on API 16 and exact certified Core beta.29
+`ffc11fc8e40618624a785b7fca5193029c6d492e` remain unchanged. Independent
+`check` runs standards, syntax and the syntax/discovery regression;
+`check:host` additionally requires analysis, units and candidate validation.
+Archive and certified installed-host proof remain mandatory. No new audit gate,
+version bump, dependency change, runtime guard removal or publication is bundled.
+
+The precise Core method/parameter/DTO exceptions remain connected-contract debt
+owned by Core #167. Tests and purpose-built fixtures retain separate scope.
+Future-file enforcement, a green formatter, or completed local renames do not
+close programme-wide matrix/drift/reference, upgrade/live-audit policy or
+connected compatibility acceptance. Refresh the open PRs before merging and
+reconcile this checkpoint to actual merged commits after owner approval.
+
 ## Bitbucket syntax and condition acceptance — 28 September 2026
 
-Current Bitbucket source checkpoint: `6c9e4c44bc1832495913826e999fb091701184dd`.
+Historical Bitbucket source checkpoint: `6c9e4c44bc1832495913826e999fb091701184dd`.
+The owned-naming checkpoint above supersedes its current-status statements.
 This supersedes pending syntax/condition work in the dated analysis checkpoint
 below. Residual acceptance remains with [#65](https://github.com/RocketsAreNostalgic/.github/issues/65);
 [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63)
@@ -304,13 +337,16 @@ Migrator release closeout is implied.
 
 ## Current routing and superseded work selections — 25 September 2026
 
-Release Updater routing reconciled on 27 September and Bitbucket on 28 September;
-other owner routing below retains its 25 September scope.
+Release Updater routing reconciled on 27 September and Bitbucket on 29 September;
+other owner routing below retains its dated scope.
 
-Bitbucket’s [level-8 acceptance](#bitbucket-level-8-acceptance--28-september-2026)
-records landed blocking level-8 analysis of all 20 shipped PHP files. Do not
-recreate the enforcement promotion, completed view/index increment or resolved
-analysis-model findings from older audit rows.
+Bitbucket's [owned-naming checkpoint](#bitbucket-owned-naming-checkpoint--29-september-2026)
+is the current source record: #78–#87 are merged, with blocking level-8 analysis
+of all 20 shipped PHP files and naming enforcement across current and future
+production paths. Do not restart shared-standard adoption, the naming cohorts,
+the analysis promotion, completed view/index coverage or resolved model findings
+from older audit rows. Connected Core contracts and held release #75 retain
+their separate owners and decisions.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
