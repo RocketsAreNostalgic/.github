@@ -6,7 +6,7 @@ evidence PR `#70`. This extends the [shared-rule audit](BOOSTER_SHARED_RULES_AUD
 It proposes the migration cohorts; it does not rename application code or
 release a new API generation.
 
-## Current routing — Bitbucket handoff, 28 September 2026
+## Current routing — Bitbucket handoff, 29 September 2026
 
 This document's counts and cohort inventory below are historical audit evidence,
 not current reservations or completed-name counts. Live ownership and sequencing

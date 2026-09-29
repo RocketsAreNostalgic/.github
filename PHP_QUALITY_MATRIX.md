@@ -378,7 +378,9 @@ parameter, condition or exception slices. Publication and the coordinated
 Core dependency/protocol-metadata/test adoption remain separate decisions.
 Do not treat the historical suppression lists as current.
 [Release Updater #70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70)
-remains held by the owner. [Migrator #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+merged and published as immutable v1.0.0-beta.9 at
+`27889528442fc4e49ca060959218d5ec288c3055`. Core/Provider consumer
+adoption remains separate. [Migrator #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
 retains its own exact-candidate installed-site acceptance.
 
 The dated checkpoints below preserve measurements and historical next-work
