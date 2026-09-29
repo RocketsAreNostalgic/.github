@@ -67,9 +67,10 @@ version bump, dependency change, runtime guard removal or publication is bundled
 The precise Core method/parameter/DTO exceptions remain connected-contract debt
 owned by Core #167. Tests and purpose-built fixtures retain separate scope.
 Future-file enforcement, a green formatter, or completed local renames do not
-close programme-wide matrix/drift/reference, upgrade/live-audit policy or
-connected compatibility acceptance. Refresh the open PRs before merging and
-reconcile this checkpoint to actual merged commits after owner approval.
+close programme-wide matrix/drift/reference or connected compatibility
+acceptance. Upgrade/live-audit policy was delivered through organisation #97;
+future policy or consumer changes require their own reviewed evidence. Refresh
+live owning issues before selecting another implementation slice.
 
 ## Bitbucket syntax and condition acceptance — 28 September 2026
 
@@ -350,9 +351,10 @@ their separate owners and decisions.
 
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 retains the previously unchecked programme responsibilities from owner-closed
-#66: matrix upkeep, upgrade/live-audit decisions, drift validation, contributor
-coordination and reference/pilot acceptance. Closure did not waive that work or
-complete consumer adoption. Existing repository children keep their claims.
+#66: matrix upkeep, drift validation, contributor coordination and
+reference/pilot acceptance. Upgrade/live-audit policy was delivered in #97;
+closure of #66 did not complete the other consumer work. Existing repository
+children keep their claims.
 
 Core's [#54 release handoff](https://github.com/RocketsAreNostalgic/ran-booster/issues/167#issuecomment-5819326356)
 and all five [#61 WordPress handoffs](https://github.com/RocketsAreNostalgic/.github/issues/61)
