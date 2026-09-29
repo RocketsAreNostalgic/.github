@@ -52,7 +52,9 @@ All 36 shipped PHP paths retain direct level-8 analysis and stronger gates.
 Protocol 5 landed with the selected-state/broker transition. The package version
 is unchanged, and this is not a certified Core dependency adoption.
 Release Updater #60's implementation acceptance is complete; this documentation
-provides its final matrix reconciliation. Release Updater #70 remains owner-held.
+provides its final matrix reconciliation. At this 27 September checkpoint,
+Release Updater #70 was owner-held; it subsequently merged and published as
+recorded in the current handoff below.
 Other repositories' dated rows are not requalified by this update.
 
 ## Command migration mapping
@@ -120,8 +122,10 @@ landed in [Release Updater #77](https://github.com/RocketsAreNostalgic/ran-wp-re
 its current owner [#60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
 records landed naming/parameter/exception acceptance and the separate release/adoption boundaries. The
 dated matrix is not a reason to repeat completed slices. Release Updater
-[#70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70) remains
-held; coverage/condition success is not release authorization. Migrator
+[#70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70) merged
+and published as immutable v1.0.0-beta.9 at
+`27889528442fc4e49ca060959218d5ec288c3055`; connected Core/Provider
+adoption remains separate. Migrator
 [#43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
 retains its separate exact-candidate installed-site acceptance.
 
@@ -133,10 +137,12 @@ retains its separate exact-candidate installed-site acceptance.
 - The initial matrix came from merged organisation #70; later checkpoints are
   measured updates, not universal execution proof. Maintain them as slices land.
 - Starter formatter consolidation and Support owned-method enforcement are
-  delivered. Remaining commands, naming/condition debt, upgrades, live-audit
-  policy, contributor coordination and proportionate drift proof stay under
-  **#65 and the existing repository children**. Closed #66 supplies evidence,
-  not an active backlog. Wider plugins use #67 and completed #61 handoffs.
+  delivered. Organisation [#97](https://github.com/RocketsAreNostalgic/.github/pull/97)
+  delivered shared version/upgrade and live Composer-audit policy. Remaining
+  repository-specific commands, naming/condition debt, actual consumer upgrades,
+  contributor coordination and proportionate drift proof stay under **#65 and
+  the existing repository children**. Closed #66 supplies evidence, not an active
+  backlog. Wider plugins use #67 and completed #61 handoffs.
 - Connected API/dependency work still needs fresh claims and an installable exact
   composition. The separate template feature under #81 does not freeze
   unrelated quality work or grant authority over its branches.
