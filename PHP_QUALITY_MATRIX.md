@@ -15,6 +15,84 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Suite and Starter source reconciliation — 29 September 2026
+
+This checkpoint supersedes current-state readings of older rows for the eight
+revisions listed here. The satellite matrix remains authoritative for Admin
+Shell and the other independent plugins. This is a source/configuration audit
+and a recheck of existing GitHub run results, not a fresh execution of the suites.
+Counts below enumerate tracked PHP selected by direct `paths` at the recorded
+commit; they do not count symbol-discovery directories as analyzed production.
+
+### Exact source, analysis and locked tools
+
+| Repository / immutable main | Direct analysis and observed boundary | Locked PHPStan / RAN standards |
+| --- | --- | --- |
+| [Core `1e7611901a2966524886b8e6c14efc4f87a71101`](https://github.com/RocketsAreNostalgic/ran-booster/tree/1e7611901a2966524886b8e6c14efc4f87a71101) | 1; 345 tracked PHP paths. `autoload.php`, `index.php`, plugin/uninstall entrypoints, `RAN/`, `views/`, `assets/`; scan directory is symbol discovery. | 2.2.8 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+| [Bitbucket `186ffd350854a528472cca66958a0a6011457834`](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/tree/186ffd350854a528472cca66958a0a6011457834) | 8; 20 tracked PHP paths. Entrypoint, autoloader, index, `src/`, `views/`; maintained-PHP scope guard is required. | 2.2.8 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+| [GitHub Provider `d9f18a10d593d88d0373e377197553c02ee664f2`](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/tree/d9f18a10d593d88d0373e377197553c02ee664f2) | 1; 23 production paths + foundation contract. `src/` and `tests/foundation-contract.php`; execution requires the pinned candidate Core host. | 2.2.14 / dev-main at `0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be` |
+| [Branch Updater `212a0d38dd7d766c6c8d8b7f29ebcf1de075802b`](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/tree/212a0d38dd7d766c6c8d8b7f29ebcf1de075802b) | 5; 36 `src/` paths. `src/` only; installed `bootstrap.php` is outside direct analysis. | 2.2.13 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+| [Release Updater `27889528442fc4e49ca060959218d5ec288c3055`](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/tree/27889528442fc4e49ca060959218d5ec288c3055) | 8; 36 production paths. Both root runtime files and explicit production roots; `scanDirectories` is not the coverage proof. | 2.2.13 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+| [Updater Support `6a9cdbc9eb1bbecbafcbe16da931c98928d035e8`](https://github.com/RocketsAreNostalgic/ran-updater-support/tree/6a9cdbc9eb1bbecbafcbe16da931c98928d035e8) | 8; two `src/` paths. `src/`; tests remain separately checked. | 2.2.13 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+| [Migrator `829d823afd87923a20f8170671d2f456465424d9`](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/tree/829d823afd87923a20f8170671d2f456465424d9) | No PHPStan dependency, configuration or `analyze` command. Syntax fix is landed; missing analysis remains an open #42 acceptance item. | absent / dev-main at `0b03e61a4bb558deeb6bc6b6399f44c0ec95e5be` |
+| [Starter `3490bef147580e07b43ab0aa4691b24548adb159`](https://github.com/RocketsAreNostalgic/ran-starter-plugin/tree/3490bef147580e07b43ab0aa4691b24548adb159) | 1; 36 selected tracked PHP paths. Entrypoint, uninstall, `inc/`, `templates/`; packaged `index.php` is outside direct analysis. | 2.2.13 / v1.0.0 at `6af816a02b7d1108ad5c990e9d0fda0af0a13de7` |
+
+All eight locks retain PHPCS 3.13.6 and WPCS 3.4.1. Their local PHPCompatibility
+ranges are 8.2+ except Starter's 8.4–8.5 range. Provider and Migrator still lock
+the older RAN revision; this is pending consumer adoption, not permission to
+rewrite an active owner's lockfile.
+
+### Commands, host requirements and execution evidence
+
+Each linked run's jobs were re-read on 29 September. Required jobs passed;
+intentional skips are identified explicitly. A green run proves only the
+configured scope at that revision.
+
+| Repository | Required local/CI contract | Existing main evidence |
+| --- | --- | --- |
+| Core | `check`: i18n, tests, admin-shell, syntax, standards, analysis. PHP ^8.2; main native runtime evidence is PHP 8.2. | [36424780232](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/36424780232) — Runtime archive, repository/runtime lanes and terminal Quality passed; release-candidate readback skipped for ordinary main. |
+| Bitbucket | Independent `check`: scope, standards, syntax/regressions. Required `check:host`: analysis, units, candidate validator, `check`. PHP ^8.2; Core beta.29 `ffc11fc8e40618624a785b7fca5193029c6d492e`. | [36580768684](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36580768684) — Runtime archive, repository/runtime lanes and terminal Quality passed; release-candidate readback skipped for ordinary main. |
+| GitHub Provider | Independent `check`: validation, syntax, standards, foundation/release tests. Required `check:host`: host contract, analysis, implementation tests. PHP ^8.2; candidate Core `3dfccf389fae6ee9e54e141f5b97b0d9b7aca2ff`, not released-host certification. | [36567027254](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/36567027254) — All listed native quality jobs, including terminal `quality`, passed. |
+| Branch Updater | `check`: validation, standards, analysis, tests, syntax. PHP ^8.2; PHP 8.2/8.5 plus installed no-dev Composer consumer. | [36360325595](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/36360325595) — All listed native quality jobs, including terminal `quality`, passed. |
+| Release Updater | `check`: validation, Support parity, live Composer audit, syntax, standards, analysis, unit/no-dev tests. PHP ^8.2; PHP 8.2/8.5 plus Windows, MySQL and WordPress integration. | [36422014824](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/actions/runs/36422014824) — All listed native quality jobs, including terminal `quality`, passed. |
+| Updater Support | `check`: validation, syntax, standards, analysis, contract/standards/release tests. PHP ^8.2; PHP 8.2/8.5. | [35933082000](https://github.com/RocketsAreNostalgic/ran-updater-support/actions/runs/35933082000) — All listed native quality jobs, including terminal `quality`, passed. |
+| Migrator | `check`: syntax, standards, units and release/syntax contracts. PHP ^8.2; exact Core beta.22 `cd328286d8b00557f8400ffdcfb0549888ec76ca`, Portability/Admin Interaction API 2. | [35973387190](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/35973387190) — Runtime archive, certified Core contract and repository Quality passed; PR/dispatch-only baseline and terminal `quality` skipped on push. |
+| Starter | `check`: syntax, standards, units/quality controls, analysis. PHP >=8.4 <8.6; native PHP 8.4/8.5 and WordPress 7.0 archive install/activation. | [36237308155](https://github.com/RocketsAreNostalgic/ran-starter-plugin/actions/runs/36237308155) — All listed native quality jobs, including terminal `quality`, passed. |
+
+Bitbucket's separate [installed proof 36580766975](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36580766975)
+remains part of its accepted evidence. Provider's current main follows #30 and
+its workflow explicitly uses candidate Core #177; it must not be described as
+qualification against released Core or Core main. Core #193 is still a separate
+open naming candidate, not part of the Core main row above.
+
+### Remaining work and ownership
+
+- **Branch coverage gap:** [installed-consumer proof](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/blob/212a0d38dd7d766c6c8d8b7f29ebcf1de075802b/tests/consumer-install.php)
+  requires and executes `vendor/ran/wp-branch-updater/bootstrap.php`, but
+  `phpstan.neon` selects only `src/`. The next bounded source candidate is direct
+  level-5 bootstrap coverage with an appropriate production-scope regression,
+  retaining PHP 8.2/8.5 and installed-consumer proof. Refresh [Branch #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59)
+  and its connected-adoption claims before implementation; this audit makes no source claim.
+- **Migrator:** missing analysis is confirmed. [#42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42)
+  now has an active command-parity worker; PHPStan adoption is that lane's separate
+  planned slice. Release #43 remains held for installed-site acceptance.
+- **Starter:** `release-contents.txt` ships the unselected `index.php` silence
+  guard. Its closed #24 formatter/runtime acceptance remains delivered; a small
+  reference-coverage follow-up should include this root and assess future
+  allowlist drift. No higher analysis floor is inferred from this finding.
+- **Core/Provider/Branch connected work:** remains with Core #167 and existing
+  package owners. Main configurations and a candidate-host CI pass do not close
+  public naming, dependency adoption or released-host certification.
+- **Completed bounded lanes:** Bitbucket #78–#88 and central #102, Support #35,
+  Release Updater #60, and Starter #24 remain completed as scoped. Their older
+  historical rows are not a new implementation queue. Release/publication holds
+  and owner-held UI acceptance remain unchanged.
+
+This checkpoint does not complete the estate-wide #65 acceptance checklist.
+Future-file drift protection and explicit per-repository exceptions still need
+review where not already evidenced; the satellite guards and Bitbucket #88 are
+bounded proofs, not an all-estate guarantee.
+
 ## Admin Shell acceptance checkpoint — 28 September 2026
 
 This checkpoint supersedes the historical Admin Shell rows below. Other package
