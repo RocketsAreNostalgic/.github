@@ -269,16 +269,57 @@ authorise lowering an existing floor, silently promoting an advisory pilot, or
 removing defensive runtime checks. Changes to levels, coverage requiring source
 edits, or enforcement need their own reviewed evidence.
 
-Existing dependency-audit gates remain required where adopted. A live advisory
-lookup is network- and time-dependent even against a locked graph; document that
-requirement rather than describing it as offline or reproducible source proof.
-For example, Release Updater currently runs `audit:composer` (`composer audit
---locked --no-interaction`) inside `check`. Preserve that command and its exit
-status, including advisory or lookup failures; do not convert a failed lookup
-into success or move the gate out of the required path during command adoption.
-This contract does not add an audit gate to repositories that do not have one.
-Any future change to audit placement, exclusions or enforcement requires an
-explicit policy decision and corresponding CI evidence.
+#### Shared-package versions, consumer upgrades and live advisories
+
+A shared-quality package version is a consumer input, not an automatic change to
+every repository. Record the package's published tag or immutable Git commit and
+the exact resolved consumer lockfile revision. Prefer a released compatible
+version for packages with a release channel; where an owner has accepted Git
+distribution, pin a full immutable commit in the manifest and lockfile. A
+branch name, moving tag or floating `dev-main` constraint alone is not proof of
+the installed revision. Existing floating constraints are inventory for the
+next consumer upgrade, not a reason to silently rewrite another owner's lock.
+
+For each proposed upgrade, the consumer owner should:
+
+1. Identify the changed package surface, new version or commit, affected
+   consumers, and whether the change is a quality-only tool update or changes a
+   runtime/host contract. Observe upstream release and advisory information
+   when selecting the candidate; do not update solely to make versions uniform.
+2. Update the consumer manifest and lockfile together where applicable, inspect
+   the resolved dependency graph and retain the declared PHP/WordPress support
+   floor. For a frontend package, update the package-manager lock and verify
+   the resolved immutable Git revision or registry version.
+3. Run strict manifest/lock validation, locked installation and the affected
+   local quality commands, then qualify the exact candidate with the consumer's
+   required CI matrix and terminal `quality` status. Retain any certified host,
+   installed WordPress, artifact and release-contract checks that apply.
+4. Record before/after resolved versions or commits, lockfile diff, affected
+   rules or behavior, exceptions, exact PR/head, and required run results in the
+   consumer's existing issue or PR. Coordinate coupled API/dependency changes
+   across owners before merging. A successful package CI run alone does not
+   certify consumers; merge of a quality upgrade does not itself publish a
+   package or release a plugin.
+
+Review upgrades when a compatible release, advisory or needed baseline change
+arrives, and as part of a consumer's bounded quality work. Security-related
+updates should be triaged promptly with the relevant owner. No estate-wide
+automatic version bump, fixed calendar cadence or uniform dependency version is
+implied by this policy.
+
+A live `composer audit --locked --no-interaction` queries changing advisory
+data and can fail because of an advisory or a lookup failure. Preserve an
+adopted blocking audit's command, exit status and path to terminal `quality`;
+report a lookup outage as unavailable evidence, not a clean security result.
+Retry the same locked candidate when service returns. A reviewed waiver of an
+advisory must be narrowly scoped, explained and approved by the affected owner;
+a new audit exclusion, fail-open fallback, relocation or removal needs explicit
+policy review and corresponding CI evidence. A passing locked source check does
+not guarantee a later live audit result. This policy does not impose a new audit
+on repositories that have not adopted one.
+
+The dated [upgrade and audit inventory](QUALITY_UPGRADES_AND_AUDIT.md) records
+the present observed placement and the boundaries of that inventory.
 
 #### Adoption and role-based exceptions
 
