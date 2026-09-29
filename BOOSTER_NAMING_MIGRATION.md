@@ -13,15 +13,16 @@ not current reservations or completed-name counts. Live ownership and sequencing
 remain in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65#rollout-plan-and-agent-handoffs).
 
 The Bitbucket quality agent's batch is merged through
-[Bitbucket #87](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/87)
-at `99f8159579b783656dae83478f7fc3a17a31f016`: shared coding-standards v1.0.0,
-owned naming across all sixteen current class files and future production files,
-blocking level 8/all 20 shipped paths, syntax failure propagation and Yoda
-enforcement are delivered. #87 preserved reviewed head
-`7916ff141dde0bb2be8c972fed755d0a61fb1859`'s tree exactly; exact-head
-Quality and certified-Core installed proof passed before the squash merge.
-The security-review service returned a usage-limit response, disclosed before
-the owner's merge decision. Release #75 is held.
+[Bitbucket #88](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/88)
+at `186ffd350854a528472cca66958a0a6011457834`. Shared coding-standards
+v1.0.0, owned naming across current and future production files, blocking
+level 8/all 20 shipped paths, syntax failure propagation and Yoda enforcement
+were delivered through #87 at `99f8159579b783656dae83478f7fc3a17a31f016`.
+#88 adds Core-independent maintained-PHP semantic coverage guarding to `check`.
+Its squash preserved reviewed head `8522a6080da09fe03f048e6d82329f2b9ee001b0`'s
+tree `e17b74f4b1e1532c22f755710dc505fdbd8a65f8`; exact-head and post-merge
+Quality/installed proof passed. The hosted security-review service returned a
+usage limit, disclosed before the owner-authorized merge. Release #75 is held.
 
 [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63)
 remains closed bounded history; residual acceptance stays under #65. This agent
