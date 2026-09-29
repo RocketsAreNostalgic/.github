@@ -24,7 +24,7 @@ and the existing repository children, not waived or marked complete.
 | [Branch Updater #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59) | `d382d09e4490ed4438d9ebaea2a06d69d59f0ce3` | [#60](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/60) merged; all six canonical names present. Installed no-dev consumer remains required in CI. |
 | [GitHub Provider #25](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/issues/25) | `7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800` | [#26](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/26) merged; six canonical names and separate certified-host `check:host` present. |
 | [Release Updater #60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60) | `5ad94e972446f08c7408828cf7e4ac42c2eee78d` | Canonical commands and direct level-8 coverage of all 36 shipped PHP files retained. Naming and exception acceptance landed through [#89](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/89)–[#92](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/92): owned methods/variables cover all maintained production paths and both scripts, including future files. See the 27 September matrix checkpoint for exact-head reviews, merged-main runs, retained exceptions and the separate protocol/Core adoption boundary. |
-| [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63) | `6c9e4c44bc1832495913826e999fb091701184dd` | #68/#69 established blocking analysis and all 20 shipped paths; #74 promoted level 8. #76 makes syntax discovery/parser failures blocking with an actual-command regression in independent `check`; #77 enforces Yoda conditions. `check:host` retains exact certified-Core analysis/tests. See the [current batch checkpoint](PHP_QUALITY_MATRIX.md#bitbucket-syntax-and-condition-acceptance--28-september-2026). Owned naming/shared-standard adoption remain planned; release #75 is separate. |
+| [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63) | `99f8159579b783656dae83478f7fc3a17a31f016` | Through #87: published coding-standards v1.0.0, owned naming across all 16 current class files and future configured production files, blocking PHPStan 8/all 20 shipped paths, syntax/discovery regression and Yoda enforcement. #87 passed exact-head Quality/installed proof and preserved its reviewed tree on squash merge. See the [current Bitbucket checkpoint](PHP_QUALITY_MATRIX.md#bitbucket-owned-naming-checkpoint--29-september-2026). Exact Core beta.29 and separate release #75 hold remain. |
 | [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42) | `829d823afd87923a20f8170671d2f456465424d9` | [#46](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/46) fixed parser/discovery failure propagation and added lint:syntax; lint:php retained for CI. No standards:fix or analyze yet at that checkpoint. [#45](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/45) separately repinned release workflow. |
 
 The original Support/Branch/Provider cohort declares PHP `^8.2` and uses shared
@@ -52,7 +52,9 @@ All 36 shipped PHP paths retain direct level-8 analysis and stronger gates.
 Protocol 5 landed with the selected-state/broker transition. The package version
 is unchanged, and this is not a certified Core dependency adoption.
 Release Updater #60's implementation acceptance is complete; this documentation
-provides its final matrix reconciliation. Release Updater #70 remains owner-held.
+provides its final matrix reconciliation. At this 27 September checkpoint,
+Release Updater #70 was owner-held; it subsequently merged and published as
+recorded in the current handoff below.
 Other repositories' dated rows are not requalified by this update.
 
 ## Command migration mapping
@@ -120,8 +122,10 @@ landed in [Release Updater #77](https://github.com/RocketsAreNostalgic/ran-wp-re
 its current owner [#60](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/issues/60)
 records landed naming/parameter/exception acceptance and the separate release/adoption boundaries. The
 dated matrix is not a reason to repeat completed slices. Release Updater
-[#70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70) remains
-held; coverage/condition success is not release authorization. Migrator
+[#70](https://github.com/RocketsAreNostalgic/ran-wp-release-updater/pull/70) merged
+and published as immutable v1.0.0-beta.9 at
+`27889528442fc4e49ca060959218d5ec288c3055`; connected Core/Provider
+adoption remains separate. Migrator
 [#43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
 retains its separate exact-candidate installed-site acceptance.
 
@@ -133,10 +137,12 @@ retains its separate exact-candidate installed-site acceptance.
 - The initial matrix came from merged organisation #70; later checkpoints are
   measured updates, not universal execution proof. Maintain them as slices land.
 - Starter formatter consolidation and Support owned-method enforcement are
-  delivered. Remaining commands, naming/condition debt, upgrades, live-audit
-  policy, contributor coordination and proportionate drift proof stay under
-  **#65 and the existing repository children**. Closed #66 supplies evidence,
-  not an active backlog. Wider plugins use #67 and completed #61 handoffs.
+  delivered. Organisation [#97](https://github.com/RocketsAreNostalgic/.github/pull/97)
+  delivered shared version/upgrade and live Composer-audit policy. Remaining
+  repository-specific commands, naming/condition debt, actual consumer upgrades,
+  contributor coordination and proportionate drift proof stay under **#65 and
+  the existing repository children**. Closed #66 supplies evidence, not an active
+  backlog. Wider plugins use #67 and completed #61 handoffs.
 - Connected API/dependency work still needs fresh claims and an installable exact
   composition. The separate template feature under #81 does not freeze
   unrelated quality work or grant authority over its branches.
