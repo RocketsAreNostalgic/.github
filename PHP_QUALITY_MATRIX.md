@@ -39,6 +39,23 @@ proof, and no separate post-merge workflow is invented. Actual plugin release
 allowlists, installed WordPress and deferred UI acceptance remain consumer-owned.
 No package tag, Packagist publication or consumer adoption is included here.
 
+## Bitbucket maintained-PHP coverage drift checkpoint — 29 September 2026
+
+This is the current Bitbucket source checkpoint. The owned-naming checkpoint below
+remains historical evidence for #78–#87. [Bitbucket #63](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/issues/63)
+is closed bounded history; #65 retains residual programme acceptance.
+
+| Disposition | Exact evidence |
+| --- | --- |
+| Merged source | [#88](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/88) squash/main `186ffd350854a528472cca66958a0a6011457834` from reviewed head `8522a6080da09fe03f048e6d82329f2b9ee001b0`, identical tree `e17b74f4b1e1532c22f755710dc505fdbd8a65f8`. #78–#87 remain merged. Core-independent `check` now discovers maintained product PHP and checks direct PHPStan and PHPCS/PHPCBF selection; inherited `check:host` retains the guard. Tests and purpose-built fixtures have separate scope. |
+| Candidate evidence | Exact-head Quality `36569540954` and certified-Core installed proof `36569540260` passed. Local host aggregate passed PHPStan level 8/all 20 shipped paths, 197 tests / 2,250 assertions, release-candidate validator 1 valid / 12 invalid, PHPCS, syntax and actual-Composer negative controls for new product paths and narrowed/excluded configuration. Exact published-head archive SHA-256 `ad1855d1fe5cdacae2f1cdd1af5b872e61cf06dc80b421bf9299d22bdaeccda3`. Eight P2 code findings were fixed and resolved; final code review clear and zero unresolved threads. Hosted security review returned a usage limit, not a pass; the owner authorized #88 squash merge with this disclosed. |
+| Current main checks | Post-merge [Quality 36580768684](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36580768684) and [certified-Core installed proof 36580766975](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36580766975) passed on the squash commit. [Release Please 36581061893](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36581061893) passed on the squash SHA; release automation is not publication authority. |
+| Open / held | No Bitbucket implementation PR remains open. [Release #75](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/75) remains held at `e6a6632305a8f799c2a04b843bd27bdb6cf7976a`; dispatched Quality `36555896639` passed, while bot PR Quality `36555899650` and installed proof `36555898585` were action_required. Its merge/publication requires a separate decision. |
+
+The PHP 8.2/8.5, WordPress 7.0+, certified Core beta.29, API 11/16,
+runtime, archive and installed-host gates remain. This local guard does not close
+estate-wide coverage/reference drift or Core #167 connected compatibility.
+
 ## Bitbucket owned-naming checkpoint — 29 September 2026
 
 This checkpoint supersedes older Bitbucket statements that shared-standard
@@ -341,10 +358,11 @@ Migrator release closeout is implied.
 Release Updater routing reconciled on 27 September and Bitbucket on 29 September;
 other owner routing below retains its dated scope.
 
-Bitbucket's [owned-naming checkpoint](#bitbucket-owned-naming-checkpoint--29-september-2026)
-is the current source record: #78–#87 are merged, with blocking level-8 analysis
-of all 20 shipped PHP files and naming enforcement across current and future
-production paths. Do not restart shared-standard adoption, the naming cohorts,
+Bitbucket's [maintained-PHP coverage drift checkpoint](#bitbucket-maintained-php-coverage-drift-checkpoint--29-september-2026)
+is the current source record: #78–#88 are merged, with blocking level-8 analysis
+of all 20 shipped PHP files, naming enforcement across current and future
+production paths, and a semantic scope guard in `check`. Do not restart
+shared-standard adoption, the naming cohorts,
 the analysis promotion, completed view/index coverage or resolved model findings
 from older audit rows. Connected Core contracts and held release #75 retain
 their separate owners and decisions.
