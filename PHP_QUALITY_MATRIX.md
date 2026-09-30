@@ -15,6 +15,48 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Migrator shipped-analysis coverage protection — 1 October 2026
+
+This checkpoint supersedes only the Migrator coverage status below; previous
+dated evidence and other owners' rows remain intact.
+
+- **Landed:** [Migrator #50](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/50)
+  was owner-authorized squash-merged at `c5f1b7a9b6f6ed38f017d43a209cd9c0e921e010`
+  from reviewed head `272c867cba23443ca7f7307d345b58e4549cdf34`, base
+  `e343b536587ba860043e0dad827834b6b4f77966`. Landed tree
+  `6e5256c001b33511d511e20069220731c15de1e0` matches the qualified candidate.
+- **Protection:** required repository Quality downloads the existing single-build
+  runtime ZIP, verifies its recorded digest and exact source metadata, and compares
+  all shipped PHP with locked PHPStan 2.2.16 CLI discovery and source bytes. Imports,
+  analysis/scan exclusions, file-extension filters and configured stub exclusions
+  use the engine's semantics; scan-only declarations do not establish coverage.
+  The current package's 15 PHP files pass. The aggregate's disposable real-builder
+  control rejects a newly shipped, uncovered `assets/uncovered.php`, then proves
+  imported direct selection, exclusions, stub/scan-only/extension handling and
+  changed-byte refusal. Discovery must be reviewed on a future tooling upgrade.
+- **Candidate qualification:** [Quality 36792967243](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36792967243)
+  passed all five jobs on PHP 8.2.34, including the actual downloaded ZIP guard;
+  full aggregate: 102 tests / 1,096 assertions, clean level 6 and all retained
+  certification negative controls. Local PHP 8.3.6 Composer/frontend/archive
+  checks passed. Published-head local and native ZIP SHA-256 agree at
+  `52ccbd05ef6fdc35e510e8b13fc602239f0aa8ed5fa4e42304d8170ffe3a2151`.
+  [Hosted code review](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/50#issuecomment-5921816268)
+  found no major issues; no unresolved review threads. Separate hosted security
+  review was usage-limited, not passed; the existing pre-publication deferral remains.
+- **Post-merge:** [Quality 36793581236](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36793581236)
+  passed on the landed squash SHA: runtime archive, certified Core and repository
+  Quality. PR-only baseline and terminal jobs intentionally skipped on push;
+  the exact candidate supplied their passing evidence.
+- **Boundaries:** runtime source/APIs, dependency locks, PHPStan level 6 and exact
+  Core beta.22 `cd328286d8b00557f8400ffdcfb0549888ec76ca` certification are unchanged.
+  [Release #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+  remains held for its existing owner's exact-candidate installed-site acceptance;
+  no release publication occurred. [Migrator #42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42)
+  and programme #65 remain open for broader acceptance;
+  Core #167 owns connected naming and level-7 typing stays separate. CI provisioning
+  [research #111](https://github.com/RocketsAreNostalgic/.github/issues/111#issuecomment-5921835140)
+  is a separate delivered report/proposal, with no consolidation rollout authorized.
+
 ## Migrator PHPStan adoption and release handoff — 30 September 2026
 
 This scoped checkpoint supersedes older current-state readings of Migrator's
