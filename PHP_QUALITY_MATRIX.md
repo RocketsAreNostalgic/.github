@@ -29,8 +29,11 @@ intact; other repository rows and owners are unchanged.
   15 shipped PHP files: recursive `src/` and `views/`, `index.php`, and the
   plugin entry point. It retains exact certified Core beta.22
   `cd328286d8b00557f8400ffdcfb0549888ec76ca`, Portability API 2 / Admin
-  Interaction API 2. No runtime API, dependency adoption, certification, or
-  release gate changed. Level 7's 14 boundary-typing findings remain separate
+  Interaction API 2. The new PHPStan development dependency and blocking
+  analysis check are the intended quality changes. No runtime API or production
+  dependency changed; the certified host, release allowlist, archive/runtime/
+  host gates and published version are unchanged. Level 7's 14 boundary-typing
+  findings remain separate
   later work.
 - **Final-head qualification:** [Quality 36712916276](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36712916276)
   passed all five jobs on PHP 8.2.34: shared baseline, runtime archive,
