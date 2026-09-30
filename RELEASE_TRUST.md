@@ -14,7 +14,11 @@ The approved direction is [Profile A](RELEASE_PROFILE_A.md) for source releases 
 
 Repository-specific gates may be stronger than this policy and should remain local when they prove product-specific properties. Shared quality infrastructure is evidence infrastructure, not automatically release authority.
 
-This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Completed quality foundation #7 remains historical evidence; current quality rollout and residual acceptance belong to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65), [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) and the existing repository children. Closed #66 records delivered policy/tooling, with its residual responsibilities explicitly retained under #65; it is not an active queue or a waiver.
+The [30 September 2026 estate snapshot](RELEASE_PUBLISHERS.md#current-estate-snapshot--30-september-2026) records all fifteen maintained production callers, including WP Pusher Migrator and Coding Standards, at exact inspected revisions. Bootstrap API-3 producer v0.3.0 is published and Provider #30 is merged; actual Core V3 composition, coordinated consumer publication and installed/owner feature acceptance remain separate under [#81](https://github.com/RocketsAreNostalgic/.github/issues/81). Release Updater #70 is merged and v1.0.0-beta.9 is published; Core/Provider adoption remains outstanding. Implementation merged, package published, consumer adopted, installed composition qualified and owner acceptance complete must be recorded separately.
+
+The snapshot verifies accessible protected-branch rules and specific immutable release objects; it does not certify inaccessible Actions permissions, immutable-release settings, environment controls or historical-ref dispatch neutralization. Duplicate Detector's current private-plan ruleset limitation remains an explicit exception/evidence gap. Retained candidate geometry and historical release identities still require existing-owner disposition under #47/#29. Existing release holds and disabled WordPress.org deployment remain in force. These limitations prevent a blanket #57 or #9 closeout.
+
+This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Completed quality foundation #7 and satellite rollout [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) remain historical evidence; current quality rollout and residual acceptance belong to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) and the existing repository children. Closed #66 records delivered policy/tooling, with its residual responsibilities explicitly retained under #65; it is not an active queue or a waiver.
 
 ### Deterministic test fixtures
 
@@ -316,11 +320,11 @@ For each repository, establish at least:
 
 ## Relationship to source quality
 
-Completed [`.github#7`](https://github.com/RocketsAreNostalgic/.github/issues/7) records the shared quality foundation. Current source-quality adoption, coding/configuration work and residual command/coverage/naming acceptance are coordinated through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65), [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) and the existing repository children. Closed #66 is policy/tooling delivery evidence, not another active backlog. Deferred organisation-required workflow activation remains separately owned by [#31](https://github.com/RocketsAreNostalgic/.github/issues/31); current repository-required checks retain their authority.
+Completed [`.github#7`](https://github.com/RocketsAreNostalgic/.github/issues/7) records the shared quality foundation; closed [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) records satellite rollout. Current source-quality adoption, coding/configuration work and residual command/coverage/naming acceptance are coordinated through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) and the existing repository children. Closed #66 is policy/tooling delivery evidence, not another active backlog. Deferred organisation-required workflow activation remains separately owned by [#31](https://github.com/RocketsAreNostalgic/.github/issues/31); current repository-required checks retain their authority.
 
 `.github#9` and this policy own release authority, privileged mutation, release-control paths, exact release-candidate identity, artifact provenance, publication/readback, repository bypass policy where it affects release trust, and independent authorization boundaries.
 
-When an audit finds a quality-adoption problem rather than a release-trust problem, route it to #65/#67 and its existing repository quality owner rather than reopening the completed #7 foundation or expanding release-trust remediation. Completed release handoffs do not complete the separate quality acceptance.
+When an audit finds a quality-adoption problem rather than a release-trust problem, route it to #65 and its existing repository quality owner rather than reopening completed #7/#67 or expanding release-trust remediation. Completed release handoffs do not complete the separate quality acceptance.
 
 ## Maintenance
 
