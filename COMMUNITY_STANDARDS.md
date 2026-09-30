@@ -42,7 +42,7 @@ The repository README should link to the applicable contribution, support, and s
 
 ## New repositories and local overrides
 
-New and bootstrap/generated RAN repositories should inherit this public organisation baseline. Do not copy generic community-health documents or templates into generated repositories. A local file needs a concrete product requirement, and its purpose should be stated in that file or the repository's existing documentation.
+New and bootstrap/generated RAN repositories should inherit this public organisation baseline. [GitHub makes the defaults available regardless of destination repository visibility](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file); the reduced-intake exceptions for private, fixture, archived or intentionally unsupported repositories above still apply. Do not copy generic community-health documents or templates into generated repositories. A local file needs a concrete product requirement, and its purpose should be stated in that file or the repository's existing documentation.
 
 Check GitHub's recognised root, `docs/` and `.github/` locations before adding or removing an override; a file in another recognised location can still shadow the organisation default. For issue intake, any local template/config set must provide the complete required surface. Removing a local document does not create a repository-relative file: repair README/support/template links to the canonical organisation URL where needed.
 
