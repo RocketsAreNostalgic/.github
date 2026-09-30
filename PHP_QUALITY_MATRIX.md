@@ -15,6 +15,40 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Branch bootstrap and Starter exclusion reconciliation — 30 September 2026
+
+This scoped checkpoint supersedes the Branch coverage gap and Starter follow-up
+in the 29 September audit. Other repositories retain their dated evidence.
+
+- **Branch:** [#66](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/66)
+  squash-merged at `7bddf0791d4aefe0d5930422b642fca00d10db2d`.
+  Blocking PHPStan level 5 directly selects all 36 `src/` PHP files plus
+  `bootstrap.php` (37 production paths). The ordinary Composer tests run actual
+  analysis in an isolated fixture: unchanged bootstrap passes; an injected
+  undefined function must fail specifically on that bootstrap. Dependencies,
+  runtime behavior and analysis level are unchanged.
+- **Qualification:** reviewed head `465adb1e8dcdaca1ed028fb8b36bb5b159115d67`
+  and merge share tree `0c98dcdefa3d0db482cad57338372c6bb709fd4a`.
+  [Candidate CI 36700894675](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/36700894675)
+  and [main CI 36702321759](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/36702321759)
+  passed PHP 8.2, PHP 8.5, installed no-dev consumer and terminal quality.
+  Independent final-head code review completed without suggestions or unresolved
+  threads. Automated security review was usage-limited; Ben explicitly waived it
+  for this PR and authorized squash merge. It is not reported as passed.
+  [Release Please 36702477206](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/36702477206)
+  succeeded; no new version or release PR resulted.
+- **Starter:** at `3490bef147580e07b43ab0aa4691b24548adb159`,
+  packaged [`index.php`](https://github.com/RocketsAreNostalgic/ran-starter-plugin/blob/3490bef147580e07b43ab0aa4691b24548adb159/index.php)
+  contains only strict-types declaration and silence comments, with no plugin
+  behavior. Its omission from direct PHPStan paths is an intentional, narrow
+  no-behavior exclusion accepted by Ben on 30 September. It does not reopen
+  [Starter #24](https://github.com/RocketsAreNostalgic/ran-starter-plugin/issues/24)
+  or require a new analyzer regression. Reassess this disposition if executable
+  behavior is added; no broader root-file exclusion is implied.
+
+Branch's bootstrap slice is complete. Branch #59 and programme #65 remain open
+for their separately owned connected-contract and broader acceptance work.
+
 ## Suite and Starter source reconciliation — 29 September 2026
 
 This checkpoint supersedes current-state readings of older rows for the eight
@@ -67,19 +101,14 @@ open naming candidate, not part of the Core main row above.
 
 ### Remaining work and ownership
 
-- **Branch coverage gap:** [installed-consumer proof](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/blob/212a0d38dd7d766c6c8d8b7f29ebcf1de075802b/tests/consumer-install.php)
-  requires and executes `vendor/ran/wp-branch-updater/bootstrap.php`, but
-  `phpstan.neon` selects only `src/`. The next bounded source candidate is direct
-  level-5 bootstrap coverage with an appropriate production-scope regression,
-  retaining PHP 8.2/8.5 and installed-consumer proof. Refresh [Branch #59](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/issues/59)
-  and its connected-adoption claims before implementation; this audit makes no source claim.
+- **Branch bootstrap:** direct level-5 coverage and its regression landed in #66;
+  the 30 September checkpoint above records candidate/main CI and review evidence.
 - **Migrator:** missing analysis is confirmed. [#42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42)
   now has an active command-parity worker; PHPStan adoption is that lane's separate
   planned slice. Release #43 remains held for installed-site acceptance.
-- **Starter:** `release-contents.txt` ships the unselected `index.php` silence
-  guard. Its closed #24 formatter/runtime acceptance remains delivered; a small
-  reference-coverage follow-up should include this root and assess future
-  allowlist drift. No higher analysis floor is inferred from this finding.
+- **Starter:** the packaged `index.php` silence guard is an intentional narrow
+  no-behavior exclusion, as recorded above. Closed #24 remains accepted; revisit
+  the exclusion if this file gains executable behavior.
 - **Core/Provider/Branch connected work:** remains with Core #167 and existing
   package owners. Main configurations and a candidate-host CI pass do not close
   public naming, dependency adoption or released-host certification.
