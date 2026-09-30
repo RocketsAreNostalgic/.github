@@ -101,7 +101,8 @@ open naming candidate, not part of the Core main row above.
 
 ### Remaining work and ownership
 
-- **Branch bootstrap:** direct level-5 coverage and its regression landed in #66;
+- **Branch bootstrap:** direct level-5 coverage and its regression landed in
+  [Branch #66](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/66);
   the 30 September checkpoint above records candidate/main CI and review evidence.
 - **Migrator:** missing analysis is confirmed. [#42](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/issues/42)
   now has an active command-parity worker; PHPStan adoption is that lane's separate
