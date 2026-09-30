@@ -15,6 +15,50 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Migrator PHPStan adoption and release handoff — 30 September 2026
+
+This scoped checkpoint supersedes older current-state readings of Migrator's
+analysis gate and Release Please candidate below. Dated source snapshots remain
+intact; other repository rows and owners are unchanged.
+
+- **Migrator #48:** [PR #48](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/48)
+  squash-merged at `e343b536587ba860043e0dad827834b6b4f77966` from reviewed
+  head `ef8e2fae4ba96ae9e0359fd2204a8ffd72c91080`; merge tree
+  `ad870e408cb49bd46088a5246cc0c53eb96fb16e` exactly matches the qualified
+  candidate. Blocking PHPStan level 6 targets PHP 8.2 and directly analyzes all
+  15 shipped PHP files: recursive `src/` and `views/`, `index.php`, and the
+  plugin entry point. It retains exact certified Core beta.22
+  `cd328286d8b00557f8400ffdcfb0549888ec76ca`, Portability API 2 / Admin
+  Interaction API 2. No runtime API, dependency adoption, certification, or
+  release gate changed. Level 7's 14 boundary-typing findings remain separate
+  later work.
+- **Final-head qualification:** [Quality 36712916276](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36712916276)
+  passed all five jobs on PHP 8.2.34: shared baseline, runtime archive,
+  certified Core contract, repository Quality, and terminal quality. The
+  aggregate records 102 tests / 1,095 assertions, zero PHPStan errors, and the
+  negative controls including replacement-tree refusal. Final-head code review
+  completed without new findings; all three P2 threads were fixed, answered,
+  and resolved.
+- **Post-merge:** [Quality 36713631680](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36713631680)
+  passed on the squash SHA, including runtime archive, certified Core, and
+  repository Quality. Its aggregate again records 102 tests / 1,095 assertions,
+  clean analysis, and the negative controls. PR-only baseline and terminal jobs
+  correctly skipped on push; the passing exact-candidate run supplies that
+  evidence.
+- **Security review:** hosted review was usage-limited and explicitly deferred
+  by Ben until before public release. It is not a passing review.
+- **Release handoff:** [Release Please 36713934298](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36713934298)
+  succeeded: exact Quality admission, Release Please, and candidate Quality
+  qualification passed; exact asset download/promotion steps were skipped.
+  [Release PR #43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+  remains open at beta.10, head `c24777c7a54ba1f5ffcb40bd9c886eb8d8652188`,
+  based on main `e343b536587ba860043e0dad827834b6b4f77966`. The separate
+  exact-candidate installed-site acceptance hold remains outstanding; this
+  workflow is not release approval.
+- **Remaining ownership:** Migrator #42 remains open for separately owned
+  command/naming acceptance and later level-7 boundary typing. Core #167 owns
+  connected Core naming. Programme #65 remains open for broader acceptance.
+
 ## Branch bootstrap and Starter exclusion reconciliation — 30 September 2026
 
 This scoped checkpoint supersedes the Branch coverage gap and Starter follow-up
