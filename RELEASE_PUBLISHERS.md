@@ -5,6 +5,50 @@ This document records the implementation-level audit and subsequent scoped migra
 The original implementation audit is dated evidence. The owner-approved [Profile A/B architecture](https://github.com/RocketsAreNostalgic/.github/issues/44) and [migration programme](https://github.com/RocketsAreNostalgic/.github/issues/47) supersede its former permission to retain generic parallel publisher/recovery machinery. The operative snapshot below contributes to the final estate/settings audit under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). A historical **CONFORMS** or **JUSTIFIED DIFFERENCE** classification neither certifies today's implementation nor requires preservation of a retired mechanism.
 
 
+## Candidate validation closeout — 1 October 2026
+
+The bounded [#114 follow-up](https://github.com/RocketsAreNostalgic/.github/issues/114)
+dispositions the Core, Bitbucket and Migrator ancestry findings in the dated
+30 September snapshot below. All three corrections are owner-authorized squash
+merges. This is candidate-validation acceptance, not a new release or an
+estate-wide settings/installed-product acceptance.
+
+| Repository / correction | Exact merged default-branch commit | Post-merge evidence |
+| --- | --- | --- |
+| [Core #208](https://github.com/RocketsAreNostalgic/ran-booster/pull/208) | `176e5329e41676337e942246a2359227567200b8` | [Quality 36850125993](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/36850125993): passed. |
+| [Bitbucket #90](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/90) | `e3bbadca96587d07f655df89bc9eda1515c6dd20` | [Quality 36847226241](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36847226241) and [certified Core installed proof 36847225679](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/36847225679): passed. |
+| [Migrator #51](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/51) | `83ab555135f624b26f1069f29084acb49bf83104` | [Quality 36846881353](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/36846881353): passed. |
+
+- All three validate the full actual release-PR base-to-head content and preserve
+  generated-file/version consistency and accepted changelog history. Parent
+  counts, adjacency and ancestry no longer determine content validity. Positive
+  alternate-history fixtures and negative runtime/configuration/missing-base
+  fixtures make those guarantees explicit.
+- Core's owner accepted removal of earlier-parent version/new-note preservation
+  with #208. That check detected metadata drift in one merge shape; it did not
+  authenticate Release Please output or constrain direct candidates equivalently.
+  Release Please owns proposed metadata; exact-candidate independent review and
+  owner approval assess intent. Core's separate **merge-commit policy for bot
+  release proposals remains unchanged**.
+- Migrator resolves canonical PR base/head for both PR and release-branch dispatch
+  instead of comparing only `HEAD^1`; malformed, ambiguous or moved identities
+  fail closed. Its full Quality gates remain. Core/Bitbucket retain their
+  documented reduced candidate lanes and archive/install proof. Supplied-base
+  equality does not prove continuing base freshness.
+- Qualified heads were Core `475eafc2202f9dc5f3813b178ea391cf75673890`, Bitbucket
+  `c1bc568cc51b87adde8518726dc4d56e2fdd654f` and Migrator
+  `e69700e57f05bd0ca2dd21a19b26a0f9ac7178b8`. Exact-head review and check evidence
+  are linked from their PRs; hosted security quota failures remain disclosed and
+  are not represented as passing checks.
+
+GitHub Provider and both updaters remain comparison-only Profile A consumers;
+no parallel validator or common lifecycle subsystem was introduced. #114 closes
+only after merged documentation and final evidence reconciliation. #47/#57 retain
+their other release, adoption, settings and owner-acceptance gates. Core naming
+#167/beta.31 #181, Bitbucket integration #89/release #75, Migrator release #43,
+CI optimisation and updater adoption retain their existing owners. This section
+does not lift a release hold or supersede historical release dispositions below.
+
 ## Historical release closeout — 1 October 2026
 
 This bounded follow-up supersedes the unresolved beta.23 and stale-label findings
