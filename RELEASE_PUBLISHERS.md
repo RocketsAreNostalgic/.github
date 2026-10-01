@@ -4,6 +4,70 @@ This document records the implementation-level audit and subsequent scoped migra
 
 The original implementation audit is dated evidence. The owner-approved [Profile A/B architecture](https://github.com/RocketsAreNostalgic/.github/issues/44) and [migration programme](https://github.com/RocketsAreNostalgic/.github/issues/47) supersede its former permission to retain generic parallel publisher/recovery machinery. The operative snapshot below contributes to the final estate/settings audit under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). A historical **CONFORMS** or **JUSTIFIED DIFFERENCE** classification neither certifies today's implementation nor requires preservation of a retired mechanism.
 
+
+## Historical release closeout — 1 October 2026
+
+This bounded follow-up supersedes the unresolved beta.23 and stale-label findings
+in the **dated 30 September snapshot below**. It does not rerun the estate audit,
+qualify current held releases, or alter the accepted Enhanced Cover and Duplicate
+Detector draft dispositions.
+
+### Booster beta.23: explicitly left unpublished; progression restored
+
+[Core release PR #67](https://github.com/RocketsAreNostalgic/ran-booster/pull/67)
+merged candidate `dc653045d02f2a139bb931c4290976a785e7d87b` at
+`56e9fa29613b8b81ee275c768e1683ad420a0c47`, intended tag `v1.0.0-beta.23`.
+Fresh complete release/tag inventories and direct tag/release-by-tag reads find
+no corresponding object; the PR has no pending or tagged label.
+
+The missing disposition is preserved in merged
+[Core #77](https://github.com/RocketsAreNostalgic/ran-booster/pull/77),
+`642982fd5d966ac46c2f5f51ae2e9d475683ed8b`. Its
+[checked-in README](https://github.com/RocketsAreNostalgic/ran-booster/blob/642982fd5d966ac46c2f5f51ae2e9d475683ed8b/README.md)
+explicitly leaves beta.23 unpublished and resumes the train at beta.24; its commit
+also carries `Release-As: 1.0.0-beta.24`. This is an existing deliberate
+unpublished supersession, not a new decision inferred from a later release.
+
+**Correct the historical rationale:** #77 describes #67 as squash-merged, but
+[the actual merge](https://github.com/RocketsAreNostalgic/ran-booster/commit/56e9fa29613b8b81ee275c768e1683ad420a0c47)
+has parents `1521def74c43eba0ba6cb95400dcfb2fa28dc5f0` and
+`dc653045d02f2a139bb931c4290976a785e7d87b`. That explanation is false; it does not
+invalidate #77's explicit choice to leave beta.23 unpublished. Exact merged-main
+[Quality 32285414604](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/32285414604)
+succeeded. [Publisher 32285959868](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/32285959868/job/96175430013)
+failed at “Verify release identity and exact artifact provenance”; draft creation,
+publication and final readback were skipped. The retained log reports ZIP checksum
+OK then exit 1; it does not establish a more specific failing assertion, so no
+more specific cause is claimed here.
+
+Restored progression is independently bound to
+[Core #78](https://github.com/RocketsAreNostalgic/ran-booster/pull/78), merge and
+actual `v1.0.0-beta.24` tag `30408f5c5323dfed307b7b39d9313c067fe7c5c6`,
+[non-draft release 374339072](https://github.com/RocketsAreNostalgic/ran-booster/releases/tag/v1.0.0-beta.24).
+Beta.23 remains unpublished. No historical release/tag/label mutation is needed
+for this out-of-scope historical observer case, and none was performed on #67.
+
+### Cancelled proposals: stale pending metadata removed
+
+Fresh PR and cancellation-comment reads confirm all four proposals remain closed
+and unmerged. Only `autorelease: pending` was removed, with an explanatory comment
+and independent label readback; no `autorelease: tagged` or new lifecycle marker
+was added. Cancellation applies to these exact proposals, not a blanket claim
+that their version strings were never used by later work.
+
+| Cancelled proposal | Exact head | Existing cancellation | Metadata reconciliation |
+| --- | --- | --- | --- |
+| EmailOctopus #1, 1.1.0 | `311f778efb52c325d28456e5305726d9b4ccf887` | [Split/rebrand](https://github.com/RocketsAreNostalgic/ran-emailoctopus-jetpack-forms/pull/1#issuecomment-5012717027) | [Pending removed](https://github.com/RocketsAreNostalgic/ran-emailoctopus-jetpack-forms/pull/1#issuecomment-5928085183) |
+| Bitbucket #14, alpha.6 | `7eac68b6cfc22f91d3df478db95d609c3d2daa3d` | [Approved clean-history beta reset](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/14#issuecomment-5154129077) | [Pending removed](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/14#issuecomment-5928088540) |
+| Migrator #8, alpha.4 | `693f37ffea998c11eb86fe01519cb61b7751bddb` | [Approved clean-history beta reset](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/8#issuecomment-5154128893) | [Pending removed](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/8#issuecomment-5928091649) |
+| Migrator #12, beta.2 | `24ae4fc37ee883356b7fc3b24acff9bc5e3916d1` | [Ignore-policy-only work did not warrant release](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/12#issuecomment-5156707136) | [Pending removed](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/12#issuecomment-5928094800) |
+
+The five specific historical cases are now evidenced. Broader #29/#57/#9
+acceptance remains with those trackers; this follow-up does not claim live
+settings, observer cadence, current product acceptance or authority to close
+those issues. No historical object was published, deleted, retargeted or
+overwritten, and no cancelled work was reopened.
+
 ## Current estate snapshot — 30 September 2026
 
 This is the operative inventory; the dated checkpoints below remain history. Inspected organisation main: `073fdbc4cf497fcd6077a740495454c4b172f791`. Source/workflow, live repository metadata, full accessible rulesets, release/tag identities and PR records were read separately. This is read-only qualification evidence, not new release approval, an installed-product rerun or proof of inaccessible admin settings. Final closure remains under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
