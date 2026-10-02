@@ -15,6 +15,47 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Core whole-tree condition and parameter candidate — 2 October 2026
+
+This checkpoint records the open [Core #226](https://github.com/RocketsAreNostalgic/ran-booster/pull/226)
+candidate for [#119](https://github.com/RocketsAreNostalgic/.github/issues/119).
+It is not landed acceptance; older dated snapshots and other repository rows
+remain historical evidence, not a new implementation queue.
+
+- **Exact candidate:** base `e0f7046521ad3c3b8ab265721efa27b53360d806`,
+  head `7332d2103234f390c398b21755e7e9e7146e3ddc`, tree
+  `7783d2ed56743e9689a39657919ba65bb24a9215`.
+- **Effective scope:** Yoda conditions, unused parameters (including inherited
+  and interface implementations), and reserved parameter names apply throughout
+  owned PHP. The 29 all-rule test/harness suppressions are removed. Required
+  native/public signatures, callback slots, implicit template uses and exact
+  runtime/security fixtures retain specific explained exceptions. Seven
+  positive/negative controls exercise the locked checker and reject blanket
+  suppressions. [Core's scope inventory](https://github.com/RocketsAreNostalgic/ran-booster/blob/7332d2103234f390c398b21755e7e9e7146e3ddc/docs/php-standards-coverage.md)
+  records the inherited WordPress-Extra/PHPCompatibilityWP/RAN profile and
+  remaining boundaries; this does not imply every WordPress-Docs rule is active.
+- **Qualification:** full local Composer checks pass on the exact final tree
+  (2,612 tests / 22,493 assertions), including PHPCS, PHPStan, syntax, gettext
+  and generated-asset verification. Unchanged frontend sources pass pinned
+  Node 24.11.0 / pnpm 11.7.0 checks (25 test files). Independent
+  [opened-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/226#issuecomment-5962454910)
+  found an installed-fixture artifact/slug collision; the final head corrects
+  those two lines and has no remaining scoped review findings.
+  [Final-head native run](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37072481271)
+  completed **SUCCESS**, refreshed 3 October 2026: Runtime archive, Repository
+  quality, all four installed WordPress/database lanes and terminal Quality
+  passed. Release-candidate-only readback is intentionally skipped for this
+  source PR; installed qualification comes from the full WordPress matrix.
+  This is source-candidate qualification, not release or product acceptance.
+- **Unchanged boundaries:** PHPStan remains level 1 with existing shipped-file
+  coverage; dependency locks, runtime API contracts and wire/storage keys are
+  unchanged. Broader retained-path review [#120](https://github.com/RocketsAreNostalgic/.github/issues/120),
+  Migrator helpers [#121](https://github.com/RocketsAreNostalgic/.github/issues/121),
+  and development-tool alignment [#122](https://github.com/RocketsAreNostalgic/.github/issues/122)
+  stay separate. #119, Core #167 and programme #65 are not closed by this proposal.
+  The owner has paused release work; no merge, release, satellite certification
+  or deferred UI/production-onboarding acceptance is granted.
+
 ## Migrator shipped-analysis coverage protection — 1 October 2026
 
 This checkpoint supersedes only the Migrator coverage status below; previous
