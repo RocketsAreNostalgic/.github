@@ -34,15 +34,17 @@ remain historical evidence, not a new implementation queue.
   suppressions. [Core's scope inventory](https://github.com/RocketsAreNostalgic/ran-booster/blob/7332d2103234f390c398b21755e7e9e7146e3ddc/docs/php-standards-coverage.md)
   records the inherited WordPress-Extra/PHPCompatibilityWP/RAN profile and
   remaining boundaries; this does not imply every WordPress-Docs rule is active.
-- **Qualification:** the preceding tree `56654e3d51798bfc5a82967f3db0fe89f4d98248`
-  passed full local Composer checks (2,612 tests / 22,493 assertions) and pinned
-  Node 24.11.0 / pnpm 11.7.0 frontend checks (25 test files). Independent
+- **Qualification:** full local Composer checks pass on the exact final tree
+  (2,612 tests / 22,493 assertions), including PHPCS, PHPStan, syntax, gettext
+  and generated-asset verification. Unchanged frontend sources pass pinned
+  Node 24.11.0 / pnpm 11.7.0 checks (25 test files). Independent
   [opened-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/226#issuecomment-5962454910)
   found an installed-fixture artifact/slug collision; the final head corrects
-  those two lines and has no remaining scoped review findings. Fresh final-head
-  canonical and [native archive/installed qualification](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37072481271)
-  remain pending at this checkpoint. Earlier-tree results do not qualify the
-  corrected installed fixture.
+  those two lines and has no remaining scoped review findings.
+  [Final-head native run](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37072481271)
+  has passed Runtime archive; repository and installed WordPress qualification
+  remain pending at this checkpoint. Source checks and archive construction
+  do not establish installed-fixture acceptance.
 - **Unchanged boundaries:** PHPStan remains level 1 with existing shipped-file
   coverage; dependency locks, runtime API contracts and wire/storage keys are
   unchanged. Broader retained-path review [#120](https://github.com/RocketsAreNostalgic/.github/issues/120),
