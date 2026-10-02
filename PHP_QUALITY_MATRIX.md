@@ -42,9 +42,11 @@ remain historical evidence, not a new implementation queue.
   found an installed-fixture artifact/slug collision; the final head corrects
   those two lines and has no remaining scoped review findings.
   [Final-head native run](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37072481271)
-  has passed Runtime archive; repository and installed WordPress qualification
-  remain pending at this checkpoint. Source checks and archive construction
-  do not establish installed-fixture acceptance.
+  completed **SUCCESS**, refreshed 3 October 2026: Runtime archive, Repository
+  quality, all four installed WordPress/database lanes and terminal Quality
+  passed. Release-candidate-only readback is intentionally skipped for this
+  source PR; installed qualification comes from the full WordPress matrix.
+  This is source-candidate qualification, not release or product acceptance.
 - **Unchanged boundaries:** PHPStan remains level 1 with existing shipped-file
   coverage; dependency locks, runtime API contracts and wire/storage keys are
   unchanged. Broader retained-path review [#120](https://github.com/RocketsAreNostalgic/.github/issues/120),
