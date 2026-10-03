@@ -15,6 +15,47 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Source integration checkpoint — 3 October 2026
+
+This checkpoint supersedes the unmerged statuses in the earlier convergence
+record below for Core #228, #229 and #230 only. Their original candidate heads,
+counts and isolated composition proof remain historical evidence.
+
+Core [#228](https://github.com/RocketsAreNostalgic/ran-booster/pull/228) landed
+at `775087ad93e88a2901d992ff525fb5345d45ff2c` under its separate #124 ownership.
+Core [#229](https://github.com/RocketsAreNostalgic/ran-booster/pull/229) was then
+refreshed against that base at head `b04e679896a0e44acb258a360e8ac8801c972611`,
+including regenerated localisation state. Renewed canonical checks passed
+(2,615 tests / 22,502 assertions), pinned frontend checks passed, and final-head
+[Quality 37103128189](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37103128189)
+passed archive, repository quality and all four installed WordPress/database lanes.
+Owner-authorized squash commit `fdf6ce9e74cf7a3f514111b83ece3a754156bd26`
+preserves reviewed tree `ba28a74979da35e2ed83b5a29b2a58c022eb1d2e`.
+
+Its exact merged-head [Quality 37103511499](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37103511499)
+subsequently passed, including all four installed lanes.
+
+Core [#230](https://github.com/RocketsAreNostalgic/ran-booster/pull/230) was
+refreshed on `fdf6ce9e74cf7a3f514111b83ece3a754156bd26` at head
+`243b73aafdcdaeae37edf19e21698e704218e20a`. Its integrated tree
+`bf2fb937d77e31bcdf9eb02450828abc1e6a66cc` passed full local Composer checks
+(2,615 tests / 22,502 assertions) and pinned frontend checks (193 tests).
+[Independent actual-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/230#issuecomment-5966417583)
+is clear, and exact-head [Quality 37103598187](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37103598187)
+passed archive, repository quality and all four installed lanes. Owner-authorized
+squash commit `0145bb2f9be4866e46e109cb160ed788cbc25e53` preserves that tree
+and has #229's merge commit as its parent.
+
+Exact merged-main [Quality 37103932804](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37103932804)
+passed at `0145bb2f9be4866e46e109cb160ed788cbc25e53`, including archive,
+repository quality and all four installed WordPress/database lanes. This is
+post-merge qualification of the integrated #228 + #229 + #230 source tree.
+
+Core #225 and Starter #30 remain separate open documentation proposals, outside
+these source merges. PHPStan remains enforced at level 1. Source integration
+does not grant release authorization, matching satellite released-host
+certification, manual migration acceptance or deferred #81/#85 UI acceptance.
+
 ## Convergence checkpoint — 3 October 2026
 
 This checkpoint supersedes the earlier open/unmerged statuses below only for
@@ -50,7 +91,7 @@ The following documentation proposals remain **open/unmerged**:
   confirms manifest 0.1.2 and immutable published v0.1.2. No new runtime
   qualification is claimed for this documentation-only refresh.
 
-The #120 source cleanup is proposed separately in
+At the earlier pre-integration checkpoint, the #120 source cleanup was proposed in
 [Core #229](https://github.com/RocketsAreNostalgic/ran-booster/pull/229), base
 `90e632cbce245b291318163b0198bc1f06371c47`, head
 `16fe91f95d457f5ccb3fa88dc57a1d72923a52f9`. It removes the null-only artifact
@@ -63,7 +104,7 @@ passes archive, repository quality and all four installed WordPress/database
 lanes. No merge or
 completion of remaining WordPress guards/persisted-state decisions is claimed.
 
-The #122 alignment is separately proposed in
+At that earlier checkpoint, the #122 alignment was proposed in
 [Core #230](https://github.com/RocketsAreNostalgic/ran-booster/pull/230), base
 `90e632cbce245b291318163b0198bc1f06371c47`, head
 `e8de763e1389247f864e4854f27f5c44d894a0c1`. PHPStan 2.2.16, WordPress stubs
@@ -88,8 +129,8 @@ change either branch, or authorize merging.
 [#124](https://github.com/RocketsAreNostalgic/.github/issues/124) remains separately
 owned. Its diagnostic baseline is captured; the external agent's
 [Core #228](https://github.com/RocketsAreNostalgic/ran-booster/pull/228), head
-`d9940c36c6859d167d0868878093097b0dea5917`, is a separate unmerged proposal,
-not duplicated by these lanes. PHPStan's enforced level remains 1. No level-5/8
+`d9940c36c6859d167d0868878093097b0dea5917`, was then a separate unmerged proposal,
+not duplicated by these lanes; the integration checkpoint above records its landing. PHPStan's enforced level remains 1. No level-5/8
 zero-findings release gate, merge authorization, release approval or deferred
 UI/manual acceptance is introduced. #111 remains retired; #118 remains completed.
 

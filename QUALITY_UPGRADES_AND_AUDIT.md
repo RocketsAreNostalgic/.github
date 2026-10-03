@@ -3,6 +3,24 @@
 Owner: [organisation quality #65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Snapshot: 29 September 2026 (UTC). Policy: [Quality Standards](QUALITY_STANDARDS.md#shared-package-versions-consumer-upgrades-and-live-advisories).
 
+## Source integration update — 3 October 2026
+
+Core [#230](https://github.com/RocketsAreNostalgic/ran-booster/pull/230) is now
+landed at `0145bb2f9be4866e46e109cb160ed788cbc25e53`, following #228 and #229.
+The final reviewed head `243b73aafdcdaeae37edf19e21698e704218e20a` and landed
+commit share tree `bf2fb937d77e31bcdf9eb02450828abc1e6a66cc`. Its refreshed
+local checks pass (2,615 tests / 22,502 assertions; 193 frontend tests), and
+native archive, repository quality and all four installed lanes pass on the
+final candidate. Exact merged-main [Quality 37103932804](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37103932804)
+also passes archive, repository quality and all four installed lanes.
+
+The [source integration checkpoint](PHP_QUALITY_MATRIX.md#source-integration-checkpoint--3-october-2026)
+records the final source tuples and qualification. Earlier candidate counts and
+toolchain comparisons below remain historical; they are not silently relabelled
+as post-merge results. Retained Admin Shell and frontend quality-config pins,
+production dependencies, enforced PHPStan level 1 and paused release boundaries
+are unchanged.
+
 ## Convergence update — 3 October 2026
 
 The [current matrix checkpoint](PHP_QUALITY_MATRIX.md#convergence-checkpoint--3-october-2026)
@@ -22,7 +40,8 @@ actual-PR review is clear; exact-head [Quality 37101149792](https://github.com/R
 passes native archive, repository quality and all four installed lanes. The
 matrix records separate local proof of the combined #229 + #230 tree.
 
-With unchanged production source, diagnostic findings at levels 1/5/8 move from
+In the historical controlled comparison on production source `90e632cbce245b291318163b0198bc1f06371c47`,
+diagnostic findings at levels 1/5/8 move from
 0/272/783 to 0/272/782 with no new messages. The single removed nullable-target
 finding in `AssistedWebhookFacade` is improved modelling of an existing guard,
 not a source defect fix. This controlled comparison supplements the external
