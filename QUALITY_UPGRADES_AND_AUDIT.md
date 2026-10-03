@@ -3,6 +3,33 @@
 Owner: [organisation quality #65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Snapshot: 29 September 2026 (UTC). Policy: [Quality Standards](QUALITY_STANDARDS.md#shared-package-versions-consumer-upgrades-and-live-advisories).
 
+## Bounded consumer decisions — 3 October 2026
+
+The [#122 tooling checkpoint](quality-evidence/tooling-decisions-20261003.md)
+records exact before/after refs, generated-file parity, advisory scope and
+qualification. It supplements the historical inventory below:
+
+- Migrator's [#55 proposal](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/55)
+  adopts released coding standards `^1.0` with the owned test/helper naming
+  enforcement. Keep other locked packages and Core certification references
+  unchanged; qualify the target-only update and negative controls together.
+- Retain Core's current Admin Shell pin: resource and sync implementation bytes
+  are unchanged. Package-local development tooling does not become a consumer
+  requirement. Any later adoption must regenerate real provenance and qualify
+  Core; generated-byte identity alone is not latest-tooling adoption.
+- Retain frontend quality-config's accepted immutable SHA: only its own
+  development lock changed, and the inspected Core lock already contains the
+  corresponding updated transitive versions. Registry publication remains
+  optional package #5.
+- Admin Shell [#20](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/20)
+  separately corrects a distribution-test stat-cache observation after child
+  Composer removal. It does not change Core's pin or weaken the assertion.
+
+These are reviewed decisions/proposals, not blanket dependency updates or
+release approval. Core PHPStan/WordPress-stub changes stay held while #124
+captures its diagnostic baseline. Historical audit placement below is not
+silently requalified.
+
 ## Observed current placement
 
 This is a bounded review of default-branch `composer.json` scripts and the
