@@ -404,4 +404,3 @@ Recorded scoped rollout includes Starter and Duplicate Detector callers. [DD #20
 - #55/#56 and Provider #28 follow [#81's current contract and ownership](https://github.com/RocketsAreNostalgic/.github/issues/81); producer API-3 implementation/publication and Provider #30 are now delivered; actual Core composition and full acceptance remain separate as recorded in the operative snapshot.
 
 Cross-repository handoffs should use explicit repository links and update operative status alongside dated evidence. Historical measurements remain history; they do not silently become new implementation instructions or current settings proof.
-
