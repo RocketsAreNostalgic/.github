@@ -15,6 +15,27 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Current closeout proposals — 3 October 2026
+
+Source integration below is delivered. The remaining closeout runs through
+existing #65/#120/#57; these proposals do not authorize merges or releases.
+
+| Proposal / owner | Bounded result and remaining decision |
+| --- | --- |
+| [Core225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), coordinator | Refreshed on current source0145bb2 at headb9f005f; unchanged three-document patch and independent review clear. Historical recovery remains dated. |
+| [Core232](https://github.com/RocketsAreNostalgic/ran-booster/pull/232), #120 | Proposed retain/defer dispositions for every remaining guard/state category, with owners and reconsideration triggers. Core150 is already closed; current schema4 state retention is delivered, while controlled-site deployment prerequisites remain separate. Debug-capture retention/reset still requires an owner decision; no private-state inventory is inferred. |
+| [Migrator56](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/56), coordinator | Current release-contract wording corrected to Portability3/Interaction3; historical provenance and genuine candidate-host compatibility clearly separated. No certification pin or runtime change. |
+| [Starter30](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30), coordinator | Unchanged reviewed README version correction, still open. |
+| [Core231](https://github.com/RocketsAreNostalgic/ran-booster/pull/231), existing #124 worker | Three bounded diagnostic-derived fixes published separately. Exact-head review and native quality are recorded by that owner; no duplicate implementation or higher-level clean-run gate. |
+
+All listed proposals remain open/unmerged at this checkpoint. Final native and
+review evidence belongs to each exact PR head; earlier candidate evidence below
+must not be relabelled. The [publisher closeout routing](RELEASE_PUBLISHERS.md#current-closeout-routing--3-october-2026)
+identifies current held candidates, concrete admin/capability evidence gaps and
+proposed dispositions. Unknown capabilities are not negative platform results,
+and proposed limitations are not accepted waivers. No new programme, release
+gate, archived-repository revival or private-site acceptance is introduced.
+
 ## Source integration checkpoint — 3 October 2026
 
 This checkpoint supersedes the unmerged statuses in the earlier convergence
