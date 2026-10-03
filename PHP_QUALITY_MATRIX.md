@@ -22,13 +22,13 @@ existing #65/#120/#57; these proposals do not authorize merges or releases.
 
 | Proposal / owner | Bounded result and remaining decision |
 | --- | --- |
-| [Core225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), coordinator | Refreshed on current source0145bb2 at headb9f005f; unchanged three-document patch and independent review clear. Historical recovery remains dated. |
+| [Core225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), coordinator | Refreshed on current source0145bb2 at headb9f005f; unchanged three-document patch, independent review clear and native37113982392 SUCCESS. Historical recovery remains dated. |
 | [Core232](https://github.com/RocketsAreNostalgic/ran-booster/pull/232), #120 | Proposed retain/defer dispositions for every remaining guard/state category, with owners and reconsideration triggers. Core150 is already closed; current schema4 state retention is delivered, while controlled-site deployment prerequisites remain separate. Debug-capture retention/reset still requires an owner decision; no private-state inventory is inferred. |
-| [Migrator56](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/56), coordinator | Current release-contract wording corrected to Portability3/Interaction3; historical provenance and genuine candidate-host compatibility clearly separated. No certification pin or runtime change. |
+| [Migrator56](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/56), coordinator | Current release-contract wording corrected to Portability3/Interaction3; historical provenance and genuine candidate-host compatibility clearly separated. No certification pin or runtime change; independent review and native37114122447 pass. |
 | [Starter30](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30), coordinator | Unchanged reviewed README version correction, still open. |
-| [Core231](https://github.com/RocketsAreNostalgic/ran-booster/pull/231), existing #124 worker | Three bounded diagnostic-derived fixes published separately. Exact-head review and native quality are recorded by that owner; no duplicate implementation or higher-level clean-run gate. |
+| [Core231](https://github.com/RocketsAreNostalgic/ran-booster/pull/231), existing #124 worker | Merged separately at `6aad7d0f303930b2b6de41618c6c99e7b80bf0f1`; exact candidate `4b524b42` passed review and native37113449930. Post-merge37114401539 SUCCESS, including all four installed lanes. Existing owner retains diagnostic handoff; no higher-level clean-run gate. |
 
-All listed proposals remain open/unmerged at this checkpoint. Final native and
+The four documentation proposals remain open/unmerged; Core231 is merged as recorded above. Final native and
 review evidence belongs to each exact PR head; earlier candidate evidence below
 must not be relabelled. The [publisher closeout routing](RELEASE_PUBLISHERS.md#current-closeout-routing--3-october-2026)
 identifies current held candidates, concrete admin/capability evidence gaps and
