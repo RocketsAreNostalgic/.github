@@ -137,6 +137,143 @@ Maintained production PHP must also have static analysis at an appropriate stric
 
 A project-specific PHPCS or static-analysis exception must not be promoted into the shared RAN standard merely because one mature repository requires it.
 
+### Next-beta Booster PHP acceptance
+
+The owner-approved [standards strand #128](https://github.com/RocketsAreNostalgic/.github/issues/128)
+applies the following decisions to the next Core beta after beta.31 and its
+matching Booster consumers. It refines the existing policy; it does not reopen
+completed naming work or impose a retrospective beta.31 release gate.
+
+> Every maintained PHP file is accounted for under an approved profile.
+> Required checks pass. Every retained exception has an accepted rationale and
+> scope. Regression controls protect those guarantees.
+
+#### Common convention and scope
+
+| Concern | Decision |
+| --- | --- |
+| Autoloading and class files | Retain Composer/PSR-4 namespaces and matching class filenames. The shared exclusions for `WordPress.Files.FileName.NotHyphenatedLowercase` and `WordPress.Files.FileName.InvalidClassFileName` are deliberate policy. |
+| Formatting and owned naming | Retain WordPress-derived formatting and `snake_case` owned functions, methods, properties, parameters and locals, including public and inherited implementations. Preserve actual foreign signatures; public visibility alone is not a foreign contract. |
+| Conditions | Retain the adopted Yoda convention. Do not change observable evaluation order to satisfy it; use a narrow exception where behavior or a demonstrated checker limitation requires one. |
+| Documentation | Require accurate public contracts, useful type information and explanations of non-obvious behavior. Full optional `WordPress-Docs` adoption is not required by this tranche; preserve stronger documentation checks already adopted locally. |
+| Compatibility and analysis | Check each consumer's declared support range. PHPStan separately checks types and data flow at the repository's agreed level; neither its level nor passing WPCS establishes the other's acceptance. |
+
+Use the existing RAN WordPress-Extra-based rules as the starting contract.
+Shared ruleset inheritance, properties and scoped configuration express the
+following applicability differences while retaining common formatting and
+owned naming. These are code-surface distinctions, not a requirement for three
+new public standards or packages.
+
+| Code surface | Required treatment |
+| --- | --- |
+| WordPress runtime and templates | Common convention and compatibility, with applicable WordPress input, escaping, nonce, SQL and localisation checks. |
+| Standalone PHP and CLI tools | Common convention and compatibility; omit only framework-specific requirements demonstrated inapplicable to the actual execution boundary. Native PHP APIs may be appropriate. |
+| Tests and fixtures | Common convention and compatibility, with scoped allowances for foreign lifecycle methods, controlled globals, CLI diagnostics and intentional synthetic contracts. Ordinary helpers are not exempt merely because they live under `tests/`. |
+
+Composer packaging alone does not make a library WordPress-independent. Map
+mixed code surfaces through existing rulesets and documented paths. Account for
+all maintained first-party PHP, including root entrypoints, templates, tests,
+tools and extensionless PHP entrypoints. A missing or syntax-only check is a
+coverage decision requiring concrete justification, not an automatic exemption.
+New maintained files must enter the appropriate checked scope.
+
+Generated first-party copies may be excluded from duplicate style checking only
+when their authoritative source is checked and generation/provenance parity is
+verified. Third-party dependencies and generated caches remain outside
+first-party formatting enforcement. Source-distribution PHP and runtime-archive
+PHP are distinct populations; describe and verify the scope actually claimed.
+
+#### Exceptions and native operations
+
+Use ordinary PHPCS annotations and existing ruleset comments to explain exact
+rules and the smallest practical span. Re-enable checks after bounded disabled
+regions. Blanket all-rule suppressions are not permitted in maintained code;
+intentionally malformed fixture bytes need an explicit fixture boundary. A
+file-wide named-rule exception needs a file-wide reason. An exceptional
+identifier in an intentional negative fixture must be necessary for the tested
+contract; it does not relax production naming.
+
+| Disposition | Evidence required |
+| --- | --- |
+| Shared policy | A reviewed, transferable rule for a defined code surface, documented in the existing shared standard and covered by representative tests. Repetition alone does not justify a global waiver. |
+| Required local exception | A concrete foreign contract or behavioral invariant, precise rule/span and relevant source/test evidence. Keep product-specific settings and exceptions local. |
+| Checker limitation | Reproduce the incorrect diagnostic with the locked checker and retain a focused regression example where practical. |
+| Temporary debt | An ordinary bounded issue with an owner and removal condition. Tracking debt does not itself satisfy acceptance or turn it into permanent policy. |
+
+Unresolved justification is unfinished acceptance work. Before the next-beta
+decision, establish the reason, fix the violation, or obtain an explicit owner
+disposition that records a remaining limitation rather than claiming full
+acceptance. Remove obsolete annotations and correct explanations that do not
+match the suppressed rule. Do not mechanically remove defensive behavior.
+
+- Native filesystem calls are permitted where locking, atomicity, identity
+  checks or private-file handling require their semantics. Name the invariant;
+  do not exempt an entire alternative-functions category for a few operations.
+- Native JSON encoding may implement a defined serialization contract. Explain
+  required flags, error behavior, byte identity or framework independence and
+  reuse relevant tests; the word "deterministic" alone is not evidence.
+- Internal exception payloads are not HTML output. Preserve diagnostic data and
+  escape at rendering boundaries; any approved exception-message allowance
+  must leave actual output checks intact.
+- Base64 for authentication or an opaque protocol value is permitted where
+  purpose and input boundaries are established; encoding is not itself proof
+  of executable-code obfuscation.
+- Read-only navigation need not acquire a nonce merely to silence a sniff.
+  Verify the path does not perform a protected mutation, validate its input,
+  and preserve any required capability or access check.
+- SQL and output exceptions require source/behavioral evidence at their real
+  boundaries. A checker that does not recognise a database receiver or cannot
+  trace a rendered fragment cannot certify that operation by reporting zero.
+
+#### Reuse existing tools and protect the agreed contract
+
+Implement these decisions with the existing shared package, upstream sniffs,
+Composer commands, PHPCS/PHPCBF, PHPCompatibility, PHPStan, repository tests and
+CI. Extend existing coverage, naming and parity guards for demonstrated gaps.
+Use actual checker file discovery and existing manifests where available.
+Representative negative controls must detect newly unchecked maintained PHP,
+unjustified broad exclusions (including inherited configuration), blanket or
+legacy suppressions, and owned violations outside earlier naming cohorts.
+Local, CI and fixer coverage must agree; repeated fixes must be stable.
+
+This is not a request for a generic ruleset interpreter, policy service,
+dashboard, custom annotation language, per-file registration framework or a
+second enforcement engine. A new sniff/helper or public profile requires a
+demonstrated gap or reusable need that existing tools cannot adequately cover,
+and the smallest practical implementation. Shared abstractions need actual
+consumers. Existing behavior tests may establish multiple exception reasons;
+do not require a new test, issue or approval process for every annotation.
+
+Keep decisions in existing standards documentation/rulesets, concise local
+reasons in source, and temporary work in ordinary issues. The audit ledger is a
+migration/review aid, not a permanent registry to maintain alongside the code.
+Group repeated cases by rule and invariant while preserving occurrence-level
+traceability during review. Existing review and release procedures suffice.
+
+#### Delivery order and ownership
+
+Record the reviewed policy checkpoint in #128 first. Implement transferable
+rules through [shared standards #8](https://github.com/RocketsAreNostalgic/ran-coding-standards/issues/8)
+and qualify the same candidate against both Core and Starter before publishing,
+as required by the package's existing guidance. Starter is bounded compatibility
+qualification here, not wider-ecosystem rollout.
+
+Adopt the genuine qualified version across Booster, then assess wider-estate
+adoption in a later phase. Shared-package changes alone do not establish
+consumer acceptance. Record exact revisions, checked scope, accepted exceptions
+and verification in the existing PHP quality matrix and repository PRs.
+
+Coordinate with [PHPStan #127](https://github.com/RocketsAreNostalgic/.github/issues/127):
+policy-dependent API/parameter/callback decisions follow this checkpoint, while
+read-only diagnostics and independent safety investigations may proceed.
+Assign overlapping declarations and consumers once; keep mechanical standards
+cleanup separately reviewable from behavioral/security/type changes. Preserve
+#127's recorded level-5 next step and explicit level-6–8 sizing, and all stronger
+existing consumer gates. This policy does not change their required levels.
+The integration coordinator receives separate standards and analysis verdicts
+for the next-beta decision. Merge/publication and deferred installed/manual/UI
+acceptance remain separate owner decisions.
+
 ## JavaScript and TypeScript
 
 WordPress-facing JavaScript and TypeScript should derive from the official `@wordpress/eslint-plugin` baseline.
