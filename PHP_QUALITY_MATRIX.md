@@ -18,17 +18,22 @@ and workflows at each linked revision are the source of each row.
 ## Current closeout proposals — 3 October 2026
 
 Source integration below is delivered. The remaining closeout runs through
-existing #65/#120/#57; these proposals do not authorize merges or releases.
+existing #65/#120/#57. Ben authorized the scoped documentation merges and
+administrative closure of #39/#44; release operations remain paused.
 
 | Proposal / owner | Bounded result and remaining decision |
 | --- | --- |
-| [Core225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), coordinator | Refreshed on current source0145bb2 at headb9f005f; unchanged three-document patch, independent review clear and native37113982392 SUCCESS. Historical recovery remains dated. |
-| [Core232](https://github.com/RocketsAreNostalgic/ran-booster/pull/232), #120 | Proposed retain/defer dispositions for every remaining guard/state category, with owners and reconsideration triggers. Core150 is already closed; current schema4 state retention is delivered, while controlled-site deployment prerequisites remain separate. Debug-capture retention/reset still requires an owner decision; no private-state inventory is inferred. |
-| [Migrator56](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/56), coordinator | Current release-contract wording corrected to Portability3/Interaction3; historical provenance and genuine candidate-host compatibility clearly separated. No certification pin or runtime change; independent review and native37114122447 pass. |
+| [Core225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), coordinator | Owner-authorized squash merge `555d6eeaf9229f0f4f39cf38d12dbeab6cd6d433` preserves reviewed tree `3be530957f218b2b1e26a835699085eb8a6961c6`. Head `1451fbef4d99c7e1b981eb552c5ab648705074c7` passed [native37115759534](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37115759534) and [independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/225#issuecomment-5968184023). Historical recovery remains dated; post-merge [Quality37116140173](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37116140173) passes. |
+| [Core232](https://github.com/RocketsAreNostalgic/ran-booster/pull/232), #120 | Retained-path dispositions delivered by owner-authorized squash `116b840a923833dfab3bb196ba9eab8fe5176f0b`, preserving tree `967f44d66182390346c413068a1de393f651be81`. Final head `88f4c2424b1df91a9d72935194a8b55b3f5ea3ff` passed [native37116714488](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37116714488) and [independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/232#issuecomment-5968330325); all six findings resolved. Post-merge qualification pending. Ben rejected legacy debug-capture retention for his disposable test sites; this records the removal decision, not completed runtime removal. |
+| [Migrator56](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/56), coordinator | Current release-contract wording corrected to Portability3/Interaction3; historical provenance and genuine candidate-host compatibility clearly separated. No certification pin or runtime change; independent review and native37114122447 pass. Owner-authorized squash merge `a9d2fb71f6c739278351a4af48d107ddb4973a18` preserves reviewed tree `19460cfe`; post-merge [Quality37115845502](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37115845502) passes. |
 | [Starter30](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30), coordinator | Unchanged reviewed README version correction, still open. |
 | [Core231](https://github.com/RocketsAreNostalgic/ran-booster/pull/231), existing #124 worker | Merged separately at `6aad7d0f303930b2b6de41618c6c99e7b80bf0f1`; exact candidate `4b524b42` passed review and native37113449930. Post-merge37114401539 SUCCESS, including all four installed lanes. Existing owner retains diagnostic handoff; no higher-level clean-run gate. |
+| [Core233](https://github.com/RocketsAreNostalgic/ran-booster/pull/233), #120 | Legacy debug-reader removal remains proposed/unmerged and is refreshing over the documentation integration. Earlier head `9c390ec4` passed independent review and [native37116295187](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37116295187); that result does not qualify a changed head. Current-state guards remain retained. |
 
-The four documentation proposals remain open/unmerged; Core231 is merged as recorded above. Final native and
+Migrator56 and Core225/Core231/Core232 are merged as recorded above. Core233
+and Starter30 remain open/unmerged at this checkpoint. #39/#44 are administratively closed by
+explicit owner approval, with remaining operational criteria handed to #57
+without waiver. Final native and
 review evidence belongs to each exact PR head; earlier candidate evidence below
 must not be relabelled. The [publisher closeout routing](RELEASE_PUBLISHERS.md#current-closeout-routing--3-october-2026)
 identifies current held candidates, concrete admin/capability evidence gaps and
@@ -72,8 +77,9 @@ passed at `0145bb2f9be4866e46e109cb160ed788cbc25e53`, including archive,
 repository quality and all four installed WordPress/database lanes. This is
 post-merge qualification of the integrated #228 + #229 + #230 source tree.
 
-Core #225 and Starter #30 remain separate open documentation proposals, outside
-these source merges. PHPStan remains enforced at level 1. Source integration
+At this source-integration checkpoint, Core #225 and Starter #30 remained
+separate open documentation proposals outside these source merges; the current
+closeout table above records their subsequent disposition. PHPStan remains enforced at level 1. Source integration
 does not grant release authorization, matching satellite released-host
 certification, manual migration acceptance or deferred #81/#85 UI acceptance.
 
@@ -94,7 +100,8 @@ The landed trees match their reviewed candidates. Core's exact merged-head
 passed, including the installed WordPress/database matrix. This delivers the
 retained-path inventory, not every disposition or a release-backed satellite certification.
 
-The following documentation proposals remain **open/unmerged**:
+At this earlier convergence checkpoint, the following documentation proposals
+were **open/unmerged**; the current closeout table above takes precedence:
 
 - [Core #225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), base
   `90e632cbce245b291318163b0198bc1f06371c47`, head

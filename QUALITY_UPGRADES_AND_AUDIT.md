@@ -3,6 +3,21 @@
 Owner: [organisation quality #65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Snapshot: 29 September 2026 (UTC). Policy: [Quality Standards](QUALITY_STANDARDS.md#shared-package-versions-consumer-upgrades-and-live-advisories).
 
+## Closeout decisions — 3 October 2026
+
+The [current closeout checkpoint](PHP_QUALITY_MATRIX.md#current-closeout-proposals--3-october-2026)
+records the separately qualified documentation merges and remaining proposals.
+Migrator #56 is merged at `a9d2fb71f6c739278351a4af48d107ddb4973a18`;
+its contract wording correction changes neither tooling nor certification.
+Core #225 and #232 documentation are merged at `555d6eea` and `116b840a`
+respectively; their qualification and remaining source proposal are recorded
+in the matrix.
+Ben approved #39/#44 administrative closure with the residual criteria retained
+under #57, and rejected legacy debug-capture retention for the disposable test
+sites. The resulting reader-removal source proposal still requires its own
+qualification and merge decision. None of these decisions changes the accepted
+tooling pins, enforced PHPStan level 1 or the release pause.
+
 ## Source integration update — 3 October 2026
 
 Core [#230](https://github.com/RocketsAreNostalgic/ran-booster/pull/230) is now
@@ -108,3 +123,4 @@ Recheck the affected consumer's latest files when an upgrade is proposed.
 The [version and audit policy](QUALITY_STANDARDS.md#shared-package-versions-consumer-upgrades-and-live-advisories)
 governs future upgrades. Live lookup errors remain blocking where an audit is
 already required; no check or dependency was changed by this documentation.
+
