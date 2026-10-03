@@ -5,6 +5,53 @@ This document records the implementation-level audit and subsequent scoped migra
 The original implementation audit is dated evidence. The owner-approved [Profile A/B architecture](https://github.com/RocketsAreNostalgic/.github/issues/44) and [migration programme](https://github.com/RocketsAreNostalgic/.github/issues/47) supersede its former permission to retain generic parallel publisher/recovery machinery. The operative snapshot below contributes to the final estate/settings audit under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). A historical **CONFORMS** or **JUSTIFIED DIFFERENCE** classification neither certifies today's implementation nor requires preservation of a retired mechanism.
 
 
+## Current closeout routing — 3 October 2026
+
+This scoped readback supersedes the active-owner, adoption and held-proposal
+rows in the 30 September snapshot. It is not a fresh fifteen-publisher audit,
+candidate qualification, settings verification or release authorization.
+Release operations remain paused.
+
+| Product | Inspected source / held proposal | Current disposition |
+| --- | --- | --- |
+| Core | Main `116b840a923833dfab3bb196ba9eab8fe5176f0b`; [#181](https://github.com/RocketsAreNostalgic/ran-booster/pull/181) head `2abf60198e5072f1267d6c646dbcf1091b66ac2d`, base `fdf6ce9e74cf7a3f514111b83ece3a754156bd26` | #228/#229/#230/#231 and documentation #225/#232 are integrated. The inspected candidate still omits #230 and #231; the existing #124 owner retains the final diagnostic handoff. Refresh only after relevant integration and release resumption; exact-head review, required-check association and archive/install proof remain necessary. |
+| GitHub Provider | Main/tag `c90777b7a23b7e07244a94c7ccbf3c4faf4fdc2c`; [beta.12 release 401815218](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/releases/tag/v1.0.0-beta.12) | Published, non-draft and immutable on readback; adopted by Core #224. The old beta.7 held row is historical. Provider requires Release Updater `~1.0.0-beta.9`; its earlier adoption task is superseded. |
+| Bitbucket | Main `03c7db70e417ef1574475c19a4ea1d88bca6106d`; [#75](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/75) head `672aed5db411f31281f3f0c946a9373220dca7db`, base `e3bbadca96587d07f655df89bc9eda1515c6dd20` | Source contract work is delivered; release proposal and historical released-Core certification remain stale. Recertify against the actual matching immutable Core release before final candidate/install proof. |
+| Migrator | Main `a9d2fb71f6c739278351a4af48d107ddb4973a18`; [#43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43) head `890c09a0c7e7ef32f07b11f45734fd1c8251d7d2`, base `4e707dc3f05233fbde4b06b933f1ac85ee03a494` | #55 naming/tooling and #56 release-contract documentation are delivered. The retained beta.22 host does not establish the required Portability3/Admin Interaction3 contract. Genuine released-Core certification, final candidate proof and owner-verified disposable-site acceptance remain. |
+
+The integration coordinator owns the existing [#65](https://github.com/RocketsAreNostalgic/.github/issues/65)
+implementation/closeout board. #120's audit and obsolete-argument removal,
+#121's naming implementation and #122's tooling alignment are delivered;
+retained-path decisions and documentation reconciliation remain distinct.
+The #225/#232 documentation closeout is merged. Ben rejected legacy debug-capture
+retention for his one or two disposable test sites. The [Core233 legacy-reader removal](https://github.com/RocketsAreNostalgic/ran-booster/pull/233)
+remains a proposed source change requiring qualification and its own merge;
+current-state guards and remaining operational unknowns are not waived.
+#124 diagnostics and its bounded defect corrections retain their existing owner.
+Higher PHPStan diagnostic cleanliness is not a new beta.31 gate. #111 optimisation
+is retired, not an active owner lane. Core #223/#224 delivered the connected
+updater/Provider adoption; do not repeat the earlier migration.
+
+### Operational evidence still required
+
+| Existing lane | Exact remaining action / owner | Evidence limit or proposed disposition |
+| --- | --- | --- |
+| #29 → #57 → #9 | Coordinator refreshes current release-proposal/draft terminal states and records exact identities/dispositions. | The five historical cases and candidate-geometry corrections below are delivered. Do not reopen them or infer guaranteed observer cadence or historical scanning. A current whole-estate sweep remains separate from this scoped readback. |
+| #59 → #57 | Owner/admin supplies current immutable-release policy, Actions default/PR-creation permissions, environment credential boundary and historical-ref workflow registration/authority readback, or explicitly accepts each bounded evidence gap. | Current source and immutable release objects do not prove those settings. On 3 October, the connector rejected Core workflow-registration and Actions-permission reads as unsupported; this is not a negative platform result. No dispatch or setting change was attempted. |
+| #57 / Duplicate Detector | Owner records the existing private-plan enforcement limitation and its acceptance. | Fresh rulesets read returned HTTP 403 with “Upgrade to GitHub Pro or make this repository public to enable this feature.” This does not authorize a plan/visibility change or establish protection. #31 remains deferred. |
+| #62 | Owner/admin verifies private-reporting availability for maintained public repositories without submitting a report; coordinator records the per-repository result or an explicit limitation. | The connector rejected the Core private-reporting endpoint as unsupported. Provider contribution wording now matches its actual candidate-only API14 CI tuple; the source discrepancy is resolved, but this does not prove the live reporting capability. |
+| #39/#44 → #57 | Both completed audit/decision records are administratively closed by Ben's explicit approval. | Remaining settings, release/publication, terminal-state and manual acceptance criteria are handed to #57 and their existing lanes without waiver. The approved architecture remains authoritative. |
+| #9 / archived repositories | Preserve the recorded archived documentation/history limitations. | No unarchiving or legacy updater revival. |
+| #81/#85 and Migrator #43 | Preserve the owner's deferred UI/onboarding and manual migration acceptance. | Producer/source/CI success does not complete those acceptance cases. |
+
+The #39/#44 administrative handoff is accepted. The other rows remain readback
+tasks or proposed limitation dispositions, not newly accepted waivers. The accepted single-maintainer model does not require an invented
+independent reviewer principal. Release and settings authority remain with the
+owner. After explicit release resumption, the order remains Core qualification
+and publication, satellite certification against that real immutable release,
+Bitbucket publication, and Migrator's compatible-add-on/manual acceptance before
+its own publication.
+
 ## Candidate validation closeout — 1 October 2026
 
 The bounded [#114 follow-up](https://github.com/RocketsAreNostalgic/.github/issues/114)
@@ -114,7 +161,7 @@ overwritten, and no cancelled work was reopened.
 
 ## Current estate snapshot — 30 September 2026
 
-This is the operative inventory; the dated checkpoints below remain history. Inspected organisation main: `073fdbc4cf497fcd6077a740495454c4b172f791`. Source/workflow, live repository metadata, full accessible rulesets, release/tag identities and PR records were read separately. This is read-only qualification evidence, not new release approval, an installed-product rerun or proof of inaccessible admin settings. Final closure remains under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
+This is the dated 30 September inventory, superseded for current routing and held proposals by the 3 October closeout section above; its exact inspected evidence is retained. Inspected organisation main: `073fdbc4cf497fcd6077a740495454c4b172f791`. Source/workflow, live repository metadata, full accessible rulesets, release/tag identities and PR records were read separately. This is read-only qualification evidence, not new release approval, an installed-product rerun or proof of inaccessible admin settings. Final closure remains under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
 
 ### Production callers and protected checks
 
@@ -361,3 +408,4 @@ Recorded scoped rollout includes Starter and Duplicate Detector callers. [DD #20
 - #55/#56 and Provider #28 follow [#81's current contract and ownership](https://github.com/RocketsAreNostalgic/.github/issues/81); producer API-3 implementation/publication and Provider #30 are now delivered; actual Core composition and full acceptance remain separate as recorded in the operative snapshot.
 
 Cross-repository handoffs should use explicit repository links and update operative status alongside dated evidence. Historical measurements remain history; they do not silently become new implementation instructions or current settings proof.
+
