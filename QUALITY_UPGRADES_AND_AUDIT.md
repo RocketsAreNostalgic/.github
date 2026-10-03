@@ -3,6 +3,34 @@
 Owner: [organisation quality #65](https://github.com/RocketsAreNostalgic/.github/issues/65).
 Snapshot: 29 September 2026 (UTC). Policy: [Quality Standards](QUALITY_STANDARDS.md#shared-package-versions-consumer-upgrades-and-live-advisories).
 
+## Convergence update — 3 October 2026
+
+The [current matrix checkpoint](PHP_QUALITY_MATRIX.md#convergence-checkpoint--3-october-2026)
+records exact landed commits and current source proposals. Migrator #55 and Admin
+Shell #20 are now merged; the earlier proposal wording below is historical.
+Core's Admin Shell and frontend quality-config pins remain retained for the
+recorded consumer reasons. No package adoption is inferred from unchanged bytes.
+
+Core's [#230 proposal](https://github.com/RocketsAreNostalgic/ran-booster/pull/230)
+compares base `90e632cbce245b291318163b0198bc1f06371c47` with head
+`e8de763e1389247f864e4854f27f5c44d894a0c1`: PHPStan 2.2.8 → 2.2.16,
+WordPress stubs 6.9.4 → 7.0.1 (constrained to `~7.0.0`) and WordPress analysis
+extension 2.0.3 → 2.0.4. Exactly three development-package lock records change;
+production dependency records and runtime source are unchanged. Local canonical
+Composer/frontend checks pass and the locked advisory result is empty. Native
+qualification and independent actual-PR review are still pending.
+
+With unchanged production source, diagnostic findings at levels 1/5/8 move from
+0/272/783 to 0/272/782 with no new messages. The single removed nullable-target
+finding in `AssistedWebhookFacade` is improved modelling of an existing guard,
+not a source defect fix. This controlled comparison supplements the external
+#124 baseline without taking over that lane or raising the enforced level 1.
+
+#124 retains separate diagnostic/fix ownership. Its captured baseline does not
+raise the enforced PHPStan level or silently qualify later toolchain results.
+This update introduces no dependency change, new advisory gate, source merge,
+release approval or blanket closure; historical audit scope below is unchanged.
+
 ## Bounded consumer decisions — 3 October 2026
 
 The [#122 tooling checkpoint](quality-evidence/tooling-decisions-20261003.md)
@@ -25,10 +53,10 @@ qualification. It supplements the historical inventory below:
   separately corrects a distribution-test stat-cache observation after child
   Composer removal. It does not change Core's pin or weaken the assertion.
 
-These are reviewed decisions/proposals, not blanket dependency updates or
-release approval. Core PHPStan/WordPress-stub changes stay held while #124
-captures its diagnostic baseline. Historical audit placement below is not
-silently requalified.
+These were reviewed decisions/proposals at this earlier checkpoint, not blanket
+dependency updates or release approval. The Core PHPStan/WordPress-stub hold
+pending #124 baseline capture is superseded by the convergence update above.
+Historical audit placement below is not silently requalified.
 
 ## Observed current placement
 

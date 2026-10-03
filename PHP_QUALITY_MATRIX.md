@@ -15,6 +15,72 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
+## Convergence checkpoint — 3 October 2026
+
+This checkpoint supersedes the earlier open/unmerged statuses below only for
+the named changes. Historical candidates and unrelated rows remain dated evidence.
+
+| Delivered proposal | Actual merge commit |
+| --- | --- |
+| [Migrator #55](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/55): #121 naming and #122 released standards | `a0350f6b6056d1a52a37431a8ed1e9a2a08ac401` |
+| [Admin Shell #20](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/20): stat-cache test repair | `f760a29a8106198fbba7b1bf804de03cd38227a4` |
+| [Core #227](https://github.com/RocketsAreNostalgic/ran-booster/pull/227): retained-path audit | `90e632cbce245b291318163b0198bc1f06371c47` |
+| [Matrix #125](https://github.com/RocketsAreNostalgic/.github/pull/125): tooling decisions and proposal evidence | `2074d678ed6144b4a532fb63e7dab9b2ee59ab66` |
+
+The landed trees match their reviewed candidates. Core's exact merged-head
+[Quality 37100129391](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37100129391)
+passed, including the installed WordPress/database matrix. This delivers the
+retained-path inventory, not every disposition or a release-backed satellite certification.
+
+The following documentation proposals remain **open/unmerged**:
+
+- [Core #225](https://github.com/RocketsAreNostalgic/ran-booster/pull/225), base
+  `90e632cbce245b291318163b0198bc1f06371c47`, head
+  `351100f4feeabcba3661dfad1069ab4350c77d8b`: recovery history and Provider
+  qualification notices reconciled; the superseded PHPCS comment delta is gone.
+  [Independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/225#issuecomment-5966089745)
+  is clear, all three findings are resolved, and exact-head
+  [Quality 37100729061](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37100729061)
+  passed.
+- [Starter #30](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30),
+  base `3490bef147580e07b43ab0aa4691b24548adb159`, head
+  `49a35cfe86c297b43c85bc08cdf0cd9e4a65d386`: unchanged one-line README
+  version correction. Exact-tuple independent review remains clear; the
+  [fresh readback](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30#issuecomment-5966058389)
+  confirms manifest 0.1.2 and immutable published v0.1.2. No new runtime
+  qualification is claimed for this documentation-only refresh.
+
+The #120 source cleanup is proposed separately in
+[Core #229](https://github.com/RocketsAreNostalgic/ran-booster/pull/229), base
+`90e632cbce245b291318163b0198bc1f06371c47`, head
+`16fe91f95d457f5ccb3fa88dc57a1d72923a52f9`. It removes the null-only artifact
+limit argument and two unused Dispatcher constructor slots with verified callers
+and regression coverage. Exact-tree local Composer checks pass (2,614 tests /
+22,495 assertions), pinned frontend checks pass (193 tests), and archive
+build/verification covers 443 PHP files. Native archive/installed qualification
+and independent actual-PR review are pending at this checkpoint; no merge or
+completion of remaining WordPress guards/persisted-state decisions is claimed.
+
+The #122 alignment is separately proposed in
+[Core #230](https://github.com/RocketsAreNostalgic/ran-booster/pull/230), base
+`90e632cbce245b291318163b0198bc1f06371c47`, head
+`e8de763e1389247f864e4854f27f5c44d894a0c1`. PHPStan 2.2.16, WordPress stubs
+7.0.1 constrained to the 7.0 line, and WordPress extension 2.0.4 change three
+development-package lock records; production package records are identical.
+Local Composer checks pass (2,612 tests / 22,493 assertions), pinned frontend
+checks pass (25 files / 193 tests), and the locked Composer audit reports no
+advisories. Native qualification and independent actual-PR review remain pending.
+See the [upgrade checkpoint](QUALITY_UPGRADES_AND_AUDIT.md#convergence-update--3-october-2026)
+for the same-source diagnostic comparison; this is not an enforced-level increase.
+
+[#124](https://github.com/RocketsAreNostalgic/.github/issues/124) remains separately
+owned. Its diagnostic baseline is captured; the external agent's
+[Core #228](https://github.com/RocketsAreNostalgic/ran-booster/pull/228), head
+`d9940c36c6859d167d0868878093097b0dea5917`, is a separate unmerged proposal,
+not duplicated by these lanes. PHPStan's enforced level remains 1. No level-5/8
+zero-findings release gate, merge authorization, release approval or deferred
+UI/manual acceptance is introduced. #111 remains retired; #118 remains completed.
+
 ## Standards integration and independent follow-up proposals — 3 October 2026
 
 This checkpoint supersedes only the Core candidate's unmerged status below.
@@ -28,7 +94,8 @@ landed normally at `c33eb0e2358c002232408ebba6f9c919aba659ff`, preserving its
 reviewed tree. PHPStan remains level 1; no release or deferred product acceptance
 is granted.
 
-The next proposals remain **open/unmerged**, separate from that delivered work:
+At this earlier checkpoint, the following proposals were **open/unmerged**;
+the convergence checkpoint above records their subsequent disposition:
 
 | Existing lane | Exact candidate / evidence | Remaining boundary |
 | --- | --- | --- |
