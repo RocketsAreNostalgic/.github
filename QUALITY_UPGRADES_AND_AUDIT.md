@@ -17,8 +17,10 @@ compares base `90e632cbce245b291318163b0198bc1f06371c47` with head
 WordPress stubs 6.9.4 → 7.0.1 (constrained to `~7.0.0`) and WordPress analysis
 extension 2.0.3 → 2.0.4. Exactly three development-package lock records change;
 production dependency records and runtime source are unchanged. Local canonical
-Composer/frontend checks pass and the locked advisory result is empty. Native
-qualification and independent actual-PR review are still pending.
+Composer/frontend checks pass and the locked advisory result is empty. Independent
+actual-PR review is clear; exact-head [Quality 37101149792](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37101149792)
+passes native archive, repository quality and all four installed lanes. The
+matrix records separate local proof of the combined #229 + #230 tree.
 
 With unchanged production source, diagnostic findings at levels 1/5/8 move from
 0/272/783 to 0/272/782 with no new messages. The single removed nullable-target

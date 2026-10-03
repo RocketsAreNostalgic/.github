@@ -57,8 +57,10 @@ The #120 source cleanup is proposed separately in
 limit argument and two unused Dispatcher constructor slots with verified callers
 and regression coverage. Exact-tree local Composer checks pass (2,614 tests /
 22,495 assertions), pinned frontend checks pass (193 tests), and archive
-build/verification covers 443 PHP files. Native archive/installed qualification
-and independent actual-PR review are pending at this checkpoint; no merge or
+build/verification covers 443 PHP files. [Independent actual-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/229#issuecomment-5966115760)
+is clear. Exact-head [Quality 37101124981](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37101124981)
+passes archive, repository quality and all four installed WordPress/database
+lanes. No merge or
 completion of remaining WordPress guards/persisted-state decisions is claimed.
 
 The #122 alignment is separately proposed in
@@ -69,9 +71,19 @@ The #122 alignment is separately proposed in
 development-package lock records; production package records are identical.
 Local Composer checks pass (2,612 tests / 22,493 assertions), pinned frontend
 checks pass (25 files / 193 tests), and the locked Composer audit reports no
-advisories. Native qualification and independent actual-PR review remain pending.
+advisories. [Independent actual-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/230#issuecomment-5966116619)
+is clear. Exact-head [Quality 37101149792](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37101149792)
+passes archive, repository quality and all four installed WordPress/database
+lanes.
 See the [upgrade checkpoint](QUALITY_UPGRADES_AND_AUDIT.md#convergence-update--3-october-2026)
 for the same-source diagnostic comparison; this is not an enforced-level increase.
+
+A disposable combined #229 + #230 tree
+`2a8eff5ae6121c02a6090efa2c5f4cba90ac903b` passes full Composer checks
+(2,614 tests / 22,495 assertions) and pinned frontend checks (193 tests). This
+local composition proof excludes the separately owned #228 and is not a native
+combined-tree result. It does not replace individual PR native qualification,
+change either branch, or authorize merging.
 
 [#124](https://github.com/RocketsAreNostalgic/.github/issues/124) remains separately
 owned. Its diagnostic baseline is captured; the external agent's
