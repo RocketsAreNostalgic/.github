@@ -36,7 +36,42 @@ that diagnostic run does not raise its required gate. PHPCS/WPCS do not use
 PHPStan's level system. Shared standards adoption alone does not establish
 reviewed acceptance of every local exception or maintained-PHP surface.
 
-The integration coordinator and bounded agents own the active next tranche in
+The earlier checkpoint above is followed by the integrated changes below. Each
+listed merge has successful exact-commit post-merge evidence. Original proposal
+heads and their isolated qualification remain in the dated history below.
+
+| Merged proposal | Exact merge commit | Successful post-merge run |
+| --- | --- | --- |
+| [Core #239](https://github.com/RocketsAreNostalgic/ran-booster/pull/239): Secrets contracts | `11bfdf963d597357eeaf80fbf5b7edf9029755cb` | [Quality 37214226819](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37214226819) |
+| [Provider #58](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/58): standards enforcement | `13386bd44fe0bb97830028c92f44d4ca4d76ba1d` | [CI 37214314167](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/37214314167) |
+| [Bitbucket #96](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/96): development-PHP standards | `1c49eadee6cf186c71d931e1b3399b87aeafd557` | [Quality 37214322177](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/37214322177) |
+| [Migrator #59](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/59): reserved-name enforcement | `2406b736e50676dadde2bf750e89402c56fbd6f0` | [Quality 37214330555](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37214330555) |
+| [Core #241](https://github.com/RocketsAreNostalgic/ran-booster/pull/241): release-handling contracts | `4ecc3146a595202a9d0162acb2410956a4c7ea2d` | [Quality 37214932746](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37214932746) |
+| [Core #240](https://github.com/RocketsAreNostalgic/ran-booster/pull/240): legacy-suppression guard | `78a998ebc12500769324a1dcffb917ac045aedc6` | [Quality 37215412332](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37215412332) |
+
+The final integrated Core tree `f207555de4ba9f6cdc49128d695e9cedf5ec887a`
+passes canonical Composer checks on refreshed #240 head
+`0383e97047c618838cfdfa8087c60022dc235320` (2,631 tests / 22,658 assertions).
+This is the same tree as the historical combined preflight: level-5 diagnostics
+fall from 165 to 80, with no findings in the Secrets or release-handling groups.
+Core's required gate remains level 1. The production-PHP delta from the preceding
+Core checkpoint is +82/−115 lines; no new types, public APIs or persistent state
+are introduced.
+
+Sequential integration refreshed the actual base/head pairs for
+[Core #241 review](https://github.com/RocketsAreNostalgic/ran-booster/pull/241#issuecomment-5981799505)
+and [Core #240 review](https://github.com/RocketsAreNostalgic/ran-booster/pull/240#issuecomment-5981851080).
+The integration coordinator retains ownership in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+[#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
+[Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167).
+The next bounded scope is the remaining 80 Core diagnostic records, retained
+exceptions, and updater/Admin Shell standards; these remain unfinished.
+
+<details>
+<summary>Historical proposal qualification — 4 October 2026, before integration</summary>
+
+At this pre-integration checkpoint, the integration coordinator and bounded
+agents owned the tranche in
 [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
 [#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
 [Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167): Core
@@ -62,6 +97,8 @@ at local tree `f207555de4ba9f6cdc49128d695e9cedf5ec887a` passes canonical checks
 with no findings in the two owned groups. This is unmerged integration evidence;
 changed actual PR base/head pairs still require refreshed review and qualification.
 
+</details>
+
 Core's gate rises only after zero findings and the required combined qualification.
 Level 6–8 work remains separately scoped.
 
@@ -70,9 +107,12 @@ merged at `e7b26f8e836ca8c73602cd2a3547f11a9d7156ce`; [Starter #30](https://gith
 merged at `b9f9bb90f8912c39046439a9650e9f0aa56f1eca`. Their work must not be restarted.
 The published Core beta.31 and satellite releases are recorded in the
 [current publisher ledger](RELEASE_PUBLISHERS.md#current-publication-and-closeout-checkpoint--4-october-2026).
-[Core #236 / beta.32](https://github.com/RocketsAreNostalgic/ran-booster/pull/236)
+[Core #236 / beta.32](https://github.com/RocketsAreNostalgic/ran-booster/pull/236),
+[Provider #59 / beta.14](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/59),
+[Bitbucket #95 / beta.16](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/95)
 and [Migrator #43 / beta.10](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
-remain open and held; candidate checks do not waive release authorization,
+remain open and held. Updated release proposals require their own exact-head
+qualification; source checks do not waive release authorization,
 Migrator's owner-verified manual acceptance, or #81/#85's deferred installed/UI
 journeys. No new release blocker or programme is introduced here.
 
