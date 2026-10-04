@@ -44,7 +44,7 @@ Secrets and release-tracking type/flow work; Provider standards completion;
 Bitbucket development-file coverage; Migrator reserved-parameter cleanup.
 The following exact heads pass native source checks and independent review but
 remain unmerged. Review-thread disposition and current-head readback remain part
-of the coordinator's merge decision; these results do not complete release or
+of the coordinator's merge recommendation and the owner's decision; these results do not complete release or
 manual/UI acceptance:
 
 | Proposal / exact head | Bounded result | Qualification |
