@@ -42,15 +42,26 @@ The integration coordinator and bounded agents own the active next tranche in
 [Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167): Core
 Secrets and release-tracking type/flow work; Provider standards completion;
 Bitbucket development-file coverage; Migrator reserved-parameter cleanup.
-[Core #239](https://github.com/RocketsAreNostalgic/ran-booster/pull/239), head
-`7996a3f8d5b944f147bbbe2af5ed6665b158a9cb`, proposes Secrets 32→0 and Core total
-165→133 diagnostic records; canonical checks and [independent actual-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/239#issuecomment-5980557194)
-pass, with [native Quality 37206107435](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37206107435)
-pending at this checkpoint. [Provider #58](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/58)
-(`e1588683b892ed2e8f4b91b44c393e584dfc7a3c`) and [Migrator #59](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/59)
-(`4db97375a6e0917699b57a69ac143cb4fae22705`) are open proposals with final native
-checks and independent review pending. Other tranche work remains implementation
-in progress, not merged or qualified consumer acceptance.
+The following exact heads pass native source checks and independent review but
+remain unmerged. Review-thread disposition and current-head readback remain part
+of the coordinator's merge decision; these results do not complete release or
+manual/UI acceptance:
+
+| Proposal / exact head | Bounded result | Qualification |
+| --- | --- | --- |
+| [Core #239](https://github.com/RocketsAreNostalgic/ran-booster/pull/239), `7996a3f8d5b944f147bbbe2af5ed6665b158a9cb` | Secrets type/flow records 32→0; isolated Core total 165→133. Filesystem rechecks and failure defenses retained. | [Independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/239#issuecomment-5980557194) and [native Quality 37206107435](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37206107435) pass. |
+| [Core #240](https://github.com/RocketsAreNostalgic/ran-booster/pull/240), `af1e18c783807ae0ac0a94c31c096592fa507441` | Existing coverage guard rejects legacy blanket suppressions, with real-checker negative controls. | [Independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/240#issuecomment-5980665930) and [native Quality 37206731568](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37206731568) pass. |
+| [Core #241](https://github.com/RocketsAreNostalgic/ran-booster/pull/241), `dd1e2710e6167687301b152e187521f6c234aaeb` | Release tracking/management records 53→0; isolated Core total 165→112. | [Independent review](https://github.com/RocketsAreNostalgic/ran-booster/pull/241#issuecomment-5980694467) and [native Quality 37206879416](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37206879416) pass. |
+| [Provider #58](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/58), `cfdea9d06751c92ab42a447173abad694b4d913c` | Shared standards, private unused parameters and scoped exceptions; blanket-suppression and unused-parameter controls corrected during review. | [Independent final review](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/58#issuecomment-5980733160) and [native CI 37207162313](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/37207162313) pass. |
+| [Bitbucket #96](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/96), `2d610a82ee3a3651f0f2af90461aef9cb6901c96` | Standards cover 20 product and 28 development PHP files. Review corrections retain product checks at nested paths and reject rule-exclusion/zero-severity bypasses. | [Independent final review](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/96#issuecomment-5980782928) and [native Quality 37207423416](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/37207423416) pass. |
+| [Migrator #59](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/59), `7e9dde440fe228137bafdf2d8e2fcd08051693fe` | Owned reserved-parameter enforcement; stored/wire `private` key preserved. Two unjustified signature exceptions removed after verifying actual WordPress declarations. | [Independent final review](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/59#issuecomment-5980757535) and [native Quality 37207191336](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37207191336) pass. |
+
+The [combined Core preflight](https://github.com/RocketsAreNostalgic/ran-booster/pull/241#issuecomment-5980701993)
+at local tree `f207555de4ba9f6cdc49128d695e9cedf5ec887a` passes canonical checks
+(2,631 tests / 22,658 assertions) and reports 80 remaining level-5 records,
+with no findings in the two owned groups. This is unmerged integration evidence;
+changed actual PR base/head pairs still require refreshed review and qualification.
+
 Core's gate rises only after zero findings and the required combined qualification.
 Level 6–8 work remains separately scoped.
 
