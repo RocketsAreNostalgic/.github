@@ -31,8 +31,9 @@ The integration coordinator owns existing #65/#57/Core167 reconciliation.
 #119/#121/#122 implementation is complete; Core233's legacy debug-reader removal
 is merged. Core160 retains the actual guard cleanup. #124 diagnostics are complete
 and #127 owns following-beta analysis work; higher-level cleanliness is not a
-retroactive beta.31 requirement. The standards owner delivers #128's adopted
-policy through shared coding standards and consumer adoption. #111 optimisation
+retroactive beta.31 requirement. Shared coding standards v1.0.1 is published and Core235's adoption is merged.
+The integration coordinator owns remaining consumer adoption under #128's
+adopted policy. #111 optimisation
 is retired. None of these require repeating Core223/224/234 adoption.
 
 ### Current publisher and terminal-state sweep
