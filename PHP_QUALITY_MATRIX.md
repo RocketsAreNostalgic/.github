@@ -15,7 +15,61 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
-## Current closeout proposals — 3 October 2026
+## Current delivery checkpoint — 4 October 2026
+
+Live readback confirms the preceding six proposals are merged, with successful
+post-merge checks on each listed commit. These are bounded source/tooling and
+documentation results, not completion of next-beta consumer acceptance.
+
+| Merged proposal | Exact merge commit | Successful post-merge run |
+| --- | --- | --- |
+| [Core #237](https://github.com/RocketsAreNostalgic/ran-booster/pull/237): truthful type annotations | `1d9d00fab7166df0e0f4006f08a5033e9d97b999` | [Quality 37191533859](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37191533859) |
+| [Core #238](https://github.com/RocketsAreNostalgic/ran-booster/pull/238): maintained-PHP coverage protection | `e19220790952e60d0210a927afc6295f7d9a8d75` | [Quality 37192041218](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37192041218) |
+| [Provider #57](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/57): required PHPStan level 5 | `b5d4d2ffd6a5c1fe1ba5c5fffd9ed3f19e58197e` | [CI 37191540107](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/37191540107) |
+| [Bitbucket #94](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/94): shared standards 1.0.1 | `3a2b24976a53af6ec374fbd123eec69814430060` | [Quality 37191550090](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/37191550090) |
+| [Migrator #58](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/58): shared standards 1.0.1 | `3d184d46f94df4cd14135329f6457c9a8c71580a` | [Quality 37191559679](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37191559679) |
+| [Organisation #130](https://github.com/RocketsAreNostalgic/.github/pull/130): publication ledger | `b72eab1307fc5d41a8d9ae367efe8883db048eb3` | [Release Liveness Contract 37191567662](https://github.com/RocketsAreNostalgic/.github/actions/runs/37191567662) |
+
+Required PHPStan levels at these source revisions are **Core 1, Provider 5,
+Bitbucket 8 and Migrator 6**. Core's level-5 diagnostic count is 165 after #237;
+that diagnostic run does not raise its required gate. PHPCS/WPCS do not use
+PHPStan's level system. Shared standards adoption alone does not establish
+reviewed acceptance of every local exception or maintained-PHP surface.
+
+The integration coordinator and bounded agents own the active next tranche in
+[#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+[#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
+[Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167): Core
+Secrets and release-tracking type/flow work; Provider standards completion;
+Bitbucket development-file coverage; Migrator reserved-parameter cleanup.
+[Core #239](https://github.com/RocketsAreNostalgic/ran-booster/pull/239), head
+`7996a3f8d5b944f147bbbe2af5ed6665b158a9cb`, proposes Secrets 32→0 and Core total
+165→133 diagnostic records; canonical checks and [independent actual-PR review](https://github.com/RocketsAreNostalgic/ran-booster/pull/239#issuecomment-5980557194)
+pass, with [native Quality 37206107435](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37206107435)
+pending at this checkpoint. [Provider #58](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/58)
+(`e1588683b892ed2e8f4b91b44c393e584dfc7a3c`) and [Migrator #59](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/59)
+(`4db97375a6e0917699b57a69ac143cb4fae22705`) are open proposals with final native
+checks and independent review pending. Other tranche work remains implementation
+in progress, not merged or qualified consumer acceptance.
+Core's gate rises only after zero findings and the required combined qualification.
+Level 6–8 work remains separately scoped.
+
+Earlier open-PR wording is historical: [Core #233](https://github.com/RocketsAreNostalgic/ran-booster/pull/233)
+merged at `e7b26f8e836ca8c73602cd2a3547f11a9d7156ce`; [Starter #30](https://github.com/RocketsAreNostalgic/ran-starter-plugin/pull/30)
+merged at `b9f9bb90f8912c39046439a9650e9f0aa56f1eca`. Their work must not be restarted.
+The published Core beta.31 and satellite releases are recorded in the
+[current publisher ledger](RELEASE_PUBLISHERS.md#current-publication-and-closeout-checkpoint--4-october-2026).
+[Core #236 / beta.32](https://github.com/RocketsAreNostalgic/ran-booster/pull/236)
+and [Migrator #43 / beta.10](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43)
+remain open and held; candidate checks do not waive release authorization,
+Migrator's owner-verified manual acceptance, or #81/#85's deferred installed/UI
+journeys. No new release blocker or programme is introduced here.
+
+All checkpoints below preserve their dated scope and evidence. Earlier ownership,
+open/merged status, pending results and blanket release-pause wording are historical;
+they do not override the current checkpoint or live coordination trackers.
+
+## Historical closeout proposals — 3 October 2026
 
 Source integration below is delivered. The remaining closeout runs through
 existing #65/#120/#57. Ben authorized the scoped documentation merges and
@@ -35,7 +89,7 @@ and Starter30 remain open/unmerged at this checkpoint. #39/#44 are administrativ
 explicit owner approval, with remaining operational criteria handed to #57
 without waiver. Final native and
 review evidence belongs to each exact PR head; earlier candidate evidence below
-must not be relabelled. The [publisher closeout routing](RELEASE_PUBLISHERS.md#current-closeout-routing--3-october-2026)
+must not be relabelled. The [publisher closeout routing](RELEASE_PUBLISHERS.md#current-publication-and-closeout-checkpoint--4-october-2026)
 identifies current held candidates, concrete admin/capability evidence gaps and
 proposed dispositions. Unknown capabilities are not negative platform results,
 and proposed limitations are not accepted waivers. No new programme, release
