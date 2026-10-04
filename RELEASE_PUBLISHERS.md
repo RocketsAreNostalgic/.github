@@ -5,6 +5,8 @@ This document records the implementation-level audit and subsequent scoped migra
 The original implementation audit is dated evidence. The owner-approved [Profile A/B architecture](https://github.com/RocketsAreNostalgic/.github/issues/44) and [migration programme](https://github.com/RocketsAreNostalgic/.github/issues/47) supersede its former permission to retain generic parallel publisher/recovery machinery. The operative snapshot below contributes to the final estate/settings audit under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). A historical **CONFORMS** or **JUSTIFIED DIFFERENCE** classification neither certifies today's implementation nor requires preservation of a retired mechanism.
 
 
+<a id="current-closeout-routing--3-october-2026"></a>
+
 ## Current publication and closeout checkpoint — 4 October 2026
 
 This read-only checkpoint supersedes the former 3 October held-proposal and owner
