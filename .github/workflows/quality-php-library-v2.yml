@@ -35,7 +35,7 @@ permissions:
 jobs:
   floor:
     name: PHP ${{ inputs.php-floor }} floor
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Reject privileged pull_request_target callers
@@ -112,7 +112,7 @@ jobs:
 
   current:
     name: PHP ${{ inputs.php-current }} compatibility
-    runs-on: blacksmith-2vcpu-ubuntu-2404
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Reject privileged pull_request_target callers
