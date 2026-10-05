@@ -15,7 +15,52 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
-## Current delivery checkpoint — 4 October 2026
+## Current delivery and exception checkpoint — 5 October 2026
+
+Core's level-5 cleanup and gate promotion are delivered. [Core #248](https://github.com/RocketsAreNostalgic/ran-booster/pull/248)
+is squash-merged at `48e86ebd5d6ca153311f60bc385173349ed81e30`, with tree
+`7b315c1f9e2f3bde38dbda50a3ce834042798209` identical to the independently reviewed
+proposal. Required PHPStan is now **level 5**, with zero diagnostics.
+[Post-merge Quality 37249520706](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37249520706)
+passed archive, repository quality, all four installed WordPress/database lanes
+and the terminal gate. Release-candidate-only readback intentionally skipped.
+Canonical equivalent-tree checks passed 2,674 tests / 22,834 assertions and 193
+frontend tests with Node 24.11.0 / pnpm 11.7.0. Production/test deltas for the gate
+promotion are zero; documentation +11/-8; checker configuration +1/-1.
+
+The preceding source PRs #242–247 are merged; their cumulative level-5 reduction
+from the earlier 80-record checkpoint is 80 to zero. Their historical proposal
+and integration evidence remains in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+[#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
+[Core #167](https://github.com/RocketsAreNostalgic/ran-booster/issues/167).
+Levels 6–8 remain separately scoped. A clean analysis result does not complete
+the adopted standards-exception acceptance contract.
+
+The next bounded tranche refreshes retained exceptions and updater/Admin Shell
+coverage under [#65](https://github.com/RocketsAreNostalgic/.github/issues/65)
+and adopted [#128](https://github.com/RocketsAreNostalgic/.github/issues/128).
+Whole-category native-function suppressions are being narrowed where only exact
+operations need exceptions. Native locking, atomicity, filesystem identity,
+archive custody and rollback behavior must remain unchanged. Larger development
+profile gaps are separately recorded, not silently waived by this narrow work.
+No new compliance framework or repeated completed naming migration is required.
+The [refreshed exception inventory](quality-evidence/retained-exceptions-20261005.md)
+records exact revisions, checked populations, justified native invariants and
+unresolved profile/API/test boundaries. It does not claim full consumer acceptance.
+
+The narrow implementation proposals are [Core #249](https://github.com/RocketsAreNostalgic/ran-booster/pull/249)
+and [Branch Updater #73](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/pull/73).
+Both preserve executable production tokens and extend existing real-checker
+negative controls. They remain unmerged; current qualification is recorded on
+the exact PRs. Ordinary squash is proposed, subject to the owner's specific
+decision. This matrix change uses the organisation repository's separate
+merge-commit policy.
+
+Core beta.32, Provider beta.14, Bitbucket beta.16 and Migrator beta.10 proposals
+remain held. Migrator manual acceptance, UI #81/#85 and operational #57 remain
+separate. No release, settings change or issue closure follows from this checkpoint.
+
+## Historical delivery checkpoint — 4 October 2026
 
 Live readback confirms the preceding six proposals are merged, with successful
 post-merge checks on each listed commit. These are bounded source/tooling and
