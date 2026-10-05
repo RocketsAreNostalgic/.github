@@ -8,7 +8,7 @@ of proven runtime defects or automatically approved migrations.
 
 | Repository | Exact main at audit | Standards population / analysis |
 | --- | --- | --- |
-| Core | `48e86ebd5d6ca153311f60bc385173349ed81e30` | Maintained source/test/tool standards; all 345 shipped PHP directly analyzed at required level 5. |
+| Core | `48e86ebd5d6ca153311f60bc385173349ed81e30` | Maintained source/test/tool standards; 345 maintained first-party Core PHP paths directly analyzed at required level 5; bundled dependency PHP is a separate archive population. |
 | Branch Updater | `729a15c30f088236d0702b52d4a9cbe15c851508` | PHPCS selects 37 of 51 tracked PHP: 36 src plus bootstrap. Analysis level 5 includes bootstrap. |
 | Release Updater | `0649dbb106fdbe8428b66a4f1efa0c52a03ddd99` | PHPCS selects 94 of 95 PHP; generated ArchiveSafety parity covers the excluded copy. All 36 shipped PHP analyzed at level 8. |
 | Updater Support | `ea902004f5f11def976a6c1cae75303985ada302` | PHPCS selects all 5 PHP; both production files analyzed at level 8. |
