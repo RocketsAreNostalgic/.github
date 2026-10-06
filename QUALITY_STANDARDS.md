@@ -183,6 +183,55 @@ verified. Third-party dependencies and generated caches remain outside
 first-party formatting enforcement. Source-distribution PHP and runtime-archive
 PHP are distinct populations; describe and verify the scope actually claimed.
 
+#### Default coverage and reviewed exemptions
+
+For the Booster ecosystem, maintained production PHP is directly analysed by
+PHPStan at **level 5 or stronger**, preserving every higher existing gate.
+Use recursive production roots or repository-wide discovery with explicit,
+anchored non-production exclusions instead of enumerating today's classes.
+Splitting a contract, adding a nested directory or introducing a root entrypoint
+must not silently remove code from analysis. A new maintained production file
+must be analysed automatically or make the coverage gate fail until its scope
+is corrected. Dependency symbol discovery (`scanDirectories`/`scanFiles`) is
+not direct analysis of those files.
+
+Derive the expected population independently from maintained source discovery
+and, where applicable, the existing distribution manifest. Compare it with the
+analyser's effective file selection, including exclusions. Do not derive both
+sides from the same inclusion list. Protect new and relocated files, an excluded
+production file and collisions with development-directory names using focused
+negative controls. A source directory named `tests` beneath a production root
+does not inherit the exemption for the repository's actual test suite.
+
+Every maintained first-party PHP file must also enter its approved PHPCS profile
+by default. Verify the required profile and effective rules, not merely the
+union of selected filenames. Keep syntax, standards, compatibility and analysis
+populations explicit: a reviewed development-only analysis exclusion does not
+exempt ordinary test or tool code from standards.
+
+Exclusions for dependencies, caches, deliberate fixtures and generated copies
+must identify their exact boundary and reason in existing configuration or
+guidance. Production analysis exemptions require explicit owner disposition;
+new or widened exemptions must be visible in the PR's scope and acceptance
+summary. Generated-style exclusions require the existing upstream-check and
+parity evidence. Preserve stronger local requirements.
+
+An exception must name the smallest practical diagnostic selector and span.
+A line-local ignore of a whole standard, category or sniff is still broad.
+Reasons must identify the actual foreign contract, behaviour or reproduced
+checker limitation; a comment alone does not establish acceptance. Retain only
+reviewed scope traceable to the owner-accepted policy or PR disposition.
+File-wide or directory-wide allowances require evidence for that entire scope,
+including the future code they admit; prefer exact message codes over disabling
+unrelated declarations along with a justified variable or signature exception.
+
+Regression controls must exercise the real locked checker: accepted exceptions
+remain valid while violations outside their scope still fail. Annotation guards
+must account for the directive forms the checker actually accepts, including
+case variants. Rule-level exclusions, severity changes and inherited profiles
+must not silently defeat those controls. Extend existing tests and manifests;
+do not introduce a second ruleset interpreter or a permanent exemption registry.
+
 #### Exceptions and native operations
 
 Use ordinary PHPCS annotations and existing ruleset comments to explain exact
