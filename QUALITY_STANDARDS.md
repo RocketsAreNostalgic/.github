@@ -185,12 +185,13 @@ PHP are distinct populations; describe and verify the scope actually claimed.
 
 #### Default coverage and reviewed exemptions
 
-For the Booster ecosystem, maintained production PHP is directly analysed by
-PHPStan at **level 5 or stronger**, preserving every higher existing gate.
-Use recursive production roots or repository-wide discovery with explicit,
-anchored non-production exclusions instead of enumerating today's classes.
+For the Booster ecosystem, every maintained first-party PHP file is directly
+analysed by PHPStan at **level 5 or stronger**, including tests, fixtures,
+scripts and extensionless entrypoints, while preserving higher existing gates.
+Use recursive maintained roots or repository-wide discovery with explicit,
+anchored reviewed exemptions instead of enumerating today's classes.
 Splitting a contract, adding a nested directory or introducing a root entrypoint
-must not silently remove code from analysis. A new maintained production file
+must not silently remove code from analysis. A new maintained PHP file
 must be analysed automatically or make the coverage gate fail until its scope
 is corrected. Dependency symbol discovery (`scanDirectories`/`scanFiles`) is
 not direct analysis of those files.
@@ -199,19 +200,23 @@ Derive the expected population independently from maintained source discovery
 and, where applicable, the existing distribution manifest. Compare it with the
 analyser's effective file selection, including exclusions. Do not derive both
 sides from the same inclusion list. Protect new and relocated files, an excluded
-production file and collisions with development-directory names using focused
-negative controls. A source directory named `tests` beneath a production root
-does not inherit the exemption for the repository's actual test suite.
+maintained file and collisions with development-directory names using focused
+negative controls. A directory named `tests`, whether at the root or nested,
+is not itself an analysis exemption. Keep production inference isolated from
+synthetic harness symbols: use the existing analysis tooling in separate scoped
+invocations when necessary, while accounting for every maintained file across
+them. Conflicting fixture signatures require concrete routing or reviewed
+exemptions; they do not justify silently omitting the entire development tree.
 
 Every maintained first-party PHP file must also enter its approved PHPCS profile
 by default. Verify the required profile and effective rules, not merely the
 union of selected filenames. Keep syntax, standards, compatibility and analysis
-populations explicit: a reviewed development-only analysis exclusion does not
-exempt ordinary test or tool code from standards.
+populations explicit: an accepted analysis exemption does not automatically
+exempt its file from standards, syntax or compatibility checks.
 
 Exclusions for dependencies, caches, deliberate fixtures and generated copies
 must identify their exact boundary and reason in existing configuration or
-guidance. Production analysis exemptions require explicit owner disposition;
+guidance. Any maintained-file analysis exemption requires explicit owner disposition;
 new or widened exemptions must be visible in the PR's scope and acceptance
 summary. Generated-style exclusions require the existing upstream-check and
 parity evidence. Preserve stronger local requirements.
