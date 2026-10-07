@@ -1,324 +1,142 @@
-# Required quality enforcement contracts
+# Protected quality contract implementation
 
-This directory is the organisation-owned integrity layer used by the required
-quality workflows under `.github#12`.
+**Dormant, not active organisation protection.** The required-workflow and hash
+registry design is retained pending [activation #31](https://github.com/RocketsAreNostalgic/.github/issues/31)
+and [proportionality assessment #139](https://github.com/RocketsAreNostalgic/.github/issues/139).
+Historical canaries prove bounded mechanisms, not live enrollment or approval
+to expand this system. Ordinary contribution uses
+[Quality Standards](../docs/quality/QUALITY_STANDARDS.md); this reference is for
+maintainers assessing or operating the design if authorized.
 
-The reusable quality providers already give RAN deterministic source-quality
-execution, but they intentionally invoke repository-owned aggregate commands
-such as `composer check` and `pnpm check`. Requiring the organisation workflow
-identity alone therefore does not stop a target pull request from weakening its
-own aggregate, configuration, test harness, helper scripts, or unvalidated
-caller inputs while keeping the same displayed status names.
+## Trust boundary and contract model
 
-The protected-contract layer closes that gap without moving product-specific
-quality topology into `.github`.
+Requiring an organisation workflow alone does not protect PR-editable aggregates,
+configs or delegated helpers. This design checks a centrally reviewed contract
+before executing the provider. It is one implementation of
+[enforcement integrity](../docs/quality/QUALITY_STANDARDS.md#enforcement-integrity),
+not a requirement to introduce registries elsewhere.
 
-## Contract model
+`contracts.json` associates repository/profile and centrally owned provider
+inputs with exact Git blob/tree identities and required-absent paths.
+`approved_commit` records provenance; matching protected objects, absence rules
+and inputs—not an entire product revision—defines approval.
 
-`contracts.json` contains one entry per enforcement-ready repository. Each
-entry records:
+Required workflows verify `job.workflow_repository`/`job.workflow_file_path`,
+check out the target PR head (otherwise `github.sha`) and policy at
+`job.workflow_sha`, then invoke `validate-contract.mjs`. The validator fails on
+missing enrollment, wrong profile, changed object type/identity or newly present
+forbidden paths. It emits the central provider inputs. Terminal `required-quality`
+requires both validation and the immutable provider to succeed. `.github` itself
+is deliberately skipped and must not be enrolled as its own consumer.
 
-- the repository quality profile;
-- organisation-approved provider inputs;
-- the reviewed source commit from which the approval was derived;
-- exact Git object IDs for the repository-owned files or trees that determine
-  the authoritative quality contract; and
-- where necessary, repository-relative paths that are explicitly required to
-  remain absent so a pull request cannot introduce a higher-precedence shadow
-  configuration, package-manager hook, or prebuilt dependency tree.
+<a id="what-belongs-in-the-protected-surface"></a>
 
-A required workflow owned by this repository checks out the exact target
-revision and this policy repository at `job.workflow_sha`, then runs
-`validate-contract.mjs`. The validator resolves each protected target path from
-`HEAD` and requires its Git object type and object ID to match the central
-registry before the shared quality provider is allowed to run. It also checks
-every `absent` path and fails if that path has appeared in the target revision.
+## Protect the smallest complete surface
 
-The provider inputs also come from the central registry. In particular, a PHP
-consumer cannot weaken its own floor/current inputs in a target-repository pull
-request and a Node consumer cannot substitute a different pnpm identity or
-working directory through its caller.
+Include aggregates, tool dependencies/locks, caller workflows/fan-in/inputs,
+configuration, package-manager hooks, implicit ignore files, delegated scripts
+and authoritative tests/fixtures. A whole tree is appropriate only when every
+file under it belongs to that harness. Do not protect product implementation
+merely because tests execute it.
 
-The required terminal job fails unless both protected-contract validation and
-the immutable shared provider succeed.
+Account for implicit precedence: protect selected configuration and require
+shadow alternatives absent, or invoke an explicit protected path. A protected
+manifest alone cannot stop a new pnpm hook. Tracked `vendor`/`node_modules` must
+remain absent so installation materializes the reviewed locked graph rather
+than reusing attacker-controlled metadata/binaries. Export attributes, nested
+attribute overrides and generated wrappers can also alter what tests prove.
 
-## What belongs in the protected surface
+The retained Admin entry illustrates these boundaries: recursive CLI/tool trees,
+root export attributes, absent `resources/.gitattributes`, protected PHPCS files
+and forbidden alternative PHPCS filenames. Explicit PHPUnit/PHPStan configuration
+paths avoid their default filename precedence. These are implementation examples,
+not proof that its historical entry matches current main.
 
-Protect the smallest complete transitive surface that can change what the
-canonical aggregate proves. Depending on the repository this normally includes:
+<a id="approval-lifecycle"></a>
+<a id="stale-or-superseded-approvals"></a>
 
-- the local quality workflow and its provider/fan-in topology;
-- `composer.json` / `package.json` aggregate definitions and quality-tool
-  dependencies;
-- lockfiles when they determine the quality-tool graph;
-- PHPCS/WPCS/PHPCompatibility/PHPStan/ESLint/Prettier/Stylelint/test-runner
-  configuration;
-- package-manager project configuration and install hooks such as `.npmrc`,
-  `pnpm-workspace.yaml`, and pnpm hook files;
-- implicitly consumed ignore files such as `.gitignore`, `.prettierignore`, or
-  `.stylelintignore` where they can change what a protected command checks;
-- scripts transitively invoked by the aggregate; and
-- tests/fixtures that constitute the authoritative behavioural or contract
-  harness.
+## Approval and changed heads
 
-Dependency installation must start from the reviewed source tree and the
-protected lockfiles. Tracked `vendor/` or `node_modules/` trees are therefore
-required to remain absent for Composer/pnpm profiles: otherwise an installer may
-reuse pre-existing metadata, binaries, or package contents instead of
-materialising the reviewed dependency graph from the lock.
+If activated, changing protected semantics follows this sequence:
 
-Some tools discover configuration by filename or precedence rather than by an
-explicit protected path. In that case the contract must either protect the
-selected file **and** require higher-precedence alternatives to remain absent,
-or the aggregate must invoke an explicit protected configuration path. For
-example, Admin Shell protects `phpcs.xml.dist` and requires `.phpcs.xml`,
-`.phpcs.xml.dist`, and `phpcs.xml` to remain absent so an implicit `phpcs -p`
-run cannot be redirected to a permissive shadow standard.
+1. Propose/review the consumer change and complete its ordinary CI.
+2. Derive object identities, absent paths and inputs from that exact reviewed head.
+3. Review a separate `.github` contract update; prove it against that target.
+4. Only after central approval is the target eligible under the required workflow.
+   Retain stronger local checks unless separately reviewed as redundant.
 
-Likewise, a pnpm profile must not protect only `package.json` and the lockfile:
-a newly introduced package-manager config or hook can change how the protected
-aggregate executes without changing either file. Existing package-manager
-configuration belongs in `objects`; unapproved alternative config/hook paths
-belong in `absent`.
+Protected objects, absence state or authority inputs changing makes approval
+stale: derive/review/prove again. Product-only changes need no registry refresh,
+but the workflow must rerun on the new head and revalidate the contract. Abandoned
+or superseded targets require closing unlanded central approvals; if central
+approval already landed, restore the approved default-branch contract through a
+reviewed change and canary it before expansion. Target PRs cannot approve
+themselves. This operational lifecycle is conditional on activation, not today's
+ordinary contribution burden.
 
-A whole Git tree object is appropriate when every file below that directory is
-part of the authority-bearing harness. This deliberately means a legitimate
-change to that harness requires a central contract refresh. That is the
-protected approval boundary; silently allowing those files to change would
-recreate the bypass this mechanism exists to prevent.
+<a id="control-plane-canary-procedure"></a>
+<a id="emergency-rollback"></a>
+<a id="required-workflow-identity"></a>
+<a id="rollout"></a>
 
-Do **not** protect ordinary product implementation merely because tests execute
-it. Product/source changes must remain reviewable in the target repository
-without a `.github` registry update. Protect the harness that decides whether
-those changes pass, not the product being tested.
+## Canary, rollout and rollback
 
-## Approval lifecycle
+Material control-plane changes require review at an exact central SHA and an
+affected-profile representative proof: positive validation/provider/terminal
+success, an actual bypass negative where relevant, then restored positive
+success on that same candidate. Historical proof callers are disposable and
+must not become alternate production gates.
 
-When a protected target object or required-absent policy needs to change:
+An authorized administrator enrolls incrementally only after auditing each
+complete transitive surface, reviewing its entry and proving the exact target.
+Do not target repositories without entries: missing contracts deliberately fail
+closed. Preserve stronger local/runtime/release evidence, including Booster's
+specialist composition. No historical canary authorizes activation.
 
-1. make the target-repository change in its normal pull request;
-2. review the new quality semantics and complete the repository's ordinary CI;
-3. derive the new protected object IDs and required-absence rules from the exact
-   reviewed target revision;
-4. update `contracts.json` in a separate reviewed `.github` change;
-5. prove that central candidate against the exact target revision from which the
-   contract was derived;
-6. only after the central contract is approved should the target change become
-   eligible under the organisation-required workflow; and
-7. retain stronger repository-specific required checks independently unless an
-   explicit later review proves them redundant.
+For a central defect, an owner/admin may narrowly disable the affected rule or
+remove affected repositories temporarily while retaining local required checks,
+review and merge policies. Revert/correct centrally through normal reviewed PRs;
+do not patch consumers to manufacture bypasses. Prove repaired/reverted canaries
+before re-enabling. Temporary disablement is controlled recovery followed by
+restoration, never an alternate merge path.
 
-The registry update is therefore an explicit organisation-policy decision, not
-a way for the target pull request to approve itself.
+<a id="protected-surface-re-audit"></a>
 
-### Stale or superseded approvals
+## Re-audit if activated
 
-A registry entry approves the protected Git objects, required-absence policy,
-and centrally owned provider inputs derived from one reviewed target revision.
-It is not an approval of a mutable branch name or of unrelated product source.
+The organisation quality programme owner (#7 or its named successor) records
+protected-surface re-audit in the existing tracker at least quarterly **while
+rules are active**, and at each contract refresh, rollout wave or material
+provider/package-manager/tool/config-format change. No dormant quarterly process
+is asserted here.
 
-- If the target PR head changes **and that move changes any protected object,
-  required-absent path state, or other authority-bearing contract input**, the
-  central approval is stale. Re-derive the contract from the new exact head and
-  repeat review/proof; do not reuse the previous approval.
-- A product-only head move outside the protected surface does not require a
-  registry refresh. The required workflow must still rerun on the new exact
-  target head and independently prove that its protected objects/absence rules
-  still match the central contract before merge.
-- If the target PR is abandoned, superseded, or closed before the registry
-  change lands, close the corresponding central approval rather than carrying
-  speculative object IDs forward.
-- If a central contract entry has already landed for a target revision that will
-  not land, restore the entry from the target repository's current approved
-  default-branch contract in a separate reviewed `.github` change and canary the
-  restored entry before expanding enforcement.
+Look beyond current hashes for new implicit configuration, ignore files, hooks,
+helpers, fixture trees, wrappers and prebuilt dependencies. Newly authoritative
+inputs must become protected objects, required-absent paths or explicit protected
+configuration. Broad historical inventories do not prove continuing completeness.
 
-`approved_commit` records the provenance of the reviewed contract definition;
-enforcement still relies on the exact protected object IDs, required-absence
-policy, centrally owned provider inputs, and validation of the current exact
-target revision.
+<a id="representative-proof-evidence"></a>
+<a id="node--bootstrap-templates"></a>
+<a id="php-library--admin-shell"></a>
+<a id="wordpress-plugin--starter"></a>
+<a id="booster"></a>
 
-## Control-plane canary procedure
+## Inspected source and historical proof
 
-The required workflows, validator, registry schema, and contract semantics form
-a high-blast-radius enforcement control plane. Material changes must be proven
-before estate-wide rollout.
+Current sources: [registry](contracts.json), [validator](validate-contract.mjs)
+and [required/provider workflows](../.github/workflows).
 
-1. Create the central change on a reviewed `.github` branch and freeze its exact
-   candidate SHA.
-2. Exercise every affected profile through an enrolled representative repository
-   using a disposable caller pinned to that exact central SHA.
-3. Require a positive exact-contract pass through the protected-contract check,
-   immutable provider, and terminal `required-quality` job.
-4. When the change addresses a bypass class, include a negative proof showing
-   the weakened/shadowed contract fails before the organisation baseline is
-   trusted.
-5. Restore the representative contract and prove it green again on the same
-   central candidate.
-6. Merge the central change only after representative proof and review are
-   clean; then stage organisation-rule expansion incrementally rather than
-   targeting the whole estate at once.
+At [.github 70df865a00734542e6bb663e684d86b8b4757b8e](https://github.com/RocketsAreNostalgic/.github/tree/70df865a00734542e6bb663e684d86b8b4757b8e/quality-enforcement),
+inspection of `contracts.json` and `validate-contract.mjs`, alongside
+[required workflow sources](https://github.com/RocketsAreNostalgic/.github/tree/70df865a00734542e6bb663e684d86b8b4757b8e/.github/workflows),
+establishes the object/absence/input validation and workflow-identity mechanisms
+above. It does not prove complete consumer inventories, current activation or
+passing execution against current consumer heads.
 
-PR #28 established the initial Node, WordPress, and PHP-v2 representative
-pattern using Bootstrap Templates, Starter, and Admin Shell respectively.
-
-## Emergency rollback
-
-A defective central enforcement change must be recoverable without weakening
-repository-owned quality rules.
-
-1. An organisation owner/admin may temporarily disable the affected required
-   workflow rule, or remove only the affected repositories from that rule, to
-   stop a central control-plane defect from blocking unrelated product work.
-2. Leave all stronger repository-local required checks, review requirements, and
-   merge policies in place during that temporary disablement.
-3. Revert or correct the defective `.github` change through the normal reviewed
-   pull-request path; do not patch consumer repositories to manufacture a bypass.
-4. Re-run the representative canary set against the exact repaired/reverted
-   central revision.
-5. Re-enable the organisation rule only after the restored control plane is
-   proven green.
-
-Temporary disablement is an emergency recovery action, not an alternate merge
-path. It must be narrow, owner/admin-controlled, and followed by restoration of
-the organisation-required boundary.
-
-## Protected-surface re-audit
-
-The owner of the organisation quality programme (`.github#7` while that tracker
-is open, or its named successor after closure) owns the recurring re-audit. While
-organisation required-workflow rules are active, the enrolled estate must be
-re-audited **at least once per calendar quarter**, with the result recorded in
-that programme tracker or successor quality log.
-
-A repository must also be re-audited whenever its contract is refreshed, during
-each enforcement rollout wave, and after material provider, package-manager,
-test-runner, lint/format tool, or configuration-format changes.
-
-The audit should actively look for new implicit inputs rather than only comparing
-the existing registry: higher-precedence config names, ignore files, package
-manager hooks, helper scripts, test/fixture trees, generated command wrappers,
-and prebuilt dependency directories can all change what the aggregate proves.
-Any newly authoritative input must be protected as an exact object, required to
-remain absent, or removed from implicit discovery by an explicit protected
-command/configuration path.
-
-## Representative proof evidence
-
-The three supported profiles have each been exercised through a disposable
-pull request with positive / negative / restored evidence. The proof callers are
-evidence only and were closed without merge.
-
-### Node — Bootstrap Templates
-
-`ran-booster-release-bootstrap-templates#21` proves the pure pnpm profile.
-
-- commit `6a369cf16b0e0a4a10d0fc6f271f9826d444e28c` changed only
-  `package.json#scripts.check` from `pnpm test` to `true`;
-- repository-owned run `35230167165` still passed local quality while
-  organisation run `35230167761` rejected the changed protected package blob;
-- a later `.npmrc` / `script-shell=/bin/true` negative proof likewise left local
-  run `35235390134` green while required run `35235390672` rejected the
-  required-absent shadow path; and
-- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
-  against exact Bootstrap head `6d67798f084e292623c539436560409dc38e4824`
-  passed repository run `35239134905` and required run `35239135572`.
-
-The protected Node surface includes the complete `tests` and `scripts` trees so
-the aggregate cannot be weakened indirectly through a helper that its protected
-test harness executes. Package-manager shadow configuration, hook paths, and
-prebuilt `node_modules/` content are centrally constrained rather than being
-implicitly trusted.
-
-### PHP library — Admin Shell
-
-`ran-admin-shell#12` proves PHP v2 and central ownership of `php-floor`,
-`php-current`, extensions, and optional Node identity.
-
-- commit `71a5e38b73b9b03783d7c4936d163996443ab444` changed only
-  `composer.json#scripts.check` to `true`;
-- repository-owned `Quality` run `35232546187` still succeeded while
-  organisation run `35232546416` rejected the changed Composer object before
-  the PHP baseline; and
-- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
-  against exact Admin Shell head `76005e2c31b64d25121f98f4585f2db92d161a0e`
-  passed repository run `35239182921` and required run `35239183776`.
-
-The September quality follow-up refreshes Admin Shell's approved object graph
-for its canonical commands, split resource/tool rules, level-5 analysis and
-exported Composer-consumer proof. `bin/`, `tools/`, both PHPCS configurations,
-`phpstan.neon.dist` and `.gitattributes` join the existing manifest/lock/tests/
-fixtures protection. The archive attributes affect what the distribution test
-installs, so they are a transitive test input. This registry refresh does not
-activate a ruleset or certify a new live organisation enforcement run.
-
-Admin Shell's protected aggregate invokes
-`phpunit --configuration phpunit.xml.dist` explicitly, so the protected PHPUnit
-configuration does not rely on automatic filename precedence.
-
-### WordPress plugin — Starter
-
-`ran-starter-plugin#21` proves the mixed Composer + pnpm profile while Starter's
-stronger archive/install evidence remains repository-owned.
-
-- commit `1503ac6007128eb119655fbbd8428568e3e436b8` changed only
-  `package.json#scripts.check` to `true`;
-- repository run `35232631692` still passed local/shared evidence while
-  organisation run `35232632076` rejected the changed protected package object;
-- review identified implicit Stylelint and Prettier inputs: `.stylelintignore`
-  is required absent, while the approved `.gitignore` and `.prettierignore`
-  blobs are protected; and
-- final central candidate `ba124001933f7febf15262c002aefec02aab3ef8`
-  against exact Starter head `f3d865e842de2be8c2df35ea52a6c7f94a7e61f8`
-  passed repository run `35239152367` and required run `35239152954`.
-
-### Booster
-
-`ran-booster` remains the high-water composition reference for a specialist
-local topology. Its runtime/archive/release evidence is not replaced by the
-generic provider contract. Before it is enrolled in organisation enforcement,
-its corresponding central contract must preserve the applicable shared quality
-authority while its stronger repository-specific rules remain required.
-
-## Required workflow identity
-
-Each required workflow asserts `job.workflow_repository` and
-`job.workflow_file_path`, then checks out this repository at `job.workflow_sha`.
-This binds contract data and validation code to the same organisation-owned
-workflow revision that GitHub is executing rather than to a mutable target
-branch.
-
-The consumer-required workflows deliberately skip when `github.repository` is
-`RocketsAreNostalgic/.github`; the policy repository is their source, not a
-consumer contract. Organisation rules must likewise target enrolled consumer
-repositories rather than treating the policy repository as a consumer.
-
-Consumer repositories must not treat a local job named `quality` as a
-substitute for this boundary. Local terminal jobs remain useful diagnostics and
-repository merge evidence, but the organisation enforcement authority is the
-required workflow plus this protected contract.
-
-## Rollout
-
-Organisation ruleset activation is an administrator action after the required
-workflow implementation and each target repository's contract entry have been
-reviewed. Enrol repositories incrementally:
-
-1. classify the repository against one of the supported profiles;
-2. audit its complete transitive authority-bearing quality surface, including
-   implicitly discovered package-manager/tool configuration, ignore files, hook
-   paths, and pre-existing dependency trees;
-3. add and review its central object and required-absent contract entries;
-4. prove the required workflow on that exact repository before targeting it;
-5. add the repository to the matching organisation required-workflow rule; and
-6. keep stronger local required checks until a separate review demonstrates
-   that any one of them is truly redundant.
-
-Do not target a repository that has no entry in `contracts.json`; the validator
-will deliberately fail closed with `No approved quality contract`.
-
-Admin Shell also rejects `resources/.gitattributes`: nested attribute overrides
-could change the export of its two resource files without changing the protected
-root attributes. The CLI and tool trees are protected recursively. PHPStan uses
-an explicit `--configuration=phpstan.neon.dist`, so default-discovery shadows
-cannot replace the protected analyzer configuration.
+[Design/canary #28](https://github.com/RocketsAreNostalgic/.github/pull/28) retains
+Node, PHP-v2 and mixed WordPress positive/negative/restored runs: altered aggregates
+or implicit configuration could pass local CI but fail the protected contract.
+Those closed, unmerged consumer proof PRs are optional historical evidence, not
+current acceptance. Their exact sources and limitations remain in that record.
+Update this reference with mechanism changes or track a cross-repository follow-up;
+unrelated commits do not require evidence refresh.

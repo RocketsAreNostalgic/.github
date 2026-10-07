@@ -1,19 +1,10 @@
 # Initial release starter: concrete G0 examples
 
-**Frozen G0 examples, not deployed templates or execution evidence.** Read
-[the contract](BOOTSTRAP_STARTER_CONTRACT.md) with this file. G0 was accepted in
-[#84](https://github.com/RocketsAreNostalgic/.github/pull/84). Implementation,
-publication and installed qualification are separate evidence in
-[#81](https://github.com/RocketsAreNostalgic/.github/issues/81); these frozen
-examples do not certify them. Later
-owner decisions distinguish proposal delivery from owner-managed execution
-configuration without changing this workflow/file-map contract.
-
-**Delivery sequencing:** the [owner decision in #81](https://github.com/RocketsAreNostalgic/.github/issues/81#temporary-delivery-deferral--owner-decision-28-september-2026)
-defers UI implementation and owner-verified end-to-end onboarding/integration
-until local interactive verification can resume. Non-UI contract preparation
-may continue within existing claims and automated gates. The acceptance below
-remains required; this deferral does not change the frozen technical contract.
+These are frozen G0 examples, not deployed templates or execution evidence.
+Read the [contract](BOOTSTRAP_STARTER_CONTRACT.md) for the accepted schema,
+proposal/execution boundary, [qualification requirements](BOOTSTRAP_STARTER_CONTRACT.md#8-qualification-and-handoff)
+and unchanged UI/owner end-to-end acceptance deferral. Current delivery evidence
+belongs to [#81](https://github.com/RocketsAreNostalgic/.github/issues/81).
 
 The fictional target is `example/acorn-plugin`, root plugin `acorn-plugin.php`,
 slug `acorn-plugin`, version `0.1.0`. The forty `1` characters in `bootstrap-sha`

@@ -1,727 +1,276 @@
 # RAN Quality Standards
 
-## Status and scope
+<a id="status-and-scope"></a>
+<a id="authority-and-precedence"></a>
+<a id="reference-high-water-implementation"></a>
+<a id="core-invariants"></a>
 
-This document defines the organisation-wide software quality baseline for Rockets Are Nostalgic (RAN) repositories.
+## Scope and authority
 
-The goal is consistent quality with project-appropriate configuration. Repositories do not need identical configuration files, dependency versions, runtime ranges, CI topology, or test suites. They do need to derive from the applicable RAN baseline, preserve the local project contract, and make deviations explicit.
+Maintained RAN repositories follow this baseline for their actual code surfaces.
+Local `AGENTS.md`, CI, tests, runtime declarations, locks and release contracts
+supply project requirements. They may strengthen or specialize the baseline,
+not silently weaken it. Stronger existing gates require an explicit reviewed
+decision before removal. Missing tooling is a migration gap, not non-applicability.
 
-The intended hierarchy is:
+Booster supplies reference evidence, not automatic organisation policy. Assess
+stronger transferable practices for benefit, applicability and cost before
+adoption; product-specific release/runtime architecture stays local. Starter
+supplies clean-reference qualification. Justified configurations need not be identical.
 
-**Organisation policy -> shared configs -> reusable CI -> repository-specific configuration -> organisation enforcement.**
+<a id="find-the-requirement-for-your-change"></a>
+<a id="quality-profiles-and-applicability"></a>
+<a id="wordpress-plugin"></a>
+<a id="php-library"></a>
+<a id="node"></a>
+<a id="mixed"></a>
+<a id="fixture"></a>
+<a id="legacy"></a>
+<a id="wordpress-php"></a>
+<a id="php-formatting-authority"></a>
+<a id="javascript-and-typescript"></a>
+<a id="prettier"></a>
+<a id="css-and-scss"></a>
+<a id="editorconfig"></a>
+<a id="shared-package-boundaries"></a>
 
-These standards apply to maintained RAN repositories according to their technology and quality profile. Fixtures, archived repositories, and intentionally unsupported projects may use a reduced surface only where that reduction is necessary to preserve their purpose. `legacy` is a migration state, not a permanent exemption.
+## What applies
 
-## Find the requirement for your change
-
-The technology/profile baseline applies across maintained RAN repositories.
-The [next-beta Booster acceptance](#next-beta-booster-php-acceptance), including
-its PHPStan level-5 minimum and default-coverage rules, applies to the Booster
-ecosystem as stated there; it does not assign that same acceptance tranche to
-the wider estate. Stronger local gates remain required under
-[authority and precedence](#authority-and-precedence).
-
-| Question | Authoritative section |
+| Surface / profile | Required checks |
 | --- | --- |
-| What applies to this repository or code surface? | [Profiles and applicability](#quality-profiles-and-applicability); for the Booster tranche, [common convention and scope](#common-convention-and-scope). |
-| Which checks must run? | [Canonical command contract](#canonical-command-contract) and [CI contract](#ci-contract), alongside the repository's required checks. |
-| What happens when a maintained file is added or moved? | Applicable [profile requirements](#quality-profiles-and-applicability); Booster's [default coverage and reviewed exemptions](#default-coverage-and-reviewed-exemptions) specifies automatic coverage and regression controls. |
-| Which exceptions are acceptable? | [Authority and precedence](#authority-and-precedence) and [core invariants](#core-invariants); Booster also follows [reviewed exemptions](#default-coverage-and-reviewed-exemptions) and [exceptions and native operations](#exceptions-and-native-operations). |
-| What must a reviewer verify? | [Review standard](#review-standard), [enforcement integrity](#enforcement-integrity), and the applicable profile; Booster qualification also uses [qualification and release boundaries](#qualification-and-release-boundaries). |
+| Maintained PHP / `php-library` | Strict Composer validation, locked installation, shared standards, declared-range compatibility, independent syntax, maintained-production static analysis and behavioural/characterization/contract tests. PHPStan is the default; an existing equivalent is acceptable. |
+| WordPress / `wordpress-plugin` | PHP plus applicable frontend checks, generated-asset/localisation parity, distributed-archive integrity, clean install/activation and materially different supported WordPress/PHP/database boundaries. WordPress.org products need applicable Plugin Check evidence. |
+| JavaScript/TypeScript / `node` | ESLint, formatting, applicable type checks, behavioural/unit/asset tests; Stylelint for CSS/SCSS; generated-artifact freshness, locked dependencies and declared toolchain. |
+| `mixed` | Every applicable constituent requirement. |
+| `fixture` | Document its purpose and necessary checks; justify production gates that would invalidate it. |
+| `legacy` | Name target profile/gaps; stage migration without avoidable new debt. This is temporary. |
 
-## Reference high-water implementation
+Use mature shared/upstream tools. WordPress PHP uses PHPCS/WPCS and preferably
+PHPCompatibilityWP. PHPCS checks and PHPCBF fixes use identical rules/paths/exclusions.
+PHP-CS-Fixer is migration debt: remove dependency/configuration/cache/callers,
+preserve intended checks and prove negative controls/stable fixes. A second
+formatter needs a concrete unmet need and explicit review; Starter has no exemption.
 
-`RocketsAreNostalgic/ran-booster` is the reference high-water implementation for RAN quality engineering.
+WordPress frontend derives through shared RAN exports from
+`@wordpress/eslint-plugin`, `@wordpress/prettier-config` and
+`@wordpress/stylelint-config`. Prettier formats supported frontend/text unless
+incompatible. Use supported ESLint configuration, separate CSS/SCSS exports and
+local formatter-aligned `.editorconfig`. Environments/globals, frameworks, browser
+support, source paths, identity/runtime settings and justified overrides stay
+local. Shared packages need tests and independent releases; runtime libraries do
+not own coding policy. Install only needed frontend exports.
 
-The organisation should strive for parity with Booster where a gate is broadly transferable, including:
+Workbench/fixtures retain recorded exemptions and useful interfaces; security
+still applies. Inactive/deferred repositories, including Plugin Library, are not
+reactivated. Do not rename fixture commands merely for symmetry.
 
-- immutable third-party Action references and minimal workflow permissions;
-- checkout without persisted Git credentials before project-controlled commands run;
-- exact declared Node/package-manager toolchains and locked dependency installation;
-- strict Composer manifest/lock validation before installation;
-- PHPCS/WPCS and PHP compatibility checks;
-- static analysis for maintained production PHP;
-- deterministic frontend formatting/linting and asset tests;
-- independent PHP syntax validation;
-- behavioural, characterization, contract, or integration tests appropriate to the code surface;
-- deterministic package/archive verification where a repository ships an installable artifact;
-- runtime install/activation/compatibility evidence where the product contract requires it;
-- one reviewable terminal merge gate that cannot pass unless all ordinary required evidence succeeds.
+<a id="canonical-command-contract"></a>
+<a id="php-command-meanings"></a>
+<a id="node-and-frontend-projects"></a>
+<a id="composerphp-projects"></a>
+<a id="adoption-and-role-based-exceptions"></a>
 
-Booster-specific release-candidate admission, artifact-reuse provenance, updater-source verification, deployment semantics, provider contracts, release state machines, and other product-specific evidence remain local to Booster. The aim is parity in transferable quality guarantees, not duplication of Booster's architecture or CI size.
+## Commands and evidence
 
-When Booster adopts a stronger broadly applicable quality invariant, reviewers should assess whether it belongs in this standard and the shared RAN tooling rather than allowing the organisation baseline to drift permanently below the reference implementation.
+Local and CI checks must agree. `composer check` and the package manager's
+`check` aggregate applicable deterministic ordinary formatting, linting,
+compatibility, analysis/types, tests and generated-state parity. pnpm is the
+Node house style; another manager requires a concrete reason/equivalent guarantees.
+Shared PHP CI may supply validation/syntax without duplication inside `check`.
 
-## Authority and precedence
-
-Quality policy does not replace a repository's engineering contract.
-
-1. Repository-local `AGENTS.md`, CI, runtime declarations, lockfiles, release documentation, and tests remain authoritative for project-specific requirements.
-2. Shared RAN quality packages and workflows provide the organisation baseline for the technologies they cover.
-3. Repository-local configuration may add or specialize project-specific requirements but must not silently weaken applicable organisation invariants.
-4. A local exception must be narrow, documented, and attributable to a concrete compatibility, runtime, fixture, generated-code, legacy-contract, or architectural requirement.
-5. Documentation must not make a mandatory CI or project-contract gate optional.
-6. A stronger reviewed local gate remains required until an explicit reviewed decision removes it; adoption of the organisation minimum never justifies lowering an existing repository contract.
-
-## Core invariants
-
-Maintained source code must use appropriate automated quality tooling where a mature tool exists for the technology.
-
-- Dependencies and toolchains must be reproducible from tracked lockfiles where the ecosystem supports lockfiles.
-- Local development and CI must invoke equivalent authoritative quality gates.
-- Generated, vendored, third-party, cache, coverage, and runtime state should be excluded from source-quality checks rather than accommodated with broad rule suppression.
-- Quality configuration should extend shared or upstream standards rather than duplicate them unnecessarily.
-- Exceptions must be scoped to the smallest practical rule, file, path, fixture, or compatibility boundary.
-- Every exception to a required profile gate must be documented in reviewed repository guidance or configuration with the concrete reason it cannot or should not apply.
-- Warnings and disabled rules that express an organisation-wide decision belong in the shared RAN standard; repository-specific deviations remain local.
-- A repository must not claim support for a runtime or platform range that its compatibility checks contradict.
-- Ordinary CI must execute project-controlled code with the minimum practical token permissions and without persisted checkout credentials unless a documented workflow operation genuinely requires them.
-
-## PHP formatting authority
-
-Maintained RAN WordPress PHP uses **PHPCS to check and PHPCBF to fix**, through
-the applicable shared RAN WordPress ruleset. These are companion commands from
-the same package and must use the same rules, first-party paths and exclusions.
-`composer standards` is the check; `composer standards:fix` is the mutating fixer.
-
-PHP-CS-Fixer is not a second organisation formatting authority. Existing use is
-migration debt to remove, together with its dependency, configuration, cache
-entries and obsolete command callers. Preserve intended checks in PHPCS and
-prove failure and repeatability there; do not widen a second formatter's scope
-or preserve accidental formatting preferences merely because they existed.
-A future exception requires a concrete unmet need and explicit review; none is
-approved for Starter by its historical use.
-
-The Booster suite must converge on one documented WordPress-derived convention.
-Existing per-repository differences are audit findings, not automatically valid
-exceptions. Review repeated naming/condition exceptions as suite policy; retain
-only justified project-specific requirements. Stronger checks must be assessed
-for transfer into the shared baseline rather than indefinitely duplicated.
-
-Completion requires matching check/fix coverage, retained tests/analysis and
-compatibility gates, representative negative fixtures, stable repeated fixes,
-updated local/CI callers, and a current adoption row with exact-head evidence.
-A repository does not satisfy the policy merely by renaming Composer scripts.
-Workbench and purpose-built fixtures retain their recorded exemptions.
-
-## Booster naming during beta
-
-RAN-owned Booster-suite PHP methods, properties, parameters and local variables
-should use WordPress `snake_case`, including public members. Public visibility,
-historical camelCase use and beta package boundaries do not by themselves
-justify exceptions. The owner permits coordinated public API changes during
-beta; migration scope must include declarations, implementations, callers,
-named arguments, callback strings, tests and current documentation.
-
-Retain an exceptional name only for a concrete externally imposed contract,
-such as a PHP magic method or a method required by a third-party interface.
-WordPress hook callback method names are normally RAN-owned: update their
-registered callables with the declaration. PHP identifiers, hook identifiers,
-wire/JSON fields and persisted keys are different contracts; a PHP rename does
-not automatically authorize changing stored or external data schemas.
-
-WPCS 3.4.1 skips method naming in classes with inheritance or implemented
-interfaces. A green WPCS result alone therefore does not prove suite naming
-convergence. Migration acceptance must check owned declarations that upstream
-skips, with narrow explicit external-signature exceptions, and prove the
-check catches a newly introduced noncompliant owned method in such a class.
-Do not exempt an entire class merely because it implements a RAN interface.
-
-Plan connected packages as one migration cohort, certify exact candidate
-revisions together, and update compatibility declarations and dependency pins
-before release. Temporary coexistence aliases need a demonstrated mixed-version
-requirement and a removal condition; they are not the default for this beta
-cleanup. This decision does not authorize merging or publication and does not
-change the recorded Workbench/fixture exemptions or the existing PSR-4
-class/filename policy.
-
-## WordPress PHP
-
-Maintained WordPress PHP code must use WordPress Coding Standards (WPCS) through PHP_CodeSniffer.
-
-The RAN shared PHP coding-standard package should provide the common WPCS baseline and organisation-wide deviations. Repository-local PHPCS configuration should provide project identity and support information such as:
-
-- minimum supported WordPress version;
-- PHP compatibility range;
-- namespace and global prefix;
-- text domain;
-- project-specific source paths;
-- justified fixture, inherited-API, legacy-contract, generated-code, or integration exceptions.
-
-PHP compatibility checks must cover the repository's declared supported PHP range. PHPCompatibilityWP is the preferred baseline for maintained WordPress PHP projects unless a documented project constraint requires an equivalent mechanism.
-
-Maintained production PHP must also have static analysis at an appropriate strictness. PHPStan is the RAN default unless a repository has an existing equivalent. A maintained repository without static analysis is a migration gap requiring a documented exception or `legacy` classification; absence alone does not make the gate non-applicable.
-
-A project-specific PHPCS or static-analysis exception must not be promoted into the shared RAN standard merely because one mature repository requires it.
-
-### Next-beta Booster PHP acceptance
-
-The owner-approved [standards strand #128](https://github.com/RocketsAreNostalgic/.github/issues/128)
-applies the following decisions to the next Core beta after beta.31 and its
-matching Booster consumers. It refines the existing policy; it does not reopen
-completed naming work or impose a retrospective beta.31 release gate.
-
-> Every maintained PHP file is accounted for under an approved profile.
-> Required checks pass. Every retained exception has an accepted rationale and
-> scope. Regression controls protect those guarantees.
-
-#### Common convention and scope
-
-| Concern | Decision |
+| Composer command | Contract |
 | --- | --- |
-| Autoloading and class files | Retain Composer/PSR-4 namespaces and matching class filenames. The shared exclusions for `WordPress.Files.FileName.NotHyphenatedLowercase` and `WordPress.Files.FileName.InvalidClassFileName` are deliberate policy. |
-| Formatting and owned naming | Retain WordPress-derived formatting and `snake_case` owned functions, methods, properties, parameters and locals, including public and inherited implementations. Preserve actual foreign signatures; public visibility alone is not a foreign contract. |
-| Conditions | Retain the adopted Yoda convention. Do not change observable evaluation order to satisfy it; use a narrow exception where behavior or a demonstrated checker limitation requires one. |
-| Documentation | Require accurate public contracts, useful type information and explanations of non-obvious behavior. Full optional `WordPress-Docs` adoption is not required by this tranche; preserve stronger documentation checks already adopted locally. |
-| Compatibility and analysis | Check each consumer's declared support range. PHPStan separately checks types and data flow at the repository's agreed level; neither its level nor passing WPCS establishes the other's acceptance. |
+| `check` | Non-mutating ordinary aggregate. |
+| `lint:syntax` | Independent parser sweep. |
+| `standards` / `standards:fix` | PHPCS/WPCS/compatibility check / matching PHPCBF fixer. |
+| `analyze` | Analysis with declared paths, level and blocking/advisory status. |
+| `test` | Ordinary deterministic tests, including local workflow/contract tests. |
+| `check:host` / `test:integration` | Required exact-certified host / purpose-built integration checks. |
 
-Use the existing RAN WordPress-Extra-based rules as the starting contract.
-Shared ruleset inheritance, properties and scoped configuration express the
-following applicability differences while retaining common formatting and
-owned naming. These are code-surface distinctions, not a requirement for three
-new public standards or packages.
+Adopt applicable names during bounded migration; no empty scripts. Record removed
+names/replacements; aliases need actual callers. `standards`, `analyze` and `test`
+do not rewrite source. Handle filenames safely; propagate parser, interpreter,
+discovery and required-check failures. Empty success must not hide failure.
+Repeated fixes must be stable; command renaming does not change gates or defenses.
 
-| Code surface | Required treatment |
-| --- | --- |
-| WordPress runtime and templates | Common convention and compatibility, with applicable WordPress input, escaping, nonce, SQL and localisation checks. |
-| Standalone PHP and CLI tools | Common convention and compatibility; omit only framework-specific requirements demonstrated inapplicable to the actual execution boundary. Native PHP APIs may be appropriate. |
-| Tests and fixtures | Common convention and compatibility, with scoped allowances for foreign lifecycle methods, controlled globals, CLI diagnostics and intentional synthetic contracts. Ordinary helpers are not exempt merely because they live under `tests/`. |
+Only concrete privilege, external-service, destructive/integration-environment or
+release/deployment needs justify checks outside ordinary aggregates. Document
+them; every merge-required lane still feeds terminal CI `quality`. Focused product
+checks remain required. Verify certified-host checkout identity/setup, not arbitrary
+siblings or shape alone; preserve independent checks without making the host a
+production dependency.
 
-Composer packaging alone does not make a library WordPress-independent. Map
-mixed code surfaces through existing rulesets and documented paths. Account for
-all maintained first-party PHP, including root entrypoints, templates, tests,
-tools and extensionless PHP entrypoints. A missing or syntax-only check is a
-coverage decision requiring concrete justification, not an automatic exemption.
-New maintained files must enter the appropriate checked scope.
+<a id="booster-naming-during-beta"></a>
+<a id="next-beta-booster-php-acceptance"></a>
+<a id="common-convention-and-scope"></a>
+<a id="default-coverage-and-reviewed-exemptions"></a>
 
-Generated first-party copies may be excluded from duplicate style checking only
-when their authoritative source is checked and generation/provenance parity is
-verified. Third-party dependencies and generated caches remain outside
-first-party formatting enforcement. Source-distribution PHP and runtime-archive
-PHP are distinct populations; describe and verify the scope actually claimed.
+## Booster PHP coverage and conventions
 
-#### Default coverage and reviewed exemptions
+These additional requirements apply to the Booster ecosystem under
+[#128](https://github.com/RocketsAreNostalgic/.github/issues/128) and adopted
+[#134](https://github.com/RocketsAreNostalgic/.github/pull/134), for the beta after
+beta.31 and matching consumers; not retrospectively to beta.31 or the wider estate.
 
-For the Booster ecosystem, every maintained first-party PHP file is directly
-analysed by PHPStan at **level 5 or stronger**, including tests, fixtures,
-scripts and extensionless entrypoints, while preserving higher existing gates.
-Use recursive maintained roots or repository-wide discovery with explicit,
-anchored reviewed exemptions instead of enumerating today's classes.
-Splitting a contract, adding a nested directory or introducing a root entrypoint
-must not silently remove code from analysis. A new maintained PHP file
-must be analysed automatically or make the coverage gate fail until its scope
-is corrected. Dependency symbol discovery (`scanDirectories`/`scanFiles`) is
-not direct analysis of those files.
+Every maintained first-party PHP file enters its approved PHPCS profile and
+direct PHPStan analysis at **level 5 or stronger**, preserving higher gates:
+tests, fixtures, scripts, root/nested and extensionless entrypoints included.
+Use recursive roots/discovery with anchored reviewed exemptions. Added/relocated
+files must be covered automatically or fail coverage. Symbol discovery via
+`scanFiles`/`scanDirectories` is not direct analysis.
 
-Derive the expected population independently from maintained source discovery
-and, where applicable, the existing distribution manifest. Compare it with the
-analyser's effective file selection, including exclusions. Do not derive both
-sides from the same inclusion list. Protect new and relocated files, an excluded
-maintained file and collisions with development-directory names using focused
-negative controls. A directory named `tests`, whether at the root or nested,
-is not itself an analysis exemption. Keep production inference isolated from
-synthetic harness symbols: use the existing analysis tooling in separate scoped
-invocations when necessary, while accounting for every maintained file across
-them. Conflicting fixture signatures require concrete routing or reviewed
-exemptions; they do not justify silently omitting the entire development tree.
+Compare independently discovered maintained/distribution populations with actual
+checker selection, exclusions and effective required rules, not two copies of
+one inclusion list. Distinguish source distributions/runtime ZIPs and
+syntax/standards/compatibility/analysis populations; one exemption does not waive
+another gate. Isolate production inference from synthetic symbols with scoped
+invocations; conflicting fixtures need routing/reviewed exemptions, not omission
+of development trees. A directory called `tests` is not exempt.
 
-Every maintained first-party PHP file must also enter its approved PHPCS profile
-by default. Verify the required profile and effective rules, not merely the
-union of selected filenames. Keep syntax, standards, compatibility and analysis
-populations explicit: an accepted analysis exemption does not automatically
-exempt its file from standards, syntax or compatibility checks.
+Real locked-checker negative controls must cover new/nested/relocated or excluded
+maintained files, development-directory name collisions, inherited configuration
+and rule/severity weakening. Accepted exceptions must pass while out-of-scope
+violations fail. Annotation guards account for accepted directive forms/case
+variants. Exclude dependencies/caches/runtime state rather than broadly suppressing
+rules. Generated-style exclusions require checked authoritative source and
+verified generation/provenance parity. Syntax-only coverage requires justification.
 
-Exclusions for dependencies, caches, deliberate fixtures and generated copies
-must identify their exact boundary and reason in existing configuration or
-guidance. Any maintained-file analysis exemption requires explicit owner disposition;
-new or widened exemptions must be visible in the PR's scope and acceptance
-summary. Generated-style exclusions require the existing upstream-check and
-parity evidence. Preserve stronger local requirements.
+Use WordPress-Extra-derived conventions, owned `snake_case` functions/methods/
+properties/parameters/locals including public/inherited implementations, and
+checks/negative controls for declarations upstream WPCS skips. Preserve actual
+foreign signatures, never blanket class exemptions. Keep PSR-4 namespaces/class
+filenames and the deliberate `WordPress.Files.FileName.NotHyphenatedLowercase`
+and `WordPress.Files.FileName.InvalidClassFileName` exclusions. Retain Yoda without
+changing evaluation order. Require accurate public contracts, useful types and
+non-obvious explanations; full optional WordPress-Docs is not imposed, stronger
+local documentation checks survive.
 
-An exception must name the smallest practical diagnostic selector and span.
-A line-local ignore of a whole standard, category or sniff is still broad.
-Reasons must identify the actual foreign contract, behaviour or reproduced
-checker limitation; a comment alone does not establish acceptance. Retain only
-reviewed scope traceable to the owner-accepted policy or PR disposition.
-File-wide or directory-wide allowances require evidence for that entire scope,
-including the future code they admit; prefer exact message codes over disabling
-unrelated declarations along with a justified variable or signature exception.
+Runtime/templates retain applicable input, escaping, nonce, SQL and localisation
+checks. Standalone/CLI code omits only demonstrably inapplicable framework rules;
+Composer packaging alone does not prove independence. Tests retain conventions/
+compatibility with justified lifecycle/global/CLI/synthetic allowances, not helper
+exemptions. Compatibility and analysis prove different properties.
 
-Regression controls must exercise the real locked checker: accepted exceptions
-remain valid while violations outside their scope still fail. Annotation guards
-must account for the directive forms the checker actually accepts, including
-case variants. Rule-level exclusions, severity changes and inherited profiles
-must not silently defeat those controls. Extend existing tests and manifests;
-do not introduce a second ruleset interpreter or a permanent exemption registry.
+Coordinate API renames across declarations, implementations, callers, named
+arguments, registered callbacks/strings, tests and documentation. Certify connected
+exact revisions; update compatibility declarations and genuine pins before release.
+PHP renames do not authorize hook/wire/JSON/persisted-schema changes. Coexistence
+aliases require mixed-version need/removal condition. Do not repeat completed work.
 
-#### Exceptions and native operations
+<a id="exceptions-and-native-operations"></a>
 
-Use ordinary PHPCS annotations and existing ruleset comments under the
-[reviewed-exemption requirements](#default-coverage-and-reviewed-exemptions).
-Re-enable checks after bounded disabled regions. Blanket all-rule suppressions
-are not permitted in maintained code; intentionally malformed fixture bytes
-need an explicit fixture boundary. An exceptional identifier in an intentional
-negative fixture must be necessary for the tested contract; it does not relax
-production naming.
+## Exceptions require review
 
-| Disposition | Evidence required |
-| --- | --- |
-| Shared policy | A reviewed, transferable rule for a defined code surface, documented in the existing shared standard and covered by representative tests. Repetition alone does not justify a global waiver. |
-| Required local exception | A concrete foreign contract or behavioral invariant, precise rule/span and relevant source/test evidence. Keep product-specific settings and exceptions local. |
-| Checker limitation | Reproduce the incorrect diagnostic with the locked checker and retain a focused regression example where practical. |
-| Temporary debt | An ordinary bounded issue with an owner and removal condition. Tracking debt does not itself satisfy acceptance or turn it into permanent policy. |
+Use ordinary annotations/ruleset comments and existing PR/issue decisions. Every
+exception needs the smallest practical diagnostic/span, concrete reason and
+traceable reviewed scope. A comment or green checker is not acceptance.
+Category/sniff ignores remain broad even on one line. Whole-file/directory
+allowances need evidence for their entire scope, including future code. Re-enable
+bounded disables; blanket all-rule suppression is forbidden in maintained code.
+Malformed/negative fixtures need intentional boundaries and necessary identifiers.
 
-Unresolved justification is unfinished acceptance work. Before the next-beta
-decision, establish the reason, fix the violation, or obtain an explicit owner
-disposition that records a remaining limitation rather than claiming full
-acceptance. Remove obsolete annotations and correct explanations that do not
-match the suppressed rule. Do not mechanically remove defensive behavior.
+Maintained-file analysis exemptions require explicit owner disposition; expose
+new/widened exemptions in PR acceptance summaries. Reproduce checker limitations
+with locked tools/focused controls where practical. Temporary debt needs owner/
+removal condition, not automatic acceptance. Resolve justification, fix violations
+or obtain explicit recorded limitations before acceptance. Remove stale annotations,
+not defenses. Shared waivers require reviewed applicability/representative tests;
+repetition alone is insufficient. Project-specific exceptions remain local.
 
-- Native filesystem calls are permitted where locking, atomicity, identity
-  checks or private-file handling require their semantics. Name the invariant;
-  do not exempt an entire alternative-functions category for a few operations.
-- Native JSON encoding may implement a defined serialization contract. Explain
-  required flags, error behavior, byte identity or framework independence and
-  reuse relevant tests; the word "deterministic" alone is not evidence.
-- Internal exception payloads are not HTML output. Preserve diagnostic data and
-  escape at rendering boundaries; any approved exception-message allowance
-  must leave actual output checks intact.
-- Base64 for authentication or an opaque protocol value is permitted where
-  purpose and input boundaries are established; encoding is not itself proof
-  of executable-code obfuscation.
-- Read-only navigation need not acquire a nonce merely to silence a sniff.
-  Verify the path does not perform a protected mutation, validate its input,
-  and preserve any required capability or access check.
-- SQL and output exceptions require source/behavioral evidence at their real
-  boundaries. A checker that does not recognise a database receiver or cannot
-  trace a rendered fragment cannot certify that operation by reporting zero.
+Preserve these behavioral boundaries:
 
-#### Reuse existing tools and protect the agreed contract
+- Filesystem exceptions establish exact locking, atomicity, identity/private-file
+  needs, not whole alternative-functions categories.
+- JSON exceptions establish flags, errors, byte identity/framework independence;
+  “deterministic” alone is insufficient.
+- Internal exception data is not HTML: escape at rendering boundaries and retain
+  output checks. SQL/output exceptions require source/behavior evidence when
+  checkers cannot trace receivers/fragments; zero diagnostics cannot certify them.
+- Authentication/opaque-protocol Base64 needs purpose/input boundaries; encoding
+  alone is not executable obfuscation.
+- Read-only navigation need not gain a nonce; validate input, preserve capability/
+  access checks and perform no protected mutation.
 
-Implement these decisions with the existing shared package, upstream sniffs,
-Composer commands, PHPCS/PHPCBF, PHPCompatibility, PHPStan, repository tests and
-CI. Extend existing coverage, naming and parity guards for demonstrated gaps.
-Use actual checker file discovery and existing manifests where available.
-Representative negative controls must detect newly unchecked maintained PHP,
-unjustified broad exclusions (including inherited configuration), blanket or
-legacy suppressions, and owned violations outside earlier naming cohorts.
-Local, CI and fixer coverage must agree; repeated fixes must be stable.
+<a id="lockfiles-and-toolchains"></a>
+<a id="shared-package-versions-consumer-upgrades-and-live-advisories"></a>
 
-This is not a request for a generic ruleset interpreter, policy service,
-dashboard, custom annotation language, per-file registration framework or a
-second enforcement engine. A new sniff/helper or public profile requires a
-demonstrated gap or reusable need that existing tools cannot adequately cover,
-and the smallest practical implementation. Shared abstractions need actual
-consumers. Existing behavior tests may establish multiple exception reasons;
-do not require a new test, issue or approval process for every annotation.
+## Reproducible inputs and upgrades
 
-Keep decisions in existing standards documentation/rulesets, concise local
-reasons in source, and temporary work in ordinary issues. The audit ledger is a
-migration/review aid, not a permanent registry to maintain alongside the code.
-Group repeated cases by rule and invariant while preserving occurrence-level
-traceability during review. Existing review and release procedures suffice.
+Track required lockfiles; missing locks fail rather than resolve new graphs.
+Validate Composer strictly before installation. Align declared/CI toolchains;
+pnpm must exactly match `packageManager`. Pin shared workflows/third-party Actions
+to full immutable SHAs; tags are discovery labels, not execution references.
 
+Prefer compatible released packages or owner-accepted immutable Git revisions
+in manifests/locks. Review changed surfaces, support floors, resolved graph and
+coupled contracts; update manifests/locks together and qualify exact consumer
+local/CI/host/archive gates. Record before/after identities, affected rules,
+exceptions and evidence in existing PRs. Package CI does not certify consumers.
+Review needed releases/advisories promptly; no uniform versions, automatic
+estate bumps or fixed upgrade cadence is implied.
+
+Preserve adopted blocking `composer audit --locked --no-interaction`. Lookup
+failure is unavailable evidence: retry the same locked candidate, not claim
+security. Advisory waivers need narrow owner approval; exclusions, fail-open
+behavior, relocation/removal need policy review and CI evidence. No new audit
+is imposed where none was adopted.
+
+<a id="ci-contract"></a>
+<a id="enforcement-integrity"></a>
+<a id="rollout-and-enforcement"></a>
+
+## CI evidence and enforcement
+
+CI uses minimal permissions, credential-free project execution unless an operation
+requires credentials, immutable Actions and fixed profile commands without
+arbitrary-command/skip inputs. Applicable shared diagnostic contexts plus terminal
+`quality` must cover every required lane and fail unless all succeed. Retired
+PHP-v1 status is not a required check. [Workflow contracts](QUALITY_WORKFLOWS.md)
+describe implementation and limits.
+
+Status names do not prove authority. Organisation enforcement needs an
+organisation-controlled required workflow **and** integrity of its complete
+transitive contract: aggregates/dependencies/locks, configurations, helpers/tests,
+caller topology and identity inputs. Prefer organisation-owned execution;
+alternatively require independent maintainer/code-owner review authors cannot
+self-satisfy, dismissing stale approvals or requiring latest-push approval.
+Identify each repository's actual delegated surface.
+
+Until both boundaries are protected, verification evidence is not the sole
+organisation merge-security boundary. Prove/version the baseline with Starter/
+Booster parity gaps recorded, migrate/qualify repositories, then activate rulesets
+only for ready targets. Do not block unmigrated repositories prematurely.
+The [registry implementation](../../quality-enforcement/README.md) is dormant
+pending #31/#139 decisions, not active protection.
+
+<a id="review-standard"></a>
+<a id="reuse-existing-tools-and-protect-the-agreed-contract"></a>
+<a id="qualification-and-release-boundaries"></a>
 <a id="delivery-order-and-ownership"></a>
 
-#### Qualification and release boundaries
-
-Transferable shared rules must qualify the same candidate against both Core and
-Starter before publication, as required by the shared package's existing guidance.
-Starter is bounded compatibility qualification here, not wider-estate rollout.
-Adopt the genuine qualified version across Booster before wider-estate adoption;
-shared-package changes alone do not establish consumer acceptance. Record exact
-revisions, checked scope, accepted exceptions and verification in the
-[acceptance record](PHP_QUALITY_MATRIX.md) and repository PRs.
-
-Keep mechanical standards cleanup separately reviewable from behavioral,
-security and type changes. Preserve #127's recorded level-5 next step, explicit
-level-6–8 sizing and stronger existing consumer gates; this policy does not
-change their required levels. The next-beta decision requires separate standards
-and analysis verdicts. Merge/publication and deferred installed/manual/UI
-acceptance remain separate owner decisions.
-
-Temporary sequencing, overlapping declarations and implementation claims stay
-in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
-[#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
-[#128](https://github.com/RocketsAreNostalgic/.github/issues/128).
-
-## JavaScript and TypeScript
-
-WordPress-facing JavaScript and TypeScript should derive from the official `@wordpress/eslint-plugin` baseline.
-
-The shared RAN ESLint configuration may add organisation-wide rules, compatibility defaults, or common ignores. Repository-local configuration remains responsible for:
-
-- browser, Node, worker, test, and build environments;
-- runtime globals such as `wp`, `jQuery`, or `$`;
-- React or TypeScript applicability;
-- project source globs;
-- generated and vendor paths;
-- justified project-specific rule exceptions.
-
-ESLint configuration should use the current configuration model supported by the repository's declared ESLint generation. Legacy repositories may migrate configuration shape separately from application refactoring.
-
-## Prettier
-
-Prettier is the standard formatter for supported frontend and text formats unless a documented incompatibility exists.
-
-WordPress projects should derive formatting from `@wordpress/prettier-config` through the shared RAN frontend-quality package. RAN should not duplicate WordPress formatting decisions without an intentional organisation-level reason.
-
-Repositories may add local format overrides only where file type, generated output, embedded syntax, or another concrete project requirement demands them.
-
-## CSS and SCSS
-
-WordPress CSS and SCSS should derive from the official `@wordpress/stylelint-config` baseline through the shared RAN frontend-quality package.
-
-The shared configuration may provide separate CSS and SCSS exports and may adopt organisation-wide additions only after they have been shown to work across representative repositories.
-
-Repository-local Stylelint configuration remains responsible for:
-
-- CSS versus SCSS applicability;
-- source globs;
-- browser-support policy where project-specific;
-- generated/vendor exclusions;
-- project-specific selector or framework exceptions.
-
-Preferences that exist only in the starter or one plugin are not organisation standards until deliberately adopted here.
-
-## EditorConfig
-
-Maintained repositories should carry a local `.editorconfig` because editors consume it directly and GitHub does not provide organisation inheritance for EditorConfig.
-
-RAN should keep a reference baseline aligned with its formatter decisions. Local differences should be limited to project file types, generated files, or other concrete project constraints.
-
-## Lockfiles and toolchains
-
-Where supported by the ecosystem:
-
-- install from tracked lockfiles in local development and CI;
-- fail the shared quality lane when a required lockfile is absent rather than allowing the package manager to resolve a new graph;
-- validate Composer configuration strictly before installation;
-- keep declared Node, package-manager, Composer, PHP, WordPress, and other toolchain constraints aligned with CI and documentation;
-- for pnpm repositories, the version executed by shared CI must exactly match the version declared in `packageManager`;
-- shared RAN packages must arrive through lockfile changes reviewed in the consuming repository;
-- shared RAN workflow callers must execute an immutable full commit SHA, so a workflow change reaches consumers through an explicit reviewed update rather than a moved branch or tag;
-- third-party Actions in shared workflows must be pinned to immutable full commit SHAs.
-
-Human-readable release tags may be recorded beside immutable SHAs for provenance and upgrade discovery, but a mutable tag is not the execution reference.
-
-## Canonical command contract
-
-Repositories should expose predictable aggregate quality commands where the relevant ecosystem exists.
-
-### Node and frontend projects
-
-The repository's authoritative package manager must expose a script named `check`. Invoke it with that repository's package manager, for example `pnpm check`, `npm run check`, or `yarn check`.
-
-For maintained RAN Node/package-managed repositories, pnpm is the organisation house style unless a concrete repository-specific constraint justifies another manager. For a pnpm repository, `pnpm check` means: run the ordinary deterministic Node/frontend source-quality baseline for the repository.
-
-The aggregate must include every applicable deterministic formatter, linter, type check, unit/asset test, and tracked generated-artifact freshness check that can run in a standard isolated CI environment without privileged mutation, deployment credentials, external service availability, or a purpose-built destructive/integration environment.
-
-A check may remain outside the aggregate only when it objectively requires one of those non-standard environments or is specifically a release/publication/deployment proof. That exclusion must be documented in the repository contract, and if the check is required for ordinary merge approval it must still feed the terminal CI `quality` gate.
-
-A repository may not omit an applicable ordinary deterministic check merely by declaring it outside the aggregate.
-
-The current shared RAN Node workflow is pnpm-specific because that matches the maintained RAN Node estate and house style. A maintained non-pnpm repository must have a concrete reason to retain its package manager and must use an equivalent local or future manager-specific shared lane as a justified difference; package-manager diversity alone is not a reason to avoid normalization.
-
-### Composer/PHP projects
-
-A Composer repository must expose `composer check` as its ordinary deterministic PHP source-quality baseline.
-
-The aggregate must include every applicable deterministic PHP formatter check, PHPCS/WPCS check, PHP compatibility check, unit/characterization/contract test suite, static-analysis gate, and other ordinary source-quality check that can run in a standard isolated CI environment.
-
-Shared PHP CI additionally validates Composer configuration strictly and performs an independent PHP syntax sweep. These checks need not be duplicated inside `composer check` when the shared profile lane already guarantees them.
-
-As with frontend checks, exclusions are limited to concrete environment, privilege, destructive-integration, release, publication, or deployment requirements; they must be documented, and ordinary merge-required checks must still feed the terminal CI `quality` gate.
-
-Repositories may retain focused commands such as `composer test`, `composer standards`, package-manager lint/format commands, integration tests, Plugin Check, archive validation, or targeted compatibility proofs. Aggregate commands do not replace focused evidence required by `AGENTS.md` or CI.
-
-#### PHP command meanings
-
-Maintained Composer repositories adopt the following names during their next
-bounded quality migration. Commands are required only where the corresponding
-surface applies; do not add empty scripts to claim compliance.
-
-| Command | Contract |
-| --- | --- |
-| `composer check` | Non-mutating aggregate of all applicable ordinary source-quality checks. |
-| `composer lint:syntax` | Independent PHP parser sweep; any parser failure makes the command fail. |
-| `composer standards` | PHPCS/WPCS and PHPCompatibility through the applicable shared profile. |
-| `composer standards:fix` | PHPCBF using the same rules and source selection as `standards`. |
-| `composer analyze` | Static analysis with documented paths, level and blocking/advisory status. |
-| `composer test` | Aggregate of ordinary deterministic package tests, including applicable local workflow/contract tests. |
-| `composer check:host` | Additional required checks needing an exact certified external host checkout. |
-| `composer test:integration` | Tests needing a purpose-built WordPress, database or equivalent integration environment. |
-
-`test:*` and other focused product commands remain useful. Existing names may
-remain as documented aliases where a concrete caller needs them; new workflow
-and contributor instructions use the canonical names. Record removed names and
-their replacements. Do not retain aliases solely to avoid finishing a migration.
-
-`check`, `standards`, `analyze` and `test` must not rewrite source. Syntax runners
-must propagate failures and handle source filenames safely. An interpreter or
-file-discovery failure must not silently become a successful empty sweep. Check
-and fix commands must agree on scope, and repeated formatting must be stable.
-Required failures must propagate through aggregates and terminal CI `quality`.
-
-When implementation tests or analysis genuinely need Booster-owned contracts,
-the repository may keep `check` host-independent and expose `check:host` as an
-additional required aggregate. Document the host revision and setup, verify the
-certified checkout in CI, and keep every required host lane in terminal
-`quality`. Do not add the whole host as a production dependency or silently use
-an arbitrary sibling checkout. A host requirement is a concrete environment
-exception, not permission to omit independent ordinary tests or analysis.
-
-Report analysis strictness together with analysed paths and enforcement status.
-Symbol-discovery paths are not analysis coverage. Command renaming does not
-authorise lowering an existing floor, silently promoting an advisory pilot, or
-removing defensive runtime checks. Changes to levels, coverage requiring source
-edits, or enforcement need their own reviewed evidence.
-
-#### Shared-package versions, consumer upgrades and live advisories
-
-A shared-quality package version is a consumer input, not an automatic change to
-every repository. Record the package's published tag or immutable Git commit and
-the exact resolved consumer lockfile revision. Prefer a released compatible
-version for packages with a release channel; where an owner has accepted Git
-distribution, pin a full immutable commit in the manifest and lockfile. A
-branch name, moving tag or floating `dev-main` constraint alone is not proof of
-the installed revision. Existing floating constraints are inventory for the
-next consumer upgrade, not a reason to silently rewrite another owner's lock.
-
-For each proposed upgrade, the consumer owner should:
-
-1. Identify the changed package surface, new version or commit, affected
-   consumers, and whether the change is a quality-only tool update or changes a
-   runtime/host contract. Observe upstream release and advisory information
-   when selecting the candidate; do not update solely to make versions uniform.
-2. Update the consumer manifest and lockfile together where applicable, inspect
-   the resolved dependency graph and retain the declared PHP/WordPress support
-   floor. For a frontend package, update the package-manager lock and verify
-   the resolved immutable Git revision or registry version.
-3. Run strict manifest/lock validation, locked installation and the affected
-   local quality commands, then qualify the exact candidate with the consumer's
-   required CI matrix and terminal `quality` status. Retain any certified host,
-   installed WordPress, artifact and release-contract checks that apply.
-4. Record before/after resolved versions or commits, lockfile diff, affected
-   rules or behavior, exceptions, exact PR/head, and required run results in the
-   consumer's existing issue or PR. Coordinate coupled API/dependency changes
-   across owners before merging. A successful package CI run alone does not
-   certify consumers; merge of a quality upgrade does not itself publish a
-   package or release a plugin.
-
-Review upgrades when a compatible release, advisory or needed baseline change
-arrives, and as part of a consumer's bounded quality work. Security-related
-updates should be triaged promptly with the relevant owner. No estate-wide
-automatic version bump, fixed calendar cadence or uniform dependency version is
-implied by this policy.
-
-A live `composer audit --locked --no-interaction` queries changing advisory
-data and can fail because of an advisory or a lookup failure. Preserve an
-adopted blocking audit's command, exit status and path to terminal `quality`;
-report a lookup outage as unavailable evidence, not a clean security result.
-Retry the same locked candidate when service returns. A reviewed waiver of an
-advisory must be narrowly scoped, explained and approved by the affected owner;
-a new audit exclusion, fail-open fallback, relocation or removal needs explicit
-policy review and corresponding CI evidence. A passing locked source check does
-not guarantee a later live audit result. This policy does not impose a new audit
-on repositories that have not adopted one.
-
-The dated [acceptance record](PHP_QUALITY_MATRIX.md#retained-tooling-and-audit-decisions)
-records bounded consumer decisions and links the historical audit inventory.
-
-#### Adoption and role-based exceptions
-
-The source-quality programme is tracked in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
-with the initial command contract in [#66](https://github.com/RocketsAreNostalgic/.github/issues/66).
-Subsequent Profile B consumer PRs may combine command names, retained-check
-wiring, syntax reliability and matching documentation with release migration.
-Record the before/after check mapping and satisfy both sets of acceptance
-criteria. New analyzers, higher levels, advisory-to-blocking promotion and broad
-style/formatter changes remain separately reviewable. The first Profile B proof
-does not depend on completing this quality programme.
-
-Workbench and fixture repositories are purpose-based exceptions to uniform
-Composer command adoption. Preserve their useful local checks and fixture
-interfaces; change a fixture only for a concrete tested-contract need and
-identify affected consumers. Do not rename fixture scripts for symmetry.
-Applicable security requirements still apply. Inactive/deferred repositories
-retain their recorded dispositions; command policy does not reactivate them.
-
-The [acceptance record](PHP_QUALITY_MATRIX.md#earlier-accepted-slices) links the initial adoption evidence.
-Its observations describe migration state, not permanent exceptions or proof
-that unexecuted checks pass. Shared rules, runtime ranges and local security/API
-exceptions retain their existing ownership until separately reviewed.
-
-## CI contract
-
-RAN provides reusable GitHub Actions workflows for common source-quality profiles. Repository workflows may call those workflows and add project-specific jobs.
-
-Shared organisation workflows must:
-
-- use minimal permissions;
-- pin third-party Actions to immutable full commit SHAs;
-- check out without persisted Git credentials before project-controlled commands run;
-- require the profile's tracked lockfiles before installation;
-- enforce exact package-manager identity where the profile defines one;
-- invoke a fixed profile contract rather than accept caller-supplied arbitrary commands or skip flags.
-
-Consumers must pin the reusable RAN workflow itself to an immutable full commit SHA.
-
-Migrated maintained repositories should expose two distinct diagnostic/local evidence surfaces:
-
-1. the applicable profile-specific shared status, such as `baseline / RAN WordPress Plugin Quality`, the PHP-v2 floor/current contexts (for example `baseline / PHP 8.2 floor` and `baseline / PHP 8.5 compatibility`), or `baseline / RAN Node Quality`; and
-2. a local terminal job named exactly `quality`, showing that every shared and project-specific lane required for ordinary merge approval succeeded.
-
-The retired PHP v1 context `baseline / RAN PHP Library Quality` is historical only and must not be configured as a current required check.
-
-These displayed statuses are useful evidence, but they are **not by themselves unforgeable merge-protection guarantees**. A pull request may be able to edit its caller workflow, aggregate script, quality-tool configuration, or a helper invoked by that aggregate.
-
-The terminal job must depend on all locally required lanes and fail unless each required dependency succeeds. Project-specific jobs may be stricter than the organisation baseline and remain mandatory through this terminal gate.
-
-### Enforcement integrity
-
-Before organisation ruleset enforcement is enabled for a quality profile, both of these boundaries must be protected:
-
-1. **Workflow identity.** An organisation or enterprise ruleset must require an organisation-controlled workflow so a target-repository pull request cannot replace it with a look-alike status/job.
-2. **Quality-contract integrity.** The authoritative checks executed by that required workflow must not be weakenable solely through an unreviewed change in the target pull request.
-
-Quality-contract integrity should be achieved in one of two ways:
-
-- **Organisation-owned execution (preferred end state):** the required workflow owns the authoritative commands/configuration, including versioned shared RAN standards, independently of PR-editable aggregate definitions. Repository `composer check` and package-manager `check` commands remain the normal local developer interface but are not the sole authority for the required organisation gate.
-- **Protected consumer contract (transitional path):** changes to the complete transitive consumer quality contract require independent maintainer/code-owner approval that the pull-request author cannot self-satisfy. Stale approvals must be dismissed, or approval of the most recent reviewable push must be required, so later commits cannot silently weaken the reviewed contract.
-
-The protected transitive contract includes, as applicable:
-
-- `composer.json` / `package.json` aggregate scripts and quality-tool dependencies;
-- relevant lockfiles where changing the resolved quality-tool graph can alter the gate;
-- PHPCS/WPCS, PHPCompatibility, PHPStan, ESLint, Prettier, Stylelint and test-runner configuration;
-- scripts/configuration transitively invoked by aggregate commands;
-- caller/local quality workflow files that determine which product-specific checks feed terminal `quality`.
-
-Because aggregate commands can delegate to repository-specific files, each migrated repository must identify the actual transitive surface rather than assuming the manifests alone are sufficient.
-
-Until workflow identity **and** quality-contract integrity are both protected, reusable RAN profiles provide deterministic verification evidence but must not be configured or described as the sole organisation merge-security boundary.
-
-## Quality profiles and applicability
-
-A profile requirement is mandatory when its triggering code surface exists. A repository may only omit it through the narrow documented-exception process above.
-
-### `wordpress-plugin`
-
-Required gates:
-
-- when maintained PHP exists: strict Composer validation, PHPCS/WPCS, PHP compatibility against the declared supported range, independent PHP syntax validation, and static analysis;
-- when maintained JavaScript or TypeScript exists: the applicable WordPress-derived ESLint baseline and deterministic formatting;
-- when maintained CSS or SCSS exists: the applicable WordPress-derived Stylelint baseline and deterministic formatting;
-- when behavioural production code exists: automated behavioural tests at the narrowest practical layer;
-- when inherited or compatibility-sensitive behaviour exists: characterization or contract coverage where that is the most reliable regression boundary;
-- when tracked generated runtime assets exist: deterministic freshness/parity verification;
-- when tracked translation templates or generated localisation artifacts exist: deterministic localisation parity/freshness verification;
-- when an installable plugin archive is part of the supported distribution contract: deterministic archive construction/content/integrity verification feeding `quality`;
-- when deployable runtime plugin code exists: at least one clean install/activation smoke proof, with broader WordPress/PHP/database matrix coverage where materially different supported boundaries require runtime proof;
-- when the repository targets WordPress.org: applicable Plugin Check evidence;
-- tracked lockfiles and locked installs for every package ecosystem that supports them;
-- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before either is relied on as an organisation merge control.
-
-A concrete environment or legacy constraint may temporarily defer one of these gates only through the documented-exception or `legacy` process. A missing test/static-analysis/runtime proof is not automatically non-applicable merely because the repository does not currently have it.
-
-### `php-library`
-
-Required gates:
-
-- strict Composer validation and deterministic installation;
-- the applicable shared RAN PHP coding standard;
-- PHP compatibility against the declared supported range;
-- independent PHP syntax validation;
-- static analysis for maintained production PHP;
-- automated tests for behavioural production code;
-- characterization/contract tests where inherited or compatibility-sensitive public behaviour warrants them;
-- a tracked Composer lockfile for reproducible RAN development/CI;
-- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before organisation enforcement.
-
-### `node`
-
-Required gates:
-
-- ESLint for maintained JavaScript/TypeScript source;
-- Prettier or the documented organisation formatter for supported source formats;
-- automated tests for behavioural production code;
-- Stylelint when maintained CSS/SCSS exists;
-- tracked package-manager lockfile and locked installation;
-- an authoritative package-manager `check` script implementing the deterministic aggregate contract;
-- exact declared package-manager execution where the shared profile supports it;
-- profile-specific shared evidence plus terminal local `quality`, with enforcement integrity established before organisation enforcement.
-
-### `mixed`
-
-Uses every applicable mandatory gate from the constituent PHP and Node/WordPress surfaces rather than choosing only one side.
-
-### `fixture`
-
-Only checks necessary to preserve and validate the documented fixture contract are required. The repository must identify itself as a fixture and document why production-profile gates that would alter the fixture are not applicable.
-
-A fixture must not be made production-like if doing so changes what it is intended to test.
-
-### `legacy`
-
-A temporary migration classification for a maintained repository that does not yet conform to its target profile. The repository must identify the target profile and the known baseline gaps. New changes must not introduce additional avoidable quality debt merely because migration is incomplete.
-
-Migration should be staged so tooling changes are not unnecessarily mixed with unrelated application refactoring.
-
-## Shared-package boundaries
-
-The RAN PHP shared standard should own only organisation-wide PHP rules and deviations. It must not contain repository prefixes, namespaces, text domains, runtime support ranges, fixture-specific suppressions, or mature-project compatibility exceptions.
-
-The RAN frontend-quality package should expose independent ESLint, Prettier, Stylelint CSS, and Stylelint SCSS entry points. A repository should install only the parts it needs.
-
-Shared standards must have their own tests or fixtures and an independent release lifecycle. Runtime libraries such as `ran-plugin-library` are not the canonical home for coding policy.
-
-## Review standard
-
-When a review finding may affect other repositories, record the sibling
-repositories or code surfaces checked, their evidence and dispositions, and
-owners of remaining work in the existing issues or PRs. Do not create a separate registry or
-framework for this record.
-
-Code review should treat the following as defects when the applicable profile or triggering code surface requires them:
-
-- missing or bypassed applicable quality tooling;
-- a local config that silently weakens the shared RAN baseline without a narrow documented exception;
-- project-specific settings embedded in a supposedly shared organisation config;
-- broad suppression used instead of excluding generated/vendor code or documenting a narrow exception;
-- runtime support declarations that disagree with compatibility checks;
-- missing or ignored lockfiles where deterministic locking is required;
-- a package-manager version that disagrees with the repository's exact declared toolchain;
-- an authoritative package-manager `check` script or `composer check` that omits an applicable ordinary deterministic gate;
-- missing static analysis for maintained production PHP without a reviewed exception or legacy classification;
-- missing package/archive or install/activation proof where the product profile triggers it;
-- a merge-required focused check that does not feed the terminal local `quality` job;
-- a repository emitting terminal `quality` while using the wrong or weaker profile-specific shared workflow;
-- treating a consumer-controlled status name as proof that the organisation-owned workflow executed;
-- relying on a ruleset-required wrapper while the authoritative aggregate/configuration it delegates to can be weakened solely through an unreviewed pull-request edit;
-- failing to protect/document the complete transitive quality-contract surface when using protected-consumer-contract enforcement;
-- CI that runs materially different checks from the documented local contract without explanation;
-- documentation that weakens mandatory CI or `AGENTS.md` requirements;
-- a reusable organisation workflow or third-party Action referenced through a mutable branch or tag instead of an immutable full commit SHA;
-- project-controlled CI commands running with persisted checkout credentials without a documented operational need;
-- removal of an already-adopted test, static-analysis, runtime, or compatibility gate without an explicit reviewed decision.
-
-Repository-specific wording, source paths, supported versions, tool versions, test topology, runtime globals, prefixes, namespaces, text domains, and justified compatibility exceptions may differ where they reflect the actual project contract.
-
-## Rollout and enforcement
-
-Organisation enforcement follows this order:
-
-1. define the standard;
-2. implement and version shared configurations and reusable source-quality workflows;
-3. prove the standard in the clean Starter reference and compare it against the Booster high-water reference;
-4. record any justified Starter/Booster parity gaps before declaring the baseline stable;
-5. migrate maintained repositories through reviewable PRs;
-6. verify the profile-specific shared evidence and terminal `quality` results across representative repositories;
-7. establish an organisation-controlled required workflow for each enforced profile;
-8. establish quality-contract integrity through organisation-owned authoritative execution/configuration or independently protected review of each consumer's complete transitive quality contract;
-9. only then enable organisation rulesets for repositories that already conform.
-
-Organisation rules are the minimum. Individual repositories may impose stronger checks, and the baseline must not be used as a reason to remove them.
-
-No repository should be made non-mergeable merely because an organisation rule was enabled before that repository had been migrated and its workflow-identity and quality-contract-integrity boundaries were ready for enforcement.
+## Review and qualification
+
+Reviewers reject missing/bypassed gates, weakened scope/support, unjustified
+exceptions, local/CI mismatches, non-reproducible inputs and unprotected authority.
+Automation does not replace exception judgment, owner acceptance or installed/
+manual/UI evidence. Standards/analysis need separate verdicts; merge/publication
+remain separate decisions. Follow the repository's documented approval process;
+Ben retains specific merge/publication decisions for coordinated work in #65.
+
+Transferable findings name checked sibling repositories/surfaces, evidence,
+dispositions and remaining owners in existing issues/PRs. [#136](https://github.com/RocketsAreNostalgic/.github/issues/136)
+records actual gaps/repairs; policy is not a claim of estate-wide enforcement.
+
+Extend existing tools/guards. New helpers/sniffs/profiles need a proven gap or
+reusable need and the smallest practical change; abstractions need actual
+consumers. No second interpreter, per-file registry, annotation language or
+engine. Reuse behavioral evidence across grouped exceptions with occurrence
+traceability, not a new test/issue/approval ritual per annotation. Keep mechanical
+cleanup separately reviewable from behavioral/security/type changes.
+
+Shared-standard publication requires the **same exact candidate** qualified
+against Core and Starter; qualify Booster adoption before wider-estate rollout.
+Record revisions, scope, accepted exceptions and checks in existing PRs/#65.
+Mechanism changes update affected guidance/evidence in the same PR or record
+cross-repository follow-up; unrelated commits do not invalidate scoped evidence.
+Temporary sequencing remains in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65).

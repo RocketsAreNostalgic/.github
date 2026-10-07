@@ -523,76 +523,51 @@ starter into a security-monitoring platform.
 
 ## 8. Qualification and handoff
 
-G0 froze the recipe, schema/map, clean initial-only V3 host cut, passive
-origin/adoption security boundary and exact examples. No provider or producer
-release on a merely opened PR. Current ownership is recorded in
-[#81](https://github.com/RocketsAreNostalgic/.github/issues/81), coordinated with
-[#65](https://github.com/RocketsAreNostalgic/.github/issues/65). Keep one writer
-for overlapping #55/#56 pack schema/templates/build/CI, and coordinate the narrow
-Core integration and its evidence. Release proposals and dependency adoption
-remain separate from feature preparation; preserve existing branch ownership.
+G0 freezes the recipe, schema/map, initial-only V3 host boundary, passive adoption
+security and examples. Coordinate current ownership in
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81) and
+[#65](https://github.com/RocketsAreNostalgic/.github/issues/65): one writer for
+#55/#56 pack schema/templates/build/CI, coordinated Core integration, preserved
+branch claims. An opened PR does not authorize provider/producer publication.
 
-G1 uses named exact provider, producer and Core candidate SHAs, actual ZIP digest,
-independent/native ZIP negatives, plugin/theme output, safe initial setup and
-inert removed operations. Preserve existing meaningful PHP/Node/host/analysis
-checks with a before/after retained/replaced/deleted map. Do not replace host
-certification pins merely to make a test green.
+G1 requires exact provider, producer and Core candidate SHAs, actual ZIP digest,
+independent/native ZIP negatives, plugin/theme output, safe setup and inert removed
+operations. Preserve meaningful PHP/Node/host/analysis gates with a
+retained/replaced/deleted map; never replace host-certification pins to get green.
 
-G2 records real release/adoption order and actual versions before mutation:
-complete provider release -> Core adoption of that released version plus initial
-UI/caller changes -> Core archive/quality/release proof -> upgrades on named test
-sites -> complete pack release through #55 -> actual installed feature test.
-Candidate testing may use unpublished exact artifacts; production dependencies
-must resolve. A brief setup-unavailable window is acceptable; no bridge, fake
-release ID or partial public pack is introduced to conceal it.
+G2 records actual versions and order before mutation: complete provider release →
+Core adoption and initial UI/caller changes → Core archive/quality/release proof →
+named-site upgrades → complete pack release through #55 → installed feature test.
+Candidate tests may use unpublished exact artifacts; production dependencies must
+resolve. A brief setup-unavailable window is acceptable, not a bridge, fake release
+ID or partial public pack.
 
-Ben supplies the two disposable-site and plugin/theme fixture repository
-identities and safe mutation authority before live operations. For each supported
-type, prove installed Booster assessment/preview/confirmation/draft-PR readback;
-then, with separately authorized fixture merge/publication, run the generated
-Quality/RP/release path and verify/install the resulting exact immutable ZIP.
-Exercise pre-merge read-only behavior, changed target, setup with incomplete
-execution settings but valid write authority, refusal for missing write permission,
-repeat setup and maintainer edits. Verify actual protected release-PR satisfaction
-for the exact SHA, event and check source; a green dispatched run alone is
-insufficient. Distinguish branch protection from rulesets and unsupported merge
-queues, and return any failure as a narrow evidence-backed qualification amendment.
-At least one non-RAN-default-settings fixture must substantiate external-repository support. Tests on disposable sites meet the
-same production criteria; no results are assumed today.
+Use the [exact exchange and acceptance runbook](BOOTSTRAP_STARTER_EXAMPLES.md#8-exact-test-exchange-and-acceptance-runbook),
+including both plugin/theme fixtures, non-RAN-default settings, pre-merge read-only
+execution, permission/refusal/repeat cases, protected-merge proof and immutable
+ZIP installation. Ben must supply the two disposable-site and fixture repository
+identities and safe mutation authority; fixture merge/publication is separately
+authorized. Disposable tests meet production criteria. Return failures as narrow,
+evidence-backed qualification amendments; do not assume acceptance.
 
-Every implementation and contract amendment receive separate `@codex review` and
-`@codex security review` requests. Resolve all substantive findings on the final
-head. Normal protected merge methods and specific owner approvals remain; Core
-bot release proposals use normal merge commits. No settings/secret/site resets,
-new analysis floors, broad naming changes or Blacksmith AI delegation. The final
-coordinator hands actual evidence to #55/#56/#81/#57/#47; code-ready is not
-installed, published or functionally proven.
+Every implementation/contract amendment receives separate `@codex review` and
+`@codex security review`, with substantive findings resolved on the final head.
+Preserve protected merge methods and specific owner approvals; Core bot release
+proposals use merge commits. No settings/secret/site resets, new analysis floors,
+broad naming changes or Blacksmith AI delegation. Record actual evidence under
+#55/#56/#81/#57/#47; code-ready is not installed, published or functionally proven.
 
 ## 9. Source basis and review status
 
-Audited snapshots (refresh before implementation): `.github`
-`2df8eb927d3d9a43870b4ba039e956e50f41e050`, pack
-`29a194be54c383e91758665d99461017386fe2e8`, provider
-`7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800`, Core
-`0c1ace618331a23e068cec6e54a896c634bc8f76`. These are not release approval or future
-certification pins. Completed .github #83 and Core #176 were documentation-only; their merged heads
-are now the refreshed source baselines for this review.
+G0 was frozen through [#84](https://github.com/RocketsAreNostalgic/.github/pull/84)
+and [#81](https://github.com/RocketsAreNostalgic/.github/issues/81); the linked owner
+clarifications in this document supersede the original settings prerequisites,
+not the schema or host boundary. The [freeze's inspected source references](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/docs/release/BOOTSTRAP_STARTER_CONTRACT.md#9-source-basis-and-review-status)
+are historical provenance, not current implementation or certification pins.
 
-- [Actual shared interface and promotion contract](RELEASE_PROFILE_B.md), backed
-  by `.github/workflows/release-profile-b.yml` at the audited `.github` SHA.
-- [Pack schema](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates/blob/29a194be54c383e91758665d99461017386fe2e8/schema/template-pack.schema.json),
-  `templates/shared/{release-please.yml,build-release.sh,verify-release.sh,upload-release-assets.sh}.tmpl`,
-  `.github/workflows/quality.yml` and `SECURITY.md` at that same pack SHA.
-- [Current mandatory host interface](https://github.com/RocketsAreNostalgic/ran-booster/blob/0c1ace618331a23e068cec6e54a896c634bc8f76/RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php)
-  and `RAN/Admin/ReleaseManagement/ReleaseWorkflowRequestController.php` at that Core SHA.
-- [Provider source](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/tree/7cd2c0624e2a41ccd8c2b1e879ac743eddb8f800/src/ReleaseDeployments/WorkflowAssistance).
-- [GitHub reusable workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows),
-  [workflow permissions](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax),
-  [PR execution security](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target),
-  [security advisories](https://docs.github.com/en/code-security/concepts/vulnerability-reporting-and-management/repository-security-advisories).
-
-**Review status:** G0 is frozen by #84 and #81; the later linked owner decisions
-supersede the original settings-prerequisite wording. Review amendments against
-that boundary rather than repeating G0. Implementation, exact-artifact and
-installed-feature qualification, protected-merge proof and #85 notices/existing
-documentation remain delivery obligations; this document claims none complete.
+[Profile B](RELEASE_PROFILE_B.md#implementation-evidence) links current and
+inspected publisher code/tests. Refresh affected consumer/producer source for
+implementation review rather than treating this frozen recipe as deployment proof.
+Implementation, exact-artifact/installed-feature qualification, protected-merge
+proof and [#85 notices/maintenance](https://github.com/RocketsAreNostalgic/.github/issues/85)
+remain separately evidenced delivery obligations.

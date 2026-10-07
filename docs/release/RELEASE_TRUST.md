@@ -2,499 +2,301 @@
 
 ## Find the release requirement
 
-| Task | Reading path |
+| Task | Read |
 | --- | --- |
-| Assess a release-control change | [Vocabulary](#vocabulary) → [required trust invariants](#required-trust-invariants). |
-| Classify a change or review release-driving metadata | [Release classification](#release-classification) → [PR-derived final commit requirements](#pr-derived-final-commit-requirements). |
-| Implement or operate a publisher | Applicable [Profile A](RELEASE_PROFILE_A.md) or [Profile B](RELEASE_PROFILE_B.md), preserving [repository-specific stronger gates](#repository-specific-stronger-gates). |
-| Verify publication or outstanding owner acceptance | [Readback and reconciliation](#8-readback-and-reconciliation) → [dated release evidence](RELEASE_PUBLISHERS.md) and its [admin readback checklist](RELEASE_PUBLISHERS.md#benadmin-readback-checklist--what-and-why). |
-| Review the release architecture | [Audit questions](#audit-questions) → [audit disposition](#audit-disposition); [source-quality work](#relationship-to-source-quality) has separate ownership. |
+| Review release authority | [Terms](#vocabulary), [invariants](#required-trust-invariants), [manual dispatch](#privileged-manual-dispatch-authority). |
+| Classify release-driving changes | [Release classification](#release-classification). |
+| Implement or operate a publisher | [Profile A](RELEASE_PROFILE_A.md) for source releases; [Profile B](RELEASE_PROFILE_B.md) for tested-asset promotion and recovery. |
+| Find current evidence or owner decisions | [#47 implementation](https://github.com/RocketsAreNostalgic/.github/issues/47), [#57 acceptance](https://github.com/RocketsAreNostalgic/.github/issues/57), [#59 immutability/settings](https://github.com/RocketsAreNostalgic/.github/issues/59). |
 
 ## Purpose
 
-Rockets Are Nostalgic repositories do not need identical release workflows. They do need the same release-trust guarantees wherever those guarantees apply.
+Apply equivalent release-trust guarantees wherever repositories can mutate release
+PRs, tags, releases, assets, deployments or package publications. Release Please
+owns version, changelog, release PR, tag and release lifecycle; Profile B adds exact
+tested-asset promotion. Do not duplicate those mechanisms locally. Stronger
+product-specific evidence remains required.
 
-This policy defines the organisation-level trust invariants for repositories that can create or modify release pull requests, tags, GitHub releases, published build artifacts, WordPress.org deployments, package-registry publications, or equivalent privileged repository state.
-
-The governing principle is:
-
-> Same release-trust guarantees where applicable; not necessarily the same release architecture.
-
-The approved architecture is [Profile A](RELEASE_PROFILE_A.md) for source releases
-and [Profile B](RELEASE_PROFILE_B.md) for promotion of authoritative built assets.
-Release Please owns version, changelog, release PR, tag and release lifecycle;
-Profile B adds exact tested-artifact promotion. Production GitHub releases follow
-the owner-enabled immutable-release baseline. Repository-specific stronger gates
-remain local; shared quality infrastructure produces evidence, not automatically
-release authority.
-
-[Release evidence and remaining acceptance](RELEASE_PUBLISHERS.md) records dated
-implementation, publication and settings proof. Implementation merged, package
-published, consumer adopted, installed composition qualified and owner acceptance
-complete are separate facts. Current coordination belongs to existing
-[#47](https://github.com/RocketsAreNostalgic/.github/issues/47),
-[#57](https://github.com/RocketsAreNostalgic/.github/issues/57),
-[#59](https://github.com/RocketsAreNostalgic/.github/issues/59) and
-[#65](https://github.com/RocketsAreNostalgic/.github/issues/65), not this policy.
+Implementation merged, package published, consumer adopted, installed composition
+qualified and owner acceptance complete are separate facts. This policy supplies
+no merge, publication or acceptance approval.
 
 ### Deterministic test fixtures
 
-The existence of a GitHub release workflow does not by itself make a repository a production release-trust target.
-
-Repositories whose published releases exist solely as deterministic test fixtures are a justified difference when their release state is test data rather than production distribution, production dependency identity, or independent release-authority evidence. Their relevant invariant is that the fixture state is deliberate, reproducible, and matched by the consuming test suite.
-
-A fixture may therefore intentionally model behaviour that would be inappropriate for a production publisher, including mutable release assets, weaker admission settings, unusual release history, or other controlled failure/recovery states. The organisation should not harden those characteristics merely for consistency when doing so would change the behaviour the tests are meant to exercise.
-
-A fixture repository enters the production release-trust audit only when its published state is also used as one of the following:
-
-- production distribution;
-- production dependency or package identity;
-- trusted evidence that authorizes real privileged repository or publication mutation.
-
-If a fixture crosses one of those boundaries, audit the production use separately from its fixture role rather than treating the test fixture label as a blanket exemption.
+A release used solely as deliberate, reproducible test data may intentionally
+model mutable assets, weaker admission or failure/recovery history. Preserve the
+behaviour its consuming tests require. Audit a fixture's production use separately
+if its releases also supply production distribution, dependency/package identity,
+or evidence authorizing real privileged mutation; “fixture” is not a blanket exemption.
 
 ## Vocabulary
 
-### Evidence
-
-Evidence is a result that qualifies a specific source revision or artifact for a later decision. Examples include source-quality checks, package tests, runtime archive verification, compatibility checks, install readback, and release-candidate validation.
-
-Release-relevant evidence should:
-
-- execute against the exact source revision being qualified;
-- use locked dependency manifests where applicable;
-- use appropriately pinned third-party Actions and toolchains;
-- use read-only or otherwise minimal permissions when mutation is not required;
-- never execute untrusted pull-request head code through a privileged `pull_request_target` path;
-- distinguish untrusted PR qualification from trusted `main` or release qualification;
-- fail closed when the expected source identity cannot be established.
-
-A reusable quality workflow may produce baseline evidence. That does not make it a release publisher.
-
-### Evidence inputs
-
-Evidence inputs are files or facts whose change can invalidate existing evidence and therefore require fresh qualification. Typical examples include:
-
-- `composer.json` and `composer.lock`;
-- `package.json` and package-manager lock files;
-- source and build inputs;
-- runtime packaging manifests;
-- generated-runtime manifests or dependency selections;
-- source-quality configuration when it materially changes the qualification contract.
-
-Evidence inputs are not automatically privileged release authority. A dependency manifest can require new evidence without gaining the authority to decide whether repository write permissions may be exercised.
-
-### Release control
-
-Release control is code or configuration that decides whether privileged release mutation is allowed. Typical examples include:
-
-- release workflows;
-- publisher or reconciliation scripts;
-- release-candidate admission logic;
-- logic that decides whether write permissions may be exercised;
-- configuration governing release mutation or promotion.
-
-Changing release control can require a stronger approval or promotion boundary than changing ordinary evidence inputs. Repositories should not collapse evidence inputs and release control into one generic list unless they genuinely require identical treatment.
-
-### Privileged mutation
-
-Privileged mutation is any action that changes trusted repository or publication state, including:
-
-- opening or modifying release pull requests with write authority;
-- creating or moving tags;
-- creating, editing, publishing, or deleting GitHub releases;
-- uploading or replacing release assets;
-- publishing to WordPress.org or another package/deployment registry;
-- modifying equivalent privileged release state.
-
-Privileged mutation must be separated from untrusted PR-head execution. A privileged mutator should consume already-qualified exact evidence rather than treating possession of write credentials as permission to run arbitrary candidate code and decide its own quality.
-
-### Artifact provenance
-
-Artifact provenance is the proof that the bytes published are the bytes that were qualified for the exact release candidate.
-
-For repositories that publish separately built artifacts, the release path should, as applicable:
-
-- build against the exact qualified revision;
-- bind artifact metadata to the candidate commit, tag, and version;
-- verify a cryptographic digest;
-- verify the expected file or asset set;
-- carry the tested artifact across the publication boundary rather than silently rebuilding different bytes;
-- verify the final tag and release target after publication;
-- read back the published asset set and relevant digests;
-- use immutable publication when the repository's release model supports it.
-
-Source-only or library releases may legitimately have no separate packaged artifact. In that case exact source, tag, release-target, and publication identity are the relevant provenance chain.
-
-### External approval or promotion
-
-An external approval or promotion boundary is an authorization mechanism that is not controlled solely by the release-control code being changed in the same repository revision.
-
-Examples can include:
-
-- appropriately configured repository rulesets or path-scoped reviewers;
-- protected environments with required reviewers;
-- an equivalent independently configured policy mechanism.
-
-Use such a boundary when independent authorization is actually intended. Do not simulate an independent principal with a ceremonial follow-up pull request or a repository-controlled self-deferral state machine when no independent principal exists.
-
-A repository is not required to add a human or external approval step merely for consistency. The need for independent authorization is an architectural decision based on the authority being protected.
-
-### Privileged manual dispatch authority
-
-A `workflow_dispatch` run executes the workflow definition from the selected dispatch ref. A condition inside that same workflow such as `github.ref == 'refs/heads/main'` is therefore useful defence in depth against accidental alternate-ref execution, but it is **not** an independent authorization boundary against a principal who can author and execute a different workflow revision.
-
-For a production manual-dispatch path that can acquire repository, release, deployment, registry, or equivalent mutation authority, record one of two explicit models:
-
-1. **Independent execution authority is intended.** A principal or policy outside the workflow revision being executed must approve or enable the privileged mutation. Examples can include a genuinely independent protected-environment reviewer, an external credential broker, or another enforced promotion mechanism that the workflow author cannot unilaterally change or satisfy.
-2. **A single trusted release principal is intentionally accepted.** The principal who can promote trusted release control may also ultimately authorize the manual mutation. In that model, protected/default-branch promotion plus exact qualification can be the intended release boundary, and an inline trusted-ref condition remains accident containment rather than separation of authority.
-
-Do not manufacture a second account, ceremonial approval loop, or repository-controlled self-deferral merely to claim independence. Conversely, do not count ordinary code review, an inline ref condition, or the mere presence of an Environment-scoped secret as independent authorization unless a distinct principal or policy is actually enforced.
-
-Whichever model applies, privileged manual dispatch should still use least-privilege job permissions, preserve exact source/artifact identity, keep historical or release-controlled code away from fresh write authority where practical, read mutation back exactly, and contract-test the intended trusted-ref guard when the operational path is the protected default branch.
-
-`workflow_dispatch` may target a branch or tag, and the selected ref supplies the workflow revision that executes. A trusted-ref guard added only to current `main` therefore does not neutralize older tags or maintained refs that still carry a privileged pre-guard workflow at the same dispatchable workflow path. When hardening a privileged manual workflow after such refs already exist, the repository must either prove those refs are no longer dispatchable or neutralize them without rewriting release history. One accepted pattern is to move the guarded current workflow to a new default-branch workflow path that does not exist in the historical refs, remove the legacy path from current `main`, and contract-lock that absence.
-
-### Repository-specific stronger gates
-
-Product-specific proofs remain owned by the repository that understands them. Examples include:
-
-- Booster runtime-archive composition and dependency-surface policy;
-- WordPress.org deployment contracts;
-- updater runtime-copy selection;
-- package-specific concurrency, race, hard-stop, or installation proofs;
-- release-candidate install readback.
-
-The organisation policy defines common trust properties. It does not replace stronger local contracts.
+- <a id="evidence"></a>**Evidence** qualifies an exact source revision or artifact: source, package,
+  compatibility, archive, installation or release-candidate checks.
+- <a id="evidence-inputs"></a>**Evidence inputs** include source/build files, dependency manifests and locks,
+  packaging/runtime manifests and material quality configuration. Changes require
+  fresh qualification; these inputs do not automatically confer mutation authority.
+- <a id="release-control"></a>**Release control** decides whether mutation is allowed: workflows, publishers,
+  reconciliation/admission logic and promotion configuration. Its approval boundary
+  may be stronger than ordinary evidence-input review; do not conflate them.
+- <a id="privileged-mutation"></a>**Privileged mutation** changes trusted PR, tag, release, asset, deployment or
+  registry state. Credentials alone do not authorize candidate code to qualify itself.
+- <a id="artifact-provenance"></a>**Artifact provenance** proves the published bytes are the bytes qualified for
+  the exact candidate. Source-only releases instead bind source, tag and release identity.
+- <a id="external-approval-or-promotion"></a>**External approval/promotion** is enforced outside the changed release-control
+  revision, for example independent ruleset reviewers, protected-environment
+  reviewers or a credential broker. Add it when the architecture requires independent
+  authorization, not merely to make repositories look alike.
 
 ## Required trust invariants
 
 ### 1. Exact identity
 
-Release-relevant evidence and privileged publication must be bound to an exact revision or candidate identity.
-
-A release path must fail closed rather than infer identity from a floating branch when exact identity is required. If evidence was produced by another workflow or job, the publisher must establish that the evidence belongs to the exact candidate it is about to publish.
+Bind evidence and publication to an exact revision/candidate; fail closed when
+identity cannot be established, rather than inferring it from a floating branch.
+Use locked dependency manifests where applicable. Evidence supplied by another
+workflow must match the expected repository, workflow, event, conclusion, branch
+and SHA; a status name is insufficient.
 
 ### 2. Minimal evidence authority
 
-Quality and evidence-production jobs should be read-only unless mutation is part of the evidence contract itself and cannot reasonably be separated.
-
-Production release workflows start with `permissions: {}` and grant only the
-scopes needed by each mutating job. Where checkout is needed, check out the exact
-admitted SHA, disable persisted credentials and verify identity before executing
-release-controlled repository code.
-
-Pull-request qualification must not give untrusted PR-head code release-write credentials. `pull_request_target` must not be used to execute untrusted head code with privileged authority.
+Evidence jobs should be read-only unless their evidence contract necessarily
+requires mutation. Production release workflows start with `permissions: {}` and
+grant only necessary job scopes. Check out the admitted SHA without persisted
+credentials and verify identity before executing release-controlled code.
+Never give untrusted PR-head code release-write credentials or execute it through
+privileged `pull_request_target`.
 
 ### 3. Separated mutation
 
-Write authority should live in a bounded publication or reconciliation path. The mutator should verify the successful evidence and exact candidate before exercising that authority.
-
-Release-PR reconciliation is distinct from publication authority. Release Please
-may reconcile its managed PR against the target branch; that mutation does not
-qualify tags, assets, release completion or downstream deployment. When consuming
-another workflow's evidence, verify repository, workflow, event, conclusion,
-branch and exact SHA, rather than trusting a status name alone.
-
-A successful PR check and a successful trusted-main qualification are different facts. Repositories may rely on one or both, but the release architecture must state which one actually admits publication.
+A bounded publisher verifies successful exact evidence before exercising write
+authority. Release Please's release-PR reconciliation is not evidence for tag,
+release, asset or deployment mutation. PR qualification and trusted-main
+qualification are different facts; state which admits publication.
 
 ### 4. Release-control changes
 
-Repository-controlled CI cannot be treated as an independent reviewer of changes to its own release authority.
-
-Where independent authorization is required, release-control changes must cross an independently enforced boundary before the changed control can authorize privileged mutation.
-
-Where independent authorization is not required, the repository may use exact trusted-main qualification as its release boundary, provided this is an explicit accepted model rather than accidental self-approval presented as independence.
-
-Existing safeguards should not be removed until the guarantee they provide has been replaced.
+Repository-controlled CI is not an independent reviewer of its own authority.
+Where independence is required, changed control must cross an independently
+enforced approval boundary before authorizing mutation. Otherwise, an explicitly
+accepted exact trusted-main model is valid; do not describe it as independent
+approval. Retain existing safeguards until their guarantees have been replaced.
 
 ### 5. Artifact identity and publication
 
-Repositories publishing build artifacts must prove the identity of the published bytes across build, transfer, and publication boundaries.
+Build against qualified source; bind metadata to commit, tag and version; verify
+the complete expected asset set and cryptographic digests; promote the tested
+bytes across the publication boundary. Privileged rebuild, post-test patch or
+repack is not a substitute. Source-only releases need no artificial ZIP proof.
 
-The production baseline is immutable GitHub releases. Publish a corrected build from freshly qualified source under a new version/tag. A mutable-release exception requires the narrow evidence and owner decision in #59; historical recovery code is not a standing exception. Profile B verifies exact tested asset digests and immutable release readback in its publisher. Release liveness observation does not reproduce those provenance guarantees.
+Production GitHub releases are immutable. Correct a build using freshly qualified
+source and a new version/tag. A mutable exception needs narrow evidence and an
+owner decision in [#59](https://github.com/RocketsAreNostalgic/.github/issues/59);
+historical recovery code is not a standing exception.
 
 ### 6. Repository settings and bypasses
 
-The audit must consider the effective repository settings that underpin the claimed release model, including:
-
-- required pull requests;
-- strict required status checks;
-- required review-thread resolution;
-- required reviewers where used;
-- allowed merge methods where they affect identity assumptions;
-- bypass actors;
-- protected environment rules where used.
-
-A bypass is a release-trust defect when it defeats a boundary the release architecture claims to rely on. It is not automatically a release-trust defect when release admission occurs later through a separate exact trusted-main qualification that the bypass does not skip.
-
-Checked-in release control and effective repository settings must agree. If a publisher requires a bypass-free ruleset, the live ruleset must satisfy that requirement; deleting the publisher's fail-closed check is not an acceptable substitute unless the trust model is deliberately redesigned and documented.
+Inspect effective required PRs, strict checks, resolved review threads, reviewers,
+merge methods, bypass actors and protected environments where applicable. Source
+control and live settings must agree. A bypass is a defect when it defeats a
+claimed boundary; a later independent exact-main admission may still protect
+publication. Do not remove a fail-closed settings check to conceal a mismatch:
+any redesign of the trust model must be deliberate and documented.
 
 ### 7. Third-party action and toolchain identity
 
-Third-party Actions used in release-relevant evidence or privileged mutation should be pinned to immutable commit SHAs. Human-readable version comments may accompany the SHA.
-
-Toolchains and package managers should use exact or appropriately locked versions where drift could change release evidence or artifact output.
+Pin release-relevant third-party Actions to immutable SHAs; version comments are
+optional. Pin or lock toolchains/package managers where drift could affect
+evidence or artifacts. Pin reusable workflow identity where practical.
 
 ### 8. Readback and reconciliation
 
-Publication is not complete merely because a create/upload command returned success.
+A successful API mutation is not completed publication. Verify actual tag target,
+release target/state, required immutability, expected asset names and digests or
+manifest identity, and enabled downstream publication identity. Retries and
+recovery preserve the same guarantees. Downstream deployment uses the canonical
+published artifact; disabled optional WordPress.org deployment cannot block
+canonical qualified GitHub publication.
 
-Where applicable, the publisher should read back and verify:
+### Privileged manual dispatch authority
 
-- tag target;
-- release target and draft/published state;
-- immutable state where required;
-- expected asset names;
-- artifact digests or manifest identity;
-- downstream publication identity where enabled, such as a WordPress.org deployment contract.
+`workflow_dispatch` executes the selected branch/tag's workflow definition.
+An inline `github.ref == 'refs/heads/main'` guard contains accidents; it cannot
+independently constrain a principal able to author and execute another revision.
+Record the accepted model for each production write-capable dispatch path:
 
-Recovery and retry paths must preserve the same identity guarantees as the normal path.
+1. **Independent authority:** a distinct principal/policy outside that workflow
+   revision enables mutation, and its author cannot unilaterally change or satisfy it.
+2. **Single trusted release principal:** protected/default-branch promotion plus
+   exact qualification is the intended boundary; the trusted principal can also
+   authorize manual mutation.
 
-### Read-only release liveness
+Neither ordinary review, an inline guard nor an Environment-scoped secret alone
+proves independence. Do not invent a second account, ceremonial approval PR or
+self-deferral state machine to claim it. Both models retain least privilege,
+exact source/artifact identity and readback. Keep historical/release-controlled
+code away from fresh write authority where practical; contract-test the trusted-ref
+guard when the operational path is the protected default branch.
 
-The [shared observer](../../.github/workflows/release-liveness-observer.yml) evaluates the **current root Release Please manifest version** in its caller repository. It requires exactly one merged, non-abandoned release PR with the expected title/version, binds its merge SHA and intended `v<version>` tag, and resolves the actual Git tag object to a commit. An exact non-draft published release plus the exact tag and settled `autorelease: tagged` label is its `published` result. The separate `release: reconciled` label on that same merged PR, with no public release, final tag, or pending/tagged Release Please label, is its machine-readable `reconciled` result; a repository-local explanation must supply the durable disposition. A hidden or unused draft alone remains nonterminal.
-
-The observer grants only Actions/Contents/Pull-request read permissions. It holds a nonterminal candidate pending during its grace period or while an exact-SHA configured publisher run is active. Stable stale candidates without publication are reported as stranded; an exact published release/tag with unsettled Release Please labels beyond those fences fails with a distinct observer error. Conflicting tag identity, a newly abandoned bound PR, ambiguous PR discovery and unexpected API errors also fail closed. It does not publish, mutate Release Please labels, inspect arbitrary historical manifests, or certify assets, digests, immutability and downstream deployment. A green observation for the current manifest does not dispose of an older incident. Record historical cancellation/supersession under [#29](https://github.com/RocketsAreNostalgic/.github/issues/29) and carry it into #57. The optional WordPress.org destination cannot block canonical qualified GitHub publication while its committed deployment contract is disabled.
+Adding a guard only to current `main` does not neutralize older dispatchable refs
+at the same workflow path. Prove those refs cannot dispatch or neutralize them
+without rewriting release history. An accepted pattern moves current guarded
+control to a new path absent from historical refs, removes the old default-branch
+path and contract-locks that absence. Source absence alone is not a live platform
+proof of dispatch neutralization.
 
 ## Accepted architectural patterns
 
 ### Source/library release
 
-A source-only library can use:
-
-```text
-read-only exact-revision CI
-→ successful exact trusted-main qualification
-→ bounded write-scoped publisher
-→ exact tag/release target verification
-→ immutable GitHub release/readback
-```
-
-It does not need WordPress-plugin ZIP provenance if no separately built ZIP is published.
+Read-only exact-source qualification → bounded publisher → exact tag/release and
+immutable readback. No separate artifact provenance is required without a built asset.
 
 ### Packaged application or plugin release
 
-A packaged release can use:
-
-```text
-exact source qualification
-→ artifact build
-→ artifact identity/digest evidence
-→ bounded publisher consuming the exact tested artifact
-→ tag/release verification
-→ asset readback
-→ immutable GitHub publication
-→ downstream deployment from the canonical published artifact
-```
-
-Repository-specific build and install proofs should remain local.
+Add exact build/asset-digest evidence and tested-artifact transfer before bounded
+publication/readback. Keep product construction and install proofs local.
 
 ### PR-evidence promotion
 
-A repository may qualify an exact PR candidate and later promote that evidence, provided the publisher proves the relationship between the merged candidate and the successful evidence and the effective repository settings preserve the assumptions on which that proof relies.
+Prove the relationship between the merged candidate and successful PR evidence,
+with effective repository settings preserving that proof's assumptions.
 
 ### Trusted-main promotion
 
-A repository may instead treat successful exact `main` qualification as the release gate. In that model a PR-level bypass does not automatically bypass release evidence, because publication still waits for the separately qualified exact `main` revision.
-
-This model is not an independent review of changed release control. If independent authorization for release-control changes is required, add an external boundary rather than describing trusted-main self-qualification as independence.
+Exact trusted-main qualification may admit release independently of PR-level
+checks. It does not independently authorize changed release control.
 
 ### Exact candidate versus latest `main`
 
-An exact successful `main` qualification identifies a trusted candidate; it does
-not universally require aborting publication when a later ordinary commit reaches
-`main`. Publishing the already-qualified earlier version is legitimate when the
-local model permits it and tag, release target, artifacts and readback remain
-bound to that candidate with unambiguous ordering. A repository that requires
-continued tip identity must prove that condition in its local release contract.
-A read-then-write main preflight is not an atomic compare-and-swap or independent
-authorization boundary against a concurrent push.
+Publishing a qualified earlier candidate after a newer ordinary main commit is
+valid where the local contract permits it, with exact identities and unambiguous
+release ordering. A contract requiring continued tip identity must prove it.
+Read-then-write preflight is neither atomic compare-and-swap nor an independent
+boundary against concurrent pushes. Profiles A/B specify their actual tip requirements.
+Runner provider is not a semantic invariant: GitHub-hosted Ubuntu 24.04 and the
+approved Blacksmith Ubuntu 24.04 runner are acceptable. Provider changes are
+trust/operations decisions, not cosmetic consistency work.
 
-Runner provider is not a semantic invariant. GitHub-hosted Ubuntu 24.04 and the
-approved Blacksmith Ubuntu 24.04 runner are acceptable; changing provider is a
-trust/operations decision, not housekeeping for visual consistency.
+<a id="shared-workflow-boundary"></a>
 
-## Shared workflow boundary
+### Repository-specific stronger gates
 
-Organisation-owned reusable quality workflows should remain generic, read-only quality infrastructure unless a separate architectural review establishes a reusable publisher with an appropriate authority model.
+Generic shared quality workflows remain read-only evidence infrastructure unless
+separately reviewed as publishers. Do not absorb product release authority merely
+for consistency: Booster archive/dependency proofs, WordPress.org contracts,
+updater runtime-copy selection, concurrency/race/hard-stop tests and installation
+or release-candidate readback remain consumer-owned. Common minimums do not
+justify weakening stronger local checks or retaining retired generic lifecycle engines.
 
-Do not move product-specific publication or trust boundaries into shared quality workflows merely for consistency. In particular, generic quality workflows should not own:
+### Read-only release liveness
 
-- Booster archive provenance;
-- WordPress.org publication;
-- updater runtime-copy selection;
-- package-specific hard-stop or race tests;
-- repository-specific release admission or mutation policy.
+The observer covers only the caller's current root Release Please manifest.
+`published` requires one exact merged non-abandoned candidate, matching final
+tag/non-draft release and settled `autorelease: tagged`; `reconciled` requires the
+separate `release: reconciled` marker with no final tag/public release or
+contradictory pending/tagged label, plus a repository-local explanation. Drafts
+alone are nonterminal. Grace and exact-SHA active publisher runs defer negative
+verdicts; stable stale candidates are stranded. Identity conflicts, abandoned or
+ambiguous candidates, API errors and overdue unsettled published labels fail closed.
 
-Consumers should pin reusable workflow identity where practical. Consumer-owned specialist gates remain consumer-owned.
+The observer is read-only; it neither mutates labels nor certifies historical
+manifests, asset bytes/digests, immutability, deployment or monitoring cadence.
+Historical dispositions belong in [#29](https://github.com/RocketsAreNostalgic/.github/issues/29)
+and [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
 
-## Audit disposition
-
-Each release-enabled repository must receive one explicit disposition:
-
-- **CONFORMS** — the applicable release-trust invariants are satisfied;
-- **JUSTIFIED DIFFERENCE** — the implementation differs from a common pattern but provides equivalent applicable guarantees, with the reason recorded;
-- **REMEDIATION REQUIRED** — a concrete trust guarantee is missing or contradicted by current repository state; an owning-repository issue must track it;
-- **UNKNOWN — MORE EVIDENCE NEEDED** — current evidence is insufficient to make a defensible classification.
-
-Difference alone is not a finding.
-
-## Audit questions
-
-For each repository, establish at least:
-
-- What creates or modifies release PRs, tags, releases, assets, deployments, or registry state?
-- What trigger enters the privileged path?
-- Which jobs receive write permissions or publication credentials?
-- Can PR-head-controlled code receive those credentials?
-- What exact source identity is qualified?
-- What proves that privileged publication consumes that successful qualification?
-- Where are release artifacts built?
-- What binds those bytes to the source candidate?
-- What digest and file-set checks exist?
-- What is read back after publication?
-- Are releases immutable, and if not, what explicit recovery model requires mutability?
-- Are third-party Actions pinned?
-- What effective ruleset and bypass actors apply?
-- Does any bypass defeat a boundary the publisher relies on?
-- Is independent approval or promotion intended, and if so, what external mechanism enforces it?
-- What specialist repository gates must remain local?
-
-## Relationship to source quality
-
-Completed [`.github#7`](https://github.com/RocketsAreNostalgic/.github/issues/7) records the shared quality foundation; closed [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) records satellite rollout. Current source-quality adoption, coding/configuration work and residual command/coverage/naming acceptance are coordinated through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) and the existing repository children. Closed #66 is policy/tooling delivery evidence, not another active backlog. Deferred organisation-required workflow activation remains separately owned by [#31](https://github.com/RocketsAreNostalgic/.github/issues/31); current repository-required checks retain their authority.
-
-`.github#9` and this policy own release authority, privileged mutation, release-control paths, exact release-candidate identity, artifact provenance, publication/readback, repository bypass policy where it affects release trust, and independent authorization boundaries.
-
-When an audit finds a quality-adoption problem rather than a release-trust problem, route it to #65 and its existing repository quality owner rather than reopening completed #7/#67 or expanding release-trust remediation. Completed release handoffs do not complete the separate quality acceptance.
-
-## Maintenance
-
-When a release architecture changes materially, reassess the repository against this policy and update the organisation ledger in `.github#9`.
-
-Do not weaken a stronger repository-local gate merely to match the organisation minimum. Do not add ceremony that provides no additional guarantee for the repository's actual release model.
+Implementation and cases: [current workflow](../../.github/workflows/release-liveness-observer.yml)
+and [tests](../../quality-enforcement/test-release-liveness-observer.py);
+inspected [workflow](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/.github/workflows/release-liveness-observer.yml)
+and [tests](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/quality-enforcement/test-release-liveness-observer.py).
+That revision supports the description, not a guarantee about future code.
 
 ## Release classification
 
-Rockets Are Nostalgic repositories may use different release architectures, merge methods, and changelog rules. Where release automation derives versioning or changelog significance from Conventional Commit metadata, however, the metadata that survives the merge must faithfully represent the repository's own release policy.
-
-This policy defines that organization-level invariant without imposing one universal list of release-driving commit types.
-
 ### Applicability
 
-This policy applies when all of the following are true:
+Where Conventional Commit metadata drives release significance and PR-controlled
+subjects survive into consumed commits, those subjects are release metadata.
+Other release models may document a justified difference but still require
+intentional, reviewable release metadata.
 
-- a repository uses Release Please or equivalent automation that derives release significance from Conventional Commit metadata;
-- a pull-request title or other PR-controlled subject becomes the final commit subject consumed by release automation, including through squash merge or another configured merge model;
-- the repository distinguishes release-driving classifications from hidden or non-release-driving classifications.
+<a id="core-invariant"></a>
+<a id="repository-ownership"></a>
 
-Repositories with a different release model may document a justified difference. The relevant invariant is that release significance is derived from deliberate, reviewable metadata rather than accidentally from a presentation-only title.
-
-### Core invariant
-
-When a pull-request title or other PR-derived subject becomes the commit subject consumed by release automation, that subject is **release metadata**.
-
-If a change satisfies that repository's release-driving criteria, the final PR-derived commit subject must use a release-driving Conventional Commit classification recognized by that repository's release configuration, or an explicit breaking-change classification where supported.
-
-A hidden type such as `refactor:`, `chore:`, `build:`, `ci:`, `docs:`, `style:`, or `test:` must not be chosen merely because the implementation technique is internal when the resulting change is release-significant under the repository's own rules.
-
-The implementation category and the release category are related but not identical questions. A refactor can still require a release if it changes a production dependency, supported runtime contract, packaged bytes, public API, compatibility boundary, or another condition the repository has explicitly declared release-driving.
-
-### Repository ownership
-
-The organization does not define one universal set of release-driving Conventional Commit types.
-
-Each release-enabled repository remains authoritative for:
-
-- which changes are release-significant;
-- which Conventional Commit types are visible to its release automation;
-- whether dependency changes use `deps:`, `fix:`, another visible type, or are intentionally non-release-driving;
-- whether breaking-change syntax is supported and how it affects versioning;
-- which merge methods are compatible with its release identity and publisher contract.
-
-The applicable release-automation configuration, repository release documentation, tests, and effective merge settings must tell a consistent story.
+Each repository owns release-driving types, dependency/breaking-change semantics
+and compatible merge methods. Configuration, documentation, tests and effective
+merge settings must agree. A release-significant effect—production dependency,
+runtime, packaged bytes, API or compatibility change—must use a recognized visible
+classification or supported explicit breaking marker, even when implemented as
+an internal refactor. Do not impose one organisation-wide type list.
 
 ### PR-derived final commit requirements
 
-For repositories where PR-controlled metadata becomes the final commit subject consumed by release automation:
-
-1. Review the pull-request title or equivalent PR-derived subject as part of the merge gate, not only as prose.
-2. Treat the resulting Conventional Commit type as the release classification of the final commit.
-3. If the pull request contains a mechanically identifiable release-significant change, CI **must** fail closed when the final subject uses a hidden or otherwise non-release-driving type, unless the subject uses a supported explicit breaking marker such as `!`.
-4. If a mechanically reliable check is not practical for a release-significant class of change, the repository must document that justified difference and the review step that owns the classification decision.
-5. Repository-local checks should derive allowed release-driving types from the repository's own release configuration where practical rather than duplicating a second hard-coded policy.
-6. If a classification check relies on mutable pull-request metadata such as the title, the required evidence **must be invalidated and rerun when that metadata changes**. A previously green check against an earlier title is not valid evidence for a later merge title.
-7. A merge method that preserves individual commits does not remove the need for deliberate release metadata; it only changes which commit metadata the release tool consumes.
-
-Changing a PR title after the final commit has been created does not repair the already-created commit. Recovery must proceed through the repository's normal reviewed release process rather than rewriting protected history or creating manual tags/releases.
+1. Review the metadata that actually survives the configured merge; preserving
+   individual commits changes its source, not the requirement.
+2. For mechanically identifiable release-significant changes, CI must fail closed
+   on hidden/non-driving subjects unless a supported breaking marker applies.
+   Where reliable checking is impractical, document the justified difference and
+   the review step owning that decision.
+3. Derive permitted types from local release configuration where practical.
+4. Invalidate and rerun checks when their mutable PR metadata changes. An earlier
+   green check cannot qualify a later title. Editing a title after merge does not
+   repair the created commit; use normal reviewed recovery, never protected-history
+   rewriting or manual tags/releases.
 
 ### Automation boundary
 
-Release-classification checks are read-only evidence. They may inspect:
-
-- the pull-request title or equivalent PR-derived subject;
-- the exact base and head revisions;
-- changed paths or manifests;
-- the repository's applicable release-automation configuration.
-
-They must not gain tag, release, package-publication, or other privileged mutation authority merely because they participate in release selection.
-
-Shared RAN quality infrastructure may provide generic helpers for classification validation where the semantics are genuinely common. Product-specific rules remain local when they depend on repository-specific runtime, packaging, dependency, or compatibility meaning.
+Classification is read-only evidence, not mutation authority. Checks may inspect
+PR subjects, exact base/head revisions, paths/manifests and release configuration.
+Share helpers only for genuinely common semantics; retain product-specific rules
+locally. Do not recreate a generic classifier or duplicate Release Please lifecycle
+machinery to satisfy superseded rollout instructions.
 
 ### Dependency changes
 
-Production dependency changes are a common mechanically detectable case but are not automatically classified the same way across RAN.
-
-A repository that considers a production dependency change release-driving should make that decision explicit in both its release configuration and its PR validation. For example, a PHP library may compare the `require` map in `composer.json` between the exact PR base and head and require a visible release type when that map changes.
-
-Development-only dependency changes should not be promoted to release-driving status merely because they live in the same manifest unless the repository explicitly chooses that policy.
+State release-driving dependency policy in configuration and validation; comparing
+the exact base/head Composer `require` maps is one possible check. Development-only
+dependencies do not automatically drive releases merely by sharing a manifest.
 
 ### Examples
 
-#### Release-driving dependency adoption
+| Local policy/effect | Valid interpretation |
+| --- | --- |
+| Production adoption drives releases and `deps:` is visible | Use `deps: adopt dependency`; hidden `refactor:` does not describe its release significance. |
+| Internal test reorganisation crosses no release-driving boundary | Hidden `refactor:` may be appropriate. |
+| Breaking syntax is supported | `refactor!: replace runtime contract` can drive release despite hidden base type. |
+| A checked `deps:` title becomes hidden `refactor:` before merge | Rerun classification evidence. |
+| Repository deliberately treats dependency-only changes as hidden | No mandatory `deps:` visibility; classify any separately release-significant effect appropriately. |
 
-A repository configures `deps:` as a visible changelog section and changes a production Composer dependency. A squash title of:
+A green “no user facing commits” result proves metadata was applied, not that its
+classification was correct. Reassess metadata after merge-method, release-tool,
+type or dependency-policy changes.
 
-`deps: adopt updater support beta.3`
+<a id="audit-questions"></a>
 
-is consistent with the repository's policy.
+## Audit disposition
 
-A title of:
+Review triggers and mutation paths, job credentials, untrusted-code exposure,
+source/evidence identity, artifact build/transfer/digests, readback/recovery,
+immutability, pinned dependencies, effective settings/bypasses, intended approval
+independence and stronger local gates against the invariants above. Record one outcome:
 
-`refactor: consume shared repository path safety`
+- **CONFORMS:** applicable guarantees satisfied.
+- **JUSTIFIED DIFFERENCE:** different implementation, equivalent guarantees and reason recorded.
+- **REMEDIATION REQUIRED:** concrete missing/contradicted guarantee with an owning-repository issue.
+- **UNKNOWN — MORE EVIDENCE NEEDED:** insufficient current evidence.
 
-is not sufficient if the same pull request changes the production dependency and that dependency change is release-driving. After squash, Release Please may see only hidden `refactor:` metadata and skip the release entirely.
+Difference alone is not a finding.
 
-#### Internal refactor with no release significance
+<a id="relationship-to-source-quality"></a>
 
-A repository changes internal test support or reorganizes implementation code without crossing any release-driving boundary. If its release policy treats that work as hidden, a `refactor:` title is appropriate.
+## Maintenance
 
-#### Supported breaking classification
-
-If the repository's release tooling recognizes the Conventional Commits breaking marker, a title such as:
-
-`refactor!: replace the public runtime contract`
-
-may legitimately be release-driving even when the base `refactor:` type is normally hidden. Repository-local enforcement must model that supported breaking semantics rather than rejecting it solely because the base type is hidden.
-
-#### Mutable title after a green check
-
-A production dependency PR passes its required classification check as `deps: adopt updater support beta.3`. Renaming the PR to `refactor: consume shared updater support` before squash merge changes the release metadata. The required classification evidence must rerun for that edit; the earlier green result cannot remain the merge gate.
-
-#### Repository with different dependency policy
-
-A repository intentionally treats `deps:` as hidden and documents that dependency-only changes do not independently drive releases. The organization policy does not require changing `deps:` to visible. It does require the repository to classify any release-significant effect using one of the types that its own release process recognizes.
-
-
-Classification is read-only evidence for release selection, not publication
-authority. The former generic classifier rollout in
-[#20](https://github.com/RocketsAreNostalgic/.github/issues/20) is superseded;
-the metadata invariant survives. Do not recreate a generic classifier or duplicate
-Release Please lifecycle/version machinery to satisfy historical instructions.
-Implementation remains under [#47](https://github.com/RocketsAreNostalgic/.github/issues/47)
-and final reconciliation under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
-
-When a repository changes its merge method, release-automation configuration, release-driving commit types, dependency policy, or equivalent release-selection semantics, re-check that the source of final commit metadata still matches the release policy.
-
-A green release workflow that reports "no user facing commits" is not proof that the classification was correct; it is only proof that the automation successfully applied the metadata it was given.
+Material release-architecture changes require reassessment and an update to
+[#9](https://github.com/RocketsAreNostalgic/.github/issues/9). Update the affected
+mechanism documentation/evidence in the same PR where practical; otherwise record
+an explicit cross-repository follow-up. Unrelated commits require no blanket refresh.
+Route quality adoption to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+not release-trust remediation. [#31](https://github.com/RocketsAreNostalgic/.github/issues/31)
+retains deferred organisation enforcement; current repository-required checks remain
+authoritative. Release completion does not complete separate quality acceptance.

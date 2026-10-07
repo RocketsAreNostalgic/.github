@@ -116,11 +116,13 @@ After exact successful-main admission:
 9. Revalidate the captured release ID, tag, admitted target SHA, original prerelease boolean and expected draft/published state on the post-upload response before publication. Metadata changes fail closed before the publication PATCH. Publish the draft, then require immutable readback. The workflow does not query the administrative setting; a misconfigured repository can publish a mutable release and then fail.
 10. Read back exact tag target, asset names/digests, non-draft state and `immutable == true`.
 
-The original boolean `prerelease` classification is captured during publication resolution and retained through initial promotion validation, pre-publication validation and final readback. Changes in either direction fail closed; stable `false` is valid.
-
-The resolved Release Please release ID is carried through promotion and readback, with its tag and admitted target SHA checked again. Draft releases are read through `/releases/{release_id}` because `/releases/tags/{tag}` can return HTTP 404 before publication. This uses the existing release identity; it does not create a replacement release.
-
-Asset uploads use the captured release ID's endpoint on `uploads.github.com`, sending the exact verified file as the raw request body. Publishing also targets that same ID. No mutation re-resolves the tag to select a release; deletion/recreation under the same tag therefore fails closed against the original ID.
+Capture the boolean `prerelease` during resolution and preserve it through initial,
+pre-publication and final validation; either direction of drift fails closed and
+stable `false` is valid. Carry the original release ID throughout. Read drafts by
+`/releases/{release_id}` because tag lookup can return HTTP 404 before publication.
+Upload exact verified file bodies to that ID's `uploads.github.com` endpoint and
+publish that same ID. Never re-resolve a tag for mutation or replace the release;
+deletion/recreation under the same tag fails closed.
 
 The workflow never uses `--clobber`.
 
@@ -141,15 +143,9 @@ The promoter may rediscover a draft after a lost acknowledgement by its exact ad
 
 ## Repository-local responsibilities
 
-Remain local:
-
-- deterministic artifact construction;
-- archive layout/allowlist rules;
-- product-specific metadata;
-- installation/runtime/Core/dependency evidence;
-- any downstream product deployment adapter.
-
-Shared Profile B does not weaken these checks. It changes only who owns generic release orchestration.
+Deterministic construction, archive layout/allowlists, product metadata,
+installation/runtime/Core/dependency evidence and downstream product deployment
+adapters remain local. Profile B owns generic orchestration without weakening them.
 
 ## Troubleshooting
 
@@ -178,3 +174,13 @@ An open release PR or no releasable change is normal non-publication. Release Pl
 Enabling the owner-managed setting affects future publication; it does not make an already published mutable release immutable. Keep the failed job's evidence and inspect the actual Release Please PR, manifest/version, tag, release and lifecycle state. A failed publisher does not imply Release Please did not advance that state. A maintainer must establish a legitimate next release through the normal reviewed Release Please process, confirm the new version and exact main revision, and obtain a fresh qualifying main push Quality artifact before publication. Verify the new release's actual immutable readback. Do not automatically edit lifecycle labels, replace assets, move tags, delete releases or replay the old version. If Release Please state is inconsistent, stop for maintainer investigation rather than inventing a repair.
 
 Rerunning a release job does not change its original event/SHA or its upstream Quality run/attempt. The admitted revision must still be current main and the original artifact must still be available. Dispatching Quality manually is not publisher admission. These limits also apply after fixing permission or owner-managed execution settings.
+
+## Implementation evidence
+
+[Current workflow](../../.github/workflows/release-profile-b.yml) and
+[contract tests](../../quality-enforcement/test-release-profile-b.mjs);
+inspected [workflow](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/.github/workflows/release-profile-b.yml)
+and [tests](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/quality-enforcement/test-release-profile-b.mjs).
+These support the mechanism described at that revision, not future implementation
+or a consumer's acceptance. Update affected documentation/evidence with material
+mechanism changes, or record an explicit cross-repository follow-up.
