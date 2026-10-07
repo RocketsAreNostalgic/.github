@@ -1,5 +1,15 @@
 # RAN release-trust policy
 
+## Find the release requirement
+
+| Task | Reading path |
+| --- | --- |
+| Assess a release-control change | [Vocabulary](#vocabulary) → [required trust invariants](#required-trust-invariants). |
+| Classify a change or review release-driving metadata | [Release classification](#release-classification) → [PR-derived final commit requirements](#pr-derived-final-commit-requirements). |
+| Implement or operate a publisher | Applicable [Profile A](RELEASE_PROFILE_A.md) or [Profile B](RELEASE_PROFILE_B.md), preserving [repository-specific stronger gates](#repository-specific-stronger-gates). |
+| Verify publication or outstanding owner acceptance | [Readback and reconciliation](#8-readback-and-reconciliation) → [dated release evidence](RELEASE_PUBLISHERS.md) and its [admin readback checklist](RELEASE_PUBLISHERS.md#benadmin-readback-checklist--what-and-why). |
+| Review the release architecture | [Audit questions](#audit-questions) → [audit disposition](#audit-disposition); [source-quality work](#relationship-to-source-quality) has separate ownership. |
+
 ## Purpose
 
 Rockets Are Nostalgic repositories do not need identical release workflows. They do need the same release-trust guarantees wherever those guarantees apply.
@@ -243,7 +253,7 @@ Recovery and retry paths must preserve the same identity guarantees as the norma
 
 ### Read-only release liveness
 
-The [shared observer](.github/workflows/release-liveness-observer.yml) evaluates the **current root Release Please manifest version** in its caller repository. It requires exactly one merged, non-abandoned release PR with the expected title/version, binds its merge SHA and intended `v<version>` tag, and resolves the actual Git tag object to a commit. An exact non-draft published release plus the exact tag and settled `autorelease: tagged` label is its `published` result. The separate `release: reconciled` label on that same merged PR, with no public release, final tag, or pending/tagged Release Please label, is its machine-readable `reconciled` result; a repository-local explanation must supply the durable disposition. A hidden or unused draft alone remains nonterminal.
+The [shared observer](../../.github/workflows/release-liveness-observer.yml) evaluates the **current root Release Please manifest version** in its caller repository. It requires exactly one merged, non-abandoned release PR with the expected title/version, binds its merge SHA and intended `v<version>` tag, and resolves the actual Git tag object to a commit. An exact non-draft published release plus the exact tag and settled `autorelease: tagged` label is its `published` result. The separate `release: reconciled` label on that same merged PR, with no public release, final tag, or pending/tagged Release Please label, is its machine-readable `reconciled` result; a repository-local explanation must supply the durable disposition. A hidden or unused draft alone remains nonterminal.
 
 The observer grants only Actions/Contents/Pull-request read permissions. It holds a nonterminal candidate pending during its grace period or while an exact-SHA configured publisher run is active. Stable stale candidates without publication are reported as stranded; an exact published release/tag with unsettled Release Please labels beyond those fences fails with a distinct observer error. Conflicting tag identity, a newly abandoned bound PR, ambiguous PR discovery and unexpected API errors also fail closed. It does not publish, mutate Release Please labels, inspect arbitrary historical manifests, or certify assets, digests, immutability and downstream deployment. A green observation for the current manifest does not dispose of an older incident. Record historical cancellation/supersession under [#29](https://github.com/RocketsAreNostalgic/.github/issues/29) and carry it into #57. The optional WordPress.org destination cannot block canonical qualified GitHub publication while its committed deployment contract is disabled.
 

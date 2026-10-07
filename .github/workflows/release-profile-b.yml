@@ -462,7 +462,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          guide=https://github.com/RocketsAreNostalgic/.github/blob/main/RELEASE_PROFILE_B.md#troubleshooting
+          guide=https://github.com/RocketsAreNostalgic/.github/blob/main/docs/release/RELEASE_PROFILE_B.md#troubleshooting
           stage=complete
           advice='Outcome unavailable: inspect skipped or interrupted steps before retrying.'
           if [[ "$RAN_PROMOTION" == success ]]; then

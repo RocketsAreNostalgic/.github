@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const workflow = readFileSync('.github/workflows/release-profile-b.yml', 'utf8');
-const docs = readFileSync('RELEASE_PROFILE_B.md', 'utf8');
+const docs = readFileSync('docs/release/RELEASE_PROFILE_B.md', 'utf8');
 
 const required = [
   "github.event_name == 'workflow_run'",

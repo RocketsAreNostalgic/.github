@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const workflow = readFileSync('.github/workflows/release-profile-a.yml', 'utf8');
-const docs = readFileSync('RELEASE_PROFILE_A.md', 'utf8');
+const docs = readFileSync('docs/release/RELEASE_PROFILE_A.md', 'utf8');
 const required = [
   "github.event_name == 'workflow_run'",
   "github.event.workflow_run.event == 'push'",

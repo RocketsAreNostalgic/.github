@@ -97,12 +97,12 @@ Core's separate #249 regression/supersession disposition remains explicit.
 
 ## Outstanding acceptance and holds
 
-- The four Core #259 occurrences above require owner disposition; source and
-  negative-test evidence does not accept them. Core #249's separate regression
-  and supersession disposition remains explicit in the linked coordinator record.
-- At the cutoff, extensionless-entrypoint repair qualification, Lane A cumulative
-  integration and shared/Admin candidates remained with their assigned issue owners.
-  Earlier green runs do not qualify changed heads or close future-file gaps.
+- At the snapshot cutoff, [Core candidate details](#core-candidate-qualification-and-remaining-gap)
+  recorded four pending #259 owner dispositions, repair qualification and the
+  separate #249 regression/supersession disposition.
+- [The snapshot](#acceptance-snapshot--7-october-2026-0841-utc) records pending
+  Lane A cumulative integration and shared/Admin qualification at the cutoff;
+  follow the linked issue owners for subsequent work.
 - Core258's consumer audit found no necessary Lane B source migration. Earlier
   source composition remains bound to Core `654fca22`; beta31 certification is
   unchanged. Future-host claims require an actually published host and fresh
@@ -122,36 +122,36 @@ Core's separate #249 regression/supersession disposition remains explicit.
 - Shared-package qualification and individual repository guards do not establish
   organisation-wide acceptance or close #65. A stronger local gate remains required.
 
-The [5 October occurrence review](quality-evidence/retained-exceptions-20261005.md)
-retains exact revisions, native-operation invariants and diagnostic exposure.
-Its implementation notes are dated candidate evidence, not universal exception
-acceptance or a fresh instruction to repeat completed work.
+The [5 October occurrence review](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/quality-evidence/retained-exceptions-20261005.md)
+retains exact revisions, diagnostic exposure and detailed native-operation
+invariants as optional evidence. Later implementations do not constitute
+blanket exception acceptance or instructions to repeat completed migrations.
+Disposition of this historical commitment was not established by this bounded
+review; resolve through #65 before repeating work: at Core
+`48e86ebd5d6ca153311f60bc385173349ed81e30`, `RAN/Storage/Database.php:189/194`
+observes the expected version before `get_option` can invoke a mutating filter.
+Preserve that evaluation order and add focused behavioral proof when the group
+is taken up; the recorded version tests did not inject that mutation.
+
+Retained exception work must preserve private-file/device/inode custody,
+identity-checked deletion, descriptor locking, atomic replacement/readback,
+bounded archive reads and stream closure; throwing/byte-stable JSON; prepared
+SQL/CAS and validated identifiers; opaque-token boundaries; real reflection and
+native seams; and namespace-only ArchiveSafety generation parity. Do not hand
+edit generated copies. Existing installed Plugin Check and no-dev provenance
+remain distinct from development-checker silence. Apply the current
+[exception policy](QUALITY_STANDARDS.md#exceptions-and-native-operations) and
+record actual disposition in existing issues; the historical exposure counts
+are neither proof of defects nor accepted exemptions.
 
 ## Earlier accepted slices
 
-These compact rows preserve dated evidence without presenting old revisions as
-current main. The linked full records retain source/tool identities, exact PR
-heads, merge trees, run results and disclosed limitations. Nothing here freshly
-requalifies an unchanged row.
-
-| Surface | Recorded disposition | Evidence |
-| --- | --- | --- |
-| Core level 5, 5 October | #248 landed at `48e86ebd5d6ca153311f60bc385173349ed81e30`; required level 5, zero findings. Levels 6–8 remain separately scoped. | [Post-merge Quality 37249520706](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37249520706); [dated PR132 record](https://github.com/RocketsAreNostalgic/.github/blob/b574d2d1a64766db94a11bfc110c456be7fab99a/PHP_QUALITY_MATRIX.md#historical-delivery-and-exception-checkpoint--5-october-2026). |
-| Starter formatter and reference | #25 removed PHP-CS-Fixer while retaining blocking alignment, negative/fix/repeatability controls and stronger local documentation checks; #27 adopted released standards. Original PHP 8.5 and reference limitations are not erased by consolidation. | [Starter formatter investigation](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/STARTER_PHP_FORMATTER_AUDIT.md) |
-| Canonical commands and Provider host | Support/Branch/Provider command migrations delivered. Independent `check` and required exact-certified `check:host` remain distinct; focused checks still feed terminal quality. Provider's package-specific title rule checks release significance, not lifecycle or publication authority. | [Command-adoption evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/PHP_QUALITY_ADOPTION.md) |
-| Release Updater | #60 implementation, 36 shipped files at level 8, naming/exception reconciliation and protocol 5 work delivered; #70 published beta.9 at `27889528442fc4e49ca060959218d5ec288c3055`. Later quality work does not redo it; Core adoption remains a separate composition decision. | [Command-adoption evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/PHP_QUALITY_ADOPTION.md) |
-| Admin Shell, 29 September | #19 delivered seven maintained production/tool/CLI paths at level 5 and semantic discovery protection; PR-only CI supplied tree-matched qualification, not an invented post-merge run. Later #128 common-convention/preview work is distinct. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| TnySignature, 29 September | #9 delivered discovery of first-party PHP and direct level 5 selection protection at `d438225c4ec5513a57e464b41e5f203a5498a65a`. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| Turnstile, 29 September | #38 protected seven shipped PHP paths/direct level 5 selection at `33c7e2fa91c8a99c96dcd3606e19daef8705810c`. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| Ecwid, 29 September | #39 protected all ten PHP entries in the finished ZIP/direct level 5 selection at `6a3a94c69292f928e3eb9b805f63c7596ceecc4e`. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| EmailOctopus, 29 September | #41 protected 15 finished-ZIP PHP paths/direct level 3 selection at `41fb873983a344eeef1d3179b1516153dd7d8ee0`. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| Enhanced Cover, 29 September | #33 protected eight finished-ZIP paths/direct level 4 selection at `08125cfd641f31c39a9b3f8f3abc97b6616a08b3`; eleven production paths is the earlier, different source population. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-| Duplicate Detector, 29 September | #28 protected eleven finished-ZIP paths/direct level 5 selection at `6e88335c1b6fd77e24a7819525e4ae8806252a3f`; two tools separately remain level 3. UI#15/settings#16 holds are separate. | [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) |
-
-The satellite guards included uncovered-file negative controls. Their rows do
-not close estate-wide drift work, create plugin releases or infer unavailable
-security-review results. Check the linked source for each actual CI topology;
-PR-only qualification and skipped jobs are not post-merge passing checks.
+Completed delivery evidence is optional history in the
+[pre-move accepted-slices record](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/PHP_QUALITY_MATRIX.md#earlier-accepted-slices):
+exact source/tool identities, PR heads, merge trees, runs and limitations. It
+covers Core's level-5 delivery, command/formatter migrations and satellite
+coverage. It does not requalify current main; later work must preserve stronger
+local gates and distinguish PR-only or skipped checks from post-merge passes.
 
 ## Retained tooling and audit decisions
 
@@ -168,41 +168,38 @@ version requirements or standing instructions to upgrade other owners' locks.
   remains an accepted immutable Git distribution. The compared newer change
   affected only package-local development locks, not exported configuration;
   registry publication remains optional [package #5](https://github.com/RocketsAreNostalgic/ran-quality-config/issues/5).
-- Migrator #55's released-standards adoption and test/helper naming landed;
-  do not restart that migration. Its qualification did not raise the analysis
-  floor or certify a new host. Core #230's development-tool update also landed;
-  the prior #124 capture hold in the original #122 report is historical.
-- The 29 September audit-placement inventory found an explicit blocking locked
-  Composer audit in Release Updater; it found none in the other inspected
-  manifests/workflows. That bounded finding does not exclude other security
-  scans or claim present-day placement. Preserve adopted audit behavior;
-  lookup failure is unavailable evidence, never a clean result.
+- Starter retains its blocking alignment, negative/fix/repeatability controls
+  and stronger local documentation checks. Historical PHP 8.4 examples do not
+  establish universal formatter equivalence or PHP 8.5 execution.
+- Provider's independent `check` and required exact-certified `check:host`
+  remain distinct, with focused checks feeding terminal quality. Its narrow
+  title rule checks release significance, not lifecycle or publication authority.
+- Duplicate Detector's UI #15/settings #16 holds remain separate from delivered
+  quality work. Completed Release Updater protocol-5 work does not itself
+  establish Core composition; consumer adoption remains a separate decision.
+- The shared recipe remains retired under #111; Provider owns provisioning
+  locally. Original action removal required Provider reintegration on main and
+  no remaining main reference. Require a demonstrated second matching contract
+  before another extraction; wider research is separate. This consolidation
+  authorizes no executable removal.
 
-[Tooling decision evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/quality-evidence/tooling-decisions-20261003.md) retains before/after refs, hashes, advisory scope and
-qualification. [Upgrade/audit inventory](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/QUALITY_UPGRADES_AND_AUDIT.md) retains the inspected script/workflow revisions.
-Neither an empty advisory snapshot nor package CI establishes general security,
-consumer acceptance or new release compatibility.
+Completed Migrator #55/Core #230 changes and the old #124 capture hold are
+[historical tooling context](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/PHP_QUALITY_MATRIX.md#retained-tooling-and-audit-decisions),
+not instructions to restart their work. Preserve adopted audit behavior under
+the upgrade policy; lookup failure is unavailable evidence, not a clean result.
 
 ## Historical evidence and completed investigations
 
-Substantive policy has one home in Quality Standards. These immutable links
-preserve prior documents, including their original anchors, without leaving old
-agent claims and implementation instructions in the ordinary reading path.
+For provenance only, the [pre-move evidence index](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/PHP_QUALITY_MATRIX.md#historical-evidence-and-completed-investigations)
+links the original acceptance, adoption, satellite, naming, shared-rule,
+formatter, recipe and tooling investigations, including original anchors and
+rollback identities. Historical diagnostics are measurements, not approved
+exceptions or proven defects. Today's requirements live in
+[Quality Standards](QUALITY_STANDARDS.md); unresolved decisions remain above.
 
-| Historical record | Surviving decision / use |
-| --- | --- |
-| [Historical acceptance matrix](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/PHP_QUALITY_MATRIX.md) | Full 23 September source/tool/coverage audit and dated 24 September–4 October acceptance, original candidate/main distinctions, evidence and limitations. |
-| [Command-adoption evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/PHP_QUALITY_ADOPTION.md) | Old→canonical command mapping, certified-host setup/identity and narrow Provider title-classification boundary. |
-| [Satellite evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/SATELLITE_QUALITY_MATRIX.md) | Per-repository tests, scope populations, exact trees/runs and explicit unavailable-review disclosures. |
-| [Naming investigation](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/BOOSTER_NAMING_MIGRATION.md) | Snake-case decision and coordinated API/named-argument/callback/generated-copy safeguards now in policy; declarations/caller inventory remains evidence, not an outstanding count or complete call graph. |
-| [Shared-rule investigation](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/BOOSTER_SHARED_RULES_AUDIT.md) | Historical PHPCS diagnostic exposure, hidden inheritance-check gap and suppressed-rule probes; diagnostic occurrences are not unique symbols or proven defects. |
-| [Starter formatter investigation](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/STARTER_PHP_FORMATTER_AUDIT.md) | Completed single-formatter investigation; finite PHP 8.4 examples do not prove universal equivalence or PHP 8.5 execution. |
-| [Retired recipe disposition](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/BOOSTER_LIBRARY_QUALITY.md) | Shared recipe retired under #111; Provider owns provisioning locally. Original action removal depended on Provider reintegration landing and main no longer referencing it; this consolidation does not authorize removing executable code. Require a demonstrated second matching contract before another extraction; wider research remains separate. Historical action commit `6e81370238e33c5b77641355a772557912f7fee7` preserves rollback provenance. |
-| [Tooling decision evidence](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/quality-evidence/tooling-decisions-20261003.md) | Exact #122 comparison and scoped advisory evidence; later landing disposition is summarized above. |
-
-Machine-readable [rule results](quality-evidence/booster-rule-results.json),
-[naming inventory](quality-evidence/booster-naming-inventory.json) and
-[Starter formatter results](quality-evidence/starter-formatter-results.json)
+Machine-readable [rule results](../../quality-evidence/booster-rule-results.json),
+[naming inventory](../../quality-evidence/booster-naming-inventory.json) and
+[Starter formatter results](../../quality-evidence/starter-formatter-results.json)
 remain unchanged with their adjacent audit scripts and path/sniff lists.
 Those scripts are investigation aids, not canonical provenance or reproducible
 build systems. Any rerun is a new measurement with separately recorded inputs;

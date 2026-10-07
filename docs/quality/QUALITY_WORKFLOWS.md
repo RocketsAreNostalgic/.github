@@ -37,7 +37,7 @@ substantive contract change, not naming symmetry.
 Consumers execute immutable provider commits, not mutable release tags. The
 [completed foundation inventory](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/QUALITY_WORKFLOWS.md#current-and-target-consumer-pins)
 preserves the inspected caller paths, pins and dispositions; it is historical
-evidence, not a live pin registry. Consult [quality acceptance](../PHP_QUALITY_MATRIX.md)
+evidence, not a live pin registry. Consult [quality acceptance](PHP_QUALITY_MATRIX.md)
 and the repository's reviewed caller for subsequent adoption evidence.
 Repository-specific aggregation and stronger gates remain under
 [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
@@ -85,7 +85,7 @@ Extra specialist checks alone are not sufficient grounds to bypass the baseline.
 
 The completed foundation review recorded the following self-validation
 harnesses. These describe the basis of the disposition; subsequent acceptance
-is recorded in [quality acceptance](../PHP_QUALITY_MATRIX.md):
+is recorded in [quality acceptance](PHP_QUALITY_MATRIX.md):
 
 - `ran-coding-standards` verifies exact PR head, immutable Actions, read-only execution, locked Composer install, the package `composer check` contract, PHP floor/current-style coverage, independent PHP lint, and fresh consumer-root installation of every exported standard.
 - `ran-quality-config` verifies exact PR head, immutable Actions, read-only execution, exact Node/pnpm identity, frozen pnpm install, `pnpm check`, packed consumer tests and publishable-package contents.
@@ -121,7 +121,7 @@ These reusable profiles deliberately execute the consuming repository's canonica
 
 The same is true of caller-supplied identity inputs such as `php-floor`, `php-current`, PHP extensions, Node version and pnpm version unless the provider independently derives or validates them. A reviewed workflow invocation is therefore part of the transitive quality contract, not merely plumbing.
 
-The authoritative [enforcement-integrity requirements](../QUALITY_STANDARDS.md#enforcement-integrity)
+The authoritative [enforcement-integrity requirements](QUALITY_STANDARDS.md#enforcement-integrity)
 cover organisation-controlled workflow identity and either organisation-owned
 execution or protected review of the complete transitive consumer contract.
 These profiles cannot alone provide an unforgeable organisation merge boundary.
@@ -187,9 +187,9 @@ A release tag such as `quality-v1` or `quality-v2` may identify a reviewed stand
 
 ## Consumer aggregation versus merge enforcement
 
-Follow the [CI contract](../QUALITY_STANDARDS.md#ci-contract) for shared diagnostic
+Follow the [CI contract](QUALITY_STANDARDS.md#ci-contract) for shared diagnostic
 contexts, local terminal `quality` aggregation and failure propagation. Follow
-[enforcement integrity](../QUALITY_STANDARDS.md#enforcement-integrity) before
+[enforcement integrity](QUALITY_STANDARDS.md#enforcement-integrity) before
 organisation-required activation. Consumer-controlled job names cannot prove
 organisation workflow identity.
 
