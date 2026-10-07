@@ -21,9 +21,6 @@ the default. `.github` is **merge-only** because reviewed provider SHAs must
 remain reachable from main. Other exact-identity exceptions must be documented;
 local release-proposal merge rules remain mandatory.
 
-<a id="check-source"></a>
-<a id="multiple-required-checks"></a>
-
 ## Required status checks
 
 Prefer one trustworthy terminal `quality` that depends on every ordinary
@@ -33,8 +30,8 @@ source; an arbitrary integration emitting the same name must not satisfy them.
 
 Distinct lifecycle/security gates may remain separate, including conditional
 archive or release-candidate evidence. Bootstrap's established `Pack inputs`
-and `Quality` requirements remain until the #31 decision; the existence of its
-new diagnostic terminal does not authorize removing them. A local status is
+and `Quality` requirements remain until a separate decision in #31 authorizes
+a replacement. A local status is
 not proof of organisation-owned workflow identity.
 
 ## Review automation
@@ -43,9 +40,6 @@ Copilot review may remain enabled without re-reviewing every push; automatic
 re-review is not an organisation requirement. Stale human approvals must still
 be dismissed. This does not waive independent review where the applicable
 protected-contract boundary requires it.
-
-<a id="repository-profiles"></a>
-<a id="relationship-to-ci-policy"></a>
 
 ## Activation and scope
 

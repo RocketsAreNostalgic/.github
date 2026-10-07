@@ -29,8 +29,6 @@ forbidden paths. It emits the central provider inputs. Terminal `required-qualit
 requires both validation and the immutable provider to succeed. `.github` itself
 is deliberately skipped and must not be enrolled as its own consumer.
 
-<a id="what-belongs-in-the-protected-surface"></a>
-
 ## Protect the smallest complete surface
 
 Include aggregates, tool dependencies/locks, caller workflows/fan-in/inputs,
@@ -52,9 +50,6 @@ and forbidden alternative PHPCS filenames. Explicit PHPUnit/PHPStan configuratio
 paths avoid their default filename precedence. These are implementation examples,
 not proof that its historical entry matches current main.
 
-<a id="approval-lifecycle"></a>
-<a id="stale-or-superseded-approvals"></a>
-
 ## Approval and changed heads
 
 If activated, changing protected semantics follows this sequence:
@@ -73,11 +68,6 @@ approval already landed, restore the approved default-branch contract through a
 reviewed change and canary it before expansion. Target PRs cannot approve
 themselves. This operational lifecycle is conditional on activation, not today's
 ordinary contribution burden.
-
-<a id="control-plane-canary-procedure"></a>
-<a id="emergency-rollback"></a>
-<a id="required-workflow-identity"></a>
-<a id="rollout"></a>
 
 ## Canary, rollout and rollback
 
@@ -100,8 +90,6 @@ do not patch consumers to manufacture bypasses. Prove repaired/reverted canaries
 before re-enabling. Temporary disablement is controlled recovery followed by
 restoration, never an alternate merge path.
 
-<a id="protected-surface-re-audit"></a>
-
 ## Re-audit if activated
 
 The organisation quality programme owner (#7 or its named successor) records
@@ -114,12 +102,6 @@ Look beyond current hashes for new implicit configuration, ignore files, hooks,
 helpers, fixture trees, wrappers and prebuilt dependencies. Newly authoritative
 inputs must become protected objects, required-absent paths or explicit protected
 configuration. Broad historical inventories do not prove continuing completeness.
-
-<a id="representative-proof-evidence"></a>
-<a id="node--bootstrap-templates"></a>
-<a id="php-library--admin-shell"></a>
-<a id="wordpress-plugin--starter"></a>
-<a id="booster"></a>
 
 ## Inspected source and historical proof
 

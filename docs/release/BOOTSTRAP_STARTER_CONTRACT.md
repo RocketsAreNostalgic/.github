@@ -1,37 +1,26 @@
-# Initial release starter: frozen G0 contract
+# Initial release starter contract
 
-**Status: G0 frozen; implementation and qualification remain separate.** This
-contract and [the generated examples](BOOTSTRAP_STARTER_EXAMPLES.md) were reviewed
-in [#84](https://github.com/RocketsAreNostalgic/.github/pull/84), normal-merged as
-`3be15ce9d67688f2b6c15d9563791d315fce780f`. Delivery continues under
-[#81](https://github.com/RocketsAreNostalgic/.github/issues/81), within #47/#44.
-The later owner decisions on
-[strict immutability](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839238578),
-[proposal versus execution settings](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839475013)
-and [failure diagnostics](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839662944)
-clarify prerequisites and handoff guidance below; they do not reopen the frozen
-schema, file map or host boundary. Documentation acceptance does not qualify
-product code, a release or a deployment.
+Booster's initial release starter proposes a release setup in a draft PR for a
+source-ready WordPress plugin or theme. The maintainer reviews the proposal and
+owns the generated files. Release Please manages subsequent version and release
+PRs; Booster does not regenerate, update or repair the copied starter files.
 
-**Delivery sequencing:** the [owner decision in #81](https://github.com/RocketsAreNostalgic/.github/issues/81#temporary-delivery-deferral--owner-decision-28-september-2026)
-defers UI implementation and owner-verified end-to-end onboarding/integration
-until local interactive verification can resume. Non-UI contract preparation
-may continue within existing claims and automated gates. The acceptance below
-remains required; this deferral does not change the frozen technical contract.
+The supported operations are status, preview, inspection, setup and outcome
+readback. The PHP reader in Booster's bundled GitHub provider validates the
+pack ZIP as data; it never executes the templates on WordPress. Generated files
+become repository code subject to normal review and maintenance.
 
-## 1. Product decision
+**Delivery status reported in #81, reviewed 7 October 2026:**
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81) records source
+integration and immutable component publication as delivered. The combined
+plugin/theme setup → generated release → installed product journey remains
+unaccepted. UI work and owner-verified manual/end-to-end testing remain deferred
+until Ben confirms interactive verification can resume; required notices and
+in-app guidance remain tracked in
+[#85](https://github.com/RocketsAreNostalgic/.github/issues/85). These documents
+define the approved product, not proof of complete delivery.
 
-Deliver one small, production-ready **initial setup** assistant for a source-ready
-WordPress plugin or theme. It proposes a release recipe in a draft PR; the target
-maintainer owns the files afterwards. Release Please's normal version/release PRs
-continue; later template-update PRs, regeneration and managed-template repair do
-not. The current absence of deployed feature state permits a clean format cut,
-not reduced production security, reliability or testing.
-
-The consumer is PHP in Booster's bundled GitHub provider, not the shared Actions
-publisher. A template ZIP is input to that reader. It is never executed on
-WordPress. The generated files become repository code with the same review and
-maintenance responsibilities as deliberately copied starter code.
+## 1. Supported targets and boundaries
 
 ### Supported first recipe
 
@@ -57,37 +46,31 @@ missing value is a manual-setup case. Generated Quality uses that exact value fo
 the bounded payload syntax check on GitHub-hosted `ubuntu-24.04`. The generated
 target adapters are Bash and do not install Node or a package manager merely
 because the producer repository itself is Node-based. These are explicit tooling
-choices, not a claim to certify every PHP/WordPress version a target declares. Product-specific tests and additional compatibility requirements
-remain target-maintainer work. No artificial Composer project is generated.
+choices, not a claim to certify every PHP or WordPress version a target declares.
+Product-specific tests and additional compatibility requirements remain the
+target maintainer's responsibility. No artificial Composer project is generated.
 
 Unsupported does not mean insecure or unmanageable by Booster. Explain the exact
 limitation and offer manual customization guidance without speculative writes.
 Other Booster installation, branch and release-management features keep their
 existing eligibility and behavior.
 
-## 2. Recipe before format
+## 2. Generated files and execution
 
-The existing pack's generated release workflow contains local two-event
-orchestration, merge-parent/PR reconstruction, draft discovery, privileged ZIP
-building, upload/publication and Release Please label reconciliation. Merely
-changing the manifest would preserve the wrong recipe.
+The [examples](BOOTSTRAP_STARTER_EXAMPLES.md#1-files-and-local-responsibilities)
+show the generated file set. Read-only Quality builds and verifies the package;
+shared Profile B owns Release Please and publication. Target-local scripts only
+build and independently verify the archive. `version.txt`, the Release Please
+manifest and the WordPress header must agree. The committed `release-contents.txt`
+file selects the payload.
 
-| Existing or proposed responsibility | Disposition and concrete reason |
-| --- | --- |
-| Local generic draft/tag/label/merged-PR/retry publisher | Delete; the existing shared Profile B workflow owns it. |
-| `scripts/upload-release-assets.sh` | Delete from the pack and consumer map; no target-local publisher. |
-| Read-only Quality workflow | Supply the small exact-source build/verification job in the examples; no release-candidate shortcut lane. |
-| Build and independent archive verification adapters | Keep the concrete source projection, layout, bounds and identity checks; remove publication/credential/state responsibilities. Do not invent an adapter framework. |
-| Release Please configuration and manifest | Keep; RP remains the sole version/lifecycle engine. |
-| `version.txt` | Keep as the simple strategy's version source; require equality with manifest and WordPress header. This is not a second version calculator. |
-| `release-contents.txt` | Keep as explicit maintainer-reviewable payload authority. The exact committed allowlist, not dirty checkout contents, decides the ZIP. |
-| Generated ownership/managed-update receipt | Remove. Keep only the local state needed to complete/read back the initial operation. |
-| Origin and maintenance information | Keep human-readable support instructions in `RELEASE-STARTER.md` and one small passive `.ran-booster-release-starter.json` origin record for the bounded read-only adoption security check in section 7. Neither grants write authority or managed-template ownership. |
-| Initial preview, authorization, identity, conflicts and truthful outcome | Keep; the feature creates remote repository changes. |
-| Template-update methods/controls/engine | Remove behavior and UI; the current mandatory host-interface slots need the specific disposition in section 6. |
-| Booster host certification, database matrix, updater graph | Not generated. Retain those where needed to qualify Booster itself. |
-| Arbitrary build hooks, ecosystem detection and deployment destinations | Outside this starter. |
-| Background advisory scanner, cached dashboard/status, notification scheduler or automatic repair | Not part of this delivery. Section 7 retains only the owner-requested on-demand read-only adoption checkpoint plus normal disclosure/subscription guidance. |
+`RELEASE-STARTER.md` explains maintainer responsibilities. The passive
+`.ran-booster-release-starter.json` origin record supports the read-only advisory
+check in section 7; neither file gives Booster continuing write authority.
+Arbitrary build hooks, automatic ecosystem detection and extra deployment
+destinations are outside the supported recipe. No template-update engine,
+background scanner, cached status service, notification scheduler or automatic repair is supplied. Booster's own host certification,
+database tests and updater integration checks are not generated into targets.
 
 ### Execution boundaries
 
@@ -118,11 +101,11 @@ Quality executes the same applicable source/archive checks on ordinary PRs,
 Release Please PRs and input-free dispatch. No bot-only skip catalogue, prior-PR
 artifact reuse or separate installed-candidate state machine is generated.
 
-## 3. Effective prerequisites, not invented capabilities
+## 3. Setup and execution prerequisites
 
-The audited shared workflow has **no configurable default-branch input**: its
+The shared workflow requires **default branch `main`**: its
 admission, ref checks and RP target all require `main`. The starter must refuse
-another default branch; do not rename it or silently add a shared-workflow feature.
+another default branch; do not rename it.
 
 Assessment, preview and creation of the initial draft setup PR may proceed before
 the owner completes Actions, runner, bot-PR or immutable-release configuration.
@@ -216,7 +199,7 @@ replacement values). Shared entries may refer to the same physical member.
 
 There are six physical files: the manifest and five templates. Do not include
 source schemas, tooling, executable dependencies or an undeclared member in the
-public ZIP. Deduplicate the currently identical plugin/theme RP config template.
+public ZIP. Both profiles share the same RP config template.
 All pack members are inert regular files, not executable members or symlinks.
 
 Tokens are literal `{{RAN_NAME}}`. Values are derived by the consumer from the
@@ -258,8 +241,8 @@ purpose is bounded handling of remote input, not support for more formats.
 Production discovery reads only the canonical repository's published stable
 immutable releases. Select the newest eligible stable release under the existing
 bounded client request limits and validate it fully; do not walk historical packs
-to find an old supported renderer. No eligible release is unavailable; a different
-API is unsupported; malformed identity/archive is invalid. None returns a usable
+to find an old supported renderer. If no eligible release exists, report the pack as unavailable. A different API
+is unsupported; malformed identity or archive content is invalid. None returns a usable
 pack or write authority. A failed/unsupported latest stable pack does not silently
 fall back. Drafts/prereleases never become production pack input.
 
@@ -281,7 +264,7 @@ bash scripts/verify-release.sh <archive-path> <version> <exact-commit>
 ```
 
 Only exact committed ordinary blobs selected by committed `release-contents.txt`
-are payload authority. For this new recipe the allowlist is sorted explicit file
+are payload authority. The allowlist is sorted explicit file
 paths, one per line, with no globs, directory expansion or overlap. The consumer
 proposes it from its narrow recognized source-ready layout and shows it for
 review; unknown payload paths require manual setup. Preserve licenses and required
@@ -295,19 +278,18 @@ verification must compare with the committed projection and enforce the existing
 WordPress archive bounds (50 MiB compressed, 10000 members, 127826407 expanded
 bytes, 200:1 ratio) before unsafe extraction. Product-specific build commands,
 network credentials and release mutations have no place in these adapters.
-Retain useful existing validator code; do not rewrite a generic archive library
-for this migration. A bounded payload PHP syntax check fails on any parse error.
+A bounded payload PHP syntax check fails on any parse error.
 
-For the pack's **own** build, the new interface is:
+The pack's **own** build interface is:
 
 ```text
 pnpm run build -- <output-directory> <repository-id> <tag> <exact-source-commit>
 bash scripts/verify-pack.sh <zip-path> <repository-id> <tag> <exact-source-commit>
 ```
 
-It has no release-ID argument. Keep all meaningful Node/source/render/archive
-checks and double-build proof in read-only Quality, adding input-free dispatch.
-Replace input-tar promotion with the final verified ZIP and the existing
+It has no release-ID argument. Read-only Quality runs the Node, source, rendering
+and archive checks, including double-build proof and input-free dispatch.
+Promotion uses the final verified ZIP and the existing
 `ran-profile-b-promotion.json` schema; artifact name is
 `ran-booster-release-bootstrap-templates-<run-id>-<attempt>`. One listed public
 asset is the fixed pack ZIP. Shared Profile B retains publication ownership;
@@ -322,56 +304,36 @@ ZIP path, not a latest URL. The harness may supply simulated transport facts for
 an unpublished candidate, clearly labeled **fixture**, without putting fake IDs
 in the pack or accepting Actions artifacts in production discovery. Test both
 plugin/theme renderings and normalized target-file digests through the actual
-candidate provider, not Core's older bundled provider.
+candidate provider identified in the test evidence.
 
 After publication, separately exercise real GitHub release transport/identity and
 the installed Core composition. Candidate-fixture success is not public-release
 or installed-feature evidence.
 
-## 6. Initial-only operation and the real host boundary
+## 6. Initial operation and host interface
 
 The initial transaction keeps enough local state to bind user, provider/repository,
 package/source revision, target base SHA, exact pack identity, previewed paths and
 content, initial operation ID and created branch/commit/PR. A bounded preview
 expiry (currently 15 minutes) is retained. Origin metadata is not authority;
-confirmation must recompute and compare verified inputs. No receipt migration or
-managed-template update state is needed. Package adoption performs only the
+confirmation must recompute and compare verified inputs. No managed-template
+update state is needed. Package adoption performs only the
 bounded read-only provenance/advisory check in section 7.
 
-Known source boundary:
+The supported Core/provider composition uses
+`RepositoryReleaseWorkflowManagementV3`, with only the five initial `workflow*`
+operations: status, preview, inspect, setup and outcome. V2 compatibility
+adapters, update-method shims and template-maintenance controls are outside this
+contract. Ordinary release update and deployment controls remain supported;
+those do not maintain the starter files.
 
-| Owner | Inspected path/symbols and proposed action |
-| --- | --- |
-| Provider | `src/GitHubProvider.php`: retain five initial `workflow*` operations while moving the supported composition to the clean V3 host interface; remove update forwarding and V2 capability support. |
-| Provider | `src/ReleaseDeployments/WorkflowAssistance/GitHubRepositoryReleaseWorkflow.php`: initial status/preview/inspect/setup/outcome only; remove update implementation. |
-| Provider | `WorkflowApplicationCoordinator.php`: remove `inspectUpdate`, `setupUpdate`, update-bundle logic and old/new managed-template comparisons; retain exact initial mutation/readback checks. |
-| Provider | `SourceReadyAssessor.php`, `ManagedReleaseBundle.php`, state/record classes: use the new fixed file map; remove managed-update assessment/receipt ownership, preserve initial conflicts and operation outcome. |
-| Core | `RAN/Admin/ReleaseManagement/ReleaseWorkflowRequestController.php`: allow only `inspect`, `setup`, `outcome`; remove `update_inspect`/`update_setup` dispatch and related request/preview branches. Forged old operations fail before credentials/remote I/O. |
-| Core | `ReleaseWorkflowControls.php` composes `ReleaseWorkflowPresenter` and `ReleaseWorkflowDisplay`: remove update buttons, projections/messages and related views/tests; retain initial setup and readback. |
-| Core contract | `RAN/RepositoryProvider/RepositoryReleaseWorkflowManagementV2.php` presently REQUIRES both update methods. The sharp-cut initial-only design must not preserve those dead public slots merely for compatibility. |
-
-**G0 host decision:** make the connected Core/provider interface cleanly
-initial-only. Introduce `RepositoryReleaseWorkflowManagementV3` with only the five
-initial `workflow*` operations (status, preview, inspect, setup, outcome), update
-the bundled GitHub provider and Core capability resolution/callers together, and
-remove V2/update-method support from the supported composition once the exact
-candidate tuple is qualified. There is no V2 compatibility adapter, failure-only
-update-method shim or transition-only provider release. The feature is unshipped
-and the owner selected a sharp cut; retaining unreachable public update methods
-would be compatibility machinery without a supported consumer.
-
-Core must reject forged legacy `update_inspect`/`update_setup` requests during
-request validation before credential lookup or provider/remote I/O. Tests cover
-that negative boundary and prove no update capability is advertised or reachable.
-If source refresh discovers another real V2 consumer, stop and return that concrete
-dependency to #81 rather than silently retaining a bridge.
-
-Core's initial-only UI/caller changes belong to Core integration; coordinate
-separate provider and Core branches through #81. They are part of G1 candidate
-composition and G2 adoption, not optional
-post-release polish. Preserve ordinary release update/deployment controls; those
-are unrelated to template maintenance. Agents must refresh/search the exact
-caller/test graph before deletion and return any additional concrete coupling.
+Core accepts only `inspect`, `setup` and `outcome` requests for this feature.
+Forged `update_inspect` or `update_setup` requests must fail validation before
+credential lookup or provider/remote I/O. Tests prove that no template-update
+capability is advertised or reachable. Any newly discovered dependency on V2
+requires an explicit decision in
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81), not an implicit
+compatibility bridge.
 
 Initial requests cannot automatically repeat a successful setup, rewrite an
 existing PR or replace maintainer files. Preserve bounded operation occupancy and
@@ -381,17 +343,16 @@ blindly issue a second write, force-update main, delete unknown remote state or
 create a general recovery engine. Tests must cover duplicate confirmation,
 concurrent requests, target movement and partial/lost responses.
 
-## 7. Production maintenance without another product
+## 7. Maintenance and advisory checks
 
-**Frozen production boundary:** maintain and secure the supplied starter/shared
+Maintain and secure the supplied starter/shared
 components; communicate known defects through existing project channels; target
 owners maintain their generated copies. Do not ship background monitoring, a
 cached dashboard/status service, scheduler, automatic repair or update engine.
 Retain one bounded **on-demand read-only adoption checkpoint**: after Booster has
 resolved the canonical package repository and exact observed revision, it may
 read the passive origin record and public advisory information described below.
-This is a product-scope choice, not a beta exception or a promise of continuous
-monitoring.
+This check does not provide continuous monitoring.
 
 The initial setup writes `.ran-booster-release-starter.json` at repository root,
 in addition to the human-readable setup PR and `RELEASE-STARTER.md`. The JSON is
@@ -491,8 +452,12 @@ not treat the index alone as an advisory. A warning is emitted only when the
 validated origin's exact pack version or shared Profile B commit occurs in the
 corresponding validated affected list. Fixed identities are displayed as manual
 mitigation targets, not automatically installed. Duplicate GHSA IDs, unknown
-fields, malformed identities, oversized data or contradictory duplicate affected
-identities invalidate the whole index for that check.
+fields, malformed identities or oversized data
+invalidate the whole index for that check. Within each advisory, affected
+identities must be unique and must not equal its fixed identity. Different
+published advisories may identify the same affected version or commit and name
+different fixes. Return every independently verified matching advisory with its
+own manual mitigation target.
 
 Maintainers update the index as part of publishing/maintaining the corresponding
 Security Advisory and focused manual fix guidance. Tests cover exact pack and
@@ -518,56 +483,49 @@ issues before appropriate disclosure.
 
 Review must confirm that these channels and ownership are operational, not just
 links in a template. If a concrete production requirement cannot be met by that
-boundary, return it as a narrowly scoped decision; do not quietly grow the G0
-starter into a security-monitoring platform.
+boundary, return it as a narrowly scoped decision; keep this starter within its
+defined scope.
 
-## 8. Qualification and handoff
+## 8. Qualification and acceptance
 
-G0 freezes the recipe, schema/map, initial-only V3 host boundary, passive adoption
-security and examples. Coordinate current ownership in
-[#81](https://github.com/RocketsAreNostalgic/.github/issues/81) and
-[#65](https://github.com/RocketsAreNostalgic/.github/issues/65): one writer for
-#55/#56 pack schema/templates/build/CI, coordinated Core integration, preserved
-branch claims. An opened PR does not authorize provider/producer publication.
+Qualification identifies the exact provider, producer and Core commits and the
+actual ZIP digest. It covers independent archive verification and rejection of
+malformed archives by both the verifier and native ZIP tools. Test both plugin
+and theme output, safe setup and rejection of unsupported operations. Preserve meaningful PHP, Node, host-integration and static-analysis
+gates. Changing a certification pin does not substitute for proving compatibility.
 
-G1 requires exact provider, producer and Core candidate SHAs, actual ZIP digest,
-independent/native ZIP negatives, plugin/theme output, safe setup and inert removed
-operations. Preserve meaningful PHP/Node/host/analysis gates with a
-retained/replaced/deleted map; never replace host-certification pins to get green.
+Use the [test exchange and acceptance runbook](BOOTSTRAP_STARTER_EXAMPLES.md#8-exact-test-exchange-and-acceptance-runbook).
+It requires installed plugin and theme journeys, a target outside RAN settings
+defaults, read-only pre-merge execution, permission and repeat-operation tests,
+protected-merge proof and installation of the immutable ZIP. Candidate tests may
+use explicitly identified unpublished artifacts; production dependencies must
+resolve to real releases. Source or fixture success is not installed acceptance.
 
-G2 records actual versions and order before mutation: complete provider release →
-Core adoption and initial UI/caller changes → Core archive/quality/release proof →
-named-site upgrades → complete pack release through #55 → installed feature test.
-Candidate tests may use unpublished exact artifacts; production dependencies must
-resolve. A brief setup-unavailable window is acceptable, not a bridge, fake release
-ID or partial public pack.
+Ben must identify and authorize the two disposable sites and fixture repositories.
+Fixture merges and publication need separate approval. Disposable tests still
+meet production criteria; no settings, secrets or site resets are implied.
+Record incomplete or failed requirements in
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81) and keep required
+[#85 notices and guidance](https://github.com/RocketsAreNostalgic/.github/issues/85)
+open until their installed lifecycle tests pass. Delivery ownership, release
+order and review arrangements belong in those work issues. They do not alter the
+product contract or grant merge/publication authority.
 
-Use the [exact exchange and acceptance runbook](BOOTSTRAP_STARTER_EXAMPLES.md#8-exact-test-exchange-and-acceptance-runbook),
-including both plugin/theme fixtures, non-RAN-default settings, pre-merge read-only
-execution, permission/refusal/repeat cases, protected-merge proof and immutable
-ZIP installation. Ben must supply the two disposable-site and fixture repository
-identities and safe mutation authority; fixture merge/publication is separately
-authorized. Disposable tests meet production criteria. Return failures as narrow,
-evidence-backed qualification amendments; do not assume acceptance.
+## 9. Implementation references and decision provenance
 
-Every implementation/contract amendment receives separate `@codex review` and
-`@codex security review`, with substantive findings resolved on the final head.
-Preserve protected merge methods and specific owner approvals; Core bot release
-proposals use merge commits. No settings/secret/site resets, new analysis floors,
-broad naming changes or Blacksmith AI delegation. Record actual evidence under
-#55/#56/#81/#57/#47; code-ready is not installed, published or functionally proven.
+[Profile B implementation evidence](RELEASE_PROFILE_B.md#implementation-evidence)
+links the publisher's current code and tests alongside the inspected revision.
+For navigation, the producer's [current qualification guide](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates/blob/main/docs/QUALIFICATION.md)
+and [delivery evidence in #55](https://github.com/RocketsAreNostalgic/.github/issues/55)
+cover pack construction and exchange; [#81](https://github.com/RocketsAreNostalgic/.github/issues/81)
+owns connected implementation and installed acceptance. Inspect the relevant
+implementation revision when changing its mechanism; neither this contract nor
+an earlier inspection certifies a later execution.
 
-## 9. Source basis and review status
-
-G0 was frozen through [#84](https://github.com/RocketsAreNostalgic/.github/pull/84)
-and [#81](https://github.com/RocketsAreNostalgic/.github/issues/81); the linked owner
-clarifications in this document supersede the original settings prerequisites,
-not the schema or host boundary. The [freeze's inspected source references](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/docs/release/BOOTSTRAP_STARTER_CONTRACT.md#9-source-basis-and-review-status)
-are historical provenance, not current implementation or certification pins.
-
-[Profile B](RELEASE_PROFILE_B.md#implementation-evidence) links current and
-inspected publisher code/tests. Refresh affected consumer/producer source for
-implementation review rather than treating this frozen recipe as deployment proof.
-Implementation, exact-artifact/installed-feature qualification, protected-merge
-proof and [#85 notices/maintenance](https://github.com/RocketsAreNostalgic/.github/issues/85)
-remain separately evidenced delivery obligations.
+Optional decision history: [contract approval #84](https://github.com/RocketsAreNostalgic/.github/pull/84),
+[strict immutability](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839238578),
+[proposal and execution prerequisites](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839475013),
+[failure diagnostics](https://github.com/RocketsAreNostalgic/.github/issues/81#issuecomment-5839662944)
+and [overlapping advisory identities](https://github.com/RocketsAreNostalgic/.github/issues/81#owner-decision--overlapping-advisory-identities-29-september-2026).
+The [original source inspection](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/docs/release/BOOTSTRAP_STARTER_CONTRACT.md#9-source-basis-and-review-status)
+is retained as historical provenance, not a current certification pin.

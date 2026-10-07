@@ -5,13 +5,6 @@ explains the existing providers and what their code establishes. Product-specifi
 archive, installed-runtime, database, host, Windows, release and deployment checks
 stay in consumer repositories and feed their required merge evidence.
 
-<a id="provider-lifecycle-policy"></a>
-<a id="php-v2-supersedes-retired-php-v1"></a>
-<a id="wordpress-remains-on-the-current-provider-generation"></a>
-<a id="node-remains-on-the-current-provider-generation"></a>
-<a id="intentionally-localself-validating-repositories"></a>
-<a id="booster-parity-boundary"></a>
-
 ## Choose a provider
 
 Choose by maintained source, not merely existing manifests. Generated assets alone
@@ -24,14 +17,12 @@ excuse checks for maintained frontend source.
 | `quality-wordpress-plugin.yml` | Mixed WordPress PHP and maintained frontend; Composer plus locked pnpm. Product compatibility matrices remain local. | `baseline / RAN WordPress Plugin Quality` |
 | `quality-node.yml` | Maintained pnpm projects; another manager needs a justified equivalent local contract. | `baseline / RAN Node Quality` |
 
-PHP v1 is retired: do not restore it or require its old status. New generations
-need substantive contract changes, not naming symmetry; WordPress/Node do not
-need a v2 merely because PHP has one. Specialist local workflows may substitute
+Use the supported providers listed above and their emitted status contexts.
+A new provider generation requires a substantive contract change. Specialist
+local workflows may substitute
 only when every applicable transferable guarantee is demonstrated; extra product
 checks alone do not justify dropping the shared baseline. This permits shared
 package self-tests and Booster's richer composition while preserving parity.
-
-<a id="shared-baseline-guarantees"></a>
 
 ## Provider execution and limits
 
@@ -50,9 +41,9 @@ installation and invoke `pnpm check`.
 PHP profiles additionally run `php -l` over discovered `*.php` files outside
 root `vendor`/`node_modules`. **This is not complete maintained-PHP discovery:**
 it does not independently select extensionless/mixed-template files. A selected
-file's parser failure propagates; discovery failure is a different boundary. The current
-process-substitution loop also fails to propagate a failing `find` process;
-a focused execution of the existing step with discovery returning exit 23 exits 0.
+file's parser failure propagates; discovery failure is a different boundary. At the inspected revision, the loop also fails to propagate a failing `find`
+process: a focused local execution of the existing floor-lane step returned
+success when file discovery exited with error code 23.
 The policy still requires discovery failure propagation. This provider gap is
 tracked through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65);
 consumer coverage deficiencies and repairs are separately recorded in
@@ -63,9 +54,6 @@ Exact-head proof is separate from mergeability. Strict integration rules or a
 merge queue must establish freshness against the target branch; add product
 integration proof where needed. Provider source inspection does not establish
 live ruleset activation, consumer scope or full-estate acceptance.
-
-<a id="caller-examples"></a>
-<a id="inputs"></a>
 
 ## Inputs and caller examples
 
@@ -95,11 +83,8 @@ caller selects `quality-node.yml` and its exact declared `pnpm-version`; a mixed
 WordPress caller selects `quality-wordpress-plugin.yml`, `php-version` and exact
 `pnpm-version`. Optional `node-version-file` and `working-directory` must identify
 the actual checked project. Inputs never override the manifest's package-manager
-identity. Fix missing locks, metadata and truthful aggregate commands during
-migration; do not select a weaker provider to avoid them.
-
-<a id="trust-boundary-consumer-quality-contracts"></a>
-<a id="consumer-aggregation-versus-merge-enforcement"></a>
+identity. Provide the required locks and metadata, and ensure aggregate commands run the
+claimed checks. Do not select a weaker provider to avoid these requirements.
 
 ## Consumer aggregation and protection
 
@@ -109,9 +94,11 @@ release gates. Its status is useful evidence, not unforgeable workflow identity.
 Follow [ruleset policy](REPOSITORY_RULESETS.md) and
 [enforcement integrity](QUALITY_STANDARDS.md#enforcement-integrity).
 
-The transitive review surface includes aggregates, dependencies/locks, delegated
-configs/helpers/tests, caller topology and identity inputs: PHP ranges/extensions,
-Node/pnpm, working directory and support declarations. Accepting an input does
+Review the complete chain of delegated behavior: aggregate commands,
+dependencies, lockfiles, configuration, helpers, tests and workflow callers.
+Also review inputs identifying the checked project and environment, including
+PHP ranges and extensions, Node and pnpm versions, working directory and support
+declarations. Accepting an input does
 not independently prove its truth. Organisation-required execution must come
 from organisation-controlled repository/branch/workflow configuration, with any
 reusable delegation pinned immutably. The separate
@@ -119,8 +106,6 @@ reusable delegation pinned immutably. The separate
 [#31](https://github.com/RocketsAreNostalgic/.github/issues/31) and
 [#139](https://github.com/RocketsAreNostalgic/.github/issues/139); it supplies no
 current activation claim.
-
-<a id="current-and-target-consumer-pins"></a>
 
 ## Inspected implementation
 
@@ -137,8 +122,3 @@ and [package controls](https://github.com/RocketsAreNostalgic/ran-coding-standar
 These revisions identify inspected evidence, not new consumer pins. Mechanism
 changes update this reference/evidence in the same PR or record a cross-repository
 follow-up. Unrelated source commits do not require refreshing the group.
-Historical provider inventories remain optional [foundation evidence](https://github.com/RocketsAreNostalgic/.github/issues/12);
-active migration claims belong in #65, not a duplicate pin/status table here.
-Plugin Library remains deferred; inactive `tnyGoogleKey` requires re-audit if
-revived. Maintained local topologies such as `ran-wp-github-release-updater` still
-need migration or justified-difference disposition; they do not revive PHP v1.

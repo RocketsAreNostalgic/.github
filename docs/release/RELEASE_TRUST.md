@@ -178,8 +178,6 @@ Runner provider is not a semantic invariant: GitHub-hosted Ubuntu 24.04 and the
 approved Blacksmith Ubuntu 24.04 runner are acceptable. Provider changes are
 trust/operations decisions, not cosmetic consistency work.
 
-<a id="shared-workflow-boundary"></a>
-
 ### Repository-specific stronger gates
 
 Generic shared quality workflows remain read-only evidence infrastructure unless
@@ -220,9 +218,6 @@ subjects survive into consumed commits, those subjects are release metadata.
 Other release models may document a justified difference but still require
 intentional, reviewable release metadata.
 
-<a id="core-invariant"></a>
-<a id="repository-ownership"></a>
-
 Each repository owns release-driving types, dependency/breaking-change semantics
 and compatible merge methods. Configuration, documentation, tests and effective
 merge settings must agree. A release-significant effect—production dependency,
@@ -249,8 +244,8 @@ an internal refactor. Do not impose one organisation-wide type list.
 Classification is read-only evidence, not mutation authority. Checks may inspect
 PR subjects, exact base/head revisions, paths/manifests and release configuration.
 Share helpers only for genuinely common semantics; retain product-specific rules
-locally. Do not recreate a generic classifier or duplicate Release Please lifecycle
-machinery to satisfy superseded rollout instructions.
+locally. Release Please owns the release lifecycle; classification checks must
+not duplicate that machinery.
 
 ### Dependency changes
 
@@ -272,8 +267,6 @@ A green “no user facing commits” result proves metadata was applied, not tha
 classification was correct. Reassess metadata after merge-method, release-tool,
 type or dependency-policy changes.
 
-<a id="audit-questions"></a>
-
 ## Audit disposition
 
 Review triggers and mutation paths, job credentials, untrusted-code exposure,
@@ -287,8 +280,6 @@ independence and stronger local gates against the invariants above. Record one o
 - **UNKNOWN — MORE EVIDENCE NEEDED:** insufficient current evidence.
 
 Difference alone is not a finding.
-
-<a id="relationship-to-source-quality"></a>
 
 ## Maintenance
 

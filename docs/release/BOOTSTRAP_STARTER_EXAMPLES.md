@@ -1,10 +1,11 @@
-# Initial release starter: concrete G0 examples
+# Initial release starter examples
 
-These are frozen G0 examples, not deployed templates or execution evidence.
-Read the [contract](BOOTSTRAP_STARTER_CONTRACT.md) for the accepted schema,
-proposal/execution boundary, [qualification requirements](BOOTSTRAP_STARTER_CONTRACT.md#8-qualification-and-handoff)
-and unchanged UI/owner end-to-end acceptance deferral. Current delivery evidence
-belongs to [#81](https://github.com/RocketsAreNostalgic/.github/issues/81).
+These examples show the approved plugin and theme recipe. They explain generated
+files and the required tests; they are not deployed templates or proof of
+execution. Read the [contract](BOOTSTRAP_STARTER_CONTRACT.md) for supported targets,
+setup and execution prerequisites, and [acceptance requirements](BOOTSTRAP_STARTER_CONTRACT.md#8-qualification-and-acceptance).
+Its opening status distinguishes delivered components from the UI/manual
+acceptance still held under [#81](https://github.com/RocketsAreNostalgic/.github/issues/81).
 
 The fictional target is `example/acorn-plugin`, root plugin `acorn-plugin.php`,
 slug `acorn-plugin`, version `0.1.0`. The forty `1` characters in `bootstrap-sha`
@@ -33,12 +34,9 @@ Nothing writes target main, creates repository secrets or silently changes Actio
 settings.
 Existing target files at any generated path make automatic setup a conflict.
 
-Compared with the old recipe, `upload-release-assets.sh` and
-`.ran-booster-release-profile.json` disappear. There is no template-update
-receipt or polling job. The publication body disappears from the local release
-workflow. The new Quality file supplies the actual tested-artifact boundary;
-`RELEASE-STARTER.md` explains the one-time handoff rather than granting ownership.
-File count is not the goal: every surviving local responsibility has a reason.
+The target has no local publisher, template-update receipt or polling job.
+Quality supplies the tested artifact; the shared publisher promotes it.
+`RELEASE-STARTER.md` explains the one-time handoff to the maintainer.
 
 ## 2. Generated Quality workflow
 
@@ -321,7 +319,7 @@ identical-input builds, and inject dirty/untracked files, unsafe allowlists,
 symlinks, wrong root/version/URI, extra members and digest/resource failures.
 Neither this table nor an illustrative YAML block is executable feature proof.
 
-## 7. Human-readable handoff instead of managed state
+## 7. Maintainer guidance
 
 The consumer writes the passive `.ran-booster-release-starter.json` origin record
 defined by the contract and `RELEASE-STARTER.md` with the following short
@@ -401,7 +399,7 @@ not these shorthand descriptions. Link publication/retry guidance to the existin
 [shared Profile B contract](RELEASE_PROFILE_B.md) using a concrete canonical URL in
 generated output; keep the setup PR and handoff usable without Booster or a
 successful Actions run. The producer security policy must match this initial-only
-contract; the coordinator verifies the reporting/subscription route
+contract; the responsible maintainer verifies the reporting and subscription routes
 before public feature acceptance. This process applies in production regardless
 of user count. No per-site tracking, telemetry, advisory database, scheduler or
 write-capable adoption service is introduced. The bounded origin parser/check is
@@ -418,8 +416,8 @@ These steps belong to the integration/test harness, not generated project files:
    its declared digests and invokes the actual candidate PHP reader with that
    local ZIP. Label simulated transport as fixture-only. Produce both generated
    file sets and compare them with the producer's output using identical target inputs.
-3. Core integration qualifies the candidate provider inside an exact Core candidate that removes
-   the old update controls/routes and adopts the clean initial-only
+3. Core integration qualifies the candidate provider inside an exact Core candidate
+   using the initial-only
    `RepositoryReleaseWorkflowManagementV3` contract. Prove V2/update methods are
    absent from the supported provider/Core composition and forged legacy update
    operations fail request validation before credentials or remote I/O. Exercise
@@ -427,11 +425,13 @@ These steps belong to the integration/test harness, not generated project files:
    `security/release-starter-advisories.json` index with matching, non-matching,
    missing, invalid, duplicate, oversized, unpublished-GHSA and unavailable
    advisory/provenance fixtures; none may grant write authority, parse advisory
-   prose for identity or infer vulnerability merely from age. Record original
-   certified-host checks separately from this new composition.
-4. With explicit approval and real immutable versions, release the complete
-   provider, adopt/qualify/release it with the connected Core changes, upgrade the
-   named disposable sites, and publish/read back the complete pack via Profile B.
+   prose for identity or infer vulnerability merely from age. Record which Core
+   revision each host-compatibility check actually tested;
+   a pass against another revision does not qualify this composition.
+4. Use real immutable provider, Core and pack versions for installed acceptance.
+   Verify the actual dependency composition and publication readback before
+   upgrading the named disposable sites. Any required release or site mutation
+   follows the approved plan in #81 and requires explicit authority.
 5. Against named plugin and theme fixture repositories, prove actual installed
    assessment -> preview -> confirmation -> initial draft PR -> identity/content
    readback. Test changed target/pack, missing permissions, conflicting automation,
@@ -453,6 +453,5 @@ These steps belong to the integration/test harness, not generated project files:
    is an explicit acceptance gap.
 
 The tests may use the two existing disposable sites, but their addresses and safe
-operation boundaries have not been supplied by these examples. No new production
-releases are required solely to exercise a hypothetical update service. G0 is frozen;
-Participants do not gain merge/publication/site authority from these examples.
+operation boundaries have not been supplied by these examples. These examples
+grant no merge, publication or site-operation authority.

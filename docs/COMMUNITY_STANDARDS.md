@@ -40,10 +40,6 @@ A removed local file is not inherited as a repository-relative path: repair
 links to the canonical organisation URL. READMEs should link local contribution,
 support and security policies; WordPress `readme.txt` should expose useful routes.
 
-<a id="conduct"></a>
-<a id="public-support-and-disclosure-safety"></a>
-<a id="security-reporting"></a>
-
 ## Reporting routes
 
 Follow the linked support, security and conduct policies. Advertised support and
@@ -51,8 +47,6 @@ security routes must exist and be reachable. Local `SECURITY.md` must name the
 most concrete available private route and supported security-fix releases.
 When private reporting is unavailable, public security help requests may only
 ask for a confidential route without vulnerability details.
-
-<a id="contribution-and-validation-guidance"></a>
 
 ## Issue templates
 
