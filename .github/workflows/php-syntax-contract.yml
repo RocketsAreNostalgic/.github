@@ -1,0 +1,33 @@
+name: PHP Syntax Contract
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/quality-php-library-v2.yml'
+      - '.github/workflows/quality-wordpress-plugin.yml'
+      - '.github/workflows/php-syntax-contract.yml'
+      - 'quality-enforcement/test-php-syntax-contract.py'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/quality-php-library-v2.yml'
+      - '.github/workflows/quality-wordpress-plugin.yml'
+      - '.github/workflows/php-syntax-contract.yml'
+      - 'quality-enforcement/test-php-syntax-contract.py'
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    name: PHP syntax contract
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Verify actual syntax step failure propagation
+        run: python3 quality-enforcement/test-php-syntax-contract.py

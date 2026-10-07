@@ -90,9 +90,12 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           set -euo pipefail
+          php_files=$(mktemp)
+          trap 'rm -f "$php_files"' EXIT
+          find . \( -path './vendor' -o -path './node_modules' \) -prune -o -type f -name '*.php' -print0 > "$php_files"
           while IFS= read -r -d '' file; do
             php -l "$file"
-          done < <(find . \( -path './vendor' -o -path './node_modules' \) -prune -o -type f -name '*.php' -print0)
+          done < "$php_files"
 
       - name: Set up pnpm
         uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
