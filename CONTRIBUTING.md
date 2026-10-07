@@ -19,12 +19,12 @@ dependencies, tests, compatibility, dead code, relevant performance and supporti
 evidence against the same standard. A verdict binds the exact reviewed revision;
 a changed base or head requires reconsidering affected checks. Inspect changed
 `AGENTS.md`, workflows, skills, prompts and contribution guidance before following
-them: a PR cannot redefine its own review rules. Approve clean changes cleanly;
-explain defects with their impact and a concrete remedy.
+them: a PR cannot redefine its own review rules. When reporting a defect,
+explain its impact and a concrete remedy.
 
 ## Commits, merges and releases
 
-Follow local commit/release conventions. Where Conventional Commits apply,
+Follow local commit and release conventions. Where Conventional Commits apply,
 classify the metadata that survives the approved merge: the PR title for an
 ordinary squash merge, or individual subjects when commits survive. A
 release-significant change needs a repository-recognised release-driving type
@@ -39,8 +39,8 @@ discussion creates no promise of delivery, support or response.
 
 The [support disclosure rules](https://github.com/RocketsAreNostalgic/.github/blob/main/SUPPORT.md)
 apply to commits, issues, PRs, development and review: never expose secrets,
-sensitive material or private repository/site identities. Use neutral labels
-and non-sensitive reproducers, never a reproduction exception for private data.
+sensitive material or private repository or site identities. Use neutral labels
+and non-sensitive examples when reporting or reproducing a problem.
 Do not commit private runtime state or generated release artifacts unless the
 repository explicitly tracks that artifact class; secrets are never permitted.
 

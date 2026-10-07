@@ -32,23 +32,27 @@ read-only contents permission, disable persisted checkout credentials and own
 runner selection. Callers cannot choose another source revision, arbitrary
 quality command, skip flag or privileged/self-hosted runner.
 
-Composer profiles require tracked manifests/locks, run
+Composer profiles require tracked manifests and lockfiles, run
 `composer validate --strict --no-check-publish --no-check-all`, install from the
-lock and invoke `composer check`. pnpm profiles require manifests/lock, compare
+lock and invoke `composer check`. pnpm profiles require manifests and a lockfile, compare
 requested pnpm with `packageManager`, verify the installed version, use frozen
 installation and invoke `pnpm check`.
 
 PHP profiles additionally run `php -l` over discovered `*.php` files outside
-root `vendor`/`node_modules`. **This is not complete maintained-PHP discovery:**
-it does not independently select extensionless/mixed-template files. A selected
-file's parser failure propagates; discovery failure is a different boundary. At the inspected revision, the loop also fails to propagate a failing `find`
+the root `vendor` and `node_modules` directories.
+**This is not complete maintained-PHP discovery:**
+it does not select PHP files with other extensions or no extension, including
+mixed-content templates outside the `*.php` pattern. A parser failure in a
+selected file fails the check.
+At the inspected revision, however, the loop does not propagate a failing `find`
 process: a focused local execution of the existing floor-lane step returned
 success when file discovery exited with error code 23.
 The policy still requires discovery failure propagation. This provider gap is
 tracked through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65);
 consumer coverage deficiencies and repairs are separately recorded in
 [#136](https://github.com/RocketsAreNostalgic/.github/issues/136).
-Neither a passing provider nor a green required aggregate proves missing scope.
+A passing provider or aggregate check does not prove that all required files
+were selected.
 
 Exact-head proof is separate from mergeability. Strict integration rules or a
 merge queue must establish freshness against the target branch; add product
@@ -98,8 +102,8 @@ Review the complete chain of delegated behavior: aggregate commands,
 dependencies, lockfiles, configuration, helpers, tests and workflow callers.
 Also review inputs identifying the checked project and environment, including
 PHP ranges and extensions, Node and pnpm versions, working directory and support
-declarations. Accepting an input does
-not independently prove its truth. Organisation-required execution must come
+declarations. Accepting an input does not independently prove its truth.
+Organisation-required execution must come
 from organisation-controlled repository/branch/workflow configuration, with any
 reusable delegation pinned immutably. The separate
 [registry implementation](../../quality-enforcement/README.md) is dormant pending
@@ -120,5 +124,5 @@ and [package controls](https://github.com/RocketsAreNostalgic/ran-coding-standar
 | Shared PHP rules at [4fb34cf349021d6b65430a4f93ce4de3e221e0a5](https://github.com/RocketsAreNostalgic/ran-coding-standards/tree/4fb34cf349021d6b65430a4f93ce4de3e221e0a5): `RANWordPress/ruleset.xml`, `RANWordPressLibrary/ruleset.xml`, `RANWordPressPlugin/ruleset.xml`, `RANOwnedMethods/Sniffs/NamingConventions/ValidMethodNameSniff.php`, `tests/run.php` | Inspected inheritance supplies WordPress-Extra/PHPCompatibilityWP, deliberate filename/exception-data decisions and blocking alignment; opt-in owned-method checking covers inherited declarations. Package tests contain actual selection/suppression/target controls. Source inspection is not a fresh test run, consumer adoption or release qualification. |
 
 These revisions identify inspected evidence, not new consumer pins. Mechanism
-changes update this reference/evidence in the same PR or record a cross-repository
-follow-up. Unrelated source commits do not require refreshing the group.
+changes update this reference and its evidence in the same PR or record a
+cross-repository follow-up. Unrelated source commits do not require refreshing the group.

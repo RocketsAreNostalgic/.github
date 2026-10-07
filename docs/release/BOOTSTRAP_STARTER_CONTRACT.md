@@ -10,15 +10,11 @@ readback. The PHP reader in Booster's bundled GitHub provider validates the
 pack ZIP as data; it never executes the templates on WordPress. Generated files
 become repository code subject to normal review and maintenance.
 
-**Delivery status reported in #81, reviewed 7 October 2026:**
-[#81](https://github.com/RocketsAreNostalgic/.github/issues/81) records source
-integration and immutable component publication as delivered. The combined
-plugin/theme setup → generated release → installed product journey remains
-unaccepted. UI work and owner-verified manual/end-to-end testing remain deferred
-until Ben confirms interactive verification can resume; required notices and
-in-app guidance remain tracked in
-[#85](https://github.com/RocketsAreNostalgic/.github/issues/85). These documents
-define the approved product, not proof of complete delivery.
+**Acceptance:** this contract defines the approved design; [#81](https://github.com/RocketsAreNostalgic/.github/issues/81)
+records implementation and delivery. Installed acceptance of the complete plugin
+and theme journeys remains outstanding. UI work and owner-verified manual testing
+remain on hold until Ben authorizes resumption; [#85](https://github.com/RocketsAreNostalgic/.github/issues/85)
+tracks the required notices and in-app guidance.
 
 ## 1. Supported targets and boundaries
 
@@ -34,7 +30,8 @@ define the approved product, not proof of complete delivery.
   owns Release Please and exact tested-asset publication.
 - No existing release automation or generated-path collisions. An existing
   Quality workflow is a manual-integration case, not permission to replace it.
-  The initial recipe does not automatically compose an arbitrary existing CI DAG.
+  The initial recipe does not automatically integrate with an existing CI
+  job dependency graph.
 - Straightforward header and optional `readme.txt` version maintenance only.
   Additional version authorities that cannot be kept coherent by that fixed
   recipe require manual setup; do not infer arbitrary package/build conventions.

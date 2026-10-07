@@ -1,5 +1,8 @@
 # RAN Quality Standards
 
+- Ordinary contributions: [applicability](#what-applies), [commands](#commands-and-evidence) and [exceptions](#exceptions-require-review).
+- Quality tooling or CI changes: [Booster coverage controls](#booster-php-coverage-and-conventions), [enforcement](#ci-evidence-and-enforcement) and [qualification](#review-and-qualification).
+
 ## Scope and authority
 
 Maintained RAN repositories follow this baseline for their actual code surfaces.
@@ -19,21 +22,25 @@ configurations need not be identical.
 
 | Surface / profile | Required checks |
 | --- | --- |
-| Maintained PHP / `php-library` | Strict Composer validation, locked installation, shared standards, declared-range compatibility, independent syntax, maintained-production static analysis and behavioural, characterization and contract tests. PHPStan is the default; an existing equivalent is acceptable. |
+| Maintained PHP / `php-library` | Strict Composer validation, locked installation, shared standards, declared-range compatibility, independent syntax, static analysis of maintained production code, and appropriate behavioural tests, including characterization, contract or unit tests where applicable to the code. PHPStan is the default; an existing equivalent is acceptable. |
 | WordPress / `wordpress-plugin` | PHP plus applicable frontend checks, generated-asset and localisation parity, distributed-archive integrity, clean installation and activation and materially different supported WordPress, PHP and database boundaries. WordPress.org products need applicable Plugin Check evidence. |
-| JavaScript/TypeScript / `node` | ESLint, formatting, applicable type checks, behavioural, unit and asset tests; Stylelint for CSS/SCSS; generated-artifact freshness, locked dependencies and declared toolchain. |
+| JavaScript/TypeScript / `node` | ESLint, formatting, applicable type checks, and appropriate behavioural tests, including unit, contract or asset tests where applicable to the code; Stylelint for CSS/SCSS; generated-artifact freshness, locked dependencies and declared toolchain. |
 | `mixed` | Every applicable constituent requirement. |
 | `fixture` | Document its purpose and necessary checks; justify production gates that would invalidate it. |
 | `legacy` | Name the target profile and gaps; stage migration without avoidable new debt. This is temporary. |
 
-Use mature shared or upstream tools. WordPress PHP uses PHPCS/WPCS and
-preferably PHPCompatibilityWP. PHPCS checks and PHPCBF fixes use identical
-rules, paths and exclusions. PHPCBF is the PHP fixer. A second formatter needs a
+The test categories describe applicability; they do not make existing
+repository-required tests optional. Those tests must continue to run.
+
+Use mature shared or upstream tools. WordPress PHP must use PHP_CodeSniffer
+(PHPCS) with WordPress Coding Standards (WPCS), and should use PHPCompatibilityWP.
+PHPCS checks and PHP Code Beautifier and Fixer (PHPCBF) must use identical rules,
+paths and exclusions. PHPCBF is the PHP fixer. A second formatter needs a
 concrete unmet need and explicit review. Replacing a formatter must preserve
 intended checks, reject known violations and produce stable results on repeated
 runs.
 
-WordPress frontend derives through shared RAN exports from
+WordPress frontend configuration uses shared RAN exports based on
 `@wordpress/eslint-plugin`, `@wordpress/prettier-config` and
 `@wordpress/stylelint-config`. Prettier formats supported frontend code and text
 unless incompatible. Use supported ESLint configuration, separate CSS/SCSS
@@ -59,8 +66,8 @@ without duplication inside `check`.
 
 | Composer command | Contract |
 | --- | --- |
-| `check` | Non-mutating ordinary aggregate. |
-| `lint:syntax` | Independent parser sweep. |
+| `check` | Runs the ordinary required checks without modifying the checkout. |
+| `lint:syntax` | Checks PHP syntax independently of other tools. |
 | `standards` / `standards:fix` | PHPCS checks WPCS and compatibility; PHPCBF applies matching fixes. |
 | `analyze` | Analysis with declared paths, level and blocking or advisory status. |
 | `test` | Ordinary deterministic tests, including local workflow and contract tests. |
@@ -128,8 +135,8 @@ implementations. Check declarations that upstream WPCS skips and prove those
 checks reject known violations. Preserve actual foreign signatures, never
 blanket class exemptions. Keep PSR-4 namespaces and class filenames and the
 deliberate `WordPress.Files.FileName.NotHyphenatedLowercase` and
-`WordPress.Files.FileName.InvalidClassFileName` exclusions. Retain Yoda without
-changing evaluation order. Require accurate public contracts, useful types and
+`WordPress.Files.FileName.InvalidClassFileName` exclusions. Retain Yoda conditions (constants before variables in comparisons)
+without changing evaluation order. Require accurate public contracts, useful types and
 non-obvious explanations; full optional WordPress-Docs is not imposed, stronger
 local documentation checks survive.
 
@@ -158,13 +165,13 @@ their entire scope, including future code. Re-enable bounded disables; blanket
 all-rule suppression is forbidden in maintained code. Malformed and
 negative-test fixtures need intentional boundaries and necessary identifiers.
 
-Maintained-file analysis exemptions require explicit owner disposition; expose
+Exemptions from maintained-file analysis require explicit owner approval; expose
 new or widened exemptions in PR acceptance summaries. Reproduce checker
 limitations with locked tools and focused controls where practical. Temporary
 debt needs an owner and a removal condition; it is not automatically accepted.
-Resolve justification, fix violations or obtain explicit recorded limitations
-before acceptance. Remove stale annotations, not defenses. Shared waivers
-require reviewed applicability and representative tests; repetition alone is
+Before acceptance, reviewers must confirm the justification, require a fix or
+obtain explicit acceptance of the recorded limitation. Remove stale annotations,
+not defenses. Shared waivers require reviewed applicability and representative tests; repetition alone is
 insufficient. Project-specific exceptions remain local.
 
 Preserve these behavioral boundaries:
@@ -172,14 +179,12 @@ Preserve these behavioral boundaries:
 - Filesystem exceptions explain the required locking, atomicity, file identity or
   private-file behavior. Do not exempt whole alternative-functions categories.
 - JSON exceptions explain the required flags, error handling, byte identity or
-  independence from framework functions;
-  “deterministic” alone is insufficient.
+  independence from framework functions. “Deterministic” alone is insufficient.
 - Internal exception data is not HTML: escape at rendering boundaries and retain
   output checks. SQL and output exceptions require source or behavior evidence when
   checkers cannot trace receivers or fragments; zero diagnostics cannot certify them.
 - Base64 used for authentication or opaque protocols needs an explained purpose
-  and input boundaries; encoding
-  alone is not executable obfuscation.
+  and input boundaries; encoding alone is not executable obfuscation.
 - Read-only navigation need not gain a nonce; validate input, preserve capability and
   access checks and perform no protected mutation.
 
@@ -202,9 +207,9 @@ in existing PRs. Package CI does not certify consumers. Review needed releases
 and advisories promptly; no uniform versions, automatic estate bumps or fixed
 upgrade cadence is implied.
 
-Preserve adopted blocking `composer audit --locked --no-interaction`. Lookup
-failure is unavailable evidence: retry the same locked candidate, not claim
-security. Advisory waivers need narrow owner approval; exclusions, fail-open
+Preserve adopted blocking `composer audit --locked --no-interaction`. If the advisory lookup
+fails, retry with the same locked dependencies; a failed lookup cannot establish
+that they are free of known advisories. Advisory waivers need narrow owner approval; exclusions, fail-open
 behavior, relocation or removal need policy review and CI evidence. No new audit
 is imposed where none was adopted.
 

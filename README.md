@@ -11,7 +11,7 @@ remain authoritative; the organisation baseline does not lower stronger gates.
 | --- | --- |
 | Change CI or branch protection | [Workflow contract](docs/quality/QUALITY_WORKFLOWS.md), [rulesets](docs/quality/REPOSITORY_RULESETS.md); [enforcement design](quality-enforcement/README.md) when changing that boundary. |
 | Prepare or operate a release | Local release guide and [release trust](docs/release/RELEASE_TRUST.md), then the applicable [Profile A](docs/release/RELEASE_PROFILE_A.md) or [Profile B](docs/release/RELEASE_PROFILE_B.md). |
-| Implement bootstrap templates | [Frozen contract and examples](docs/release/BOOTSTRAP_STARTER_CONTRACT.md). |
+| Implement bootstrap templates | [Approved contract and examples](docs/release/BOOTSTRAP_STARTER_CONTRACT.md). |
 | Change contribution or support intake | [Community inheritance and overrides](docs/COMMUNITY_STANDARDS.md); [support](SUPPORT.md), [security](SECURITY.md) and [conduct](CODE_OF_CONDUCT.md) define reporting boundaries. |
 
 ## Work and acceptance
