@@ -1,4 +1,4 @@
-![A retro-futurist interplanetary workshop at night, with RAN machinery surrounding a rocket ready for launch.](assets/ran-night-shift-header.png)
+![A retro-futurist interplanetary workshop at night, with RAN machinery surrounding a rocket ready for launch.](https://raw.githubusercontent.com/RocketsAreNostalgic/.github/refs/heads/main/profile/assets/ran-night-shift-header.png)
 
 # Rockets Are Nostalgic [RAN]
 
