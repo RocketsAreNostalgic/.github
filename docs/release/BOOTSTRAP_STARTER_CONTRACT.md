@@ -155,7 +155,7 @@ No Blacksmith subscription or AI feature is required by generated output.
 Static setup-PR and `RELEASE-STARTER.md` guidance must remain useful when no job
 can run: disabled Actions, rejected workflow/policy, or runner/account constraints
 cannot be explained by an annotation inside a job that never starts. Point to the
-[shared Profile B contract](RELEASE_PROFILE_B.md) for publication and retry
+[shared Profile B contract](../../RELEASE_PROFILE_B.md) for publication and retry
 boundaries. Executing jobs may explain observed failures using bounded existing
 evidence; a generic 403 does not establish which administrative setting is wrong.
 
@@ -313,7 +313,7 @@ Replace input-tar promotion with the final verified ZIP and the existing
 asset is the fixed pack ZIP. Shared Profile B retains publication ownership;
 separately reviewed shared diagnostics do not move publisher logic into the pack.
 
-Producer B gives consumer A a non-secret test envelope containing
+The producer gives the provider consumer a non-secret test envelope containing
 `producer_sha`, `workflow_run_id`, `run_attempt`, `artifact_id`, `zip_sha256`,
 `manifest_sha256`, `pack_version` and the five per-profile template digests.
 Retrieve the actual CI artifact through an authorized test harness and verify its
@@ -366,8 +366,9 @@ that negative boundary and prove no update capability is advertised or reachable
 If source refresh discovers another real V2 consumer, stop and return that concrete
 dependency to #81 rather than silently retaining a bridge.
 
-Core's initial-only UI/caller changes belong to integration C, not provider A's
-branch. They are part of G1 candidate composition and G2 adoption, not optional
+Core's initial-only UI/caller changes belong to Core integration; coordinate
+separate provider and Core branches through #81. They are part of G1 candidate
+composition and G2 adoption, not optional
 post-release polish. Preserve ordinary release update/deployment controls; those
 are unrelated to template maintenance. Agents must refresh/search the exact
 caller/test graph before deletion and return any additional concrete coupling.
@@ -523,11 +524,13 @@ starter into a security-monitoring platform.
 ## 8. Qualification and handoff
 
 G0 froze the recipe, schema/map, clean initial-only V3 host cut, passive
-origin/adoption security boundary and exact examples. No A/B release on a merely
-opened PR. A owns provider code; B alone owns overlapping #55/#56 pack code. C
-owns the narrow connected Core changes and integrated evidence. No competing writers on
-pack schema/templates/build/CI. Release proposals and dependency adoption remain
-separate from feature preparation; preserve other agents' branch ownership.
+origin/adoption security boundary and exact examples. No provider or producer
+release on a merely opened PR. Current ownership is recorded in
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81), coordinated with
+[#65](https://github.com/RocketsAreNostalgic/.github/issues/65). Keep one writer
+for overlapping #55/#56 pack schema/templates/build/CI, and coordinate the narrow
+Core integration and its evidence. Release proposals and dependency adoption
+remain separate from feature preparation; preserve existing branch ownership.
 
 G1 uses named exact provider, producer and Core candidate SHAs, actual ZIP digest,
 independent/native ZIP negatives, plugin/theme output, safe initial setup and
@@ -575,7 +578,7 @@ Audited snapshots (refresh before implementation): `.github`
 certification pins. Completed .github #83 and Core #176 were documentation-only; their merged heads
 are now the refreshed source baselines for this review.
 
-- [Actual shared interface and promotion contract](RELEASE_PROFILE_B.md), backed
+- [Actual shared interface and promotion contract](../../RELEASE_PROFILE_B.md), backed
   by `.github/workflows/release-profile-b.yml` at the audited `.github` SHA.
 - [Pack schema](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates/blob/29a194be54c383e91758665d99461017386fe2e8/schema/template-pack.schema.json),
   `templates/shared/{release-please.yml,build-release.sh,verify-release.sh,upload-release-assets.sh}.tmpl`,

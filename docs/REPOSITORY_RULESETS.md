@@ -52,40 +52,37 @@ Copilot code review may remain enabled without automatically re-reviewing every 
 
 ## Repository profiles
 
-The current maintained public repository mapping is:
+The [recorded repository mapping](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/REPOSITORY_RULESETS.md#repository-profiles)
+preserves the inspected profiles, merge methods and protected contexts as
+historical evidence. Consult [quality acceptance](../PHP_QUALITY_MATRIX.md),
+existing repository issues and live rulesets for subsequent changes; this
+policy is not a second current-status inventory.
 
-| Repository | Profile | Merge methods | Protected CI contract |
-| --- | --- | --- | --- |
-| `.github` | Reusable workflow provider / organisation infrastructure | merge only | Provider review; organisation-required workflow enforcement is tracked separately in #31 |
-| `ran-updater-support` | PHP library | squash + merge | `quality` from GitHub Actions |
-| `ran-wp-branch-updater` | PHP library with installed-consumer proof | squash + merge | `quality` from GitHub Actions |
-| `ran-wp-release-updater` | Mixed updater library with specialist integration lanes | squash + merge | `quality` from GitHub Actions |
-| `ran-starter-plugin` | WordPress plugin reference | squash + merge | `quality` from GitHub Actions |
-| `ran-emailoctopus-jetpack-forms` | WordPress plugin | squash + merge | `quality` from GitHub Actions |
-| `ran-ecwid-shop-teaser` | WordPress plugin | squash + merge | `quality` from GitHub Actions |
-| `ran-enhanced-cover` | WordPress plugin | squash + merge | `quality` from GitHub Actions |
-| `ran-turnstile-for-jetpack-forms` | WordPress plugin | squash + merge | `quality` from GitHub Actions |
-| `ran-booster` | Complex release/provenance product | squash + merge | `Runtime archive`, `Quality`, and `Release candidate install readback`, all from GitHub Actions |
-| `ran-booster-bitbucket` | Complex release/provenance add-on | squash + merge | `Runtime archive`, `Quality`, and `Release candidate install readback`, all from GitHub Actions |
-| `ran-booster-release-bootstrap-templates` | Node/pnpm release-integrity templates | squash + merge | Live ruleset still requires `Pack inputs` and `Quality`; terminal `quality` now aggregates repository-specific + shared baseline evidence, with #31 owning future organisation-required activation |
-| `ran-plugin-library` | PHP library; migration currently deferred/not planned | squash + merge | No normalized required CI status in the current programme |
-| `ran-admin-shell` | PHP library | squash + merge | Live ruleset requires strict GitHub Actions `quality`; workflow consumes PHP v2 and exposes that terminal fan-in |
-| `tnyGmaps` | Legacy WordPress plugin | squash + merge | No normalized required CI status yet |
-| `tnySignature` | WordPress plugin; quality profile migrated | squash + merge | Normalized local `quality` evidence exists; organisation-required enforcement remains under #31 |
-| `wp-duplicate-detector` | Legacy WordPress plugin | squash + merge | No normalized required CI status yet |
-| `ran-coding-standards` | Shared quality tooling | squash + merge target | Remediation tracked in #16: require its stable `quality` gate and resolved review threads |
-| `ran-quality-config` | Shared quality tooling | squash + merge target | Remediation tracked in #16: require its stable `quality` gate |
+The recorded unresolved obligations remain: organisation-required enforcement
+is coordinated under [#31](https://github.com/RocketsAreNostalgic/.github/issues/31);
+shared-tooling protection remediation under
+[#16](https://github.com/RocketsAreNostalgic/.github/issues/16) requires the stable
+`quality` gate for Coding Standards and Quality Config, plus resolved review
+threads for Coding Standards. Plugin Library migration remains deferred/not
+planned. Recorded legacy gaps for `tnyGmaps` and `wp-duplicate-detector`, and
+`tnySignature`'s pending organisation-required enforcement, are not certified
+closed by this consolidation.
 
 Archived repositories and fixtures are outside the active normalization requirement unless restored to maintained status. Private maintained repositories are governed by the same policy in principle, but current plan/API limitations prevent the same live ruleset audit used for public repositories.
 
 ## Relationship to CI policy
 
-This policy complements `QUALITY_WORKFLOWS.md` and `QUALITY_STANDARDS.md`.
+[Reusable workflows](QUALITY_WORKFLOWS.md) define shared quality execution;
+[Quality Standards](../QUALITY_STANDARDS.md#ci-contract) defines the CI contract.
+Rulesets govern which evidence is required before merge. A repository-local
+status remains useful evidence without becoming an authoritative organisation
+workflow identity.
 
-Reusable workflows define shared quality execution; repository rulesets define what evidence is required before merge. A repository-local terminal status is useful merge evidence, but it is **not** an authoritative organisation workflow identity: a pull request may still be able to edit the caller, aggregate command, or transitive quality configuration.
-
-Before RAN treats any local `quality` status as part of an authoritative organisation-level merge-enforcement boundary, the completed enforcement design recorded by #12 and the activation prerequisites now owned by #31 must be satisfied: organisation-controlled workflow identity plus quality-contract integrity through organisation-owned authoritative execution/configuration or independently protected approval of the complete transitive consumer contract. Until then, repository-local required statuses remain useful repository-level evidence, not an unforgeable organisation security boundary.
-
-The guiding principle is:
+[Enforcement integrity](../QUALITY_STANDARDS.md#enforcement-integrity) is the
+authoritative requirement for organisation-controlled workflow identity and
+quality-contract protection. The completed design is recorded in #12;
+activation prerequisites remain under #31. Repository-local required statuses
+must not be presented as that organisation security boundary before both
+requirements are satisfied.
 
 > **Normalize the protection contract, not the workflow topology.**

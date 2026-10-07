@@ -12,6 +12,23 @@ The intended hierarchy is:
 
 These standards apply to maintained RAN repositories according to their technology and quality profile. Fixtures, archived repositories, and intentionally unsupported projects may use a reduced surface only where that reduction is necessary to preserve their purpose. `legacy` is a migration state, not a permanent exemption.
 
+## Find the requirement for your change
+
+The technology/profile baseline applies across maintained RAN repositories.
+The [next-beta Booster acceptance](#next-beta-booster-php-acceptance), including
+its PHPStan level-5 minimum and default-coverage rules, applies to the Booster
+ecosystem as stated there; it does not assign that same acceptance tranche to
+the wider estate. Stronger local gates remain required under
+[authority and precedence](#authority-and-precedence).
+
+| Question | Authoritative section |
+| --- | --- |
+| What applies to this repository or code surface? | [Profiles and applicability](#quality-profiles-and-applicability); for the Booster tranche, [common convention and scope](#common-convention-and-scope). |
+| Which checks must run? | [Canonical command contract](#canonical-command-contract) and [CI contract](#ci-contract), alongside the repository's required checks. |
+| What happens when a maintained file is added or moved? | Applicable [profile requirements](#quality-profiles-and-applicability); Booster's [default coverage and reviewed exemptions](#default-coverage-and-reviewed-exemptions) specifies automatic coverage and regression controls. |
+| Which exceptions are acceptable? | [Authority and precedence](#authority-and-precedence) and [core invariants](#core-invariants); Booster also follows [reviewed exemptions](#default-coverage-and-reviewed-exemptions) and [exceptions and native operations](#exceptions-and-native-operations). |
+| What must a reviewer verify? | [Review standard](#review-standard), [enforcement integrity](#enforcement-integrity), and the applicable profile; Booster qualification also uses [qualification and release boundaries](#qualification-and-release-boundaries). |
+
 ## Reference high-water implementation
 
 `RocketsAreNostalgic/ran-booster` is the reference high-water implementation for RAN quality engineering.
@@ -304,29 +321,29 @@ migration/review aid, not a permanent registry to maintain alongside the code.
 Group repeated cases by rule and invariant while preserving occurrence-level
 traceability during review. Existing review and release procedures suffice.
 
-#### Delivery order and ownership
+<a id="delivery-order-and-ownership"></a>
 
-Record the reviewed policy checkpoint in #128 first. Implement transferable
-rules through [shared standards #8](https://github.com/RocketsAreNostalgic/ran-coding-standards/issues/8)
-and qualify the same candidate against both Core and Starter before publishing,
-as required by the package's existing guidance. Starter is bounded compatibility
-qualification here, not wider-ecosystem rollout.
+#### Qualification and release boundaries
 
-Adopt the genuine qualified version across Booster, then assess wider-estate
-adoption in a later phase. Shared-package changes alone do not establish
-consumer acceptance. Record exact revisions, checked scope, accepted exceptions
-and verification in the existing PHP quality matrix and repository PRs.
+Transferable shared rules must qualify the same candidate against both Core and
+Starter before publication, as required by the shared package's existing guidance.
+Starter is bounded compatibility qualification here, not wider-estate rollout.
+Adopt the genuine qualified version across Booster before wider-estate adoption;
+shared-package changes alone do not establish consumer acceptance. Record exact
+revisions, checked scope, accepted exceptions and verification in the
+[acceptance record](PHP_QUALITY_MATRIX.md) and repository PRs.
 
-Coordinate with [PHPStan #127](https://github.com/RocketsAreNostalgic/.github/issues/127):
-policy-dependent API/parameter/callback decisions follow this checkpoint, while
-read-only diagnostics and independent safety investigations may proceed.
-Assign overlapping declarations and consumers once; keep mechanical standards
-cleanup separately reviewable from behavioral/security/type changes. Preserve
-#127's recorded level-5 next step and explicit level-6–8 sizing, and all stronger
-existing consumer gates. This policy does not change their required levels.
-The integration coordinator receives separate standards and analysis verdicts
-for the next-beta decision. Merge/publication and deferred installed/manual/UI
+Keep mechanical standards cleanup separately reviewable from behavioral,
+security and type changes. Preserve #127's recorded level-5 next step, explicit
+level-6–8 sizing and stronger existing consumer gates; this policy does not
+change their required levels. The next-beta decision requires separate standards
+and analysis verdicts. Merge/publication and deferred installed/manual/UI
 acceptance remain separate owner decisions.
+
+Temporary sequencing, overlapping declarations and implementation claims stay
+in [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+[#127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
+[#128](https://github.com/RocketsAreNostalgic/.github/issues/128).
 
 ## JavaScript and TypeScript
 
@@ -509,8 +526,8 @@ policy review and corresponding CI evidence. A passing locked source check does
 not guarantee a later live audit result. This policy does not impose a new audit
 on repositories that have not adopted one.
 
-The dated [upgrade and audit inventory](QUALITY_UPGRADES_AND_AUDIT.md) records
-the present observed placement and the boundaries of that inventory.
+The dated [acceptance record](PHP_QUALITY_MATRIX.md#retained-tooling-and-audit-decisions)
+records bounded consumer decisions and links the historical audit inventory.
 
 #### Adoption and role-based exceptions
 
@@ -530,7 +547,7 @@ identify affected consumers. Do not rename fixture scripts for symmetry.
 Applicable security requirements still apply. Inactive/deferred repositories
 retain their recorded dispositions; command policy does not reactivate them.
 
-The initial adoption ledger is in [PHP_QUALITY_ADOPTION.md](PHP_QUALITY_ADOPTION.md).
+The [acceptance record](PHP_QUALITY_MATRIX.md#earlier-accepted-slices) links the initial adoption evidence.
 Its observations describe migration state, not permanent exceptions or proof
 that unexecuted checks pass. Shared rules, runtime ranges and local security/API
 exceptions retain their existing ownership until separately reviewed.
@@ -660,6 +677,11 @@ The RAN frontend-quality package should expose independent ESLint, Prettier, Sty
 Shared standards must have their own tests or fixtures and an independent release lifecycle. Runtime libraries such as `ran-plugin-library` are not the canonical home for coding policy.
 
 ## Review standard
+
+When a review finding may affect other repositories, record the sibling
+repositories or code surfaces checked, their evidence and dispositions, and
+owners of remaining work in the existing issues or PRs. Do not create a separate registry or
+framework for this record.
 
 Code review should treat the following as defects when the applicable profile or triggering code surface requires them:
 

@@ -10,15 +10,22 @@ The governing principle is:
 
 > Same release-trust guarantees where applicable; not necessarily the same release architecture.
 
-The approved direction is [Profile A](RELEASE_PROFILE_A.md) for source releases and [Profile B](RELEASE_PROFILE_B.md) where an authoritative built asset must be promoted. Release Please owns version, changelog, release PR, tag and release lifecycle; Profile B adds exact tested-artifact promotion. Production GitHub releases are subject to the owner-enabled immutable-release policy. Remaining implementation and final reconciliation are tracked in [.github#47](https://github.com/RocketsAreNostalgic/.github/issues/47), [#59](https://github.com/RocketsAreNostalgic/.github/issues/59) and [#57](https://github.com/RocketsAreNostalgic/.github/issues/57). [Core #54](https://github.com/RocketsAreNostalgic/.github/issues/54) and the five-consumer [WordPress #61](https://github.com/RocketsAreNostalgic/.github/issues/61) migration are completed evidence/handoff records, not active migration queues. This target does not certify every older publisher row or unfinished consumer.
+The approved architecture is [Profile A](RELEASE_PROFILE_A.md) for source releases
+and [Profile B](RELEASE_PROFILE_B.md) for promotion of authoritative built assets.
+Release Please owns version, changelog, release PR, tag and release lifecycle;
+Profile B adds exact tested-artifact promotion. Production GitHub releases follow
+the owner-enabled immutable-release baseline. Repository-specific stronger gates
+remain local; shared quality infrastructure produces evidence, not automatically
+release authority.
 
-Repository-specific gates may be stronger than this policy and should remain local when they prove product-specific properties. Shared quality infrastructure is evidence infrastructure, not automatically release authority.
-
-The [30 September 2026 estate snapshot](RELEASE_PUBLISHERS.md#current-estate-snapshot--30-september-2026) records all fifteen maintained production callers, including WP Pusher Migrator and Coding Standards, at exact inspected revisions. Bootstrap API-3 producer v0.3.0 is published and Provider #30 is merged; actual Core V3 composition, coordinated consumer publication and installed/owner feature acceptance remain separate under [#81](https://github.com/RocketsAreNostalgic/.github/issues/81). Release Updater #70 is merged and v1.0.0-beta.9 is published; Core/Provider adoption remains outstanding. Implementation merged, package published, consumer adopted, installed composition qualified and owner acceptance complete must be recorded separately.
-
-The snapshot verifies accessible protected-branch rules and specific immutable release objects; it does not certify inaccessible Actions permissions, immutable-release settings, environment controls or historical-ref dispatch neutralization. Duplicate Detector's current private-plan ruleset limitation remains an explicit exception/evidence gap. The [1 October candidate-validation closeout](RELEASE_PUBLISHERS.md#candidate-validation-closeout--1-october-2026) records the owner-approved Core/Bitbucket/Migrator geometry removals and retained product checks under #114; broader #47 reconciliation remains separate. The [1 October historical closeout](RELEASE_PUBLISHERS.md#historical-release-closeout--1-october-2026) records the existing explicit beta.23 unpublished disposition and four cancelled proposals' corrected pending labels; broader #29 reconciliation remains separate. Existing release holds and disabled WordPress.org deployment remain in force. These limitations prevent a blanket #57 or #9 closeout.
-
-This policy is maintained under the organisation-wide audit in RocketsAreNostalgic/.github#9. Completed quality foundation #7 and satellite rollout [#67](https://github.com/RocketsAreNostalgic/.github/issues/67) remain historical evidence; current quality rollout and residual acceptance belong to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65) and the existing repository children. Closed #66 records delivered policy/tooling, with its residual responsibilities explicitly retained under #65; it is not an active queue or a waiver.
+[Release evidence and remaining acceptance](RELEASE_PUBLISHERS.md) records dated
+implementation, publication and settings proof. Implementation merged, package
+published, consumer adopted, installed composition qualified and owner acceptance
+complete are separate facts. Current coordination belongs to existing
+[#47](https://github.com/RocketsAreNostalgic/.github/issues/47),
+[#57](https://github.com/RocketsAreNostalgic/.github/issues/57),
+[#59](https://github.com/RocketsAreNostalgic/.github/issues/59) and
+[#65](https://github.com/RocketsAreNostalgic/.github/issues/65), not this policy.
 
 ### Deterministic test fixtures
 
@@ -162,11 +169,22 @@ A release path must fail closed rather than infer identity from a floating branc
 
 Quality and evidence-production jobs should be read-only unless mutation is part of the evidence contract itself and cannot reasonably be separated.
 
+Production release workflows start with `permissions: {}` and grant only the
+scopes needed by each mutating job. Where checkout is needed, check out the exact
+admitted SHA, disable persisted credentials and verify identity before executing
+release-controlled repository code.
+
 Pull-request qualification must not give untrusted PR-head code release-write credentials. `pull_request_target` must not be used to execute untrusted head code with privileged authority.
 
 ### 3. Separated mutation
 
 Write authority should live in a bounded publication or reconciliation path. The mutator should verify the successful evidence and exact candidate before exercising that authority.
+
+Release-PR reconciliation is distinct from publication authority. Release Please
+may reconcile its managed PR against the target branch; that mutation does not
+qualify tags, assets, release completion or downstream deployment. When consuming
+another workflow's evidence, verify repository, workflow, event, conclusion,
+branch and exact SHA, rather than trusting a status name alone.
 
 A successful PR check and a successful trusted-main qualification are different facts. Repositories may rely on one or both, but the release architecture must state which one actually admits publication.
 
@@ -272,6 +290,21 @@ A repository may instead treat successful exact `main` qualification as the rele
 
 This model is not an independent review of changed release control. If independent authorization for release-control changes is required, add an external boundary rather than describing trusted-main self-qualification as independence.
 
+### Exact candidate versus latest `main`
+
+An exact successful `main` qualification identifies a trusted candidate; it does
+not universally require aborting publication when a later ordinary commit reaches
+`main`. Publishing the already-qualified earlier version is legitimate when the
+local model permits it and tag, release target, artifacts and readback remain
+bound to that candidate with unambiguous ordering. A repository that requires
+continued tip identity must prove that condition in its local release contract.
+A read-then-write main preflight is not an atomic compare-and-swap or independent
+authorization boundary against a concurrent push.
+
+Runner provider is not a semantic invariant. GitHub-hosted Ubuntu 24.04 and the
+approved Blacksmith Ubuntu 24.04 runner are acceptable; changing provider is a
+trust/operations decision, not housekeeping for visual consistency.
+
 ## Shared workflow boundary
 
 Organisation-owned reusable quality workflows should remain generic, read-only quality infrastructure unless a separate architectural review establishes a reusable publisher with an appropriate authority model.
@@ -331,3 +364,127 @@ When an audit finds a quality-adoption problem rather than a release-trust probl
 When a release architecture changes materially, reassess the repository against this policy and update the organisation ledger in `.github#9`.
 
 Do not weaken a stronger repository-local gate merely to match the organisation minimum. Do not add ceremony that provides no additional guarantee for the repository's actual release model.
+
+## Release classification
+
+Rockets Are Nostalgic repositories may use different release architectures, merge methods, and changelog rules. Where release automation derives versioning or changelog significance from Conventional Commit metadata, however, the metadata that survives the merge must faithfully represent the repository's own release policy.
+
+This policy defines that organization-level invariant without imposing one universal list of release-driving commit types.
+
+### Applicability
+
+This policy applies when all of the following are true:
+
+- a repository uses Release Please or equivalent automation that derives release significance from Conventional Commit metadata;
+- a pull-request title or other PR-controlled subject becomes the final commit subject consumed by release automation, including through squash merge or another configured merge model;
+- the repository distinguishes release-driving classifications from hidden or non-release-driving classifications.
+
+Repositories with a different release model may document a justified difference. The relevant invariant is that release significance is derived from deliberate, reviewable metadata rather than accidentally from a presentation-only title.
+
+### Core invariant
+
+When a pull-request title or other PR-derived subject becomes the commit subject consumed by release automation, that subject is **release metadata**.
+
+If a change satisfies that repository's release-driving criteria, the final PR-derived commit subject must use a release-driving Conventional Commit classification recognized by that repository's release configuration, or an explicit breaking-change classification where supported.
+
+A hidden type such as `refactor:`, `chore:`, `build:`, `ci:`, `docs:`, `style:`, or `test:` must not be chosen merely because the implementation technique is internal when the resulting change is release-significant under the repository's own rules.
+
+The implementation category and the release category are related but not identical questions. A refactor can still require a release if it changes a production dependency, supported runtime contract, packaged bytes, public API, compatibility boundary, or another condition the repository has explicitly declared release-driving.
+
+### Repository ownership
+
+The organization does not define one universal set of release-driving Conventional Commit types.
+
+Each release-enabled repository remains authoritative for:
+
+- which changes are release-significant;
+- which Conventional Commit types are visible to its release automation;
+- whether dependency changes use `deps:`, `fix:`, another visible type, or are intentionally non-release-driving;
+- whether breaking-change syntax is supported and how it affects versioning;
+- which merge methods are compatible with its release identity and publisher contract.
+
+The applicable release-automation configuration, repository release documentation, tests, and effective merge settings must tell a consistent story.
+
+### PR-derived final commit requirements
+
+For repositories where PR-controlled metadata becomes the final commit subject consumed by release automation:
+
+1. Review the pull-request title or equivalent PR-derived subject as part of the merge gate, not only as prose.
+2. Treat the resulting Conventional Commit type as the release classification of the final commit.
+3. If the pull request contains a mechanically identifiable release-significant change, CI **must** fail closed when the final subject uses a hidden or otherwise non-release-driving type, unless the subject uses a supported explicit breaking marker such as `!`.
+4. If a mechanically reliable check is not practical for a release-significant class of change, the repository must document that justified difference and the review step that owns the classification decision.
+5. Repository-local checks should derive allowed release-driving types from the repository's own release configuration where practical rather than duplicating a second hard-coded policy.
+6. If a classification check relies on mutable pull-request metadata such as the title, the required evidence **must be invalidated and rerun when that metadata changes**. A previously green check against an earlier title is not valid evidence for a later merge title.
+7. A merge method that preserves individual commits does not remove the need for deliberate release metadata; it only changes which commit metadata the release tool consumes.
+
+Changing a PR title after the final commit has been created does not repair the already-created commit. Recovery must proceed through the repository's normal reviewed release process rather than rewriting protected history or creating manual tags/releases.
+
+### Automation boundary
+
+Release-classification checks are read-only evidence. They may inspect:
+
+- the pull-request title or equivalent PR-derived subject;
+- the exact base and head revisions;
+- changed paths or manifests;
+- the repository's applicable release-automation configuration.
+
+They must not gain tag, release, package-publication, or other privileged mutation authority merely because they participate in release selection.
+
+Shared RAN quality infrastructure may provide generic helpers for classification validation where the semantics are genuinely common. Product-specific rules remain local when they depend on repository-specific runtime, packaging, dependency, or compatibility meaning.
+
+### Dependency changes
+
+Production dependency changes are a common mechanically detectable case but are not automatically classified the same way across RAN.
+
+A repository that considers a production dependency change release-driving should make that decision explicit in both its release configuration and its PR validation. For example, a PHP library may compare the `require` map in `composer.json` between the exact PR base and head and require a visible release type when that map changes.
+
+Development-only dependency changes should not be promoted to release-driving status merely because they live in the same manifest unless the repository explicitly chooses that policy.
+
+### Examples
+
+#### Release-driving dependency adoption
+
+A repository configures `deps:` as a visible changelog section and changes a production Composer dependency. A squash title of:
+
+`deps: adopt updater support beta.3`
+
+is consistent with the repository's policy.
+
+A title of:
+
+`refactor: consume shared repository path safety`
+
+is not sufficient if the same pull request changes the production dependency and that dependency change is release-driving. After squash, Release Please may see only hidden `refactor:` metadata and skip the release entirely.
+
+#### Internal refactor with no release significance
+
+A repository changes internal test support or reorganizes implementation code without crossing any release-driving boundary. If its release policy treats that work as hidden, a `refactor:` title is appropriate.
+
+#### Supported breaking classification
+
+If the repository's release tooling recognizes the Conventional Commits breaking marker, a title such as:
+
+`refactor!: replace the public runtime contract`
+
+may legitimately be release-driving even when the base `refactor:` type is normally hidden. Repository-local enforcement must model that supported breaking semantics rather than rejecting it solely because the base type is hidden.
+
+#### Mutable title after a green check
+
+A production dependency PR passes its required classification check as `deps: adopt updater support beta.3`. Renaming the PR to `refactor: consume shared updater support` before squash merge changes the release metadata. The required classification evidence must rerun for that edit; the earlier green result cannot remain the merge gate.
+
+#### Repository with different dependency policy
+
+A repository intentionally treats `deps:` as hidden and documents that dependency-only changes do not independently drive releases. The organization policy does not require changing `deps:` to visible. It does require the repository to classify any release-significant effect using one of the types that its own release process recognizes.
+
+
+Classification is read-only evidence for release selection, not publication
+authority. The former generic classifier rollout in
+[#20](https://github.com/RocketsAreNostalgic/.github/issues/20) is superseded;
+the metadata invariant survives. Do not recreate a generic classifier or duplicate
+Release Please lifecycle/version machinery to satisfy historical instructions.
+Implementation remains under [#47](https://github.com/RocketsAreNostalgic/.github/issues/47)
+and final reconciliation under [#57](https://github.com/RocketsAreNostalgic/.github/issues/57).
+
+When a repository changes its merge method, release-automation configuration, release-driving commit types, dependency policy, or equivalent release-selection semantics, re-check that the source of final commit metadata still matches the release policy.
+
+A green release workflow that reports "no user facing commits" is not proof that the classification was correct; it is only proof that the automation successfully applied the metadata it was given.

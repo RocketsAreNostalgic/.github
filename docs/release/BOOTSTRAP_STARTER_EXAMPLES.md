@@ -2,9 +2,10 @@
 
 **Frozen G0 examples, not deployed templates or execution evidence.** Read
 [the contract](BOOTSTRAP_STARTER_CONTRACT.md) with this file. G0 was accepted in
-[#84](https://github.com/RocketsAreNostalgic/.github/pull/84); producer B must still
-implement/test the adapters and materialize the qualified template ZIP. These
-examples do not claim an executable producer/consumer pair already exists. Later
+[#84](https://github.com/RocketsAreNostalgic/.github/pull/84). Implementation,
+publication and installed qualification are separate evidence in
+[#81](https://github.com/RocketsAreNostalgic/.github/issues/81); these frozen
+examples do not certify them. Later
 owner decisions distinguish proposal delivery from owner-managed execution
 configuration without changing this workflow/file-map contract.
 
@@ -406,10 +407,10 @@ There is no background scan, notification guarantee or repair service.
 
 The actual output must contain concrete official reporting/announcement links,
 not these shorthand descriptions. Link publication/retry guidance to the existing
-[shared Profile B contract](RELEASE_PROFILE_B.md) using a concrete canonical URL in
+[shared Profile B contract](../../RELEASE_PROFILE_B.md) using a concrete canonical URL in
 generated output; keep the setup PR and handoff usable without Booster or a
-successful Actions run. B updates its outdated managed-update security
-policy accordingly; the coordinator verifies the reporting/subscription route
+successful Actions run. The producer security policy must match this initial-only
+contract; the coordinator verifies the reporting/subscription route
 before public feature acceptance. This process applies in production regardless
 of user count. No per-site tracking, telemetry, advisory database, scheduler or
 write-capable adoption service is introduced. The bounded origin parser/check is
@@ -419,14 +420,14 @@ part of the reviewed initial-only contract and grants no setup/update authority.
 
 These steps belong to the integration/test harness, not generated project files:
 
-1. B records its actual source SHA and uploads the twice-built/verified API-3 ZIP
+1. The producer records its actual source SHA and uploads the twice-built/verified API-3 ZIP
    plus manifest/render evidence in its CI artifact. Record run/attempt/artifact
    IDs and SHA-256; do not publish a partial API-3 release to provide a fixture.
-2. A downloads that exact authorized artifact into the test environment, verifies
+2. The provider consumer downloads that exact authorized artifact into the test environment, verifies
    its declared digests and invokes the actual candidate PHP reader with that
    local ZIP. Label simulated transport as fixture-only. Produce both generated
-   file sets and compare them with B's output using identical target inputs.
-3. C qualifies the candidate provider inside an exact Core candidate that removes
+   file sets and compare them with the producer's output using identical target inputs.
+3. Core integration qualifies the candidate provider inside an exact Core candidate that removes
    the old update controls/routes and adopts the clean initial-only
    `RepositoryReleaseWorkflowManagementV3` contract. Prove V2/update methods are
    absent from the supported provider/Core composition and forged legacy update
@@ -463,4 +464,4 @@ These steps belong to the integration/test harness, not generated project files:
 The tests may use the two existing disposable sites, but their addresses and safe
 operation boundaries have not been supplied by these examples. No new production
 releases are required solely to exercise a hypothetical update service. G0 is frozen;
-A/B/C do not gain merge/publication/site authority from these examples.
+Participants do not gain merge/publication/site authority from these examples.
