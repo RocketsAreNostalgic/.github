@@ -17,56 +17,93 @@ and workflows at each linked revision are the source of each row.
 
 ## Current candidate checkpoint — 7 October 2026
 
-This checkpoint distinguishes implemented and qualified **candidate trees** from
-merged default branches, publication and consumer adoption. The
+This checkpoint distinguishes qualified **candidate trees**, delivered default
+branches, publication and consumer adoption. The
 [6 October exact-pair ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6027025243)
-records the preceding nine qualified tips. Its ready status is historical where
-subsequent findings, edits or integration change the candidate. The
-[current Core/shared checkpoint](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032296921)
-and repository PRs carry renewed qualification; no default-branch certification
-or blanket exception acceptance follows from this table.
+is historical where later findings or integration changed the candidate. The
+[Core refresh](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033828160),
+[Lane A second folds](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033842955)
+and [Lane B delivered-source handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032915181)
+provide the current scoped evidence. No blanket exception acceptance follows.
 
-| Repository / candidate lineage | Maintained PHP coverage at the recorded candidate | Current disposition |
+| Repository / candidate or delivered lineage | Maintained PHP coverage at the recorded revision | Current disposition |
 | --- | --- | --- |
-| Core #254 → #257 → #258 → #259 | 708/710 at level 5; two exact immutable historical rejection fixtures are reviewed exemptions | #255/#256 landed only into #254's branch. The former 312-file development backlog is disposed by automatic maintained-file analysis, not a permanent file allowlist. #257 protects selectors and generated-path collisions. #258 removes five owned reserved-parameter exemptions; #259 supplies bounded evidence for four retained occurrences without accepting them. Final qualification remains in progress below. |
-| Release Updater #105–108 | 97/97 at levels 8/5 | Transferred to Lane A; configuration-guard refinements and renewed exact-candidate qualification are in progress. |
-| Branch Updater #73/#76/#77 | 52/52 at level 5 | Transferred to Lane A; preserve the separate standalone compatibility profile. Future-exclusion guard refinement and renewed qualification are in progress. |
-| Updater Support #43–47 | 6/6 at level 8 | Transferred to Lane A for exact integration/publication assessment; prior tip qualification is not default delivery. |
-| GitHub Provider #61–64 | 77/77 at level 5 | Transferred to Lane B; mandatory shared-profile inventory finding requires refreshed disposition and qualification. |
-| Bitbucket #98–101 | 50/50 at levels 8/5 | Transferred to Lane B; disposable candidate composition does not replace released certified-host evidence. |
-| Migrator #61–64 | 49/49 at levels 6/5 | Transferred to Lane B; retain exact host/dependency and installed-site acceptance boundaries. |
-| Admin Shell #24 | 16/16 at level 5 | Resource-profile repair is published at `b976e57df0294a150894000d1e0562556f851b2b`; canonical checks pass 42 tests/483 assertions, both PHPCS profiles and consumer proof. Renewed independent review/native qualification remains pending. |
-| Shared coding standards #14 | 4/4 at level 5 | Guard correction at `f308e46352591a36ca318147d8b25f69bbe28b47` passes exact local canonical checks, renewed independent review 5438488239 and all three jobs in native run 37581037936; both review findings are resolved. This remains an unmerged candidate. |
+| Core #254 → #257 → #258 → #259 → #260; cumulative #261 | 708/710 at level 5; two exact immutable historical rejection fixtures are reviewed exemptions | #255/#256 landed only into #254's branch. The former 312-file development backlog is disposed in the candidate lineage. #258 removes five owned reserved-parameter exemptions; #259 supplies evidence for four retained occurrences without accepting them. #260/#261 remain draft: the published future extensionless-entrypoint repair below awaits renewed qualification. |
+| Release Updater #105–108 | 97/97 at levels 8/5 | Lane A merged #108/#107 into parent branches only; expanded #106 awaits refreshed cumulative review/native qualification and Ben's next decision. |
+| Branch Updater #73/#76/#77 | 52/52 at level 5 | Lane A merged #77/#76 into parent branches only; main-target #73 awaits refreshed cumulative review/native qualification and Ben's next decision. Separate standalone compatibility profile retained. |
+| Updater Support #43–47 | 6/6 at level 8 | Lane A merged #47/#46 into parent branches only; expanded #45 awaits refreshed cumulative review/native qualification and Ben's next decision. |
+| GitHub Provider #65, superseding #61–64 | 77/77 at level 5 | Delivered to main and post-merge verified; mandatory shared-profile guard finding repaired. Release #59 and immutable Core adoption remain separate. |
+| Bitbucket #102, superseding #98–101 | 50/50 at levels 8/5 | Delivered to main and post-merge verified, including certified beta31 installed proof. Release #95 and future-host certification remain separate. |
+| Migrator #65, superseding #61–64 | 49/49 at levels 6/5/5 | Delivered to main and post-merge verified after late guard repairs; release #43 remains subject to exact candidate/archive qualification and owner installed/manual acceptance. |
+| Admin Shell #24 | 16/16 at level 5 | Candidate `b976e57df0294a150894000d1e0562556f851b2b` passes canonical 42 tests/483 assertions, both PHPCS profiles, consumer proof, independent review 5438537090 and native 37582247639. Unmerged. |
+| Shared coding standards #14 | 4/4 at level 5 | Candidate `f308e46352591a36ca318147d8b25f69bbe28b47` passes local canonical checks, independent review 5438488239 and all three jobs in native 37581037936; both findings resolved. Unmerged. |
 
-Core #258 now has base `35bf417461eb980f3ca0a42b762d101920407fb6`, head
-`055ea662fef2771c20e3f50a867cbb9f45eb2b7a`; #259 has that head as base and
-head `ddc2031494ae64418f5f11158eeee147d7510163`. Renewed independent reviews
-5438441245 and 5438442671 are clear. Full canonical/native qualification of these
-new heads remains pending at this checkpoint. Earlier heads passed 2,700/30,035
-and 2,703/30,188 PHPUnit tests/assertions respectively, 364 analysis invocations
-and 193 frontend tests; those results do not qualify the changed heads. A named
-Theme factory assertion was added to an actually invoked installed MySQL
-proof; the previously edited race fixture was not invoked by those native jobs.
+### Delivered Lane B source
+
+| Delivered PR | Main revision | Verified tree | Post-merge evidence |
+| --- | --- | --- | --- |
+| [Provider #65](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/pull/65) | `db90f3c470bd4149b5931b119aa62e43c7ff59ec` | `d24aa21555d098f80503c5aa158cd0bde760ec4d` | [CI 37583233815](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/37583233815) success |
+| [Bitbucket #102](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/102) | `0e1e44b0ccd0fd4ce5d846d947b79a2ce5120e87` | `1699dda0a495653c4cd5f205daabd7dd39b552ea` | [Quality 37583248694](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/37583248694) success; certified beta31 installed proof 37583528602 success |
+| [Migrator #65](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/65) | `486d7aba3dce88ae4c7c8cf23f20d143e878d902` | `13e338dccefa998c5b89216ac10d575074b54f53` | [Quality 37584807685](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37584807685) success |
+
+These are owner-authorized source squashes with independently matched trees and
+reviewed sole parents. All twelve original Lane B proposals are closed as
+superseded, not falsely marked merged; their branches and reviews are preserved.
+Migrator's main runtime archive, certified provenance and repository Quality
+passed; intentionally skipped baseline/terminal wrappers are not executed checks.
+No release was merged or published by Lane B. Provider #59, Bitbucket #95 and
+Migrator #43 are regenerated release proposals, distinct from source delivery.
+Provider #59 and Bitbucket #95 received clear independent release-pair reviews
+5439496402/5439499218; Ben's publication decision remains separate. Migrator #43
+still requires exact release-pair review/qualification and owner acceptance. Release Please merges use
+regular merge commits. Migrator's manual acceptance must bind its exact candidate,
+ZIP digest and released host; green automation cannot clear that hold.
+
+### Core candidate qualification and remaining gap
+
+Core #258 base `35bf417461eb980f3ca0a42b762d101920407fb6` → head
+`055ea662fef2771c20e3f50a867cbb9f45eb2b7a`, and #259 from that head →
+`ddc2031494ae64418f5f11158eeee147d7510163`, passed independent exact-pair
+reviews 5438441245/5438442671 and all seven required native jobs in
+37580826081/37580961732. Exact-head canonical results are respectively
+2,700/30,035 and 2,703/30,188 PHPUnit tests/assertions, 364 successful analyses
+each and 193 frontend tests each. The named Theme proof actually executes on
+both MySQL8.4 lanes (WordPress 7.0 and 7.0.3), not all four installed lanes.
+
+#260 pins root PHPCS exclusion patterns; cumulative main-target #261 presents
+the existing integration stack without duplicate implementation. At head
+`2e88e61a3290b847cdda0b2d0e81fa7a79d663c6`, native 37583840571/37584440611
+passed all seven required jobs and canonical checks passed 2,704 tests/30,277
+assertions plus 364 analyses. However, independent cumulative review
+[4204022880](https://github.com/RocketsAreNostalgic/ran-booster/pull/261#discussion_r4204022880)
+found that a future extensionless PHP entrypoint under a new root can escape both
+analysis and WPCS inventories. No current 710-file omission was found. Those green runs do not establish the
+broad future-file guarantee or qualify the subsequent repair.
+
+The repair is now published on the shared #260/#261 branch at
+`fda3d4ac7fd489fd1dc29915772c2d950a9e9dca`, tree
+`30a07102aaf2b5f8f7f27445b362a42b01513cf0`. Both old canonical inventory checks
+accepted the reproducer; the repair rejects it. Focused checks pass 40 tests /
+22,133 assertions plus locked PHPCS and PHPStan level 5. Fresh independent review
+and native qualification remain pending; #260/#261 remain draft.
 
 The four #259 occurrences remain **pending owner disposition**: captured renderer
 fragments in `RepositoryDetailRenderer.php` and passive request selection in
-`DeploymentAdminPresenter.php`. Behavioral/negative controls and precise reasons
-are evidence, not acceptance. Other retained CLI, native-I/O, security and SQL
-allowances retain their existing recorded disposition; these selector and test
-changes do not reaccept them. The
-[Admin repair claim](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032328507)
-records the additional confirmed gap. Core's absent-future-path configuration
-concern is preventive: existing tracked-file coverage rejects a matching file;
-it is not the same end-to-end bypass.
+`DeploymentAdminPresenter.php`. Behavioral/negative controls and reasons are
+evidence, not acceptance. Other CLI, native-I/O, security and SQL allowances
+retain their existing recorded disposition; these changes do not reaccept them.
+Core's separate #249 regression/supersession disposition remains explicit.
 
-Implementation/integration ownership is transferred only for the
-[three Lane A stacks](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
-and [three Lane B stacks](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857).
+Lane A retains its three integration stacks; Lane B source integration is complete.
 The overall coordinator retains Core, Admin Shell, shared standards/policy,
-this matrix/tracker, final dependency sequencing and Core adoption. Specific
-merge/publication decisions remain Ben's. Refresh exact pairs after integration;
-manual/UI/operational and release holds remain separate. CI-only progress belongs
-in the linked live records without rewriting historical evidence below.
+this matrix/tracker, release-pair qualification, final dependency sequencing and
+Core adoption. The Core258 consumer audit found no necessary Lane B source
+migration; earlier source composition remains bound to Core `654fca22`, not
+silently relabeled as a later head. Immutable beta31 certification is unchanged;
+a future-host claim requires an actual published host and fresh archive/runtime
+proof. Specific merge/publication decisions remain Ben's. Manual/UI/operational
+holds remain separate. CI-only updates belong in the linked live records without
+rewriting historical evidence below.
 
 ## Historical delivery and exception checkpoint — 5 October 2026
 

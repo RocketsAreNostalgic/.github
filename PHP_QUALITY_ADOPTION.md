@@ -19,26 +19,39 @@ and the existing repository children, not waived or marked complete.
 ## Current candidate adoption boundary — 7 October 2026
 
 The [current matrix checkpoint](PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026)
-records all-maintained analysis and exception-guard work above unmerged parent
-branches. The older shipped-file populations and certified-host revisions below
-remain dated landing evidence, not current candidate certification. Core's former
-312-file development backlog is disposed in the #254 lineage; 708/710 maintained
-PHP files are analyzed at level 5 with two exact historical-fixture exemptions.
-This does not establish universal retained-exception acceptance.
+distinguishes delivered Lane B source from still-unmerged Core, Admin Shell and
+shared-standard candidates. Older shipped populations and certified-host revisions
+below remain dated evidence. Core's former 312-file development backlog is disposed
+in the #254 lineage: 708/710 maintained PHP files analyzed at level 5, with two
+exact historical-fixture exemptions. This is candidate coverage, not main delivery
+or universal retained-exception acceptance.
 
-[Lane A](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
-owns Release Updater #105–108, Branch Updater #73/#76/#77 and Support #43–47;
-[Lane B](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857)
-owns Provider #61–64, Bitbucket #98–101 and Migrator #61–64 implementation and
-integration. The overall coordinator retains Core, Admin Shell, shared standards,
-policy/matrix reconciliation, cross-lane sequencing and final Core adoption.
-Candidate integration, package publication, exact consumer-lock adoption and
-installed certification are distinct steps. No released-certification substitution,
-blanket CLI exception acceptance or additional merge/release authorization follows.
-Core #258/#259 and repaired Admin #24 await the renewed qualification recorded
-in the matrix and live #65 checkpoints. Shared #14 passes exact review and native
-checks but remains unmerged; four Core #259 occurrence dispositions explicitly
-remain pending owner decision.
+[Lane B's final handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032915181)
+records Provider #65, Bitbucket #102 and Migrator #65 delivered to main with exact
+tree verification and successful post-merge checks. Their original twelve proposals
+are closed as superseded with branches/reviews preserved. No release or new-host
+adoption follows. Provider #59 and Bitbucket #95 now have clear independent
+release-pair reviews (5439496402/5439499218); publication remains Ben's separate
+decision. Migrator #43 still requires exact release qualification/review. Migrator's
+exact candidate/ZIP/released-host manual acceptance remains held. Existing beta31
+certification is unchanged.
+
+[Lane A's second folds](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033842955)
+landed Release #108/#107, Branch #77/#76 and Support #47/#46 into parent branches
+only. Next #106/#73/#45 require refreshed cumulative qualification and specific
+approval; none of these stacks is delivered to main at this checkpoint.
+
+Core #258/#259, Admin #24 and shared #14 have passed their recorded exact-pair
+qualification and remain unmerged. Cumulative Core #261 and its #260 parent remain
+draft despite earlier green native checks: independent review found a future
+extensionless-entrypoint inventory escape. Its published repair at `fda3d4ac`
+awaits fresh review/native qualification; prior green runs do not qualify it.
+Four Core #259 exception occurrences remain owner-pending. The overall coordinator
+retains Core, Admin Shell, shared standards, policy/matrix reconciliation,
+release-pair qualification, cross-lane sequencing and immutable Core adoption.
+Candidate integration, publication, consumer-lock adoption and installed
+certification remain distinct; no blanket exception or merge/release authorization
+follows from this ledger.
 
 ## Recorded landing checkpoints
 

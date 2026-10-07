@@ -11,8 +11,14 @@ release a new API generation.
 The current claims are the [Lane A transfer](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
 and [Lane B transfer](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857).
 Lane A owns implementation/integration of Release Updater #105–108, Branch Updater
-#73/#76/#77 and Updater Support #43–47. Lane B owns Provider #61–64, Bitbucket
-#98–101 and Migrator #61–64. These transfers do not transfer Core, Admin Shell,
+#73/#76/#77 and Updater Support #43–47; its second approved folds remain
+parent-only, with #106/#73/#45 under renewed qualification. Lane B completed
+Provider #65, Bitbucket #102 and Migrator #65 delivery to main and post-merge
+verification; the twelve original proposals are closed as superseded with branches
+and reviews preserved. Its [final handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032915181)
+returns remaining release-pair qualification and immutable adoption sequencing to
+the overall coordinator; no release was published. These transfers do not transfer
+Core, Admin Shell,
 shared standards/policy, matrix/tracker reconciliation, final ecosystem dependency
 sequencing or Core adoption from the overall coordinator. Ben retains specific
 merge and publication decisions. Current repairs and exact qualification are
@@ -22,8 +28,11 @@ and linked #65 records; earlier ready statuses are not automatically current.
 The original counts, cohort descriptions and dated handoff below remain historical
 evidence. Core's former development-analysis backlog is disposed in the #254
 candidate lineage; the five reserved owned parameters are addressed by #258.
-The four #259 exception occurrences still await owner disposition. Do not repeat
-completed naming migrations, reinterpret historical fixture identities, or infer
+The four #259 exception occurrences still await owner disposition. Cumulative
+Core #261 remains draft while its published future extensionless-entrypoint repair
+at `fda3d4ac` awaits fresh review/native qualification; earlier green native checks
+do not qualify the changed head.
+Do not repeat completed naming migrations, reinterpret historical fixture identities, or infer
 released/default-branch adoption from qualified dependent candidates.
 
 ## Historical routing — Bitbucket handoff, 29 September 2026
