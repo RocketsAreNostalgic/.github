@@ -407,7 +407,7 @@ There is no background scan, notification guarantee or repair service.
 
 The actual output must contain concrete official reporting/announcement links,
 not these shorthand descriptions. Link publication/retry guidance to the existing
-[shared Profile B contract](../../RELEASE_PROFILE_B.md) using a concrete canonical URL in
+[shared Profile B contract](RELEASE_PROFILE_B.md) using a concrete canonical URL in
 generated output; keep the setup PR and handoff usable without Booster or a
 successful Actions run. The producer security policy must match this initial-only
 contract; the coordinator verifies the reporting/subscription route

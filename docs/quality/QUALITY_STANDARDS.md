@@ -256,13 +256,13 @@ do not introduce a second ruleset interpreter or a permanent exemption registry.
 
 #### Exceptions and native operations
 
-Use ordinary PHPCS annotations and existing ruleset comments to explain exact
-rules and the smallest practical span. Re-enable checks after bounded disabled
-regions. Blanket all-rule suppressions are not permitted in maintained code;
-intentionally malformed fixture bytes need an explicit fixture boundary. A
-file-wide named-rule exception needs a file-wide reason. An exceptional
-identifier in an intentional negative fixture must be necessary for the tested
-contract; it does not relax production naming.
+Use ordinary PHPCS annotations and existing ruleset comments under the
+[reviewed-exemption requirements](#default-coverage-and-reviewed-exemptions).
+Re-enable checks after bounded disabled regions. Blanket all-rule suppressions
+are not permitted in maintained code; intentionally malformed fixture bytes
+need an explicit fixture boundary. An exceptional identifier in an intentional
+negative fixture must be necessary for the tested contract; it does not relax
+production naming.
 
 | Disposition | Evidence required |
 | --- | --- |

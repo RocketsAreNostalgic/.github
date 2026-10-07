@@ -155,7 +155,7 @@ No Blacksmith subscription or AI feature is required by generated output.
 Static setup-PR and `RELEASE-STARTER.md` guidance must remain useful when no job
 can run: disabled Actions, rejected workflow/policy, or runner/account constraints
 cannot be explained by an annotation inside a job that never starts. Point to the
-[shared Profile B contract](../../RELEASE_PROFILE_B.md) for publication and retry
+[shared Profile B contract](RELEASE_PROFILE_B.md) for publication and retry
 boundaries. Executing jobs may explain observed failures using bounded existing
 evidence; a generic 403 does not establish which administrative setting is wrong.
 
@@ -578,7 +578,7 @@ Audited snapshots (refresh before implementation): `.github`
 certification pins. Completed .github #83 and Core #176 were documentation-only; their merged heads
 are now the refreshed source baselines for this review.
 
-- [Actual shared interface and promotion contract](../../RELEASE_PROFILE_B.md), backed
+- [Actual shared interface and promotion contract](RELEASE_PROFILE_B.md), backed
   by `.github/workflows/release-profile-b.yml` at the audited `.github` SHA.
 - [Pack schema](https://github.com/RocketsAreNostalgic/ran-booster-release-bootstrap-templates/blob/29a194be54c383e91758665d99461017386fe2e8/schema/template-pack.schema.json),
   `templates/shared/{release-please.yml,build-release.sh,verify-release.sh,upload-release-assets.sh}.tmpl`,

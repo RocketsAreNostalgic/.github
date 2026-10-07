@@ -13,8 +13,9 @@ terminal dispositions in [#29](https://github.com/RocketsAreNostalgic/.github/is
 The consolidation preserves the evidence below without rerunning the estate audit.
 A dated CONFORMS/JUSTIFIED DIFFERENCE result does not certify later source, settings
 or releases. Implementation, publication, adoption, installed qualification and
-owner acceptance remain separate facts. Refresh the exact candidate through the
-responsible controller before acting.
+owner acceptance remain separate facts. This record authorizes no merge,
+publication, settings change or acceptance waiver. Refresh the exact candidate
+through the responsible controller before acting.
 
 <a id="current-closeout-routing--3-october-2026"></a>
 <a id="current-publication-and-closeout-checkpoint--4-october-2026"></a>
@@ -23,39 +24,25 @@ responsible controller before acting.
 
 At this checkpoint Core beta.31, Provider beta.13 and Bitbucket beta.15 were
 published; their former release/check-association pauses were historical.
-Migrator's owner disposable-site acceptance remained held. This retained record
-authorizes no merge, publication, settings change or acceptance waiver.
+Migrator's owner disposable-site acceptance remained held.
 
 ### Published Booster composition and remaining candidate
 
-| Product | Exact publication / qualification | Disposition at 4 October checkpoint |
-| --- | --- | --- |
-| Core | [beta.31](https://github.com/RocketsAreNostalgic/ran-booster/releases/tag/v1.0.0-beta.31), release `402608343`, tag/merge `8a3ed5a8acdb3875f498e2f44bf9eba89fddbbaf`; [publisher37139357048](https://github.com/RocketsAreNostalgic/ran-booster/actions/runs/37139357048) SUCCESS | Published, non-draft, immutable. ZIP `608190187`, API digest `sha256:cf0ebbd306fa9086a9f885974f490b0cacb4a172c20f6b290dde13d2f3a7b2c5`; checksum `608190206`. Existing [post-merge qualification](https://github.com/RocketsAreNostalgic/.github/issues/57) includes all four installed lanes. Later main changes belong to next-beta work, not this released artifact. |
-| GitHub Provider | [beta.13](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/releases/tag/v1.0.0-beta.13), release `402505132`, tag/merge `34de47b67f91719679eeeb8ecd93716e3b6ff377`; [publisher37123138039](https://github.com/RocketsAreNostalgic/ran-booster-github-provider/actions/runs/37123138039) SUCCESS | Published, non-draft, immutable; adopted by Core234 and included in beta.31. No beta.12 adoption task remains. |
-| Bitbucket | [v0.1.0-beta.15](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/releases/tag/v0.1.0-beta.15), release `402647375`, tag/merge `3c9dc950814b1a3905500470ad0e465b3ba2c520`; [publisher37145848530](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/actions/runs/37145848530) SUCCESS | Published, non-draft, immutable. ZIP `608346451`, API digest `sha256:e385a9b7ff36db6f2529d61c5784109fbf7b28ea2e485d772ba01a97e19e3380`; checksum `608346466`. [Retained downloaded-byte and installed proof](https://github.com/RocketsAreNostalgic/ran-booster-bitbucket/pull/75#issuecomment-5972423291) qualifies genuine Core beta.31, both load orders and incompatible-host rejection. |
-| Migrator | Source57 merged at `2897e647c607b87e0514d260555b4e628623cd08`; [release43](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43) open at `3584e5b22b8e860598ab09728f706e34163ab881` against that source; [Quality37145886566](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/actions/runs/37145886566) SUCCESS | Exact-head [independent review](https://github.com/RocketsAreNostalgic/ran-booster-wp-pusher-migrator/pull/43#issuecomment-5972414983) and automated released-Core qualification are complete. **Do not merge:** owner disposable-site acceptance remains outstanding. Published Bitbucket beta.15 is available for its eventual cases. Beta.10 is not published. |
-
-That checkpoint reread release objects, assets' API identities/digests, direct
-tag targets and the named runs; it does not claim a new archive download,
-installation or manual test. Archive-source identity can differ from the tag
-target; use the retained qualification proof rather than substituting one.
+The optional [4 October composition record](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/RELEASE_PUBLISHERS.md#published-booster-composition-and-remaining-candidate)
+retains release/tag identities, API asset IDs/digests and exact publisher,
+downloaded-byte, installed and candidate-review evidence. Core beta.31 adopted
+Provider beta.13; no beta.12 adoption task remains. That record does not turn
+source/API readback into a new archive download, installation or manual test.
+Archive-source identity can differ from a tag target; use its retained proof.
+Migrator's owner hold remains in [surviving safeguards](#surviving-acceptance-and-release-safeguards).
 
 ### Current publisher and terminal-state sweep
 
-The [complete 4 October fifteen-publisher sweep](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#current-publisher-and-terminal-state-sweep)
-records exact inspected default commits, caller pins, releases, tags and candidate
-states. It covered all accessible release pages, open PRs and pending-labelled
-records; every collection fit its requested 100-item page. Each latest release was
-non-draft and immutable, each listed tag directly resolved to a commit, and each
-caller retained top-level `permissions: {}`. This was source/API readback, not
-proof of inaccessible administrative settings or a new artifact download/install.
-
-At that checkpoint Migrator43 was the sole open release proposal and sole
-pending-labelled record. The only retained drafts were Enhanced Cover
-`394078148` (`v1.3.3`) and Duplicate Detector `390735360` (`v0.2.2`), both explicitly
-superseded/unpublished. This is a dated observation, not an instruction to remove
-those drafts or a claim about today's release queue. Current-version observation
-does not prove historical dispositions or guaranteed monitoring cadence.
+The optional [fifteen-publisher sweep](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/RELEASE_PUBLISHERS.md#current-publisher-and-terminal-state-sweep)
+retains exact inspected source/API identities, pins and collection coverage.
+It cannot prove inaccessible administration, present queues or monitoring
+cadence. The two retained unpublished drafts remain subject to
+[their terminal dispositions](#historical-terminal-dispositions--1-october-2026).
 
 ### Ben/admin readback checklist — what and why
 
@@ -85,8 +72,7 @@ administrative evidence remains unverified; no settings or approval was changed.
 ## Surviving acceptance and release safeguards
 
 - [#57/#59](https://github.com/RocketsAreNostalgic/.github/issues/57) retain the
-  administrative evidence gaps above. Source path absence and immutable release
-  objects cannot certify live dispatch neutralization or future release settings.
+  administrative evidence gaps and their [readback requirements](#benadmin-readback-checklist--what-and-why).
 - [#81](https://github.com/RocketsAreNostalgic/.github/issues/81) owns actual Core
   composition and installed/owner feature acceptance. Preserve its UI/onboarding
   deferral and [#85](https://github.com/RocketsAreNostalgic/.github/issues/85)
@@ -108,6 +94,10 @@ administrative evidence remains unverified; no settings or approval was changed.
   and next-beta work remain with #65 and its existing repository children.
 
 ### Local guarantees and deletion disposition
+
+The following is retained product evidence from the dated checkpoint, not a
+claim about current API generations or fresh consumer certification. Product
+contracts and subsequent qualification remain with their existing owners.
 
 - **Justified local evidence:** Branch's installed Composer consumer; Release Updater's generated runtime-copy version projection (`runtime-copy.json` through Release Please `extra-files`), no-dev consumer, Windows/MySQL/WordPress integration; Provider's exact candidate-host implementation gates; Starter's source-only release plus local build/reference checks; Coding Standards' exact-candidate Starter and Booster proof before any standards release. These are not generic lifecycle engines.
 - **Justified Profile B construction:** Core's dependency projection, allowlisted archive, localisation/database/WordPress/install evidence; Bitbucket's exact released-Core certification and installed readback; Migrator's deterministic allowlisted ZIP, Core Portability/Admin Interaction API 2 certification and fresh disposable-site migration matrix; the five WordPress consumers' build/POT/generated-output/archive/Plugin Check and compatibility adapters. Their authoritative bytes are built by read-only Quality and promoted without privileged rebuild, replacement or post-test repack.
@@ -140,16 +130,18 @@ remaining acceptance, and this consolidation does not close any tracker.
 
 ## Historical terminal dispositions — 1 October 2026
 
-| Case | Retained decision and provenance |
-| --- | --- |
-| Core beta.23 | [Explicitly left unpublished](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#booster-beta23-explicitly-left-unpublished-progression-restored) by Core77 (`642982fd5d966ac46c2f5f51ae2e9d475683ed8b`); progression resumed at published beta.24. Core67 actually had a two-parent merge, so #77's squash-merge explanation was false. Quality passed; publisher failed at exact artifact provenance with checksum OK then exit 1. No more specific assertion failure is proven. Do not invent a cause or rewrite/publish historical objects. |
-| Four cancelled proposals | [Exact heads, cancellations and label readbacks](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#cancelled-proposals-stale-pending-metadata-removed): EmailOctopus1 (1.1.0), Bitbucket14 (alpha.6), Migrator8 (alpha.4), Migrator12 (beta.2). All remained closed/unmerged; only stale `autorelease: pending` was removed, with no tagged/new lifecycle marker. Cancellation applies to those proposals, not every later use of the version string. |
-| Enhanced Cover v1.3.3 / Duplicate Detector v0.2.2 | [Retained unpublished supersessions](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#current-publisher-and-terminal-state-sweep); newer immutable publications do not themselves supply the historical disposition. No historical draft deletion or replacement is required by this consolidation. |
+The optional [terminal-disposition record](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/RELEASE_PUBLISHERS.md#historical-terminal-dispositions--1-october-2026)
+retains exact cancellations, label readbacks and failure evidence. Core beta.23
+remains explicitly unpublished; Core77's squash-merge explanation was false,
+and no more specific cause than the recorded artifact-provenance failure is
+proven. EmailOctopus1, Bitbucket14, Migrator8 and Migrator12 remain cancelled
+proposals, not a prohibition on later use of their version strings. Enhanced
+Cover v1.3.3 and Duplicate Detector v0.2.2 remain unpublished supersessions;
+this consolidation requires no draft deletion or replacement.
 
-These five closeout cases and the two retained drafts are separate from wider
-#29/#57/#9 acceptance. Historical release/tag targets must not be rewritten to
-match today's merged-main model: Migrator beta.9 and bootstrap v0.2.0 deliberately
-retain their recorded PR-head publication identities.
+These cases do not close wider #29/#57/#9 acceptance. Do not rewrite historical
+release/tag targets or publish historical objects: Migrator beta.9 and bootstrap
+v0.2.0 retain their deliberate PR-head publication identities.
 
 <a id="current-estate-snapshot--30-september-2026"></a>
 <a id="privileged-workflow_dispatch-authority-audit--historical-checkpoint"></a>
@@ -160,12 +152,12 @@ retain their recorded PR-head publication identities.
 
 ## Earlier evidence and supersession
 
-| Evidence | How to use it |
-| --- | --- |
-| [30 September estate snapshot](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#current-estate-snapshot--30-september-2026) | Exact fifteen-publisher source/settings/publication inventory, 96 non-default branches and 125 tag refs. Its old held-proposal, adoption and geometry status is superseded by later evidence above and existing issues. It never proved inaccessible dispatchability. |
-| [17 September manual-authority audit and tag follow-up](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#privileged-workflow_dispatch-authority-audit--historical-checkpoint) | Exact branch/tag coverage, accepted single-trusted-principal model, retired-path neutralization PRs and run IDs. Old path absence was checkpoint-specific, not proof of current platform dispatchability. No tags were rewritten. |
-| [Original publisher matrix through 25 September](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#historical-production-publisher-matrix--through-25-september-2026) | Original classifications, remediations and exclusions. Later Profile A/B migrations superseded permission to retain generic local publisher/recovery machinery and bootstrap's numeric release-ID dependency. Former read-only exclusions are not permanent exemptions if a production mutator is added. |
-| [Original audit conclusions and liveness rollout](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/RELEASE_PUBLISHERS.md#audit-conclusions) | Exact historical admission, race-repair and observer proofs. A current-manifest observer cannot certify historical releases, assets/digests, immutability, deployment or estate-wide cadence. Its live contract remains in [release trust](RELEASE_TRUST.md#read-only-release-liveness). |
+The optional [pre-move evidence index](https://github.com/RocketsAreNostalgic/.github/blob/70e1321efc0b7cce7d6330b58cc0dd5a60e5ae66/RELEASE_PUBLISHERS.md#earlier-evidence-and-supersession)
+links the original estate, historical-ref authority, publisher and liveness
+audits. These checkpoint-specific measurements do not establish current
+platform dispatchability or turn former read-only exclusions into permanent
+exemptions after a production mutator is added. Current liveness boundaries
+are defined by [release trust](RELEASE_TRUST.md#read-only-release-liveness).
 
 <a id="transferable-publisher-invariants"></a>
 <a id="exact-candidate-versus-latest-main"></a>

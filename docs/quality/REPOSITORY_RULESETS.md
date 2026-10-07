@@ -54,7 +54,7 @@ Copilot code review may remain enabled without automatically re-reviewing every 
 
 The [recorded repository mapping](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/REPOSITORY_RULESETS.md#repository-profiles)
 preserves the inspected profiles, merge methods and protected contexts as
-historical evidence. Consult [quality acceptance](../PHP_QUALITY_MATRIX.md),
+historical evidence. Consult [quality acceptance](PHP_QUALITY_MATRIX.md),
 existing repository issues and live rulesets for subsequent changes; this
 policy is not a second current-status inventory.
 
@@ -73,12 +73,12 @@ Archived repositories and fixtures are outside the active normalization requirem
 ## Relationship to CI policy
 
 [Reusable workflows](QUALITY_WORKFLOWS.md) define shared quality execution;
-[Quality Standards](../QUALITY_STANDARDS.md#ci-contract) defines the CI contract.
+[Quality Standards](QUALITY_STANDARDS.md#ci-contract) defines the CI contract.
 Rulesets govern which evidence is required before merge. A repository-local
 status remains useful evidence without becoming an authoritative organisation
 workflow identity.
 
-[Enforcement integrity](../QUALITY_STANDARDS.md#enforcement-integrity) is the
+[Enforcement integrity](QUALITY_STANDARDS.md#enforcement-integrity) is the
 authoritative requirement for organisation-controlled workflow identity and
 quality-contract protection. The completed design is recorded in #12;
 activation prerequisites remain under #31. Repository-local required statuses

@@ -6,16 +6,16 @@ on:
       - '.github/workflows/release-liveness-observer.yml'
       - '.github/workflows/release-liveness-contract.yml'
       - 'quality-enforcement/test-release-liveness-observer.py'
-      - 'RELEASE_TRUST.md'
-      - 'RELEASE_PUBLISHERS.md'
+      - 'docs/release/RELEASE_TRUST.md'
+      - 'docs/release/RELEASE_PUBLISHERS.md'
   push:
     branches: [main]
     paths:
       - '.github/workflows/release-liveness-observer.yml'
       - '.github/workflows/release-liveness-contract.yml'
       - 'quality-enforcement/test-release-liveness-observer.py'
-      - 'RELEASE_TRUST.md'
-      - 'RELEASE_PUBLISHERS.md'
+      - 'docs/release/RELEASE_TRUST.md'
+      - 'docs/release/RELEASE_PUBLISHERS.md'
 
 permissions:
   contents: read
