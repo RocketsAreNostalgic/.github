@@ -15,7 +15,60 @@ row meets the adopted policy. Open migration PRs are recorded separately.
 The manifests, locks, rulesets, analysis configurations, contributor contracts
 and workflows at each linked revision are the source of each row.
 
-## Current delivery and exception checkpoint — 5 October 2026
+## Current candidate checkpoint — 7 October 2026
+
+This checkpoint distinguishes implemented and qualified **candidate trees** from
+merged default branches, publication and consumer adoption. The
+[6 October exact-pair ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6027025243)
+records the preceding nine qualified tips. Its ready status is historical where
+subsequent findings, edits or integration change the candidate. The
+[current Core/shared checkpoint](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032296921)
+and repository PRs carry renewed qualification; no default-branch certification
+or blanket exception acceptance follows from this table.
+
+| Repository / candidate lineage | Maintained PHP coverage at the recorded candidate | Current disposition |
+| --- | --- | --- |
+| Core #254 → #257 → #258 → #259 | 708/710 at level 5; two exact immutable historical rejection fixtures are reviewed exemptions | #255/#256 landed only into #254's branch. The former 312-file development backlog is disposed by automatic maintained-file analysis, not a permanent file allowlist. #257 protects selectors and generated-path collisions. #258 removes five owned reserved-parameter exemptions; #259 supplies bounded evidence for four retained occurrences without accepting them. Final qualification remains in progress below. |
+| Release Updater #105–108 | 97/97 at levels 8/5 | Transferred to Lane A; configuration-guard refinements and renewed exact-candidate qualification are in progress. |
+| Branch Updater #73/#76/#77 | 52/52 at level 5 | Transferred to Lane A; preserve the separate standalone compatibility profile. Future-exclusion guard refinement and renewed qualification are in progress. |
+| Updater Support #43–47 | 6/6 at level 8 | Transferred to Lane A for exact integration/publication assessment; prior tip qualification is not default delivery. |
+| GitHub Provider #61–64 | 77/77 at level 5 | Transferred to Lane B; mandatory shared-profile inventory finding requires refreshed disposition and qualification. |
+| Bitbucket #98–101 | 50/50 at levels 8/5 | Transferred to Lane B; disposable candidate composition does not replace released certified-host evidence. |
+| Migrator #61–64 | 49/49 at levels 6/5 | Transferred to Lane B; retain exact host/dependency and installed-site acceptance boundaries. |
+| Admin Shell #24 | 16/16 at level 5 | Resource-profile repair is published at `b976e57df0294a150894000d1e0562556f851b2b`; canonical checks pass 42 tests/483 assertions, both PHPCS profiles and consumer proof. Renewed independent review/native qualification remains pending. |
+| Shared coding standards #14 | 4/4 at level 5 | Guard correction at `f308e46352591a36ca318147d8b25f69bbe28b47` passes exact local canonical checks, renewed independent review 5438488239 and all three jobs in native run 37581037936; both review findings are resolved. This remains an unmerged candidate. |
+
+Core #258 now has base `35bf417461eb980f3ca0a42b762d101920407fb6`, head
+`055ea662fef2771c20e3f50a867cbb9f45eb2b7a`; #259 has that head as base and
+head `ddc2031494ae64418f5f11158eeee147d7510163`. Renewed independent reviews
+5438441245 and 5438442671 are clear. Full canonical/native qualification of these
+new heads remains pending at this checkpoint. Earlier heads passed 2,700/30,035
+and 2,703/30,188 PHPUnit tests/assertions respectively, 364 analysis invocations
+and 193 frontend tests; those results do not qualify the changed heads. A named
+Theme factory assertion was added to an actually invoked installed MySQL
+proof; the previously edited race fixture was not invoked by those native jobs.
+
+The four #259 occurrences remain **pending owner disposition**: captured renderer
+fragments in `RepositoryDetailRenderer.php` and passive request selection in
+`DeploymentAdminPresenter.php`. Behavioral/negative controls and precise reasons
+are evidence, not acceptance. Other retained CLI, native-I/O, security and SQL
+allowances retain their existing recorded disposition; these selector and test
+changes do not reaccept them. The
+[Admin repair claim](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032328507)
+records the additional confirmed gap. Core's absent-future-path configuration
+concern is preventive: existing tracked-file coverage rejects a matching file;
+it is not the same end-to-end bypass.
+
+Implementation/integration ownership is transferred only for the
+[three Lane A stacks](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
+and [three Lane B stacks](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857).
+The overall coordinator retains Core, Admin Shell, shared standards/policy,
+this matrix/tracker, final dependency sequencing and Core adoption. Specific
+merge/publication decisions remain Ben's. Refresh exact pairs after integration;
+manual/UI/operational and release holds remain separate. CI-only progress belongs
+in the linked live records without rewriting historical evidence below.
+
+## Historical delivery and exception checkpoint — 5 October 2026
 
 Core's level-5 cleanup and gate promotion are delivered. [Core #248](https://github.com/RocketsAreNostalgic/ran-booster/pull/248)
 is squash-merged at `48e86ebd5d6ca153311f60bc385173349ed81e30`, with tree

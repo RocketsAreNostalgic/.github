@@ -1,5 +1,24 @@
 # Booster retained-exception scope — 5 October 2026
 
+## Supersession note — 7 October 2026
+
+This is the dated 5 October audit, not the current implementation queue. See the
+[current matrix checkpoint](../PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026)
+for later all-maintained coverage, narrow-exception and selector-guard candidates.
+The Branch development-profile gap, Release test/native exclusions, Admin preview
+profile gap and Core five owned reserved-parameter cases below have subsequent
+implementations; their candidate qualification, integration and remaining repairs
+are separate from default-branch delivery. Core's former 312-file backlog is
+resolved in the candidate lineage, with two exact historical-fixture exemptions
+retained. Preserve the original revisions/counts below as exposure evidence.
+
+[Lane A](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
+and [Lane B](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857)
+now own only their transferred implementation/integration stacks. Current Core,
+shared and Admin repairs/qualification remain with the overall coordinator.
+No historical rationale or passing check here accepts all remaining exceptions;
+four Core #259 occurrences explicitly await owner disposition.
+
 Dated review aid under organisation #65 and adopted #128, not a new permanent
 registry. Policy revision: `ff6ddb6731dd4151b39dc8d8c0464a253d88caf8`.
 Current source was compared with actual locked checker selection and existing

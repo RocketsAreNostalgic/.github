@@ -6,7 +6,27 @@ evidence PR `#70`. This extends the [shared-rule audit](BOOSTER_SHARED_RULES_AUD
 It proposes the migration cohorts; it does not rename application code or
 release a new API generation.
 
-## Current routing — Bitbucket handoff, 29 September 2026
+## Current routing — limited lane transfers, 7 October 2026
+
+The current claims are the [Lane A transfer](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
+and [Lane B transfer](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857).
+Lane A owns implementation/integration of Release Updater #105–108, Branch Updater
+#73/#76/#77 and Updater Support #43–47. Lane B owns Provider #61–64, Bitbucket
+#98–101 and Migrator #61–64. These transfers do not transfer Core, Admin Shell,
+shared standards/policy, matrix/tracker reconciliation, final ecosystem dependency
+sequencing or Core adoption from the overall coordinator. Ben retains specific
+merge and publication decisions. Current repairs and exact qualification are
+recorded in the [matrix checkpoint](PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026)
+and linked #65 records; earlier ready statuses are not automatically current.
+
+The original counts, cohort descriptions and dated handoff below remain historical
+evidence. Core's former development-analysis backlog is disposed in the #254
+candidate lineage; the five reserved owned parameters are addressed by #258.
+The four #259 exception occurrences still await owner disposition. Do not repeat
+completed naming migrations, reinterpret historical fixture identities, or infer
+released/default-branch adoption from qualified dependent candidates.
+
+## Historical routing — Bitbucket handoff, 29 September 2026
 
 This document's counts and cohort inventory below are historical audit evidence,
 not current reservations or completed-name counts. Live ownership and sequencing

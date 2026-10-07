@@ -16,6 +16,30 @@ responsibilities are explicitly retained in
 [#65's residual-owner ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#residual-programme-ownership-after-66-closure)
 and the existing repository children, not waived or marked complete.
 
+## Current candidate adoption boundary — 7 October 2026
+
+The [current matrix checkpoint](PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026)
+records all-maintained analysis and exception-guard work above unmerged parent
+branches. The older shipped-file populations and certified-host revisions below
+remain dated landing evidence, not current candidate certification. Core's former
+312-file development backlog is disposed in the #254 lineage; 708/710 maintained
+PHP files are analyzed at level 5 with two exact historical-fixture exemptions.
+This does not establish universal retained-exception acceptance.
+
+[Lane A](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032064210)
+owns Release Updater #105–108, Branch Updater #73/#76/#77 and Support #43–47;
+[Lane B](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032171857)
+owns Provider #61–64, Bitbucket #98–101 and Migrator #61–64 implementation and
+integration. The overall coordinator retains Core, Admin Shell, shared standards,
+policy/matrix reconciliation, cross-lane sequencing and final Core adoption.
+Candidate integration, package publication, exact consumer-lock adoption and
+installed certification are distinct steps. No released-certification substitution,
+blanket CLI exception acceptance or additional merge/release authorization follows.
+Core #258/#259 and repaired Admin #24 await the renewed qualification recorded
+in the matrix and live #65 checkpoints. Shared #14 passes exact review and native
+checks but remains unmerged; four Core #259 occurrence dispositions explicitly
+remain pending owner decision.
+
 ## Recorded landing checkpoints
 
 | Repository / owner | Recorded revision | Canonical-command status at that checkpoint |
