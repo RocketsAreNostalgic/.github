@@ -12,6 +12,23 @@ The intended hierarchy is:
 
 These standards apply to maintained RAN repositories according to their technology and quality profile. Fixtures, archived repositories, and intentionally unsupported projects may use a reduced surface only where that reduction is necessary to preserve their purpose. `legacy` is a migration state, not a permanent exemption.
 
+## Find the requirement for your change
+
+The technology/profile baseline applies across maintained RAN repositories.
+The [next-beta Booster acceptance](#next-beta-booster-php-acceptance), including
+its PHPStan level-5 minimum and default-coverage rules, applies to the Booster
+ecosystem as stated there; it does not assign that same acceptance tranche to
+the wider estate. Stronger local gates remain required under
+[authority and precedence](#authority-and-precedence).
+
+| Question | Authoritative section |
+| --- | --- |
+| What applies to this repository or code surface? | [Profiles and applicability](#quality-profiles-and-applicability); for the Booster tranche, [common convention and scope](#common-convention-and-scope). |
+| Which checks must run? | [Canonical command contract](#canonical-command-contract) and [CI contract](#ci-contract), alongside the repository's required checks. |
+| What happens when a maintained file is added or moved? | Applicable [profile requirements](#quality-profiles-and-applicability); Booster's [default coverage and reviewed exemptions](#default-coverage-and-reviewed-exemptions) specifies automatic coverage and regression controls. |
+| Which exceptions are acceptable? | [Authority and precedence](#authority-and-precedence) and [core invariants](#core-invariants); Booster also follows [reviewed exemptions](#default-coverage-and-reviewed-exemptions) and [exceptions and native operations](#exceptions-and-native-operations). |
+| What must a reviewer verify? | [Review standard](#review-standard), [enforcement integrity](#enforcement-integrity), and the applicable profile; Booster qualification also uses [qualification and release boundaries](#qualification-and-release-boundaries). |
+
 ## Reference high-water implementation
 
 `RocketsAreNostalgic/ran-booster` is the reference high-water implementation for RAN quality engineering.
@@ -660,6 +677,11 @@ The RAN frontend-quality package should expose independent ESLint, Prettier, Sty
 Shared standards must have their own tests or fixtures and an independent release lifecycle. Runtime libraries such as `ran-plugin-library` are not the canonical home for coding policy.
 
 ## Review standard
+
+When a review finding may affect other repositories, record the sibling
+repositories or code surfaces checked, their evidence and dispositions, and
+owners of remaining work in the existing issues or PRs. Do not create a separate registry or
+framework for this record.
 
 Code review should treat the following as defects when the applicable profile or triggering code surface requires them:
 

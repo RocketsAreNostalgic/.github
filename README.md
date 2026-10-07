@@ -8,13 +8,13 @@ shared requirements are a minimum and do not remove stronger local gates.
 
 | Task | Reading path |
 | --- | --- |
-| Ordinary development or review | Local `AGENTS.md`, README and contribution guidance → applicable [Quality Standards](QUALITY_STANDARDS.md) sections. [Engineering](ENGINEERING.md) explains the common stance and safe review boundary. |
+| Ordinary development or review | Local `AGENTS.md`, README and contribution guidance → the [Quality Standards navigation](QUALITY_STANDARDS.md#find-the-requirement-for-your-change) for applicable requirements. [Engineering](ENGINEERING.md) explains the common stance and safe review boundary. |
 | Change standards, quality tooling or CI | [Quality Standards](QUALITY_STANDARDS.md) → [workflow contract](docs/QUALITY_WORKFLOWS.md) and [ruleset policy](docs/REPOSITORY_RULESETS.md) as applicable. Read the [enforcement design](quality-enforcement/README.md) only when changing that boundary. |
 | Prepare or operate a release | Local release guide → [release trust and classification](RELEASE_TRUST.md) → the applicable [Profile A](RELEASE_PROFILE_A.md) or [Profile B](RELEASE_PROFILE_B.md). |
 | Implement bootstrap templates | [Frozen bootstrap contract and examples](docs/release/BOOTSTRAP_STARTER_CONTRACT.md); release profiles remain separate contracts. |
 | Change public contribution or support intake | [Community Standards](COMMUNITY_STANDARDS.md), then the relevant inherited [contribution](CONTRIBUTING.md), [support](SUPPORT.md), [security](SECURITY.md) or [conduct](CODE_OF_CONDUCT.md) file. |
 
-## Current acceptance and coordination
+## Acceptance snapshots and coordination
 
 [Quality acceptance](PHP_QUALITY_MATRIX.md) is the dated quality checkpoint;
 [release publisher evidence](RELEASE_PUBLISHERS.md) records release-specific

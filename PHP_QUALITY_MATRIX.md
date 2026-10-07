@@ -1,53 +1,55 @@
 # PHP quality acceptance
 
 Policy lives in [Quality Standards](QUALITY_STANDARDS.md); this page records
-bounded acceptance and remaining decisions. Live claims and sequencing stay in
+bounded acceptance and remaining decisions. Closed #66 is delivered evidence;
+its residual commitments remain under #65 and existing repository issues.
+This consolidation does not re-run consumer checks, raise levels, approve
+exceptions, change dependencies or authorize releases.
+
+<a id="current-candidate-checkpoint--7-october-2026"></a>
+
+## Acceptance snapshot — 7 October 2026, 08:41 UTC
+
+This fixed snapshot transcribes the responsible controllers' linked handoffs
+and the [frozen PR132 evidence checkpoint](https://github.com/RocketsAreNostalgic/.github/blob/b574d2d1a64766db94a11bfc110c456be7fab99a/PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026).
+It is not new independent qualification or approval of that documentation PR.
+Subsequent operations, ownership and changed qualification belong in
 [coordination #65](https://github.com/RocketsAreNostalgic/.github/issues/65),
-[PHPStan #127](https://github.com/RocketsAreNostalgic/.github/issues/127) and
-[standards #128](https://github.com/RocketsAreNostalgic/.github/issues/128).
-Closed #66 is delivered evidence; its residual commitments remain under #65 and
-existing repository issues. This consolidation does not re-run consumer checks,
-raise levels, approve exceptions, change dependencies or authorize releases.
+with its existing [analysis #127](https://github.com/RocketsAreNostalgic/.github/issues/127)
+and [standards #128](https://github.com/RocketsAreNostalgic/.github/issues/128) workstreams;
+this dated snapshot must not be read as their live state.
 
-## Current candidate checkpoint — 7 October 2026
+| Repository | Delivery state at checkpoint | Remaining acceptance | Evidence |
+| --- | --- | --- | --- |
+| Core | Candidate stack; not delivered to main. | Repair qualification and four exception dispositions; separate release decision. | [Candidate details](#core-candidate-qualification-and-remaining-gap) |
+| Release Updater | Parent-branch integration only. | Main-target qualification and owner decision. | [Controller handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) |
+| Branch Updater | Delivered to main; post-merge checks passed. | No residual Branch integration finding; wider acceptance remains scoped. | [Delivery evidence](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) |
+| Updater Support | Parent-branch integration only. | Further parent-target qualification and owner decision. | [Controller handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) |
+| GitHub Provider | Delivered to main; post-merge checks passed. | Release decision and immutable Core adoption. | [Delivered-source evidence](#delivered-lane-b-source) |
+| Bitbucket | Delivered to main; certified beta31 installed proof passed. | Release decision and separate future-host certification. | [Delivered-source evidence](#delivered-lane-b-source) |
+| Migrator | Delivered to main; exact release candidate qualified. | Owner installed/manual acceptance and release decision. | [Delivered-source and candidate evidence](#delivered-lane-b-source) |
+| Admin Shell | Main-target candidate; unmerged. | Exact cumulative review and native qualification. | [Frozen candidate evidence](https://github.com/RocketsAreNostalgic/.github/blob/b574d2d1a64766db94a11bfc110c456be7fab99a/PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026) |
+| Shared coding standards | Main-target candidate; unmerged. | Cumulative qualification; exact Starter/Core proof before release. | [Frozen candidate evidence](https://github.com/RocketsAreNostalgic/.github/blob/b574d2d1a64766db94a11bfc110c456be7fab99a/PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026) |
 
-The following is a dated transcription of the responsible controllers' linked
-handoffs and the [proposed PR132 evidence checkpoint](https://github.com/RocketsAreNostalgic/.github/blob/b574d2d1a64766db94a11bfc110c456be7fab99a/PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026),
-not new independent source qualification or approval of that documentation PR.
-Coverage counts and analysis levels describe the stated revisions only; a
-candidate result is not default-branch delivery. PHPCS/WPCS have no PHPStan
-level system, and analysis coverage is distinct from style acceptance.
+The linked records retain PR chains, maintained-PHP populations, analysis levels,
+exact revisions and run results. Coverage describes the stated revision only;
+PHPCS/WPCS have no PHPStan level system, and analysis coverage is distinct from
+style acceptance. Qualified candidate trees, default-branch delivery, publication
+and consumer adoption are separate claims. No blanket exception acceptance follows.
 
-
-Controller evidence is bounded to the linked 7 October handoffs, including
-[Branch delivery at 08:41 UTC](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606).
-Later CI changes belong in #65 until a substantive disposition changes.
-
-This checkpoint distinguishes qualified **candidate trees**, delivered default
-branches, publication and consumer adoption. The
-[6 October exact-pair ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6027025243)
-is historical where later findings or integration changed the candidate. The
-[Core refresh](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033828160),
-[Lane A second folds](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033842955)
-and [Lane B delivered-source handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6032915181)
-provide the current scoped evidence. No blanket exception acceptance follows.
-
-| Repository / candidate or delivered lineage | Maintained PHP coverage at the recorded revision | Current disposition |
-| --- | --- | --- |
-| Core #254 → #257 → #258 → #259 → #260; cumulative #261 | 708/710 at level 5; two exact immutable historical rejection fixtures are reviewed exemptions | #255/#256 landed only into #254's branch. The former 312-file development backlog is disposed in the candidate lineage. #258 removes five owned reserved-parameter exemptions; #259 supplies evidence for four retained occurrences without accepting them. #260/#261 remain draft: the published future extensionless-entrypoint repair below awaits renewed qualification. |
-| Release Updater #105–108 | 97/97 at levels 8/5 | Parent-branch folds are recorded in #65; the [later controller handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) reports main-target #105 awaiting separate qualification/owner decision. No default-branch delivery inferred. |
-| Branch Updater #73/#76/#77 | 52/52 at level 5 | Delivered to main `9ab9be281a2fa3dabb072d7a80505a54ef9eb366`; [post-main CI37594935138](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/37594935138) passed all four required jobs. [Controller handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) records tree `88ec71f18622d437caf32087a248f5448ac23c01`, retained standalone profile and no publication or consumer update. |
-| Updater Support #43–47 | 6/6 at level 8 | Parent-branch folds are recorded in #65; the [later controller handoff](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6034269606) reports parent-target #44 awaiting separate qualification/owner decision. No default-branch delivery inferred. |
-| GitHub Provider #65, superseding #61–64 | 77/77 at level 5 | Delivered to main and post-merge verified; mandatory shared-profile guard finding repaired. Release #59 and immutable Core adoption remain separate. |
-| Bitbucket #102, superseding #98–101 | 50/50 at levels 8/5 | Delivered to main and post-merge verified, including certified beta31 installed proof. Release #95 and future-host certification remain separate. |
-| Migrator #65, superseding #61–64 | 49/49 at levels 6/5/5 | Delivered to main and post-merge verified after late guard repairs; release #43 remains subject to exact candidate/archive qualification and owner installed/manual acceptance. |
-| [Admin Shell #25](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/25), cumulative #22–24 | 16/16 at level 5 | Main-target candidate `9fa1e0d4512d9a5f86fb6ca9ed6ac4065a9ab040`, tree `2f828021afe345dcf051483b99af5f0f01d717eb`; author canonical passes 43 tests/497 assertions, both PHPCS profiles, PHPStan and archive consumer proof. Exact cumulative review/native qualification is tracked in live #65. Unmerged. |
-| [Shared coding standards #15](https://github.com/RocketsAreNostalgic/ran-coding-standards/pull/15), cumulative #12–14 | 4/4 at level 5 | Main-target candidate `18c04e5028fc3bef37b2efc82a48550d1964dcc0`, tree `7d6018ba7d1f47062e0cfdc920c16a1258d89f2b`; author full canonical passes, including standards, analysis, behavior/coverage and consumer installation. Exact cumulative review/native qualification is tracked in live #65. Unmerged. |
+Branch delivery bound main `9ab9be281a2fa3dabb072d7a80505a54ef9eb366` to tree
+`88ec71f18622d437caf32087a248f5448ac23c01`; [CI37594935138](https://github.com/RocketsAreNostalgic/ran-wp-branch-updater/actions/runs/37594935138)
+passed all four required jobs. The standalone profile was retained; no package
+publication or consumer update followed from that development-quality stack.
+The [Lane A parent-fold record](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033842955)
+and [Core refresh](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033828160)
+supply the preceding bounded evidence. The [6 October ledger](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6027025243)
+retains original pairs where findings or integration changed the candidate.
 
 Admin #25/shared #15 are cumulative candidates. Their earlier green #24/#14
 runs did not establish protection against effective PHPStan `ignoreErrors`;
-the frozen checkpoint records the later locked-checker guard repairs. Exact
-cumulative review/native status stays in #65. Neither is delivered or published;
+the frozen checkpoint records the locked-checker guard repairs. Cumulative
+review/native qualification was pending at the cutoff. Neither was delivered or published;
 shared release still requires exact-candidate Starter/Core proof.
 
 ### Delivered Lane B source
@@ -66,7 +68,7 @@ passed; intentionally skipped baseline/terminal wrappers are not executed checks
 No release was merged or published by Lane B. Provider #59, Bitbucket #95 and
 Migrator #43 are regenerated release proposals, distinct from source delivery.
 Provider #59 and Bitbucket #95 received clear independent release-pair reviews
-5439496402/5439499218; Ben's publication decision remains separate. Migrator #43's [subsequent qualification](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033971914)
+5439496402/5439499218; Ben's publication decision remains separate. Migrator #43's [recorded qualification](https://github.com/RocketsAreNostalgic/.github/issues/65#issuecomment-6033971914)
 records clear review 5439537219 and five passing canonical jobs at exact head
 `e3d2052b846fd749f48a0e17b94f55ff262f7686`; two clean builds reproduced native ZIP
 SHA-256 `432b54648628fdaacc29a39fde4e1d91f4abc698f13f319cf3e00eb09308196c`.
@@ -80,7 +82,8 @@ The [frozen candidate record](https://github.com/RocketsAreNostalgic/.github/blo
 retains #258/#259 exact pairs, independent reviews, native results and the
 limited two-lane named-Theme proof. #260/#261's earlier green candidate still
 allowed a future extensionless entrypoint under a new root to escape both
-inventories; no current 710-file omission was found. The published repair at
+inventories; no omission from the recorded 710-file population was found. Two exact immutable
+historical rejection fixtures remained reviewed exemptions. The published repair at
 `fda3d4ac7fd489fd1dc29915772c2d950a9e9dca` has focused evidence, with renewed
 independent/native qualification pending at this checkpoint. Green predecessor
 runs do not qualify that changed head or establish its future-file guarantee.
@@ -97,8 +100,8 @@ Core's separate #249 regression/supersession disposition remains explicit.
 - The four Core #259 occurrences above require owner disposition; source and
   negative-test evidence does not accept them. Core #249's separate regression
   and supersession disposition remains explicit in the linked coordinator record.
-- Current extensionless-entrypoint repair qualification, Lane A cumulative
-  integration and shared/Admin candidates remain with their live issue owners.
+- At the cutoff, extensionless-entrypoint repair qualification, Lane A cumulative
+  integration and shared/Admin candidates remained with their assigned issue owners.
   Earlier green runs do not qualify changed heads or close future-file gaps.
 - Core258's consumer audit found no necessary Lane B source migration. Earlier
   source composition remains bound to Core `654fca22`; beta31 certification is
@@ -121,8 +124,8 @@ Core's separate #249 regression/supersession disposition remains explicit.
 
 The [5 October occurrence review](quality-evidence/retained-exceptions-20261005.md)
 retains exact revisions, native-operation invariants and diagnostic exposure.
-Its subsequent implementation notes are candidate evidence, not universal
-exception acceptance; use current controller records before taking an item up.
+Its implementation notes are dated candidate evidence, not universal exception
+acceptance or a fresh instruction to repeat completed work.
 
 ## Earlier accepted slices
 
