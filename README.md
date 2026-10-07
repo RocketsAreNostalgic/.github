@@ -37,8 +37,6 @@ The task references above preserve implementation contracts and operational
 runbooks. Dated evidence and immutable source links in the acceptance documents
 preserve completed investigations and superseded checkpoints; they are not
 additional required reading for every change or claims about today's branches.
-The [support-naming tool](quality-tools/support-naming/README.md) is a bounded
-specialist reference, not a new rollout queue.
 
 This public `.github` repository supplies GitHub community-health defaults when
 a repository has no local equivalent. [Community Standards](COMMUNITY_STANDARDS.md#authority-and-precedence)
