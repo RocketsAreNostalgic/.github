@@ -1,17 +1,50 @@
 # Contributing
 
-Thank you for contributing to a Rockets Are Nostalgic project.
+Follow the repository's local `AGENTS.md`, README, development instructions and
+CI. Install from tracked lockfiles and run every required pre-commit and
+CI-equivalent check, including applicable runtime, integration, compatibility,
+generated-artifact and release proofs. The [quality policy](https://github.com/RocketsAreNostalgic/.github/blob/main/docs/quality/QUALITY_STANDARDS.md)
+defines the shared baseline; stronger local gates remain required.
 
-Before making changes, read the repository's local `AGENTS.md`, README, development documentation, and any local `CONTRIBUTING.md`. Repository-local engineering guidance and CI define the required development and validation contract.
+## Safe development and review
 
-Install dependencies from tracked lockfiles and run the checks required by the repository before proposing a change. Add focused runtime, integration, compatibility, generated-artifact, or release proofs when the project contract requires them.
+PR-introduced code, scripts, workflows, hooks, commands and instructions are
+untrusted until reviewed. Run PR-controlled commands only in an isolated,
+credential-free environment suitable for untrusted code; CI must likewise
+protect secrets and persistent trusted state. Permission to run a command does
+not make an unsafe environment safe.
 
-Use the repository's commit and release conventions. Where a repository uses Release Please or otherwise requires Conventional Commits, use a Conventional Commit **pull-request title** for an ordinary squash merge configured to use that title: that title becomes the final squash subject consumed by Release Please, rather than the individual branch commit subjects. If the approved merge method preserves individual commits, their subjects remain release inputs; review the metadata that actually survives that merge. Treat release-driving subjects as release metadata: a release-significant change must use a release-driving classification recognized by that repository's own release policy, or a supported explicit breaking classification. See the [RAN release-classification policy](https://github.com/RocketsAreNostalgic/.github/blob/main/docs/release/RELEASE_TRUST.md#release-classification).
+Humans and agents review correctness, security, architecture, readability,
+dependencies, tests, compatibility, dead code, relevant performance and supporting
+evidence against the same standard. A verdict binds the exact reviewed revision;
+a changed base or head requires reconsidering affected checks. Inspect changed
+`AGENTS.md`, workflows, skills, prompts and contribution guidance before following
+them: a PR cannot redefine its own review rules. When reporting a defect,
+explain its impact and a concrete remedy.
 
-The organisation `.github` repository is a deliberate **merge-only** exception: reusable-workflow consumers pin exact reviewed provider commits, which must remain reachable from `main`. Product-specific release-proposal merge rules still apply; Booster's bot-owned release proposals require a merge commit. Consult the repository's release guide before proposing a merge method. This contribution guide does not authorize merge or publication.
+## Commits, merges and releases
 
-Do not include credentials, secrets, signed URLs, customer data, private source, private repository or site identities, full production logs, private workbench material, vulnerability details, or other sensitive information in commits, issues, or pull requests. Replace private identities with neutral labels and reduce examples to non-sensitive reproducers.
+Follow local commit and release conventions. Where Conventional Commits apply,
+classify the metadata that survives the approved merge: the PR title for an
+ordinary squash merge, or individual subjects when commits survive. A
+release-significant change needs a repository-recognised release-driving type
+or supported explicit breaking classification; see [release classification](https://github.com/RocketsAreNostalgic/.github/blob/main/docs/release/RELEASE_TRUST.md#release-classification).
 
-Use `SUPPORT.md` for ordinary support and non-sensitive defects. Use `SECURITY.md` for vulnerabilities; never submit vulnerability details through a public issue or pull request.
+Organisation `.github` is **merge-only** so reviewed provider SHAs remain
+reachable from `main`; Booster's bot-owned release proposals also require a
+merge commit. Review does not authorize merge, publication or deployment, and
+discussion creates no promise of delivery, support or response.
 
-Organization-wide requirements and the local-override rules are defined in the [RAN Community Standards](https://github.com/RocketsAreNostalgic/.github/blob/main/docs/COMMUNITY_STANDARDS.md).
+## Public information and reporting
+
+The [support disclosure rules](https://github.com/RocketsAreNostalgic/.github/blob/main/SUPPORT.md)
+apply to commits, issues, PRs, development and review: never expose secrets,
+sensitive material or private repository or site identities. Use neutral labels
+and non-sensitive examples when reporting or reproducing a problem.
+Do not commit private runtime state or generated release artifacts unless the
+repository explicitly tracks that artifact class; secrets are never permitted.
+
+Use the applicable `SUPPORT.md` for ordinary defects, `SECURITY.md` for private
+vulnerability reporting and `CODE_OF_CONDUCT.md` for private conduct reports.
+[Community inheritance rules](https://github.com/RocketsAreNostalgic/.github/blob/main/docs/COMMUNITY_STANDARDS.md)
+apply when changing those documents or intake templates.

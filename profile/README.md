@@ -1,4 +1,4 @@
-![A retro-futurist interplanetary workshop at night, with RAN machinery surrounding a rocket ready for launch.](assets/ran-night-shift-header.png)
+![A retro-futurist interplanetary workshop at night, with RAN machinery surrounding a rocket ready for launch.](https://raw.githubusercontent.com/RocketsAreNostalgic/.github/refs/heads/main/profile/assets/ran-night-shift-header.png)
 
 # Rockets Are Nostalgic [RAN]
 
@@ -31,7 +31,7 @@ RAN also publishes some of the tooling behind these releases: the [RAN WordPress
 
 RAN is small, but I don't want that to mean ad hoc. The maintained repositories share a baseline for security, contributions, code quality, review and CI, while each project keeps the tooling and checks that make sense for its code.
 
-[Read how RAN builds software](../docs/ENGINEERING.md).
+[Read the development and review guide](../README.md).
 
 ## Who is RAN?
 
