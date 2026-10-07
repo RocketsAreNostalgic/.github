@@ -22,42 +22,36 @@ Provider selection is based on the repository's actual maintained source surface
 - a WordPress repository with maintained frontend source must retain the applicable frontend quality contract even if its current package metadata is incomplete;
 - a maintained Node repository normally follows the organisation pnpm house style unless a repository-specific constraint justifies a different manager.
 
-Current lifecycle state:
+| Provider | Contract and lifecycle |
+| --- | --- |
+| `quality-php-library-v2.yml` | Current shared PHP-library baseline; also suitable for PHP-only maintained WordPress source, retaining local WordPress evidence. Pure-PHP callers pass `node-version: ''`; others provide an exact full Node version. |
+| `quality-wordpress-plugin.yml` | Current mixed WordPress PHP + maintained frontend-source contract, using Composer and locked pnpm aggregates. |
+| `quality-node.yml` | Current maintained pnpm Node contract. Another manager needs a concrete justified difference with equivalent guarantees. |
 
-| Provider | Lifecycle state | Intended profile | Active default-branch consumers | Target consumers | Migration / retirement condition |
-| --- | --- | --- | --- | --- | --- |
-| `quality-php-library-v2.yml` | **CURRENT** | Maintained PHP-library source quality; also the shared PHP source baseline for PHP-only maintained WordPress source surfaces | `ran-updater-support`, `ran-wp-branch-updater`, `ran-wp-release-updater`, `ran-admin-shell`, `ran-booster-bitbucket`, `ran-booster-github-provider` | compatible maintained PHP consumers | Preferred PHP provider for new and migrating compatible consumers. Pure-PHP callers set `node-version: ''`; callers that genuinely need Node provide an exact full version. |
-| `quality-wordpress-plugin.yml` | **CURRENT** | Maintained WordPress plugins with PHP plus maintained frontend source represented by Composer and locked pnpm quality contracts | `ran-starter-plugin`, `ran-emailoctopus-jetpack-forms`, `ran-ecwid-shop-teaser`, `ran-enhanced-cover`, `ran-turnstile-for-jetpack-forms`, `ran-duplicate-detector`, `ran-booster-wp-pusher-migrator`, `tnySignature` | compatible maintained mixed WordPress consumers | Keep as the current mixed WordPress contract. Do not create a WordPress `v2` unless a concrete shared contract gap requires an incompatible generation. |
-| `quality-node.yml` | **CURRENT** | Maintained pnpm Node repositories | `ran-booster-workbench`, `ran-booster-release-bootstrap-templates` | compatible maintained pnpm Node consumers | Keep as the current pnpm Node contract. Non-pnpm is an explicit justified difference, not the default house style. |
-
-`quality-php-library.yml` is **RETIRED / REMOVED**. It was the historical single-PHP predecessor to v2 and is no longer an available provider. No provider is currently classified **TRANSITIONAL**. The three current providers are intentionally different profiles: PHP source quality, mixed WordPress PHP+pnpm source quality, and pnpm Node source quality. That profile split is substantive and should remain small.
+`quality-php-library.yml` is retired and removed; it must not be restored as a
+new caller. No provider is classified transitional. New generations require a
+substantive contract change, not naming symmetry.
 
 ### Current and target consumer pins
 
-Consumers execute immutable provider commits, not mutable release tags. The inventory below records the lifecycle-authoritative provider mapping from the completed quality-foundation review. Repository-specific terminal aggregation and stronger local gates now remain with `.github#65` / `#67` and the existing repository quality children. Completed `.github#7` / `#12` / `#15` are foundation/enforcement-design evidence, not active rollout queues; deferred organisation-required activation is owned by `.github#31`.
+Consumers execute immutable provider commits, not mutable release tags. The
+[completed foundation inventory](https://github.com/RocketsAreNostalgic/.github/blob/4e5982757f42fdc640757f4caedc0be03b2da182/QUALITY_WORKFLOWS.md#current-and-target-consumer-pins)
+preserves the inspected caller paths, pins and dispositions; it is historical
+evidence, not a live pin registry. Consult [quality acceptance](../PHP_QUALITY_MATRIX.md)
+and the repository's reviewed caller for subsequent adoption evidence.
+Repository-specific aggregation and stronger gates remain under
+[#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+[#67](https://github.com/RocketsAreNostalgic/.github/issues/67) and existing
+repository issues. Completed #7/#12/#15 are foundation/design evidence;
+organisation-required activation remains under
+[#31](https://github.com/RocketsAreNostalgic/.github/issues/31).
 
-| Repository | Repository profile | Caller | Current provider / immutable ref | Target provider / immutable ref | Disposition |
-| --- | --- | --- | --- | --- | --- |
-| `ran-starter-plugin` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-emailoctopus-jetpack-forms` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-ecwid-shop-teaser` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-enhanced-cover` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-turnstile-for-jetpack-forms` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-duplicate-detector` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-booster-wp-pusher-migrator` | `wordpress-plugin` | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `tnySignature` | `wordpress-plugin`; maintained JS/SCSS source | `.github/workflows/quality.yml` | `quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep |
-| `ran-updater-support` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
-| `ran-wp-branch-updater` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
-| `ran-wp-release-updater` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
-| `ran-admin-shell` | `php-library` | `.github/workflows/quality.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
-| `ran-booster-bitbucket` | `wordpress-plugin`; audited PHP-only maintained source surface | `.github/workflows/quality.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep shared PHP baseline; retain WordPress profile |
-| `ran-booster-github-provider` | `php-library` | `.github/workflows/ci.yml` | `quality-php-library-v2.yml@788f783d2998994f7aab9691710911ed1bd762c9` | same | keep |
-| `ran-booster-workbench` | `node`; internal planning/development tool | `.github/workflows/quality.yml` | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep provider; no release/enforcement ceremony implied |
-| `ran-booster-release-bootstrap-templates` | `node` | `.github/workflows/quality.yml` | `quality-node.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d` | same | keep provider; clean Node/pnpm proof target; repository quality acceptance remains local/#65 and any future organisation-required activation belongs to `.github#31` |
-| `ran-plugin-library` | `php-library` | none | none | v2 if migration is deliberately restarted later | deferred / not planned in current migration programme |
-| `tnyGoogleKey` | historical/private WordPress plugin | none | none | none | out of active estate; re-audit if deliberately revived |
-
-Repositories that remain on a deliberately local quality topology, such as `ran-wp-github-release-updater`, are not evidence that v1 remains live. They require their own migration or justified-difference disposition if they remain in the maintained enforcement estate.
+Plugin Library migration remains deferred/not planned; v2 is only a target if
+its migration is deliberately restarted. Historical/private `tnyGoogleKey`
+is outside the active estate and needs re-audit if deliberately revived.
+Deliberately local topologies such as `ran-wp-github-release-updater` still need
+a migration or justified-difference disposition if maintained; they do not
+make retired v1 live.
 
 ### PHP v2 supersedes retired PHP v1
 
@@ -89,7 +83,9 @@ A reusable provider is an organisation minimum, not a reason to duplicate eviden
 
 Extra specialist checks alone are not sufficient grounds to bypass the baseline. The local topology must still cover, where applicable, exact reviewed PR-head execution, immutable Actions, minimal permissions, credential-free checkout during project-controlled execution, deterministic/locked dependency handling, exact toolchain identity, canonical aggregate quality commands, and equivalent failure propagation.
 
-The current shared standards packages satisfy that condition through their self-validation harnesses:
+The completed foundation review recorded the following self-validation
+harnesses. These describe the basis of the disposition; subsequent acceptance
+is recorded in [quality acceptance](../PHP_QUALITY_MATRIX.md):
 
 - `ran-coding-standards` verifies exact PR head, immutable Actions, read-only execution, locked Composer install, the package `composer check` contract, PHP floor/current-style coverage, independent PHP lint, and fresh consumer-root installation of every exported standard.
 - `ran-quality-config` verifies exact PR head, immutable Actions, read-only execution, exact Node/pnpm identity, frozen pnpm install, `pnpm check`, packed consumer tests and publishable-package contents.
@@ -125,26 +121,17 @@ These reusable profiles deliberately execute the consuming repository's canonica
 
 The same is true of caller-supplied identity inputs such as `php-floor`, `php-current`, PHP extensions, Node version and pnpm version unless the provider independently derives or validates them. A reviewed workflow invocation is therefore part of the transitive quality contract, not merely plumbing.
 
-A ruleset-required organisation workflow prevents a target-repository pull request from replacing the organisation-owned workflow itself, but **workflow identity alone does not make a PR-controlled quality contract immutable**. A pull request could otherwise replace `composer check` or `pnpm check` with a no-op, weaken lint/static-analysis configuration, change a helper script, or misstate an unvalidated support/toolchain input while leaving the organisation-owned wrapper untouched.
+The authoritative [enforcement-integrity requirements](../QUALITY_STANDARDS.md#enforcement-integrity)
+cover organisation-controlled workflow identity and either organisation-owned
+execution or protected review of the complete transitive consumer contract.
+These profiles cannot alone provide an unforgeable organisation merge boundary.
 
-Therefore these reusable profiles must not be treated as a standalone, unforgeable organisation merge-security boundary. Before RAN enables organisation ruleset enforcement for a profile, one of the following must also be true:
-
-1. **Organisation-owned execution (preferred end state).** The ruleset-required workflow owns the authoritative commands/configuration and derives or validates required project identity independently of PR-editable aggregate definitions where necessary. Consumer aggregate commands remain the local developer interface and may run additionally, but they are not the sole authority for the required organisation gate.
-2. **Protected consumer contract (transitional path).** Changes to the complete transitive quality contract require independent maintainer/code-owner approval that the PR author cannot self-satisfy. Stale approvals must be dismissed, or approval of the most recent reviewable push must be required, so a later commit cannot weaken the contract after approval.
-
-The protected consumer contract includes, as applicable:
-
-- caller workflow inputs such as PHP floor/current, extensions, Node/pnpm identity and working directory;
-- `composer.json` script definitions, support declarations and quality-tool dependencies;
-- `package.json` aggregate scripts, runtime/package-manager identity and quality-tool dependencies;
-- lockfiles where changing the resolved quality-tool graph could alter the gate;
-- PHPCS/WPCS, PHPCompatibility, PHPStan, ESLint, Prettier, Stylelint and test-runner configuration;
-- project scripts/configuration transitively invoked by `composer check` or the package-manager `check` command;
-- caller/local quality workflow files that decide which project-specific checks feed terminal `quality`.
-
-The exact file set is repository-specific because aggregate scripts may delegate to additional tracked files. A repository must document/protect that transitive set rather than assuming the two manifest files are sufficient.
-
-Until organisation-owned execution or protected-contract review is actually configured, these workflows provide strong deterministic verification evidence but **must not be advertised or configured as the sole organisation enforcement control**.
+For this workflow contract, the protected transitive surface additionally
+includes caller identity inputs (PHP floor/current, extensions, Node/pnpm,
+working directory), manifest support declarations and runtime/package-manager
+identity. Deriving or validating an input independently changes what the
+provider proves; accepting an input does not prove it agrees with repository
+support policy. Each repository must identify its actual delegated file set.
 
 ## Caller examples
 
@@ -200,21 +187,18 @@ A release tag such as `quality-v1` or `quality-v2` may identify a reviewed stand
 
 ## Consumer aggregation versus merge enforcement
 
-Consumer-owned status names are **evidence, not an unforgeable workflow identity**. A pull request that can edit its caller workflow can manufacture a successful job with the same displayed status name. Therefore neither a shared baseline context nor a local terminal `quality` status is sufficient by itself to prove that an organisation-owned workflow executed.
+Follow the [CI contract](../QUALITY_STANDARDS.md#ci-contract) for shared diagnostic
+contexts, local terminal `quality` aggregation and failure propagation. Follow
+[enforcement integrity](../QUALITY_STANDARDS.md#enforcement-integrity) before
+organisation-required activation. Consumer-controlled job names cannot prove
+organisation workflow identity.
 
-A migrated repository should still expose a local terminal aggregation job named `quality` because it gives maintainers one clear result for all ordinary shared and project-specific lanes. The terminal job must fail if any required shared or repository-specific lane fails or is unexpectedly skipped.
-
-The eventual security/enforcement boundary is an organisation or enterprise ruleset using GitHub's **Require workflows to pass before merging** rule **plus the quality-contract integrity requirement above**. The required workflow must be selected from an organisation-controlled repository/branch/workflow configuration so a target-repository pull request cannot replace it with a look-alike job. Where a required workflow delegates to these reusable profiles, that delegation should use an immutable reviewed provider SHA.
-
-The final enforcement phase should therefore:
-
-1. keep consumer baseline and terminal `quality` jobs for local feedback and diagnosis;
-2. configure the appropriate organisation ruleset-required workflow for the repository profile;
-3. ensure that required workflow executes the reviewed RAN baseline against the intended source revision;
-4. establish either organisation-owned authoritative execution/configuration or independent protected approval for the complete transitive consumer quality contract; and
-5. use repository-level required-workflow enforcement as needed for product-specific gates that must not be bypassable by editing a caller workflow.
-
-Do not create organisation required-status rules that treat a consumer-controlled job name as proof of organisation workflow identity. Do not enable an organisation ruleset-required quality workflow while its authoritative checks can still be weakened solely by an unreviewed PR edit to consumer manifests, configuration, caller inputs or helper scripts.
+The required workflow must be selected from organisation-controlled
+repository/branch/workflow configuration. Delegation to a reusable provider
+must pin an immutable reviewed SHA. Retain local baseline/terminal feedback
+and repository-specific required-workflow gates where product checks must not
+be bypassable by editing a caller. Do not activate organisation enforcement
+while unreviewed consumer-contract edits can weaken authoritative checks.
 
 ## Inputs
 
