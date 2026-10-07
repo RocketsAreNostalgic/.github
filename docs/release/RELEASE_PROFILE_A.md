@@ -34,8 +34,6 @@ Do not use `secrets: inherit`. The reusable workflow uses the caller's automatic
 
 The caller names the canonical Quality workflow in `workflows:`, supplies its canonical path, and supplies the canonical Release Please branch name from its configuration. Consumers pin the reusable workflow to an approved immutable organisation ref.
 
-Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore includes one bounded qualification step: after Release Please runs, it finds exactly one bot-owned open candidate at the configured branch, binds its exact head SHA, and dispatches the repository's existing read-only Quality workflow only when no successful or in-flight pull-request/workflow-dispatch run already covers that exact head. This is merge qualification, not release/version state.
-
 ## Contract
 
 The read-only admission job requires the actual caller event to be `workflow_run`, then reads the actual event payload and admits only a successful same-repository `push` Quality run on `main` with the expected path and canonical SHA. It checks out that exact SHA without persisted credentials and verifies HEAD.
@@ -48,12 +46,9 @@ The main-tip check is a fail-closed stale-run guard, not an atomic compare-and-s
 
 Profile A intentionally does not implement SemVer/changelog policy, Release Please branch/title/label parsing, merge-parent/tree reconstruction, candidate markers, manual lifecycle reconciliation, historical recovery, or generic Actions API run rereads.
 
-The candidate Quality dispatch is part of the shared Profile A contract because `GITHUB_TOKEN` event suppression is common to Release Please consumers with required PR checks. Repository Quality remains repository-owned and read-only; the shared workflow does not interpret its result beyond avoiding duplicate dispatch.
-
-
 ## Release-PR Quality qualification
 
-Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore contains one bounded qualification step: find exactly one configured bot-owned open candidate, bind its exact head SHA, and dispatch the existing read-only Quality workflow only when no successful or in-flight PR/dispatch run already covers that exact head. This is merge qualification, not release/version state.
+Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary workflow events caused by its release-PR mutation. Profile A therefore contains one bounded qualification step: find exactly one configured bot-owned open candidate, bind its exact head SHA, and dispatch the existing read-only Quality workflow only when no successful or in-flight PR/dispatch run already covers that exact head. This is merge qualification, not release/version state; the shared workflow does not interpret Quality results beyond avoiding duplicate dispatch.
 
 
 ### Consumer Quality prerequisite
@@ -61,3 +56,13 @@ Release Please uses the automatic `GITHUB_TOKEN`, so GitHub suppresses ordinary 
 The canonical Quality workflow used for release-PR qualification must support `workflow_dispatch` with **no required inputs**. Profile A dispatches that existing read-only workflow at the exact Release Please candidate branch when GitHub's `GITHUB_TOKEN` event suppression prevents a normal `pull_request` run.
 
 A consumer must not adopt Profile A until this prerequisite is contract-tested locally. The dispatched Quality workflow must continue to qualify the exact dispatched revision and must not gain release-write authority.
+
+## Implementation evidence
+
+[Current workflow](../../.github/workflows/release-profile-a.yml) and
+[contract tests](../../quality-enforcement/test-release-profile-a.mjs);
+inspected [workflow](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/.github/workflows/release-profile-a.yml)
+and [tests](https://github.com/RocketsAreNostalgic/.github/blob/70df865a00734542e6bb663e684d86b8b4757b8e/quality-enforcement/test-release-profile-a.mjs).
+These support the mechanism described at that revision, not future implementation
+or a consumer's acceptance. Update affected documentation/evidence with material
+mechanism changes, or record an explicit cross-repository follow-up.
