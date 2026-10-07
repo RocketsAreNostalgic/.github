@@ -24,6 +24,11 @@ sequencing or Core adoption from the overall coordinator. Ben retains specific
 merge and publication decisions. Current repairs and exact qualification are
 recorded in the [matrix checkpoint](PHP_QUALITY_MATRIX.md#current-candidate-checkpoint--7-october-2026)
 and linked #65 records; earlier ready statuses are not automatically current.
+Main-target cumulative [Admin #25](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/25)
+and [shared #15](https://github.com/RocketsAreNostalgic/ran-coding-standards/pull/15)
+preserve their original stacks and include the effective PHPStan ignored-error
+repairs. Their exact-candidate qualification remains tracked in live #65; this
+routing does not authorize merge, release or consumer adoption.
 
 The original counts, cohort descriptions and dated handoff below remain historical
 evidence. Core's former development-analysis backlog is disposed in the #254

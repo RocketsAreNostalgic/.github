@@ -41,8 +41,14 @@ landed Release #108/#107, Branch #77/#76 and Support #47/#46 into parent branche
 only. Next #106/#73/#45 require refreshed cumulative qualification and specific
 approval; none of these stacks is delivered to main at this checkpoint.
 
-Core #258/#259, Admin #24 and shared #14 have passed their recorded exact-pair
-qualification and remain unmerged. Cumulative Core #261 and its #260 parent remain
+Core #258/#259 retain their recorded qualification. Main-target cumulative
+[Admin #25](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/25) at `9fa1e0d4`
+and [shared #15](https://github.com/RocketsAreNostalgic/ran-coding-standards/pull/15) at `18c04e50`
+repair the independently confirmed effective `ignoreErrors` escape. Author canonical
+checks pass; current exact-pair review/native qualification is tracked in live #65.
+Earlier #24/#14 verdicts do not qualify these changed candidates. Original branches
+and proposals remain preserved; no merge, publication or adoption follows.
+Cumulative Core #261 and its #260 parent remain
 draft despite earlier green native checks: independent review found a future
 extensionless-entrypoint inventory escape. Its published repair at `fda3d4ac`
 awaits fresh review/native qualification; prior green runs do not qualify it.

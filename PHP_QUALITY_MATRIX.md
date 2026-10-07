@@ -35,8 +35,24 @@ provide the current scoped evidence. No blanket exception acceptance follows.
 | GitHub Provider #65, superseding #61–64 | 77/77 at level 5 | Delivered to main and post-merge verified; mandatory shared-profile guard finding repaired. Release #59 and immutable Core adoption remain separate. |
 | Bitbucket #102, superseding #98–101 | 50/50 at levels 8/5 | Delivered to main and post-merge verified, including certified beta31 installed proof. Release #95 and future-host certification remain separate. |
 | Migrator #65, superseding #61–64 | 49/49 at levels 6/5/5 | Delivered to main and post-merge verified after late guard repairs; release #43 remains subject to exact candidate/archive qualification and owner installed/manual acceptance. |
-| Admin Shell #24 | 16/16 at level 5 | Candidate `b976e57df0294a150894000d1e0562556f851b2b` passes canonical 42 tests/483 assertions, both PHPCS profiles, consumer proof, independent review 5438537090 and native 37582247639. Unmerged. |
-| Shared coding standards #14 | 4/4 at level 5 | Candidate `f308e46352591a36ca318147d8b25f69bbe28b47` passes local canonical checks, independent review 5438488239 and all three jobs in native 37581037936; both findings resolved. Unmerged. |
+| [Admin Shell #25](https://github.com/RocketsAreNostalgic/ran-admin-shell/pull/25), cumulative #22–24 | 16/16 at level 5 | Main-target candidate `9fa1e0d4512d9a5f86fb6ca9ed6ac4065a9ab040`, tree `2f828021afe345dcf051483b99af5f0f01d717eb`; author canonical passes 43 tests/497 assertions, both PHPCS profiles, PHPStan and archive consumer proof. Exact cumulative review/native qualification is tracked in live #65. Unmerged. |
+| [Shared coding standards #15](https://github.com/RocketsAreNostalgic/ran-coding-standards/pull/15), cumulative #12–14 | 4/4 at level 5 | Main-target candidate `18c04e5028fc3bef37b2efc82a48550d1964dcc0`, tree `7d6018ba7d1f47062e0cfdc920c16a1258d89f2b`; author full canonical passes, including standards, analysis, behavior/coverage and consumer installation. Exact cumulative review/native qualification is tracked in live #65. Unmerged. |
+
+Admin #25 targets main `ff6e933b031d5d537defcfad7a00e12e4e2ce2ec`;
+shared #15 targets main `3fba2682766b9cec4f78354114830fa9f05cf820`.
+Independent cumulative reviews found that nonempty effective PHPStan `ignoreErrors`
+could hide real diagnostics while canonical checks remained green. Both existing
+guards now reject that configuration; locked regex/identifier controls demonstrate
+diagnostic disappearance followed by guard rejection, including inherited shared
+configuration. Earlier #24 `b976e57d` / #14 `f308e463` qualification is historical,
+not acceptance of this subsequently found gap. Cumulative scopes are Admin 21 files
++1,120/−145 and shared 8 files +1,127/−481. These integrate maintained-file analysis,
+standalone/own-source naming and guard repairs; the latest repair changes no runtime,
+profiles, dependencies or exported resources. Across the full stacks, Admin resource
+and dependency bytes and shared exported standards/sniff bytes remain unchanged;
+shared PHPStan dependency additions are development-only. Original proposals,
+branches and review evidence remain preserved, with no merge or publication.
+Exact-candidate Starter/Core proof remains required before a shared-standard release.
 
 ### Delivered Lane B source
 
