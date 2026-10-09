@@ -22,7 +22,7 @@ on:
         description: Exact Node.js version available to repository-owned quality commands.
         required: false
         type: string
-        default: '24.11.0'
+        default: '24.21.0'
       working-directory:
         description: Project directory containing composer.json and composer.lock.
         required: false
