@@ -65,8 +65,12 @@ Inputs describe project/toolchain identity and working directory. Review them
 against the consumer support contract: PHP floor/current are **not** derived from
 or checked against Composer support declarations. Node/pnpm providers use the
 specified Node-version file; truthful exact/stable Node declarations remain a
-consumer obligation. PHP v2 verifies a nonempty Node input as exact
+consumer obligation. The shared development minimum is Node 24.21.0 within Node 24 LTS.
+PHP v2 defaults to 24.21.0 and verifies a nonempty Node input as exact
 `major.minor.patch`; pure-PHP callers explicitly pass `node-version: ''`.
+Node and mixed callers pin 24.21.0 in their package toolchain metadata.
+Existing immutable provider pins adopt this default only when deliberately
+updated to a qualified provider revision.
 
 Pin every provider to a reviewed full commit SHA. Tags are optional provenance
 comments, not execution references. For example:

@@ -193,8 +193,12 @@ Preserve these behavioral boundaries:
 ## Reproducible inputs and upgrades
 
 Track required lockfiles; missing locks fail rather than resolve new graphs.
-Validate Composer strictly before installation. Align declared and CI
-toolchains; pnpm must exactly match `packageManager`. Pin shared workflows and
+Validate Composer strictly before installation. Maintained Node tooling uses Node 24 LTS with a shared minimum of 24.21.0.
+Declare `>=24.21.0 <25` and pin local toolchain metadata and CI to 24.21.0
+when adopting this baseline. This development floor does not change browser,
+WordPress or PHP product support. Pure-PHP workflows may omit Node where no
+maintained helper requires it. Preserve each repository's qualified pnpm version;
+pnpm must exactly match `packageManager`. Align declared and CI toolchains. Pin shared workflows and
 third-party Actions to full immutable SHAs; tags are discovery labels, not
 execution references.
 
