@@ -43,16 +43,17 @@ the root `vendor` and `node_modules` directories.
 **This is not complete maintained-PHP discovery:**
 it does not select PHP files with other extensions or no extension, including
 mixed-content templates outside the `*.php` pattern. A parser failure in a
-selected file fails the check.
-At the inspected revision, however, the loop does not propagate a failing `find`
-process: a focused local execution of the existing floor-lane step returned
-success when file discovery exited with error code 23.
-The policy still requires discovery failure propagation. This provider gap is
-tracked through [#65](https://github.com/RocketsAreNostalgic/.github/issues/65);
-consumer coverage deficiencies and repairs are separately recorded in
-[#136](https://github.com/RocketsAreNostalgic/.github/issues/136).
-A passing provider or aggregate check does not prove that all required files
-were selected.
+selected file fails the check. All three PHP syntax steps write the NUL-separated
+file list to a temporary file in a checked command before parsing it, so discovery
+failures also fail the step. [PR143](https://github.com/RocketsAreNostalgic/.github/pull/143)
+delivered this repair; the earlier process-substitution loop could hide a failing
+`find`. Existing immutable consumer pins require separate adoption of a repaired
+provider revision.
+
+Consumers remain responsible for complete maintained-file coverage, including
+PHP outside the `*.php` pattern. [#136](https://github.com/RocketsAreNostalgic/.github/issues/136)
+records the delivered consumer repairs and adoption dispositions. A passing
+provider or aggregate check does not prove that all required files were selected.
 
 Exact-head proof is separate from mergeability. Strict integration rules or a
 merge queue must establish freshness against the target branch; add product
@@ -124,7 +125,7 @@ and [package controls](https://github.com/RocketsAreNostalgic/ran-coding-standar
 
 | Evidence group | What it establishes and limits |
 | --- | --- |
-| Organisation providers at [70df865a00734542e6bb663e684d86b8b4757b8e](https://github.com/RocketsAreNostalgic/.github/tree/70df865a00734542e6bb663e684d86b8b4757b8e/.github/workflows): `quality-node.yml`, `quality-php-library-v2.yml`, `quality-wordpress-plugin.yml` | Inspected source establishes the checkout, input, install and fixed-command mechanisms above. Focused local execution establishes the discovery-exit limitation, not hosted-run or full-aggregate failure. No consumer support metadata validation or organisation activation is inferred. |
+| Organisation providers at [ff58c659264cf1b7dcb78c130c1dd8def4579a33](https://github.com/RocketsAreNostalgic/.github/tree/ff58c659264cf1b7dcb78c130c1dd8def4579a33/.github/workflows): `quality-node.yml`, `quality-php-library-v2.yml`, `quality-wordpress-plugin.yml` | Inspected source establishes the checkout, input, install, fixed-command and checked PHP-discovery mechanisms above. [PR143's contract](https://github.com/RocketsAreNostalgic/.github/blob/ff58c659264cf1b7dcb78c130c1dd8def4579a33/quality-enforcement/test-php-syntax-contract.py) exercises the three actual PHP syntax steps, including discovery and parser failures. This does not establish complete maintained-file selection, consumer pin adoption, support metadata validation or organisation activation. |
 | Shared PHP rules at [4fb34cf349021d6b65430a4f93ce4de3e221e0a5](https://github.com/RocketsAreNostalgic/ran-coding-standards/tree/4fb34cf349021d6b65430a4f93ce4de3e221e0a5): `RANWordPress/ruleset.xml`, `RANWordPressLibrary/ruleset.xml`, `RANWordPressPlugin/ruleset.xml`, `RANOwnedMethods/Sniffs/NamingConventions/ValidMethodNameSniff.php`, `tests/run.php` | Inspected inheritance supplies WordPress-Extra/PHPCompatibilityWP, deliberate filename/exception-data decisions and blocking alignment; opt-in owned-method checking covers inherited declarations. Package tests contain actual selection/suppression/target controls. Source inspection is not a fresh test run, consumer adoption or release qualification. |
 
 These revisions identify inspected evidence, not new consumer pins. Mechanism
