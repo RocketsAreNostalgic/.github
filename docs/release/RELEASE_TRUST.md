@@ -91,7 +91,7 @@ repack is not a substitute. Source-only releases need no artificial ZIP proof.
 
 Production GitHub releases are immutable. Correct a build using freshly qualified
 source and a new version/tag. A mutable exception needs narrow evidence and an
-owner decision in [#59](https://github.com/RocketsAreNostalgic/.github/issues/59);
+owner decision in [#57](https://github.com/RocketsAreNostalgic/.github/issues/57);
 historical recovery code is not a standing exception.
 
 ### 6. Repository settings and bypasses
