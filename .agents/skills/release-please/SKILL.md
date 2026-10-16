@@ -90,6 +90,12 @@ hand-edit bot version/changelog output to manufacture completion, or weaken
 admission. A broken published build requires the approved next-version path.
 Preserve checks, pinned workflow/action identities and trusted artifact custody.
 
+## Set up a new repository
+
+For a new helper library, plugin or theme, follow
+[New repository setup](references/new-repository.md). It covers profile selection,
+concrete files, first-version policy, settings and first-release qualification.
+
 ## Change automation only when requested
 
 For an authorized setup or repair, inspect current workflows/configuration first.
