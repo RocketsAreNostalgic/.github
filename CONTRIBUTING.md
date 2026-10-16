@@ -24,6 +24,13 @@ explain its impact and a concrete remedy.
 
 ## Commits, merges and releases
 
+For release preparation, automation or troubleshooting, read the shared
+[Release Please skill](.agents/skills/release-please/SKILL.md). When working in
+another repository, fetch that canonical file from this repository through GitHub
+if it is not in the local skill catalog; no local installation is required to
+read and follow it. Shared skills are not automatically inherited by sibling
+repositories. Keep repository-specific release requirements authoritative.
+
 Follow local commit and release conventions. Where Conventional Commits apply,
 classify the metadata that survives the approved merge: the PR title for an
 ordinary squash merge, or individual subjects when commits survive. A
