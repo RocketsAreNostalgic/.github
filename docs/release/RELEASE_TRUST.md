@@ -7,7 +7,7 @@
 | Review release authority | [Terms](#vocabulary), [invariants](#required-trust-invariants), [manual dispatch](#privileged-manual-dispatch-authority). |
 | Classify release-driving changes | [Release classification](#release-classification). |
 | Implement or operate a publisher | [Profile A](RELEASE_PROFILE_A.md) for source releases; [Profile B](RELEASE_PROFILE_B.md) for tested-asset promotion and recovery. |
-| Find current evidence or owner decisions | [#47 implementation](https://github.com/RocketsAreNostalgic/.github/issues/47), [#57 acceptance](https://github.com/RocketsAreNostalgic/.github/issues/57), [#59 immutability/settings](https://github.com/RocketsAreNostalgic/.github/issues/59). |
+| Find current evidence or owner decisions | [#57 reconciliation](https://github.com/RocketsAreNostalgic/.github/issues/57); historical implementation evidence remains in [#47](https://github.com/RocketsAreNostalgic/.github/issues/47) and [#59](https://github.com/RocketsAreNostalgic/.github/issues/59). |
 
 ## Purpose
 
@@ -91,7 +91,7 @@ repack is not a substitute. Source-only releases need no artificial ZIP proof.
 
 Production GitHub releases are immutable. Correct a build using freshly qualified
 source and a new version/tag. A mutable exception needs narrow evidence and an
-owner decision in [#59](https://github.com/RocketsAreNostalgic/.github/issues/59);
+owner decision in [#57](https://github.com/RocketsAreNostalgic/.github/issues/57);
 historical recovery code is not a standing exception.
 
 ### 6. Repository settings and bypasses
@@ -284,10 +284,10 @@ Difference alone is not a finding.
 ## Maintenance
 
 Material release-architecture changes require reassessment and an update to
-[#9](https://github.com/RocketsAreNostalgic/.github/issues/9). Update the affected
+[#57](https://github.com/RocketsAreNostalgic/.github/issues/57). Update the affected
 mechanism documentation/evidence in the same PR where practical; otherwise record
 an explicit cross-repository follow-up. Unrelated commits require no blanket refresh.
-Route quality adoption to [#65](https://github.com/RocketsAreNostalgic/.github/issues/65),
+Route quality adoption to [#127](https://github.com/RocketsAreNostalgic/.github/issues/127),
 not release-trust remediation. [#31](https://github.com/RocketsAreNostalgic/.github/issues/31)
 retains deferred organisation enforcement; current repository-required checks remain
 authoritative. Release completion does not complete separate quality acceptance.
