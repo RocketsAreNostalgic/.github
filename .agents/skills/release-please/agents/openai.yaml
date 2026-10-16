@@ -1,0 +1,4 @@
+interface:
+  display_name: "RAN Release Please"
+  short_description: "Operate and troubleshoot RAN release pipelines"
+  default_prompt: "Use $release-please to prepare or troubleshoot this repository release using its existing RAN release profile."
