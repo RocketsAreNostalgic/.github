@@ -68,6 +68,14 @@ Because GitHub's workflow-dispatch API accepts a branch or tag ref rather than a
 
 GitHub may record the automatic bot-created `pull_request` Quality run as completed with `conclusion: action_required` and no jobs. Profile B treats that specific record as non-execution rather than failed qualification, then uses the exact-head `workflow_dispatch` fallback. An actually executed exact candidate run that completes unsuccessfully still fails closed.
 
+After fallback Quality succeeds at the exact candidate head, inspect the live
+required check context and source app, whether the branch is up to date under
+its rules, unresolved review threads and mergeability. An ordinary PR run that
+never executed does not by itself require another full run. Approve or rerun it
+only to satisfy a concrete missing or failed requirement identified by GitHub.
+A successful dispatch does not guarantee merge admission in every repository;
+preserve stronger local requirements, branch protections and required checks.
+
 For every run that can become a production release, Quality uploads one run-bound Actions artifact named:
 
 ```text
