@@ -68,13 +68,18 @@ Because GitHub's workflow-dispatch API accepts a branch or tag ref rather than a
 
 GitHub may record the automatic bot-created `pull_request` Quality run as completed with `conclusion: action_required` and no jobs. Profile B treats that specific record as non-execution rather than failed qualification, then uses the exact-head `workflow_dispatch` fallback. An actually executed exact candidate run that completes unsuccessfully still fails closed.
 
-After fallback Quality succeeds at the exact candidate head, inspect the live
-required check context and source app, whether the branch is up to date under
-its rules, unresolved review threads and mergeability. An ordinary PR run that
-never executed does not by itself require another full run. Approve or rerun it
-only to satisfy a concrete missing or failed requirement identified by GitHub.
-A successful dispatch does not guarantee merge admission in every repository;
-preserve stronger local requirements, branch protections and required checks.
+Fallback Quality qualifies the exact candidate for Profile B, but
+[checks from `workflow_dispatch` jobs do not satisfy branch-ruleset required checks](https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/troubleshooting-required-status-checks#checks-from-some-workflow-jobs-are-not-evaluated).
+If the required `quality` check comes from the ordinary `pull_request` workflow,
+approve or rerun that workflow so it executes, even after dispatched Quality
+succeeds. Matching the head SHA, context and source app is insufficient.
+
+Before additional reruns, inspect trigger-event eligibility, the live required
+check context and app, whether the branch is up to date under its rules,
+unresolved review threads and mergeability. Consider omitting an initially
+unexecuted ordinary run only when its context is not required and local
+requirements permit it. Preserve branch protections, stronger local gates and
+the full successful-main qualification used for artifact promotion.
 
 For every run that can become a production release, Quality uploads one run-bound Actions artifact named:
 
