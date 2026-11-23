@@ -67,7 +67,7 @@ jobs:
     if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Organisation WordPress baseline
     needs: contract
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@72a90b5826db37d1e94cdcdcf3374ccf58c0aa7d
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-wordpress-plugin.yml@19311b758c3ca0180f7deaf21befcdfe720c9b45
     with:
       php-version: ${{ needs.contract.outputs.php_version }}
       node-version-file: ${{ needs.contract.outputs.node_version_file }}

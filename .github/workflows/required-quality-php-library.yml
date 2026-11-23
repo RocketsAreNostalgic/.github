@@ -68,7 +68,7 @@ jobs:
     if: ${{ github.repository != 'RocketsAreNostalgic/.github' }}
     name: Organisation PHP baseline
     needs: contract
-    uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library-v2.yml@84dde4704058d71646f56c369981bb6aaf201e24
+    uses: RocketsAreNostalgic/.github/.github/workflows/quality-php-library-v2.yml@2fb2507c1da6fd63d927a7ebb3f72fbcc1eea5fb
     with:
       php-floor: ${{ needs.contract.outputs.php_floor }}
       php-current: ${{ needs.contract.outputs.php_current }}
