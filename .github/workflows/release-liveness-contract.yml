@@ -2,6 +2,7 @@ name: Release Liveness Contract
 
 on:
   pull_request:
+    branches-ignore: [main]
     paths:
       - '.github/workflows/release-liveness-observer.yml'
       - '.github/workflows/release-liveness-contract.yml'
@@ -14,6 +15,7 @@ on:
       - '.github/workflows/release-liveness-contract.yml'
       - 'quality-enforcement/test-release-liveness-observer.py'
       - 'docs/release/RELEASE_TRUST.md'
+  workflow_call:
 
 permissions:
   contents: read

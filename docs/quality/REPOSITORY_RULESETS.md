@@ -34,6 +34,12 @@ and `Quality` requirements remain until a separate decision in #31 authorizes
 a replacement. A local status is
 not proof of organisation-owned workflow identity.
 
+For organisation `.github` PRs targeting `main`, require `release-contracts`
+from GitHub Actions once the workflow has landed. It uses the PR's three-dot diff
+to select the Profile B and Release Liveness contracts. The terminal job requires
+successful path detection and successful execution of every selected contract.
+The individual diagnostics retain their path filters for `main` pushes.
+
 ## Review automation
 
 Copilot review may remain enabled without re-reviewing every push; automatic

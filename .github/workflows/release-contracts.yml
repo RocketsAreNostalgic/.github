@@ -1,0 +1,100 @@
+name: Release Contracts
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect release contract changes
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      profile_b: ${{ steps.paths.outputs.profile_b }}
+      liveness: ${{ steps.paths.outputs.liveness }}
+    steps:
+      - name: Check out PR merge revision and history
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Select affected release contracts
+        id: paths
+        shell: bash
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          merge_base=$(git merge-base "$PR_BASE_SHA" "$PR_HEAD_SHA")
+
+          changed() {
+            local result
+            if git diff --quiet --no-renames "$merge_base" "$PR_HEAD_SHA" -- "$@"; then
+              echo false
+            else
+              result=$?
+              if [[ "$result" != 1 ]]; then
+                return "$result"
+              fi
+              echo true
+            fi
+          }
+
+          # Match the diagnostic workflows' path filters. Changes to this gate exercise both.
+          profile_b=$(changed .github/workflows/release-contracts.yml \
+            .github/workflows/release-profile-b.yml .github/workflows/profile-b-contract.yml \
+            docs/release/RELEASE_PROFILE_B.md quality-enforcement/test-release-profile-b.mjs)
+          liveness=$(changed .github/workflows/release-contracts.yml \
+            .github/workflows/release-liveness-observer.yml .github/workflows/release-liveness-contract.yml \
+            docs/release/RELEASE_TRUST.md quality-enforcement/test-release-liveness-observer.py)
+          printf 'profile_b=%s\nliveness=%s\n' "$profile_b" "$liveness" >> "$GITHUB_OUTPUT"
+
+  profile-b:
+    name: Profile B Contract
+    needs: changes
+    if: ${{ needs.changes.outputs.profile_b == 'true' }}
+    uses: ./.github/workflows/profile-b-contract.yml
+
+  liveness:
+    name: Release Liveness Contract
+    needs: changes
+    if: ${{ needs.changes.outputs.liveness == 'true' }}
+    uses: ./.github/workflows/release-liveness-contract.yml
+
+  release-contracts:
+    name: release-contracts
+    if: ${{ always() }}
+    needs: [changes, profile-b, liveness]
+    permissions: {}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Require success from every selected contract
+        shell: bash
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          PROFILE_B_SELECTED: ${{ needs.changes.outputs.profile_b }}
+          PROFILE_B_RESULT: ${{ needs.profile-b.result }}
+          LIVENESS_SELECTED: ${{ needs.changes.outputs.liveness }}
+          LIVENESS_RESULT: ${{ needs.liveness.result }}
+        run: |
+          set -euo pipefail
+          if [[ "$CHANGES_RESULT" != success ]]; then
+            echo "Release contract path detection did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+
+          require_contract() {
+            case "$2:$3" in
+              true:success|false:skipped) return 0 ;;
+              *) echo "$1 reported '$3' with selection '$2'." >&2; return 1 ;;
+            esac
+          }
+
+          require_contract 'Profile B Contract' "$PROFILE_B_SELECTED" "$PROFILE_B_RESULT"
+          require_contract 'Release Liveness Contract' "$LIVENESS_SELECTED" "$LIVENESS_RESULT"

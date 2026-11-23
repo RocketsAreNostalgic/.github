@@ -2,6 +2,7 @@ name: Profile B Contract
 
 on:
   pull_request:
+    branches-ignore: [main]
     paths:
       - '.github/workflows/release-profile-b.yml'
       - '.github/workflows/profile-b-contract.yml'
@@ -14,6 +15,7 @@ on:
       - '.github/workflows/profile-b-contract.yml'
       - 'docs/release/RELEASE_PROFILE_B.md'
       - 'quality-enforcement/test-release-profile-b.mjs'
+  workflow_call:
 
 permissions:
   contents: read
