@@ -99,7 +99,15 @@ claimed checks. Do not select a weaker provider to avoid these requirements.
 
 A local terminal `quality` depends on every ordinary merge-blocking lane and
 fails unless all succeed. Preserve stronger local checks and distinct conditional
-release gates. Its status is useful evidence, not unforgeable workflow identity.
+release gates. Consumer workflows that require non-default credentials must not
+gate secret access or token minting on mutable `github.ref` branch-name
+conditions; hold the credential as an environment secret inside a protected
+GitHub Environment (with required reviewers or deployment branch policy), or
+delegate issuance to an organisation-owned trusted workflow or broker boundary
+that keeps the credential out of consumer-controlled execution. Regardless of
+credential use, every workflow that emits server or HTTP diagnostics must route
+early-exit, readiness and cleanup failure paths through the same log-redaction
+filter. Its status is useful evidence, not unforgeable workflow identity.
 Follow [ruleset policy](REPOSITORY_RULESETS.md) and
 [enforcement integrity](QUALITY_STANDARDS.md#enforcement-integrity).
 

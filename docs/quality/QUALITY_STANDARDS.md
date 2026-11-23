@@ -187,6 +187,18 @@ Preserve these behavioral boundaries:
   and input boundaries; encoding alone is not executable obfuscation.
 - Read-only navigation need not gain a nonce; validate input, preserve capability and
   access checks and perform no protected mutation.
+- Full-string PCRE validation should anchor with `\A...\z` rather than
+  `^...$` without `/D`, which accepts a trailing newline; path-segment
+  validators permitting dots must explicitly reject `.` and `..`.
+- On PHP 8.2+, functions, methods and closures accepting tokens, secrets,
+  `Authorization` headers or authenticated HTTP request arguments should mark those
+  parameters `#[\SensitiveParameter]`, and closures should avoid capturing plaintext
+  credentials when a lazy resolver exists.
+- Security-sensitive local file checks should verify `lstat()` regular-file identity
+  before hashing or mutating paths, create private temporary files exclusively inside
+  verified `0700` directories rather than relying on `tempnam()` fallback, enforce
+  `0600` on private state and lock files, and validate `https://` scheme, host
+  allowlists and header scrubbing on every hop when HTTP redirects are enabled.
 
 <a id="shared-package-versions-consumer-upgrades-and-live-advisories"></a>
 
@@ -223,7 +235,16 @@ is imposed where none was adopted.
 
 CI uses minimal permissions, credential-free project execution unless an
 operation requires credentials, immutable Actions and fixed profile commands
-without inputs that allow arbitrary commands or skip checks. Applicable shared
+without inputs that allow arbitrary commands or skip checks. Do not gate secrets
+or GitHub App token minting on mutable branch names (`github.ref == 'refs/heads/...'`);
+hold the credential behind the chosen boundary: either a protected GitHub
+Environment (storing the credential as an environment secret protected by
+required reviewers or deployment branch policy) or an organisation-owned trusted
+workflow or broker boundary that controls token issuance and keeps the
+credential out of consumer-controlled execution. Route every diagnostic failure
+path — including startup, readiness and early-exit failures — through the same
+redaction helper used in cleanup traps rather than dumping raw server or HTTP
+logs to workflow output. Applicable shared
 diagnostic contexts plus terminal `quality` must cover every required lane and
 fail unless all succeed. Require statuses emitted by the selected supported
 provider. [Workflow contracts](QUALITY_WORKFLOWS.md) describe implementation and
