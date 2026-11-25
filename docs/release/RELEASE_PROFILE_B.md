@@ -50,6 +50,8 @@ Release Please remains authoritative for version calculation, changelog, release
 
 The shared workflow verifies this configuration from the admitted commit before invoking Release Please.
 
+RAN consumers should also set root-level `"always-update": true` in `release-please-config.json` (checked by repository-local release contract tests rather than the shared workflow) so open release PRs continue updating after subsequent merges to `main`.
+
 ## Immutable-release platform prerequisite
 
 Profile B assumes the owner-managed GitHub immutable-release policy is already enabled for the consumer repository. In RAN this is an organization-wide production constraint owned by #47/#57, not a repository workflow preference.

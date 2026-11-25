@@ -49,6 +49,8 @@ and candidate for an owner decision. Coordinate active writers and releases.
    title, or retained commit subjects. Use repository-supported conventional commit
    and breaking-change rules; let the actual Release Please configuration determine
    version/prerelease progression. Do not calculate a parallel version lifecycle.
+   Keep root-level `"always-update": true` in `release-please-config.json` so open
+   Release Please pull requests continue updating after subsequent merges to `main`.
 2. Qualify the exact source/release PR tuple with local required checks and
    independent review. A changed head needs reconsideration of affected evidence.
    Resolve required findings and check effective merge requirements.
@@ -81,9 +83,11 @@ Inspect actual logs and remote state before retrying; a later failure may follow
 an already-created PR, tag, uploaded asset or published release.
 
 Follow Profile A/B troubleshooting and retry boundaries. An open release PR or
-no releasable change can be normal non-publication. GITHUB_TOKEN event suppression
-can require the existing exact-candidate Quality dispatch. An executed red check
-is a real failure; diagnose it rather than suppressing it.
+no releasable change can be normal non-publication. When an open release PR fails
+to update after subsequent releasable merges to `main`, check that root-level
+`"always-update": true` is enabled in `release-please-config.json`. GITHUB_TOKEN
+event suppression can require the existing exact-candidate Quality dispatch. An
+executed red check is a real failure; diagnose it rather than suppressing it.
 
 Never move released tags, replace published assets, fabricate lifecycle labels,
 hand-edit bot version/changelog output to manufacture completion, or weaken

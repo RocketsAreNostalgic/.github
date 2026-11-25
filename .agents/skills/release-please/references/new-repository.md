@@ -44,7 +44,7 @@ not a universal template or permission to copy their product-specific checks.
 
 | File or area | Setup requirement |
 | --- | --- |
-| release-please-config.json | Correct strategy/package identity, tag shape, version policy and necessary extra-files |
+| release-please-config.json | Correct strategy/package identity, tag shape, version policy, root-level `"always-update": true` and necessary extra-files |
 | .release-please-manifest.json | Deliberate baseline coherent with actual history/version policy |
 | Read-only canonical CI/Quality workflow | PR and main-push qualification plus input-free workflow_dispatch on the exact requested revision |
 | .github/workflows/release-please.yml | Thin caller from the selected profile, pinned to an approved full organisation commit |
@@ -69,8 +69,10 @@ Copy caller structure from the selected current RAN profile and replace all
 repository-specific values. Bind workflow name/path and bot release branch to
 the actual configuration. Use automatic GITHUB_TOKEN with the documented job
 permissions, no secrets: inherit, and no privileged PR-code execution.
-For Profile B, retain draft/force-tag-creation prerequisites and exact run-bound
-artifact promotion; build and verify before privileged publication.
+Set root-level `"always-update": true` in `release-please-config.json` so open
+release PRs keep refreshing across subsequent merges to `main`.
+For Profile B, also retain draft/force-tag-creation prerequisites and exact
+run-bound artifact promotion; build and verify before privileged publication.
 
 ## 4. Check execution prerequisites
 
