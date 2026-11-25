@@ -40,7 +40,7 @@ The read-only admission job requires the actual caller event to be `workflow_run
 
 Only after admission does a separate write-capable job run. Immediately before Release Please it requires current `main` still to equal the admitted SHA, and Release Please is explicitly targeted at `main`. Workflow concurrency serializes Profile A release runs.
 
-Release Please owns version calculation, prerelease progression, changelog generation, release-PR lifecycle, tags and GitHub Releases.
+Release Please owns version calculation, prerelease progression, changelog generation, release-PR lifecycle, tags and GitHub Releases. Set root-level `"always-update": true` in `release-please-config.json` so open release PRs continue updating after subsequent merges to `main`.
 
 The main-tip check is a fail-closed stale-run guard, not an atomic compare-and-swap with a concurrent push. The architecture deliberately requires the admitted Quality revision still to be current main when Release Please begins; a newer main revision receives its own Quality/release lifecycle.
 
