@@ -50,7 +50,7 @@ Release Please remains authoritative for version calculation, changelog, release
 
 The shared workflow verifies this configuration from the admitted commit before invoking Release Please.
 
-RAN consumers should also set root-level `"always-update": true` in `release-please-config.json` (checked by repository-local release contract tests rather than the shared workflow) so open release PRs continue updating after subsequent merges to `main`.
+RAN consumers should also set root-level `"always-update": true` in `release-please-config.json` and verify that setting in their own release contract tests (it is not enforced by the shared workflow) so open release PRs continue updating after subsequent merges to `main`.
 
 ## Immutable-release platform prerequisite
 
